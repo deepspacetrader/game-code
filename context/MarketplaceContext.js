@@ -642,7 +642,7 @@ export const MarketplaceProvider = ({ children }) => {
         (type = 'greetings') => {
             if (!currentTrader || !traderMessages) return '';
 
-            console.log('pickTraderMessage called with type:', type, 'for trader:', currentTrader);
+            // console.log('pickTraderMessage called with type:', type, 'for trader:', currentTrader);
 
             // Get messages for the current trader and message type
             const traderData = traderMessages.find((tm) => tm.traderId === currentTrader);
@@ -652,7 +652,7 @@ export const MarketplaceProvider = ({ children }) => {
             }
 
             const messages = traderData[type];
-            console.log('Messages for trader:', messages);
+            // console.log('Messages for trader:', messages);
 
             if (!messages) {
                 console.warn('No messages found for trader', currentTrader, 'and type', type);
@@ -666,18 +666,18 @@ export const MarketplaceProvider = ({ children }) => {
             const langs = Object.keys(messages);
             let msg = '';
 
-            console.log('Available languages:', langs);
-            console.log(
-                'Has CHIK translator:',
-                hasCHIKTranslator,
-                'Has LAY translator:',
-                hasLAYTranslator
-            );
+            // console.log('Available languages:', langs);
+            // console.log(
+            //     'Has CHIK translator:',
+            //     hasCHIKTranslator,
+            //     'Has LAY translator:',
+            //     hasLAYTranslator
+            // );
 
             // If player has a relevant translator and English exists, always show English
             if (messages.EN && Array.isArray(messages.EN) && messages.EN.length > 0) {
                 msg = messages.EN[randomInt(0, messages.EN.length - 1)];
-                console.log('Selected EN message:', msg);
+                // console.log('Selected EN message:', msg);
                 return msg;
             }
 
@@ -685,7 +685,7 @@ export const MarketplaceProvider = ({ children }) => {
             for (const lang of ['CHIK', 'LAY', 'EN', ...langs]) {
                 if (messages[lang] && Array.isArray(messages[lang]) && messages[lang].length > 0) {
                     msg = messages[lang][randomInt(0, messages[lang].length - 1)];
-                    console.log(`Selected ${lang} message:`, msg);
+                    // console.log(`Selected ${lang} message:`, msg);
                     return msg;
                 }
             }

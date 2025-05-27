@@ -40,7 +40,7 @@ const SignalAnimation = ({ duration, onClose }) => {
     // Initialize canvas and image
     useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
         const img = new Image();
         img.src = currentImage;
@@ -117,7 +117,7 @@ const SignalAnimation = ({ duration, onClose }) => {
             return;
         }
 
-        console.log('Starting fisheye animation');
+        // console.log('Starting fisheye animation');
         let frameId;
         let lastTime = 0;
 
@@ -153,13 +153,13 @@ const SignalAnimation = ({ duration, onClose }) => {
         // Start the animation
         frameId = requestAnimationFrame(animate);
         animationFrameId.current = frameId;
-        console.log('Fisheye animation started');
+        // console.log('Fisheye animation started');
 
         // Cleanup function
         return () => {
             if (frameId) {
                 cancelAnimationFrame(frameId);
-                console.log('Fisheye animation stopped');
+                // console.log('Fisheye animation stopped');
 
                 // Redraw the original image when effect is cleaned up
                 if (img && img.complete) {
@@ -193,7 +193,7 @@ const SignalAnimation = ({ duration, onClose }) => {
 
     const showLens = (ctx, img, x, y) => {
         if (!img || !img.complete) return;
-        
+
         const { size, mag, k } = lensProperties.current;
         const lsize = size;
         const lsize2 = lsize * lsize;
@@ -201,7 +201,7 @@ const SignalAnimation = ({ duration, onClose }) => {
         // Debug logging - only log every 500ms
         const now = Date.now();
         if (now - debugInfo.current.lastUpdate > 500) {
-            console.log('Applying fisheye at:', { x, y }, 'size:', size, 'mag:', mag, 'k:', k);
+            // console.log('Applying fisheye at:', { x, y }, 'size:', size, 'mag:', mag, 'k:', k);
             debugInfo.current.lastUpdate = now;
         }
 
@@ -213,7 +213,7 @@ const SignalAnimation = ({ duration, onClose }) => {
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = img.width;
         tempCanvas.height = img.height;
-        const tempCtx = tempCanvas.getContext('2d');
+        const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
 
         // Draw the current image to the temp canvas
         tempCtx.drawImage(img, 0, 0);
@@ -299,7 +299,7 @@ const SignalAnimation = ({ duration, onClose }) => {
             // Only update if position changed significantly (for performance)
             if (Math.abs(mousePos.current.x - x) > 1 || Math.abs(mousePos.current.y - y) > 1) {
                 mousePos.current = { x, y };
-                console.log('Mouse move:', mousePos.current);
+                // console.log('Mouse move:', mousePos.current);
             }
 
             // Ensure hover state is true when mouse is over the container
@@ -314,14 +314,14 @@ const SignalAnimation = ({ duration, onClose }) => {
     };
 
     const handleMouseEnter = (e) => {
-        console.log('Mouse entered');
+        // console.log('Mouse entered');
         isHovered.current = true;
         // Force a re-render to trigger the effect
         setLastImageSwitch((prev) => prev + 1);
     };
 
     const handleMouseLeave = () => {
-        console.log('Mouse left');
+        // console.log('Mouse left');
         isHovered.current = false;
 
         // Redraw original image when mouse leaves

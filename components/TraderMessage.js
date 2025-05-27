@@ -67,32 +67,57 @@ const TraderMessage = ({
 
         // If we have a specific message to show, use that
         if (messageText) {
-            // Try to find the message in any language
-            for (const lang of Object.values(messages)) {
-                if (lang === messageText) {
-                    setCurrentMessage(messageText);
-                    setVisible(true);
-                    return;
+            let messageToShow = messageText;
+            
+            // If messageText is an array, pick a random message from it
+            if (Array.isArray(messageText)) {
+                // If it's an array of arrays (like the greetings object values), get a random language first
+                if (messageText.some(Array.isArray)) {
+                    const randomLang = messageText[Math.floor(Math.random() * messageText.length)];
+                    if (Array.isArray(randomLang) && randomLang.length > 0) {
+                        messageToShow = randomLang[Math.floor(Math.random() * randomLang.length)];
+                    } else {
+                        messageToShow = randomLang;
+                    }
+                } else {
+                    // If it's a simple array of strings, pick one randomly
+                    messageToShow = messageText[Math.floor(Math.random() * messageText.length)];
                 }
             }
+            
+            // If we ended up with an array (shouldn't happen with the above logic, but just in case)
+            if (Array.isArray(messageToShow)) {
+                messageToShow = messageToShow[0] || '';
+            }
+            
+            setCurrentMessage(messageToShow);
+            setVisible(true);
+            return;
         }
 
         // Otherwise, select a random message in the trader's language
         const messageKeys = Object.keys(messages);
         if (messageKeys.length > 0) {
             const randomKey = messageKeys[Math.floor(Math.random() * messageKeys.length)];
-            let selectedMessage = messages[randomKey];
-
+            let selectedMessages = messages[randomKey];
+            
+            // If we have an array of messages, pick one randomly
+            if (Array.isArray(selectedMessages) && selectedMessages.length > 0) {
+                selectedMessages = selectedMessages[Math.floor(Math.random() * selectedMessages.length)];
+            }
+            
             // If player has a translator for this language, show the English version if available
             if (
                 ((randomKey === 'CHIK' && hasCHIK) || (randomKey === 'LAY' && hasLAY)) &&
                 messages['EN']
             ) {
-                selectedMessage = messages['EN'];
+                const enMessages = messages['EN'];
+                selectedMessages = Array.isArray(enMessages) 
+                    ? enMessages[Math.floor(Math.random() * enMessages.length)]
+                    : enMessages;
             }
 
-            console.log('Selected message:', selectedMessage);
-            setCurrentMessage(selectedMessage);
+            setCurrentMessage(selectedMessages);
             setVisible(true);
         }
     }, [currentTrader, lastTrader, messageText, statusEffects, traderMessages]);
@@ -101,7 +126,6 @@ const TraderMessage = ({
     useEffect(() => {
         if (visible) {
             const timer = setTimeout(() => {
-                console.log('Auto-hiding message');
                 setVisible(false);
             }, 5000);
             return () => clearTimeout(timer);
