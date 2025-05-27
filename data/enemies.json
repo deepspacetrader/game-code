@@ -1,0 +1,69 @@
+{
+    "enemies": [
+        {
+            "enemyId": 0,
+            "name": "Scavenger",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "chanceOfScan": [0, 0.2],
+            "hostileRange": [0, 0.08],
+            "intelligence": [20, 85],
+            "health": 50,
+            "weapons": [],
+            "shield": false,
+            "stealth": false
+        },
+        {
+            "enemyId": 1,
+            "name": "Market Police",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "chanceOfScan": [0.56, 0.82],
+            "hostileRange": [0.24, 0.978],
+            "intelligence": [60, 100],
+            "health": 100,
+            "weapons": [1, 2, 3],
+            "shield": false,
+            "stealth": false
+        },
+        {
+            "enemyId": 2,
+            "name": "Theif",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "chanceOfScan": [1, 1],
+            "hostileRange": [0.24, 0.978],
+            "intelligence": [80, 150],
+            "health": 100,
+            "weapons": [1],
+            "shield": false,
+            "stealth": true
+        },
+        {
+            "enemyId": 3,
+            "name": "Thug",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "chanceOfScan": [0.29, 0.62],
+            "hostileRange": [0.24, 0.978],
+            "intelligence": [40, 90],
+            "health": 250,
+            "weapons": [1, 4],
+            "shield": true,
+            "stealth": false
+        },
+        {
+            "enemyId": 4,
+            "name": "Military",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "chanceOfScan": [0.56, 0.72],
+            "hostileRange": [0.1, 0.2],
+            "intelligence": [60, 100],
+            "health": 110,
+            "weapons": [4, 5],
+            "shield": true,
+            "stealth": false
+        }
+    ]
+}

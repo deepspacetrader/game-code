@@ -1,0 +1,155 @@
+// QuantumTest.scss - Styles for the Quantum Test Runner
+
+.quantum-test-container {
+  font-family: 'Courier New', monospace;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #0a0e17;
+  color: #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  
+  h2, h3 {
+    color: #4fc3f7;
+    margin-bottom: 1rem;
+  }
+  
+  h2 {
+    border-bottom: 1px solid #1e2a3a;
+    padding-bottom: 0.5rem;
+  }
+  
+  .test-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    
+    .test-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      
+      &.run-tests {
+        background-color: #4caf50;
+        color: white;
+        
+        &:hover:not(:disabled) {
+          background-color: #3d8b40;
+        }
+      }
+      
+      &.enabled {
+        background-color: #f44336;
+        color: white;
+        
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+      
+      &.disabled {
+        background-color: #2196f3;
+        color: white;
+        
+        &:hover {
+          background-color: #1976d2;
+        }
+      }
+    }
+  }
+  
+  .test-suites {
+    margin-bottom: 1.5rem;
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        &.available {
+          background-color: rgba(76, 175, 80, 0.1);
+          border-left: 4px solid #4caf50;
+          
+          .test-status {
+            color: #4caf50;
+            
+            &.passed {
+              color: #4caf50;
+              &::before {
+                content: '✓ ';
+              }
+            }
+            
+            &.failed {
+              color: #f44336;
+              &::before {
+                content: '✗ ';
+              }
+            }
+          }
+        }
+        
+        &.unavailable {
+          background-color: rgba(158, 158, 158, 0.1);
+          border-left: 4px solid #9e9e9e;
+          color: #9e9e9e;
+          
+          .test-status {
+            font-size: 0.9em;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+  
+  .test-log {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 1rem;
+    min-height: 150px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    
+    .log-entries {
+      .log-entry {
+        padding: 0.25rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  
+  // Animation for test running state
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  
+  .running {
+    animation: pulse 1.5s infinite;
+  }
+}

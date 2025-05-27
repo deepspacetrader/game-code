@@ -1,0 +1,84 @@
+.signal-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: eyelid 0.1337s ease-in-out forwards;
+}
+
+@keyframes eyelid {
+    0% {
+        transform: scaleY(0.2);
+        opacity: 0.2;
+    }
+
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.signal-container .signal-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    opacity: 1;
+    transform: scale(1);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.signal-container.close .signal-image {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.travel-signal {
+    color: #fff;
+    border-radius: 50%;
+    border: inset 0.13374269rem gold;
+    min-width: 15rem;
+    min-height: 15rem;
+    max-height: 25rem;
+    max-width: 25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.travel-signal .signal-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.travel-signal .travel-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 1rem;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+@keyframes toggle-signal {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

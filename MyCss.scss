@@ -1,0 +1,60 @@
+.admin-debug {
+    background: none;
+}
+
+.main-container {
+    margin: 0 auto;
+    width: 100%;
+}
+
+
+.main-area {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    background-image: url(./images/ship.webp);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 1rem;
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    position: relative;
+
+    &:after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        box-shadow: inset 5px 5px 250px 15px #000,
+            inset -10px -24px 40px 0px #000,
+            inset 20px -10px 40px 0px #000,
+            inset -20px 10px 40px 0px #000;
+        z-index: 0;
+    }
+}
+
+.inventory-pane {
+    flex: 1;
+    min-height: 10rem;
+    width: 50%;
+    position: relative;
+    z-index: 1;
+}
+
+.trading-area {
+    width: 50%;
+    z-index: 1;
+    position: relative;
+}
+
+.galaxy-image {
+    background-size: cover;
+    background-pPosition: center;
+    width: 100%;
+    min-height: 5rem;
+}

@@ -1,0 +1,71 @@
+/* Save Game Component */
+.save-game-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.save-game-container {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.save-button {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+        color: var(--accent);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.save-level-display {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px 5px 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+    }
+
+    &.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}

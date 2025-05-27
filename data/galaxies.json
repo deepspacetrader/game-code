@@ -1,0 +1,214 @@
+{
+    "galaxies": [
+        {
+            "galaxyId": 1,
+            "danger": false,
+            "distance": 1213,
+            "name": "Xylen Verge",
+            "description": "Mysterious and highly isolated galaxy known for its ancient starfields and unpredictable magnetic anomalies. Traders here are resilient and resourceful.",
+            "war": false,
+            "traders": [2, 8, 9],
+            "coordinates": {
+                "x": 432,
+                "y": 1180,
+                "z": -237
+            }
+        },
+        {
+            "galaxyId": 2,
+            "danger": false,
+            "distance": 10,
+            "name": "Cindros Bloom",
+            "description": "First utopian galaxy still shining bright to this very moment. A symbol of peace, balance, and successful interstellar diplomacy.",
+            "war": false,
+            "traders": [2, 3, 5, 6, 8, 9],
+            "coordinates": {
+                "x": 540,
+                "y": 1345,
+                "z": 210
+            }
+        },
+        {
+            "galaxyId": 3,
+            "danger": false,
+            "distance": 789,
+            "name": "Vrellian Sprawl",
+            "description": "A sprawling galactic web filled with hybrid civilizations, political intrigue, and shifting alliances. Traders thrive in the chaos here.",
+            "war": false,
+            "traders": [4, 10, 5],
+            "coordinates": {
+                "x": 799,
+                "y": -1420,
+                "z": 430
+            }
+        },
+        {
+            "galaxyId": 4,
+            "danger": false,
+            "distance": 210,
+            "name": "Oon Cascade",
+            "description": "This vibrant galaxy is known for its waterfall-like nebulae and harmonic energy fields. A hub for cultural exchange and moderate trade activity.",
+            "war": false,
+            "traders": [6, 7],
+            "coordinates": {
+                "x": -642,
+                "y": 1565,
+                "z": 320
+            }
+        },
+        {
+            "galaxyId": 5,
+            "danger": false,
+            "distance": 152,
+            "name": "Galactic Rift",
+            "description": "A dense, gravity-torn stretch of space filled with mineral wealth and ancient relics. Despite its instability, it's a popular location for resource mining.",
+            "war": false,
+            "traders": [8, 7],
+            "coordinates": {
+                "x": 1225,
+                "y": 480,
+                "z": -670
+            }
+        },
+        {
+            "galaxyId": 6,
+            "danger": true,
+            "distance": 90,
+            "name": "Marrowth Deltas",
+            "description": "Turbulent galaxy fractured by black hole tributaries and violent plasma storms. Trade is lucrative but extremely high-risk.",
+            "war": false,
+            "traders": [11, 12, 9],
+            "coordinates": {
+                "x": -1280,
+                "y": -850,
+                "z": 510
+            }
+        },
+        {
+            "galaxyId": 7,
+            "danger": false,
+            "distance": 60,
+            "name": "Cryofern Wastes",
+            "description": "Frozen galaxy teeming with abandoned outposts and dormant alien technologies. Dangerous terrain for travelers, but full of opportunity.",
+            "war": false,
+            "traders": [13, 4, 8],
+            "coordinates": {
+                "x": 310,
+                "y": -1930,
+                "z": -420
+            }
+        },
+        {
+            "galaxyId": 8,
+            "danger": true,
+            "distance": 50,
+            "name": "Henus Vault",
+            "description": "Dangerous area full of life lurking in the shadows. Total anarchy. Extreme market volatility. Rumors of hidden vaults and clandestine experiments fuel constant interest.",
+            "war": false,
+            "traders": [14, 15, 16, 17],
+            "coordinates": {
+                "x": -925,
+                "y": 780,
+                "z": -305
+            }
+        },
+        {
+            "galaxyId": 9,
+            "danger": false,
+            "distance": 456,
+            "name": "Krothu-9",
+            "description": "A quiet mid-range galaxy known for its stable solar systems and rare crystal formations. Often used as a relay point by long-haul traders.",
+            "war": false,
+            "traders": [5, 12],
+            "coordinates": {
+                "x": -215,
+                "y": 987,
+                "z": -112
+            }
+        },
+        {
+            "galaxyId": 10,
+            "danger": false,
+            "distance": 0,
+            "name": "Driftspire Helix",
+            "description": "Now peaceful area under no direct control or authority which was recently devastated by the great cybernetic wars. A few civilizations remain mostly trading goods as a means of survival with nearby commercial haulers. Once the core of technological advancement, now a humbled neutral zone.",
+            "war": false,
+            "traders": [1, 2, 3],
+            "coordinates": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+        },
+        {
+            "galaxyId": 11,
+            "danger": true,
+            "distance": 80,
+            "name": "Terra Nexus",
+            "description": "Oldest paradise themed galaxy in the entire universe. Once revered as a model of harmony, recent instability has brought dangerous tides and fluctuating alliances.",
+            "war": false,
+            "traders": [7, 2, 9, 4, 5, 11, 14],
+            "coordinates": {
+                "x": 980,
+                "y": 970,
+                "z": -250
+            }
+        },
+        {
+            "galaxyId": 12,
+            "danger": true,
+            "distance": 70,
+            "name": "Sostilisor",
+            "description": "Unstable and enigmatic, this galaxy houses ancient ruins and unexplored anomalies. Navigation is difficult and local space-time fields are erratic.",
+            "war": false,
+            "traders": [5, 6, 7, 8, 9, 10, 11],
+            "coordinates": {
+                "x": -1115,
+                "y": 545,
+                "z": 690
+            }
+        },
+        {
+            "galaxyId": 13,
+            "danger": true,
+            "distance": 100,
+            "name": "Astral Plateaus",
+            "description": "Conflict zone where multiple factions are fighting over their pure hatred for one another. An endless demand of resources makes for a popular and dangerous market. Expect extreme volatility. Battles erupt without warning across the plateaus of starlight and smoke.",
+            "war": true,
+            "traders": [15, 6, 8, 4, 2],
+            "coordinates": {
+                "x": 400,
+                "y": 1680,
+                "z": -515
+            }
+        },
+        {
+            "galaxyId": 14,
+            "danger": true,
+            "distance": 200,
+            "name": "Nexva Dawless",
+            "description": "Remote and lawless, this galaxy exists at the edge of known space. Filled with rogue fleets, experimental tech, and cosmic storms.",
+            "war": false,
+            "traders": [8, 2, 7, 8, 13, 5],
+            "coordinates": {
+                "x": -1385,
+                "y": -340,
+                "z": -685
+            }
+        },
+        {
+            "galaxyId": 15,
+            "danger": true,
+            "distance": 600,
+            "name": "Quantum Flux",
+            "description": "Ever-shifting and impossible to predict, Quantum Flux is a galaxy defined by its unstable spacetime fabric. Transit corridors blink in and out of existence without notice.",
+            "war": false,
+            "traders": [4, 6, 7, 11, 12],
+            "coordinates": {
+                "x": 1230,
+                "y": -1100,
+                "z": 360
+            }
+        }
+    ]
+}

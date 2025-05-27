@@ -1,0 +1,152 @@
+// Base styles
+.quantum-setup {
+    margin-top: 16px;
+    padding: 16px;
+    border: 2px solid var(--hud-border);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+
+    // Opacity variants
+    &.low { opacity: 0.6; }
+    &.medium { opacity: 0.75; }
+    &.high { opacity: 1; }
+    
+    // Border color variants
+    &.ultra { border-color: var(--accent); }
+    &.elite { border-color: var(--info); }
+
+    // Slots container
+    .slots {
+        display: flex;
+        gap: 8px;
+        margin: 8px 0;
+        flex-wrap: wrap;
+    }
+
+    // Base slot styles
+    .slot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        input[type="checkbox"] {
+            display: none; // Hide default checkbox
+        }
+
+        .slot-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--hud-border);
+            border-radius: 4px;
+            background: rgba(30, 30, 40, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        &:hover .slot-content {
+            background: rgba(60, 60, 80, 0.6);
+        }
+
+        &.filled .slot-content {
+            background: rgba(0, 100, 200, 0.4);
+            font-weight: bold;
+        }
+
+        &.locked .slot-content {
+            background: rgba(200, 50, 50, 0.4);
+        }
+    }
+
+    // Professional UI (500+)
+    &.professional {
+        .slots { gap: 12px; }
+        
+        .slot {
+            width: 100px;
+            height: 100px;
+            font-size: 1rem;
+
+            .slot-content {
+                border-radius: 8px;
+                font-size: 1.2rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
+
+    // High-tier UI (1000+)
+    $high-tiers: 'skilled', 'knowledgeable', 'smart', 'expert', 'master', 'grandmaster', 'elite', 'legendary', 'potential', 'endgame';
+
+    @each $tier in $high-tiers {
+        &.#{$tier} {
+            .slots {
+                gap: 16px;
+            }
+
+            .slot {
+                position: relative;
+                width: 100px;
+                height: 100px;
+                font-size: 1.1rem;
+                perspective: 1000px;
+
+                .slot-content {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    border: 2px solid var(--accent);
+                    border-radius: 12px;
+                    background: linear-gradient(135deg, rgba(40, 40, 60, 0.7), rgba(20, 20, 40, 0.9));
+                    box-shadow: 0 4px 15px rgba(0, 100, 255, 0.2);
+                    transition: all 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+                    overflow: hidden;
+                }
+
+                &:hover .slot-content {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 100, 255, 0.3);
+                    border-color: var(--info);
+                }
+
+                &:active .slot-content {
+                    transform: translateY(1px);
+                    box-shadow: 0 2px 8px rgba(0, 100, 255, 0.2);
+                }
+
+                &.filled .slot-content {
+                    background: linear-gradient(135deg, rgba(0, 80, 200, 0.6), rgba(0, 40, 120, 0.8));
+                    border-color: var(--info);
+                    box-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
+                }
+                &.locked .slot-content {
+                    background: linear-gradient(135deg, rgba(200, 50, 50, 0.6), rgba(120, 20, 20, 0.8));
+                    border-color: #ff4d4d;
+                    box-shadow: 0 0 15px rgba(255, 80, 80, 0.5);
+                    animation: pulse 2s infinite;
+                }
+            }
+        }
+    }
+
+    // Info text
+    .info {
+        margin-top: 12px;
+        font-size: 0.9rem;
+        text-align: center;
+        color: var(--text);
+        opacity: 0.9;
+    }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 5px rgba(255, 80, 80, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 80, 80, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(255, 80, 80, 0.5); }
+}

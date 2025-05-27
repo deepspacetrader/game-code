@@ -1,0 +1,95 @@
+.spaceship-hud {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 10px;
+    background: var(--hud-bg);
+    border: 2px solid var(--hud-border);
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--cell-hover-shadow);
+}
+
+.sticky-hud {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.spaceship-hud__galaxy {
+    grid-column: 1 / -1;
+    font-size: 1.2rem;
+    color: var(--hud-text);
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.hud-item {
+    background: var(--cell-bg);
+    padding: 8px;
+    border: 1px solid var(--cell-border);
+    border-radius: 4px;
+    text-align: center;
+    transition: background 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.hud-item:hover {
+    box-shadow: 0 0 8px var(--cell-hover-shadow);
+}
+
+.hud-item--credit {
+    color: var(--accent);
+}
+
+.hud-item--health {
+    color: var(--info);
+}
+
+.hud-item--fuel {
+    color: var(--error);
+}
+
+.hud-item--avg {
+    color: var(--accent);
+}
+
+.hud-item--speed {
+    color: var(--info);
+}
+
+.hud-item--stealth {
+    color: var(--info);
+}
+
+.hud-item--shield {
+    color: var(--accent);
+}
+
+.cheater {
+    background: var(--cheater-bg) !important;
+}
+
+/* Ship Installed Modules UI */
+.ship-inventory {
+    margin-top: 16px;
+    border-top: 1px solid var(--cell-border);
+    padding-top: 8px;
+}
+
+.module-item {
+    margin: 4px 0;
+}
+
+.module-timer-bar-container {
+    background: var(--cell-border);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.module-timer-bar {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.1s linear;
+}

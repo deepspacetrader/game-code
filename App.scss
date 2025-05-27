@@ -1,0 +1,309 @@
+/* Define variables */
+$gold: gold;
+$cheap: green;
+$deal: darken($cheap, 10%);
+$normal: rgb(0, 0, 100);
+$avoid: red;
+$expensive: darken($avoid, 10%);
+$hud-bg: var(--hud-bg);
+$hud-text: var(--hud-text);
+$cell-border: var(--cell-border);
+$cell-bg: var(--cell-bg);
+$accent: var(--accent);
+$error: var(--error);
+$info: var(--info);
+$cell-hover-shadow: var(--cell-hover-shadow);
+$breakpoint-tablet: 640px;
+$breakpoint-desktop: 1024px;
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #000;
+    color: #fff;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+h3 {
+    text-align: center;
+}
+
+h3.qs {
+    text-align: left;
+}
+
+.grid {
+    display: grid;
+    gap: 5px;
+    border: 1px solid;
+    padding: 2px;
+    margin: 2px;
+}
+
+.cell {
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.owned {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.cell.bg-gray-200 {
+    background-color: gray;
+}
+
+.cell.bg-blue-500 {
+    background-color: blue;
+}
+
+.hud {
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    background-color: #222;
+    color: #fff;
+    align-items: center;
+}
+
+button {
+    padding: 8px 12px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+}
+
+/* Notice overlay for invalid trades */
+.cell-notice {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10;
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0;
+}
+
+/* Buy/Sell backgrounds */
+.cell-notice--buy {
+    background: rgba(255, 50, 50, 0.8);
+    color: #fff;
+}
+
+.cell-notice--sell {
+    background: rgba(50, 50, 255, 0.8);
+    color: #fff;
+}
+
+/* Medium UI: static text */
+.cell-notice--medium {
+    position: relative;
+    opacity: 1 !important;
+    transform: none !important;
+    font-size: 0.8rem;
+}
+
+/* High UI: fade away */
+.cell-notice--high {
+    font-size: 0.9rem;
+    animation-name: notice-fade;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+/* Elite UI: larger fade up and away */
+.cell-notice--elite {
+    font-size: 1.2rem;
+    animation-name: notice-move-up;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes notice-fade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes notice-move-up {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) translateY(-20px);
+    }
+}
+
+.cheater {
+    color: red !important;
+
+    &:before {
+        content: 'WARNING: INVALID CREDITS CHEATER ALERT ⚠️';
+        position: absolute;
+        top: -2rem;
+        left: 0;
+        background: rgba(255, 0, 0, 0.5);
+        color: white;
+        padding: 0.2469rem 0.4201337rem;
+        border-radius: 4px;
+        font-size: 0.5rem;
+    }
+}
+
+/* UI Tier Styles */
+
+.ui-tier-low {
+    --hud-bg: #0a0e14;
+    --hud-border: #222;
+    --hud-text: #fff;
+    /* --cell-bg: #17212b; */
+    --cell-border: #334;
+    --cell-hover-shadow: #555;
+    --accent: #afa;
+    --error: #f55;
+    --info: #aff;
+}
+
+.ui-tier-medium {
+    --hud-bg: #121824;
+    --hud-border: #445;
+    --hud-text: #fff;
+    /* --cell-bg: #1e2d3c; */
+    --cell-border: #556;
+    --cell-hover-shadow: #6af;
+    --accent: #bfb;
+    --error: #f44;
+    --info: #aff;
+}
+
+.ui-tier-high {
+    --hud-bg: #20304e;
+    --hud-border: #667;
+    --hud-text: #fff;
+    /* --cell-bg: #2a3f5f; */
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-elite {
+    --hud-bg: #7c007e;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-legendary {
+    --hud-bg: #d97700;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+.ui-tier-potential {
+    --hud-bg: #005e1b;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+.ui-tier-endgame {
+    --hud-bg: #00ff48;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-bg: #000a1a74;
+    --cell-border: gold;
+    --cell-hover-shadow: darken(gold, 55%);
+    --accent: #eee;
+    --error: #f11;
+    --info: #000;
+}
+
+.ui-tier-elite .cell--up {
+    --cell-bg: darkgreen;
+}
+
+.ui-tier-elite .cell--down {
+    --cell-bg: darkred;
+}
+
+.ui-tier-ultra,
+.ui-tier-newbie,
+.ui-tier-apprentice,
+.ui-tier-journeyman,
+.ui-tier-adventurer,
+.ui-tier-explorer,
+.ui-tier-professional,
+.ui-tier-skilled,
+.ui-tier-knowledgeable,
+.ui-tier-smart,
+.ui-tier-expert,
+.ui-tier-master,
+.ui-tier-grandmaster {
+    /* mirror elite tier styling until new theming is defined */
+    --hud-bg: #304167;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
