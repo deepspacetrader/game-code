@@ -29,10 +29,10 @@ export const MarketplaceProvider = ({ children }) => {
     const defaultFuel = 100;
     const MIN_QUANTUM_TRADE_DELAY = 1000; // Minimum milliseconds between quantum trades
 
-    // Load game data
-    const traderConfigs = tradersData?.traders || [];
-    const eventsList = (randomEvents?.events || []).map((e) => e || {});
-    const { items = [] } = itemsData || {};
+    // Load game data - these are static imports, so we don't need dependency arrays
+    const traderConfigs = useMemo(() => tradersData?.traders || [], []);
+    const eventsList = useMemo(() => (randomEvents?.events || []).map((e) => e || {}), []);
+    const items = useMemo(() => itemsData?.items || [], []);
 
     // Core game state
     const [inventory, setInventory] = useState([]);
@@ -545,8 +545,14 @@ export const MarketplaceProvider = ({ children }) => {
             : [];
     }
 
+    // Memoize traderConfigs to prevent unnecessary recalculations
+    const memoizedTraderConfigs = useMemo(() => traderConfigs, [traderConfigs]);
+
     // ----- INIT -----
     useEffect(() => {
+        // Skip if already initialized
+        if (isInitialized) return;
+
         // Initialize starting galaxy by galaxyId
         const startGalaxyObj = galaxiesData.galaxies.find((g) => g.galaxyId === 10) || {};
 
@@ -560,7 +566,7 @@ export const MarketplaceProvider = ({ children }) => {
 
         // Resolve trader configs by traderId for this galaxy
         const tradersInGalaxy = (startGalaxyObj.traders || [])
-            .map((id) => traderConfigs.find((cfg) => cfg.traderId === id))
+            .map((id) => memoizedTraderConfigs.find((cfg) => cfg.traderId === id))
             .filter(Boolean);
         // console.log('Found traders in galaxy:', tradersInGalaxy);
 
@@ -610,64 +616,88 @@ export const MarketplaceProvider = ({ children }) => {
         // Set currentGalaxy to its galaxyId
         setCurrentGalaxy(startGalaxyObj.galaxyId);
         // console.log('Current galaxy set to:', startGalaxyObj.galaxyId);
-        //
+
         // Mark initialization as complete
         setIsInitialized(true);
         // console.log('Initialization complete');
-    }, []); // Empty dependency array to run only once on mount
+        // We can safely omit galaxiesData.galaxies from deps as it's static data
+    }, [
+        isInitialized,
+        prepareGalaxy,
+        memoizedTraderConfigs,
+        setHealth,
+        setFuel,
+        setCredits,
+        setDeliverySpeed,
+        setShieldActive,
+        setStealthActive,
+        setInventory,
+        setQuantumProcessors,
+        setImprovedUILevel,
+        travelToGalaxy,
+    ]);
 
     // Helper: Pick a random greeting for a trader
-    function pickTraderMessage(type = 'greetings') {
-        const messages = traderMessages[currentTrader]?.[type] || {};
-        const hasCHIKTranslator =
-            statusEffects['translate_CHIK'] || statusEffects['Auto Translator CHIK']?.active;
-        const hasLAYTranslator =
-            statusEffects['translate_LAY'] || statusEffects['Auto Translator LAY']?.active;
-        const langs = Object.keys(messages);
-        let msg = '';
+    const pickTraderMessage = useCallback(
+        (type = 'greetings') => {
+            if (!currentTrader || !traderMessages) return '';
 
-        // If player has a relevant translator and English exists, always show English
-        if (
-            (hasCHIKTranslator && messages.CHIK && messages.EN) ||
-            (hasLAYTranslator && messages.LAY && messages.EN)
-        ) {
-            console.log('Player has translator for CHIK or LAY, showing EN');
-            const arr = messages.EN;
-            if (Array.isArray(arr) && arr.length > 0) {
-                msg = arr[randomInt(0, arr.length - 1)];
+            console.log('pickTraderMessage called with type:', type, 'for trader:', currentTrader);
+
+            // Get messages for the current trader and message type
+            const traderData = traderMessages.find((tm) => tm.traderId === currentTrader);
+            if (!traderData) {
+                console.warn('No trader data found for trader ID:', currentTrader);
+                return '';
             }
-        }
 
-        // If above didn't set a message, use the trader's native language (prefer CHIK, then LAY, then EN)
-        if (!msg) {
-            if (messages.CHIK && Array.isArray(messages.CHIK) && messages.CHIK.length > 0) {
-                msg = messages.CHIK[randomInt(0, messages.CHIK.length - 1)];
-                // console.log('Trader speaks CHIK', msg);
-            } else if (messages.LAY && Array.isArray(messages.LAY) && messages.LAY.length > 0) {
-                msg = messages.LAY[randomInt(0, messages.LAY.length - 1)];
-                // console.log('Trader speaks LAY', msg);
-            } else if (messages.EN && Array.isArray(messages.EN) && messages.EN.length > 0) {
+            const messages = traderData[type];
+            console.log('Messages for trader:', messages);
+
+            if (!messages) {
+                console.warn('No messages found for trader', currentTrader, 'and type', type);
+                return '';
+            }
+
+            const hasCHIKTranslator =
+                statusEffects['translate_CHIK'] || statusEffects['Auto Translator CHIK']?.active;
+            const hasLAYTranslator =
+                statusEffects['translate_LAY'] || statusEffects['Auto Translator LAY']?.active;
+            const langs = Object.keys(messages);
+            let msg = '';
+
+            console.log('Available languages:', langs);
+            console.log(
+                'Has CHIK translator:',
+                hasCHIKTranslator,
+                'Has LAY translator:',
+                hasLAYTranslator
+            );
+
+            // If player has a relevant translator and English exists, always show English
+            if (messages.EN && Array.isArray(messages.EN) && messages.EN.length > 0) {
                 msg = messages.EN[randomInt(0, messages.EN.length - 1)];
-                // console.log('Trader speaks EN', msg);
-            } else if (
-                langs.length > 0 &&
-                Array.isArray(messages[langs[0]]) &&
-                messages[langs[0]].length > 0
-            ) {
-                // fallback to any available language
-                msg = messages[langs[0]][randomInt(0, messages[langs[0]].length - 1)];
-                console.log('Fallback to', langs[0], msg);
-            } else {
-                msg = '';
-                console.warn('No messages available for trader', currentTrader, type);
+                console.log('Selected EN message:', msg);
+                return msg;
             }
-        }
-        return msg;
-    }
 
-    // Generate messages for current trader
+            // Try to find a message in any available language
+            for (const lang of ['CHIK', 'LAY', 'EN', ...langs]) {
+                if (messages[lang] && Array.isArray(messages[lang]) && messages[lang].length > 0) {
+                    msg = messages[lang][randomInt(0, messages[lang].length - 1)];
+                    console.log(`Selected ${lang} message:`, msg);
+                    return msg;
+                }
+            }
+
+            console.warn('No suitable message found for trader', currentTrader, 'type', type);
+            return '';
+        },
+        [currentTrader, traderMessages, statusEffects]
+    );
+
+    // Handle trader messages when in travel or when arriving
     useEffect(() => {
-        // Show goodbye message when leaving a trader (before travel starts)
         if (inTravel) {
             const goodbyeMessage = pickTraderMessage('goodbyes');
             if (goodbyeMessage) {
@@ -676,19 +706,9 @@ export const MarketplaceProvider = ({ children }) => {
                 setTraderMessageTimeout(setTimeout(() => setTraderMessage(null), 3000));
             }
         } else {
-            // Not in travel meaning player has arrived or its first load.
-            if (!traderMessages) {
-                setTraderMessages(traderMessagesData.traderMessages);
-            }
-        }
-    }, [inTravel, traderMessages]);
-
-    // Separate effect for greeting message to ensure traderMessages is set
-    useEffect(() => {
-        if (!inTravel && currentTrader && traderMessages) {
-            const greetingMessage = pickTraderMessage('greetings');
             if (traderMessageTimeout) clearTimeout(traderMessageTimeout);
-            setTraderMessage(greetingMessage);
+            setTraderMessage(null);
+            // console.log(traderMessage);
             setTraderMessageTimeout(setTimeout(() => setTraderMessage(null), 4200));
         }
     }, [currentTrader, traderMessages, inTravel]);

@@ -33,7 +33,6 @@ const TraderNav = () => {
         traderMessage,
         traderMessages,
         statusEffects,
-        traderMessageTimeout,
         nextGalaxyName,
         nextGalaxyWar,
         shieldActive,
@@ -299,7 +298,7 @@ const TraderNav = () => {
 
         // Always travel to the selected galaxy
         travelToGalaxy(tradersData.traders[nextIdx].homeGalaxy);
-        
+
         // Show map preview if UI level is high enough
         if (improvedUILevel >= 50) {
             setShowMap(true);
@@ -348,11 +347,7 @@ const TraderNav = () => {
                     )}
                 </div>
 
-                <div
-                    className="trader-card"
-                    onMouseEnter={() => !inTravel && setShowTraderInfo(true)}
-                    onMouseLeave={() => setShowTraderInfo(false)}
-                >
+                <div className="trader-card">
                     {inTravel ? (
                         <>
                             <div className="signal-animation">
@@ -361,42 +356,59 @@ const TraderNav = () => {
                                     onClose={() => setShowMap(false)}
                                 />
                             </div>
-                            <TraderMessage
-                                messageText={traderMessage}
-                                traderMessages={traderMessages}
-                                lastTrader={currentTrader}
-                                statusEffects={statusEffects}
-                                improvedUILevel={improvedUILevel}
-                                traderMessageTimeout={traderMessageTimeout}
-                            />
+                            <div className="traveling-message">
+                                <TraderMessage
+                                    key={`goodbye-${currentTrader}`} // Force re-render with new trader
+                                    messageText={traderMessage}
+                                    traderMessages={traderMessages}
+                                    lastTrader={currentTrader} // This is a goodbye message
+                                    statusEffects={statusEffects}
+                                    improvedUILevel={improvedUILevel}
+                                />
+                            </div>
                         </>
                     ) : (
                         imgSrc && (
-                            <div
-                                className="trader-image"
-                                style={{ backgroundImage: `url(${imgSrc})` }}
-                            >
-                                <div className="trader-name">{traderData?.name}</div>
-                                <TraderMessage
-                                    messageText={traderMessage}
-                                    traderMessages={traderMessages}
-                                    currentTrader={currentTrader}
-                                    statusEffects={statusEffects}
-                                    improvedUILevel={improvedUILevel}
-                                    traderMessageTimeout={traderMessageTimeout}
-                                />
+                            <div className="trader-image-container">
+                                <div
+                                    className="trader-image"
+                                    style={{ backgroundImage: `url(${imgSrc})` }}
+                                >
+                                    <div className="trader-name">{traderData?.name}</div>
+                                    <TraderMessage
+                                        messageText={traderMessage}
+                                        traderMessages={traderMessages}
+                                        currentTrader={currentTrader} // This is a greeting message
+                                        statusEffects={statusEffects}
+                                        improvedUILevel={improvedUILevel}
+                                    />
+                                </div>
                             </div>
                         )
                     )}
-                    <div className={`trader-info-container ${showTraderInfo ? 'active' : ''}`}>
-                        <TraderInfo trader={traderData} improvedUILevel={improvedUILevel} />
-                    </div>
+
+                    {!inTravel && traderData && (
+                        <div
+                            className="trader-info-trigger"
+                            onMouseEnter={() => setShowTraderInfo(true)}
+                            onMouseLeave={() => setShowTraderInfo(false)}
+                        >
+                            <svg className="info-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                            </svg>
+                        </div>
+                    )}
 
                     <div className="trader-count">
                         Trader {traderIndex + 1} of {TRADER_COUNT}
                         {improvedUILevel >= 25 && ` - ${traderData?.name}`}
                     </div>
 
+                    {showTraderInfo && traderData && (
+                        <div className="trader-info-container">
+                            <TraderInfo trader={traderData} improvedUILevel={improvedUILevel} />
+                        </div>
+                    )}
                     <div className="status-card">
                         <button
                             className={`shield-button${shieldActive ? ' active' : ''}`}

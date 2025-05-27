@@ -1,12 +1,129 @@
+/* Mixins for UI Tiers */
+@import '../App.scss';
+
 // Base styles
+.trader-card {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.trader-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.trader-info-trigger {
+    position: absolute;
+    top: 0.25rem;
+    z-index: 10;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.69);
+
+    &:hover {
+        transform: scale(1.5);
+        background: rgba(0, 0, 0, 0.8);
+
+        .info-icon {
+            fill: $gold;
+            filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.7));
+        }
+    }
+
+    .info-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        fill: rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+    }
+}
+
+.trader-image {
+    margin: 0 auto;
+    animation: trader-image-eyelid 0.5s ease-in-out forwards;
+    background-size: cover;
+    border-radius: 50%;
+    border: inset 0.13374269rem $gold;
+    min-width: 20rem;
+    min-height: 20rem;
+    max-height: 25rem;
+    max-width: 25rem;
+    display: block;
+    position: relative;
+
+    @media (max-width: $breakpoint-desktop) {
+        max-height: 10rem;
+        max-width: 10rem;
+        min-height: 10rem;
+        min-width: 10rem;
+    }
+}
+
+.trader-name {
+    position: absolute;
+    background: rgba(79, 46, 0, 1);
+    bottom: 0;
+    border-radius: 0px 0px 2.5rem 2.5rem;
+    border: 1px solid $gold;
+    box-shadow: 2px 5px 10px rgba(37, 22, 0, 0.6942);
+    left: 50%;
+    min-width: 7rem;
+    padding: 0.1rem 0.1rem 0.4rem 0.1rem;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 50%;
+}
+
 .trader-info-container {
     position: absolute;
-    top: -50rem;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: all 0.3s ease;
-    z-index: 1001;
+    top: 5vh;
+    margin-top: 0.5rem;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid $gold;
+    border-radius: 4px;
+    padding: 1rem;
+    min-width: 280px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    transform-origin: top;
+    animation: fadeIn 0.2s ease-out;
 
+    &::before {
+        content: '';
+        position: absolute;
+        top: -0.5rem;
+        left: 50%;
+        width: 1rem;
+        height: 1rem;
+        background: rgba(0, 0, 0, 0.95);
+        border-top: 1px solid $gold;
+        border-left: 1px solid $gold;
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.trader-info-container {
     .trader-info {
         padding: 1.25rem;
         background-color: rgba(20, 20, 30, 0.8);

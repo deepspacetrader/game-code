@@ -4,102 +4,131 @@ import traders from '../data/traders.json';
 const TraderMessage = ({
     lastTrader,
     messageText,
-    traderMessages,
+    traderMessages = [],
     currentTrader,
-    statusEffects,
-    improvedUILevel,
+    statusEffects = {},
+    improvedUILevel = 0,
 }) => {
+    const [currentMessage, setCurrentMessage] = useState('');
     const [visible, setVisible] = useState(false);
-    const [clickedClose, setClickedClose] = useState(false);
+    const [tierClass, setTierClass] = useState('tier-low');
 
+    // Update tier class based on UI level
     useEffect(() => {
-        if (!messageText || !traderMessages || !currentTrader) {
+        if (improvedUILevel >= 100) {
+            setTierClass('tier-elite');
+        } else if (improvedUILevel >= 75) {
+            setTierClass('tier-ultra');
+        } else if (improvedUILevel >= 25) {
+            setTierClass('tier-medium');
+        } else {
+            setTierClass('tier-low');
+        }
+    }, [improvedUILevel]);
+
+    // Update message when dependencies change
+    useEffect(() => {
+        if (!traderMessages || traderMessages.length === 0) {
             setVisible(false);
             return;
         }
+
+        // Use currentTrader if available, otherwise use lastTrader
+        const traderId = currentTrader || lastTrader;
+        if (!traderId) {
+            setVisible(false);
+            return;
+        }
+
         // Get trader config (known languages) by traderId
-        const traderConfig = traders.traders.find((t) => t.traderId === currentTrader);
+        const traderConfig = traders.traders.find((t) => t.traderId === traderId);
         if (!traderConfig) {
             setVisible(false);
             return;
         }
 
         // Find the trader message entry by traderId
-        const traderMsg = traderMessages.find((tm) => tm.traderId === currentTrader);
+        const traderMsg = traderMessages.find((tm) => tm.traderId === traderId);
         if (!traderMsg) {
             setVisible(false);
             return;
         }
+
         const greetings = traderMsg.greetings || {};
         const goodbyes = traderMsg.goodbyes || {};
 
-        // Get the trader's known languages
-        const availableLangs = traderConfig.languageRange || [];
-        // Randomly select a language from that range
+        // Check if player has any translators
+        const hasCHIK = statusEffects['Auto Translator CHIK']?.active || false;
+        const hasLAY = statusEffects['Auto Translator LAY']?.active || false;
 
-        // If player has translator for selected language, show English instead
-        const hasCHIK = statusEffects['Auto Translator CHIK']?.active;
-        const hasLAY = statusEffects['Auto Translator LAY']?.active;
+        // Determine if this is a goodbye message (lastTrader is set) or greeting (currentTrader is set)
+        const isGoodbye = !!lastTrader && !currentTrader;
+        const messages = isGoodbye ? goodbyes : greetings;
 
-        // Exclude 'EN' from random selection, but keep it in the data for translation
-        const randomizableLangs = availableLangs.filter((l) => l !== 'EN');
-        let lang =
-            randomizableLangs.length > 0
-                ? randomizableLangs[Math.floor(Math.random() * randomizableLangs.length)]
-                : availableLangs.includes('EN')
-                ? 'EN'
-                : availableLangs[0] || '';
-        let originalLang = lang;
-        let displayLang = lang;
-
-        // Unify language translation logic for both greetings and goodbyes
-        const allLangs = new Set([...Object.keys(greetings || {}), ...Object.keys(goodbyes || {})]);
-        if (allLangs.has('CHIK') || allLangs.has('LAY')) {
-            if ((lang === 'CHIK' && hasCHIK) || (lang === 'LAY' && hasLAY)) {
-                displayLang = 'EN'; // Show EN translation
-                console.log('Translating to EN due to translator, originalLang:', originalLang);
+        // If we have a specific message to show, use that
+        if (messageText) {
+            // Try to find the message in any language
+            for (const lang of Object.values(messages)) {
+                if (lang === messageText) {
+                    setCurrentMessage(messageText);
+                    setVisible(true);
+                    return;
+                }
             }
         }
 
-        // Get the message array in the selected language (displayLang)
-        // Use greetings or goodbyes depending on which contains the messageText
-        let messageArr = greetings[displayLang];
-        if (!messageArr || !messageArr.includes(messageText)) {
-            messageArr = goodbyes[displayLang];
-        }
+        // Otherwise, select a random message in the trader's language
+        const messageKeys = Object.keys(messages);
+        if (messageKeys.length > 0) {
+            const randomKey = messageKeys[Math.floor(Math.random() * messageKeys.length)];
+            let selectedMessage = messages[randomKey];
 
-        // Find the index of our current message in the array
-        const messageIndex = messageArr ? messageArr.indexOf(messageText) : -1;
-        if (messageIndex !== -1 && !clickedClose) {
+            // If player has a translator for this language, show the English version if available
+            if (
+                ((randomKey === 'CHIK' && hasCHIK) || (randomKey === 'LAY' && hasLAY)) &&
+                messages['EN']
+            ) {
+                selectedMessage = messages['EN'];
+            }
+
+            console.log('Selected message:', selectedMessage);
+            setCurrentMessage(selectedMessage);
             setVisible(true);
-        } else {
-            setVisible(false);
         }
-    }, [messageText, traderMessages, currentTrader, statusEffects, clickedClose]);
+    }, [currentTrader, lastTrader, messageText, statusEffects, traderMessages]);
 
+    // Auto-hide after 5 seconds
     useEffect(() => {
-        if (clickedClose) {
-            setVisible(false);
-            setClickedClose(true);
+        if (visible) {
+            const timer = setTimeout(() => {
+                console.log('Auto-hiding message');
+                setVisible(false);
+            }, 5000);
+            return () => clearTimeout(timer);
         }
-    }, [clickedClose]);
+    }, [visible]);
 
-    // determine tier style
-    let tierClass = 'tier-low';
-    if (improvedUILevel >= 25) tierClass = 'tier-medium';
-    if (improvedUILevel >= 75) tierClass = 'tier-high';
-    if (improvedUILevel >= 50) tierClass = 'tier-ultra';
-    if (improvedUILevel >= 100) tierClass = 'tier-elite';
+    if (!visible || !currentMessage) return null;
 
     return (
-        !clickedClose && (
-            <div
-                className={`trader-message ${lastTrader ? 'goodbye' : 'greeting'}  ${tierClass}`}
-                onClick={() => setClickedClose(true)}
-            >
-                <p>{messageText}</p>
-            </div>
-        )
+        <div
+            className={`trader-message ${tierClass}`}
+            style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                color: '#fff',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                cursor: 'pointer',
+                padding: '10px',
+                borderRadius: '5px',
+                margin: '10px',
+                maxWidth: '300px',
+                textAlign: 'center',
+            }}
+            onClick={() => setVisible(false)}
+        >
+            <div className="message-content">{currentMessage}</div>
+        </div>
     );
 };
+
 export default TraderMessage;
