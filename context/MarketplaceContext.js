@@ -810,7 +810,7 @@ export const MarketplaceProvider = ({ children }) => {
     }, [traders, traderIds]);
 
     // ----- NEXT TRADER -----
-    const handleNextTrader = () => {
+    const handleNextTrader = useCallback(() => {
         const currentIdx = traderIds.findIndex((tid) => tid === currentTrader);
         const nextIdx = (currentIdx + 1) % traderIds.length;
         const nextTraderId = traderIds[nextIdx];
@@ -872,10 +872,10 @@ export const MarketplaceProvider = ({ children }) => {
             0, // Tremolo
             0 // Filter
         );
-    };
+    });
 
     // ----- PREVIOUS TRADER -----
-    const handlePrevTrader = () => {
+    const handlePrevTrader = useCallback(() => {
         const currentIdx = traderIds.findIndex((tid) => tid === currentTrader);
         const prevIdx = (currentIdx - 1 + traderIds.length) % traderIds.length;
         const prevTraderId = traderIds[prevIdx];
@@ -938,285 +938,317 @@ export const MarketplaceProvider = ({ children }) => {
             0, // Tremolo
             0 // Filter
         );
-    };
+    });
 
     // ----- BUY SINGLE -----
-    const handleBuyClick = (identifier) => {
-        // Determine the trader index in the traders array based on traderIds
-        const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
-        if (inTravel) {
-            const receiver = statusEffects['tool_receiver'];
-            if (!receiver?.active) {
-                addFloatingMessage('Requires Particle Beam Receiver to buy during travel');
-                return false;
+    const handleBuyClick = useCallback(
+        (identifier) => {
+            // Determine the trader index in the traders array based on traderIds
+            const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
+            if (inTravel) {
+                const receiver = statusEffects['tool_receiver'];
+                if (!receiver?.active) {
+                    addFloatingMessage('Requires Particle Beam Receiver to buy during travel');
+                    return false;
+                }
             }
-        }
 
-        // If identifier is a cell object, use it directly
-        let cell, idx;
-        if (typeof identifier === 'object' && identifier !== null) {
-            cell = identifier;
-            const list = traders[traderIdx] || [];
-            idx = list.findIndex((c) => c && c.itemId === cell.itemId);
-        } else {
-            // Handle legacy case where identifier is index or name/itemId
-            const list = traders[traderIdx] || [];
-            if (typeof identifier === 'number' && Number.isInteger(identifier)) {
-                idx = identifier;
-                cell = list[idx];
+            // If identifier is a cell object, use it directly
+            let cell, idx;
+            if (typeof identifier === 'object' && identifier !== null) {
+                cell = identifier;
+                const list = traders[traderIdx] || [];
+                idx = list.findIndex((c) => c && c.itemId === cell.itemId);
             } else {
-                // match by itemId or name
-                idx = list.findIndex(
-                    (c) => c && (c.itemId === identifier || c.name === identifier)
-                );
-                cell = list[idx];
+                // Handle legacy case where identifier is index or name/itemId
+                const list = traders[traderIdx] || [];
+                if (typeof identifier === 'number' && Number.isInteger(identifier)) {
+                    idx = identifier;
+                    cell = list[idx];
+                } else {
+                    // match by itemId or name
+                    idx = list.findIndex(
+                        (c) => c && (c.itemId === identifier || c.name === identifier)
+                    );
+                    cell = list[idx];
+                }
             }
-        }
-        if (!cell) return false;
-        // Check stock level and prevent purchase if out of stock
-        if (!cell || cell.stock <= 0) {
-            addFloatingMessage('Out of stock');
-            console.log('Purchase failed: Out of stock', { item: cell?.name, stock: cell?.stock });
-            return false;
-        }
-        const name = cell.name;
-        const price = cell.price;
-
-        if (credits < price) {
-            // insufficient credits for standard purchase
-            const nextFail = insufficientCreditFails + 1;
-            setInsufficientCreditFails(nextFail);
-            const variants = [
-                'ERROR!',
-                'ERROR INSUFFICIENT CREDITS',
-                'E R R O R - NOT ENOUGH CREDITS',
-            ];
-            addFloatingMessage(variants[(nextFail - 1) % variants.length]);
-            return false;
-        }
-        // deduct immediate
-        setCredits((c) => c - price);
-        // Update stock in a single atomic operation
-        setTraders((ts) =>
-            ts.map((g, i) =>
-                i === traderIdx
-                    ? g.map((c, j) =>
-                          j === idx
-                              ? {
-                                    ...c,
-                                    stock: Math.max(0, c.stock - 1), // Ensure stock never goes below 0
-                                }
-                              : c
-                      )
-                    : g
-            )
-        );
-
-        // If we just bought the last item, update the display
-        if (cell.stock === 1) {
-            addFloatingMessage('Last one sold out!', 'global');
-            // Force a re-render to update the UI immediately
-            setTraders((prevTraders) => [...prevTraders]);
-        }
-        // reset fail counter on successful buy
-        setInsufficientCreditFails(0);
-        // update purchase history
-        setPurchaseHistory((ph) => ({
-            ...ph,
-            [name]: [...(ph[name] || []), price],
-        }));
-        // schedule delivery based on item deliveryTime and courierDrones
-        const itemData = items.find((i) => i.name === name);
-        const rawTime = (itemData?.deliveryTime || 0) * 1000;
-        const deliverTime = rawTime / (1 + courierDrones);
-        const timeSound = deliverTime / 1000;
-        const timeSoundHalf = timeSound / 2;
-        setDeliveryQueue((q) => {
-            const newQ = [
-                ...q,
-                {
-                    id: Date.now() + Math.random(),
-                    name,
-                    quantity: 1,
-                    price,
-                    timeLeft: deliverTime,
-                    totalTime: deliverTime,
-                },
-            ];
-            return newQ;
-        });
-
-        // console.log('deliver now.!');
-        // DELIVERY SOUND (switches halfway)
-        zzfx(
-            volumeRef.current, //Volume
-            420, //Randomness
-            5, //Freq
-            0, //Attack
-            0, //Sustain
-            timeSound, //Release
-            2, //Wave Shape (0,1,2,3,4)
-            1.337, //Shape curve
-            0.69, //Slide
-            0.47, //Delta Slide
-            750, //Pitch Jump
-            timeSoundHalf, //Pitch Jump Time
-            0, //Repeat Time
-            0.1337, //Noise
-            105, //Modulation
-            0.015, //Bit Crush
-            0, //Delay
-            0.025, //Sustain Volume
-            0, //Decay
-            0, //Tremolo
-            0 // Filter
-        );
-
-        setTradeHistory((h) => [
-            ...h,
-            { time: Date.now(), type: 'buy', name, quantity: 1, price, profit: -price },
-        ]);
-        setPurchaseHistory((ph) => ({ ...ph, [name]: [...(ph[name] || []), price] }));
-
-        // Buy Sound
-        let buySoundChange = randomFloatRange(22, 25);
-        console.log(buySoundChange.toFixed(2));
-        zzfx(
-            volumeRef.current, // Volume
-            69, // Randomness
-            13.37, //Freq
-            0.02, //Attack
-            0, //Sustain
-            0.01, // Release
-            0, //  Wave Shape (0,1,2,3,4)
-            buySoundChange.toFixed(2) * 1.25, // Shape curve
-            buySoundChange.toFixed(2), //  Slide
-            0, // Delta Slide
-            475, // Pitch Jump
-            0.01, // Pitch Jump Time
-            buySoundChange.toFixed(2), // Repeat Time
-            0.5, // Noise
-            0, // Modulation
-            0, // Bit Crush
-            0, // Delay
-            1, // Sustain Volume
-            0, // Decay
-            0, // Tremolo
-            0 // Filter
-        );
-        return true;
-    };
-
-    // ----- SELL SINGLE -----
-    const handleSellClick = (identifier) => {
-        // Determine the trader index in the traders array based on traderIds
-        const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
-
-        // If identifier is a cell object, use it directly
-        let cell, idx;
-        if (typeof identifier === 'object' && identifier !== null) {
-            cell = identifier;
-            const list = traders[traderIdx] || [];
-            idx = list.findIndex((c) => c && c.itemId === cell.itemId);
-        } else {
-            // Handle legacy case where identifier is index or name
-            const list = traders[traderIdx] || [];
-            if (typeof identifier === 'number' && Number.isInteger(identifier)) {
-                idx = identifier;
-                cell = list[idx];
-            } else if (typeof identifier === 'string') {
-                // match by name
-                idx = list.findIndex((c) => c && c.name === identifier);
-                cell = list[idx];
-            }
-        }
-
-        if (!cell) return false;
-        const itemName = cell.name;
-        // max 4 Quantum Processors: trader won't buy more
-        if (itemName === 'Quantum Processor' && cell.stock >= 4) {
-            addFloatingMessage('Trader cannot hold more Quantum Processors');
-            return false;
-        }
-        // Disable selling during travel if not allowed or no Particle Beam Reverter
-        if (inTravel) {
-            const itemDef = items.find((i) => i.name === cell.name);
-            if (!itemDef.travelSell) {
-                addFloatingMessage('Cannot sell during travel');
+            if (!cell) return false;
+            // Check stock level and prevent purchase if out of stock
+            if (!cell || cell.stock <= 0) {
+                addFloatingMessage('Out of stock');
+                console.log('Purchase failed: Out of stock', {
+                    item: cell?.name,
+                    stock: cell?.stock,
+                });
                 return false;
             }
-            if (!statusEffects['tool_reverter']) {
-                addFloatingMessage('Requires Particle Beam Reverter to sell during travel');
+            const name = cell.name;
+            const price = cell.price;
+
+            if (credits < price) {
+                // insufficient credits for standard purchase
+                const nextFail = insufficientCreditFails + 1;
+                setInsufficientCreditFails(nextFail);
+                const variants = [
+                    'ERROR!',
+                    'ERROR INSUFFICIENT CREDITS',
+                    'E R R O R - NOT ENOUGH CREDITS',
+                ];
+                addFloatingMessage(variants[(nextFail - 1) % variants.length]);
                 return false;
             }
-        }
-        const sale = cell.price;
-        const inventoryItem = inventory.find((i) => i.name === itemName);
-        if (!inventoryItem) return;
-        setCredits((c) => c + sale);
-        // Sell Sound
-        zzfx(volumeRef.current, 0, 150, 0.05, 0, 0.05, 0, 1.3, 0, 0, 0, 0, 0, 3);
-        addFloatingMessage(`Sold ${itemName} (+${sale})`, 'global');
-        addFloatingMessage(`+${sale}`, 'credits');
-        setInventory((prev) =>
-            prev
-                .map((i) => (i.name === itemName ? { ...i, quantity: i.quantity - 1 } : i))
-                .filter((i) => i.quantity > 0)
-        );
-        const newT = [...traders];
-        const g = newT[traderIdx] || [];
-        g[idx] = {
-            ...g[idx],
-            name: itemName,
-            price: sale,
-            stock: (g[idx]?.stock || 0) + 1,
-            itemId: cell.itemId, // Preserve the itemId
-        };
-        newT[traderIdx] = g;
-        setTraders(newT);
-        // Get purchase history for this item
-        const historyArr = [...(purchaseHistory[itemName] || [])];
+            // deduct immediate
+            setCredits((c) => c - price);
+            // Update stock in a single atomic operation
+            setTraders((ts) =>
+                ts.map((g, i) =>
+                    i === traderIdx
+                        ? g.map((c, j) =>
+                              j === idx
+                                  ? {
+                                        ...c,
+                                        stock: Math.max(0, c.stock - 1), // Ensure stock never goes below 0
+                                    }
+                                  : c
+                          )
+                        : g
+                )
+            );
 
-        // Calculate average cost based on remaining items in inventory
-        const remainingItems = (inventory.find((i) => i.name === itemName)?.quantity || 1) - 1;
-        const purchasePrice = historyArr.length > 0 ? historyArr.shift() : sale; // Remove oldest purchase
-        const profit = +(sale - purchasePrice).toFixed(2);
-
-        // Update purchase history by removing the sold item's purchase record
-        if (historyArr.length > 0) {
+            // If we just bought the last item, update the display
+            if (cell.stock === 1) {
+                addFloatingMessage('Last one sold out!', 'global');
+                // Force a re-render to update the UI immediately
+                setTraders((prevTraders) => [...prevTraders]);
+            }
+            // reset fail counter on successful buy
+            setInsufficientCreditFails(0);
+            // update purchase history
             setPurchaseHistory((ph) => ({
                 ...ph,
-                [itemName]: historyArr,
+                [name]: [...(ph[name] || []), price],
             }));
-        } else {
-            // Remove the item from purchase history if no more items left
-            setPurchaseHistory(({ [itemName]: _, ...rest }) => rest);
-        }
+            // schedule delivery based on item deliveryTime and courierDrones
+            const itemData = items.find((i) => i.name === name);
+            const rawTime = (itemData?.deliveryTime || 0) * 1000;
+            const deliverTime = rawTime / (1 + courierDrones);
+            const timeSound = deliverTime / 1000;
+            const timeSoundHalf = timeSound / 2;
+            setDeliveryQueue((q) => {
+                const newQ = [
+                    ...q,
+                    {
+                        id: Date.now() + Math.random(),
+                        name,
+                        quantity: 1,
+                        price,
+                        timeLeft: deliverTime,
+                        totalTime: deliverTime,
+                    },
+                ];
+                return newQ;
+            });
 
-        // Record sell event with detailed profit information
-        setTradeHistory((h) => [
-            ...h,
-            {
-                time: Date.now(),
-                type: 'sell',
+            // console.log('deliver now.!');
+            // DELIVERY SOUND (switches halfway)
+            zzfx(
+                volumeRef.current, //Volume
+                420, //Randomness
+                5, //Freq
+                0, //Attack
+                0, //Sustain
+                timeSound, //Release
+                2, //Wave Shape (0,1,2,3,4)
+                1.337, //Shape curve
+                0.69, //Slide
+                0.47, //Delta Slide
+                750, //Pitch Jump
+                timeSoundHalf, //Pitch Jump Time
+                0, //Repeat Time
+                0.1337, //Noise
+                105, //Modulation
+                0.015, //Bit Crush
+                0, //Delay
+                0.025, //Sustain Volume
+                0, //Decay
+                0, //Tremolo
+                0 // Filter
+            );
+
+            setTradeHistory((h) => [
+                ...h,
+                { time: Date.now(), type: 'buy', name, quantity: 1, price, profit: -price },
+            ]);
+            setPurchaseHistory((ph) => ({ ...ph, [name]: [...(ph[name] || []), price] }));
+
+            // Buy Sound
+            let buySoundChange = randomFloatRange(22, 25);
+            console.log(buySoundChange.toFixed(2));
+            zzfx(
+                volumeRef.current, // Volume
+                69, // Randomness
+                13.37, //Freq
+                0.02, //Attack
+                0, //Sustain
+                0.01, // Release
+                0, //  Wave Shape (0,1,2,3,4)
+                buySoundChange.toFixed(2) * 1.25, // Shape curve
+                buySoundChange.toFixed(2), //  Slide
+                0, // Delta Slide
+                475, // Pitch Jump
+                0.01, // Pitch Jump Time
+                buySoundChange.toFixed(2), // Repeat Time
+                0.5, // Noise
+                0, // Modulation
+                0, // Bit Crush
+                0, // Delay
+                1, // Sustain Volume
+                0, // Decay
+                0, // Tremolo
+                0 // Filter
+            );
+            return true;
+        },
+        [
+            addFloatingMessage,
+            courierDrones,
+            credits,
+            currentTrader,
+            inTravel,
+            insufficientCreditFails,
+            items,
+            statusEffects,
+            traderIds,
+            traders,
+        ]
+    );
+
+    // ----- SELL SINGLE -----
+    const handleSellClick = useCallback(
+        (identifier) => {
+            // Determine the trader index in the traders array based on traderIds
+            const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
+
+            // If identifier is a cell object, use it directly
+            let cell, idx;
+            if (typeof identifier === 'object' && identifier !== null) {
+                cell = identifier;
+                const list = traders[traderIdx] || [];
+                idx = list.findIndex((c) => c && c.itemId === cell.itemId);
+            } else {
+                // Handle legacy case where identifier is index or name
+                const list = traders[traderIdx] || [];
+                if (typeof identifier === 'number' && Number.isInteger(identifier)) {
+                    idx = identifier;
+                    cell = list[idx];
+                } else if (typeof identifier === 'string') {
+                    // match by name
+                    idx = list.findIndex((c) => c && c.name === identifier);
+                    cell = list[idx];
+                }
+            }
+
+            if (!cell) return false;
+            const itemName = cell.name;
+            // max 4 Quantum Processors: trader won't buy more
+            if (itemName === 'Quantum Processor' && cell.stock >= 4) {
+                addFloatingMessage('Trader cannot hold more Quantum Processors');
+                return false;
+            }
+            // Disable selling during travel if not allowed or no Particle Beam Reverter
+            if (inTravel) {
+                const itemDef = items.find((i) => i.name === cell.name);
+                if (!itemDef.travelSell) {
+                    addFloatingMessage('Cannot sell during travel');
+                    return false;
+                }
+                if (!statusEffects['tool_reverter']) {
+                    addFloatingMessage('Requires Particle Beam Reverter to sell during travel');
+                    return false;
+                }
+            }
+            const sale = cell.price;
+            const inventoryItem = inventory.find((i) => i.name === itemName);
+            if (!inventoryItem) return;
+            setCredits((c) => c + sale);
+            // Sell Sound
+            zzfx(volumeRef.current, 0, 150, 0.05, 0, 0.05, 0, 1.3, 0, 0, 0, 0, 0, 3);
+            addFloatingMessage(`Sold ${itemName} (+${sale})`, 'global');
+            addFloatingMessage(`+${sale}`, 'credits');
+            setInventory((prev) =>
+                prev
+                    .map((i) => (i.name === itemName ? { ...i, quantity: i.quantity - 1 } : i))
+                    .filter((i) => i.quantity > 0)
+            );
+            const newT = [...traders];
+            const g = newT[traderIdx] || [];
+            g[idx] = {
+                ...g[idx],
                 name: itemName,
-                quantity: 1,
                 price: sale,
-                purchasePrice: purchasePrice,
-                profit,
-                remainingInInventory: remainingItems,
-                avgCost:
-                    historyArr.length > 0
-                        ? +(historyArr.reduce((a, v) => a + v, 0) / historyArr.length).toFixed(2)
-                        : 0,
-            },
-        ]);
-        return true;
-    };
+                stock: (g[idx]?.stock || 0) + 1,
+                itemId: cell.itemId, // Preserve the itemId
+            };
+            newT[traderIdx] = g;
+            setTraders(newT);
+            // Get purchase history for this item
+            const historyArr = [...(purchaseHistory[itemName] || [])];
+
+            // Calculate average cost based on remaining items in inventory
+            const remainingItems = (inventory.find((i) => i.name === itemName)?.quantity || 1) - 1;
+            const purchasePrice = historyArr.length > 0 ? historyArr.shift() : sale; // Remove oldest purchase
+            const profit = +(sale - purchasePrice).toFixed(2);
+
+            // Update purchase history by removing the sold item's purchase record
+            if (historyArr.length > 0) {
+                setPurchaseHistory((ph) => ({
+                    ...ph,
+                    [itemName]: historyArr,
+                }));
+            } else {
+                // Remove the item from purchase history if no more items left
+                setPurchaseHistory(({ [itemName]: _, ...rest }) => rest);
+            }
+
+            // Record sell event with detailed profit information
+            setTradeHistory((h) => [
+                ...h,
+                {
+                    time: Date.now(),
+                    type: 'sell',
+                    name: itemName,
+                    quantity: 1,
+                    price: sale,
+                    purchasePrice: purchasePrice,
+                    profit,
+                    remainingInInventory: remainingItems,
+                    avgCost:
+                        historyArr.length > 0
+                            ? +(historyArr.reduce((a, v) => a + v, 0) / historyArr.length).toFixed(
+                                  2
+                              )
+                            : 0,
+                },
+            ]);
+            return true;
+        },
+        [
+            addFloatingMessage,
+            currentTrader,
+            inTravel,
+            inventory,
+            items,
+            purchaseHistory,
+            statusEffects,
+            traderIds,
+            traders,
+        ]
+    );
 
     // ----- BUY ALL (Entire Market) -----
     // bulk buy: purchase all stock at once or nothing
-    const handleBuyAll = () => {
+    const handleBuyAll = useCallback(() => {
         if (inTravel) {
             const receiver = statusEffects['tool_receiver'];
             if (!receiver?.active) {
@@ -1268,496 +1300,527 @@ export const MarketplaceProvider = ({ children }) => {
         );
         addFloatingMessage('Bulk purchase completed', 'global');
         return true;
-    };
+    }, [
+        addFloatingMessage,
+        courierDrones,
+        credits,
+        currentTrader,
+        inTravel,
+        items,
+        statusEffects,
+        traderIds,
+        traders,
+    ]);
 
     // ----- SELL ALL -----
     // sell all quantity of an item
-    const handleSellAll = (name) => {
-        // Disable bulk selling during travel if not allowed or no Particle Beam Reverter
-        if (inTravel) {
-            const itemDef = items.find((i) => i.name === name);
-            if (!itemDef.travelSell) {
-                console.log('no travel sell for this item allowed');
-                addFloatingMessage('Cannot sell during travel', 'global');
+    const handleSellAll = useCallback(
+        (name) => {
+            // Disable bulk selling during travel if not allowed or no Particle Beam Reverter
+            if (inTravel) {
+                const itemDef = items.find((i) => i.name === name);
+                if (!itemDef.travelSell) {
+                    console.log('no travel sell for this item allowed');
+                    addFloatingMessage('Cannot sell during travel', 'global');
+                    return false;
+                }
+                const hasReverter = Object.entries(statusEffects).some(
+                    ([key, effect]) =>
+                        effect.name === 'Particle Beam Reverter' && effect.expiresAt > Date.now()
+                );
+                if (!hasReverter) {
+                    addFloatingMessage('Requires Particle Beam Reverter to sell during travel');
+                    console.log('no reverter installed');
+                    return false;
+                }
+            }
+            const invItem = inventory.find((i) => i.name === name);
+            if (!invItem) return;
+            const qty = invItem.quantity;
+            // Determine trader index based on currentTrader id
+            const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
+            const list = traders[traderIdx] || [];
+            const idx = list.findIndex((c) => c && c.name === name);
+            const cell = list[idx];
+            if (!cell) return;
+            // trader capacity for Quantum Processors
+            if (name === 'Quantum Processor' && cell.stock >= 4) {
+                addFloatingMessage('Trader cannot hold more Quantum Processors');
                 return false;
             }
-            const hasReverter = Object.entries(statusEffects).some(
-                ([key, effect]) =>
-                    effect.name === 'Particle Beam Reverter' && effect.expiresAt > Date.now()
+            const sale = cell.price;
+            setCredits((c) => c + sale * qty);
+            addFloatingMessage(`Sold All ${name} (+${sale * qty})`, 'global');
+            addFloatingMessage(`+${sale * qty}`, 'credits');
+            // record single combined sell event with profit
+            const historyArr = purchaseHistory[name] || [];
+            const avgCost = historyArr.length
+                ? historyArr.reduce((a, v) => a + v, 0) / historyArr.length
+                : sale;
+            const totalProfit = +(sale * qty - avgCost * qty).toFixed(2);
+            setTradeHistory((h) => [
+                ...h,
+                {
+                    time: Date.now(),
+                    type: 'sell',
+                    name,
+                    quantity: qty,
+                    price: sale,
+                    profit: totalProfit,
+                },
+            ]);
+
+            // remove from inventory
+            setInventory((prev) => prev.filter((i) => i.name !== name));
+
+            // Clear purchase history for this item since we've sold all of it
+            setPurchaseHistory((ph) => {
+                const newPh = { ...ph };
+                delete newPh[name];
+                return newPh;
+            });
+
+            // restore stock to trader, but don't exceed maximum capacity
+            setTraders((ts) =>
+                ts.map((g, i) =>
+                    i === traderIdx
+                        ? g.map((c, j) => {
+                              if (j !== idx) return c;
+                              const itemDef = items.find((item) => item.name === name);
+                              const maxStock = itemDef?.maxStock || 99; // Default to 99 if no maxStock defined
+                              const newStock = Math.min(maxStock, c.stock + qty);
+                              return { ...c, stock: newStock };
+                          })
+                        : g
+                )
             );
-            if (!hasReverter) {
-                addFloatingMessage('Requires Particle Beam Reverter to sell during travel');
-                console.log('no reverter installed');
-                return false;
+            if (totalProfit >= 0) {
+                // Volume, Randomness, Freq, Wav Shape, Shape, Attack, Decay, sustain, Release, Sustain Volume, Slide, Delta Slide, Pitch Jump, Pitch Jump Time, Repeat Time, Tremolo, Noise, Bitch Crush, Delay, Modulation, Filter
+
+                // SELL ALL (profit) sound
+                zzfx(
+                    volumeRef.current,
+                    0.05,
+                    60,
+                    0,
+                    0.02,
+                    0.23,
+                    4,
+                    1.6,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    19,
+                    0,
+                    0.41,
+                    0.96,
+                    0.18,
+                    0,
+                    235
+                );
+            } else {
+                // SELL ALL (loss) sound
+                zzfx(
+                    volumeRef.current,
+                    0.1,
+                    9220,
+                    0.01,
+                    0,
+                    0,
+                    0,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    9,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                );
             }
-        }
-        const invItem = inventory.find((i) => i.name === name);
-        if (!invItem) return;
-        const qty = invItem.quantity;
-        // Determine trader index based on currentTrader id
-        const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
-        const list = traders[traderIdx] || [];
-        const idx = list.findIndex((c) => c && c.name === name);
-        const cell = list[idx];
-        if (!cell) return;
-        // trader capacity for Quantum Processors
-        if (name === 'Quantum Processor' && cell.stock >= 4) {
-            addFloatingMessage('Trader cannot hold more Quantum Processors');
-            return false;
-        }
-        const sale = cell.price;
-        setCredits((c) => c + sale * qty);
-        addFloatingMessage(`Sold All ${name} (+${sale * qty})`, 'global');
-        addFloatingMessage(`+${sale * qty}`, 'credits');
-        // record single combined sell event with profit
-        const historyArr = purchaseHistory[name] || [];
-        const avgCost = historyArr.length
-            ? historyArr.reduce((a, v) => a + v, 0) / historyArr.length
-            : sale;
-        const totalProfit = +(sale * qty - avgCost * qty).toFixed(2);
-        setTradeHistory((h) => [
-            ...h,
-            {
-                time: Date.now(),
-                type: 'sell',
-                name,
-                quantity: qty,
-                price: sale,
-                profit: totalProfit,
-            },
-        ]);
-
-        // remove from inventory
-        setInventory((prev) => prev.filter((i) => i.name !== name));
-
-        // Clear purchase history for this item since we've sold all of it
-        setPurchaseHistory((ph) => {
-            const newPh = { ...ph };
-            delete newPh[name];
-            return newPh;
-        });
-
-        // restore stock to trader, but don't exceed maximum capacity
-        setTraders((ts) =>
-            ts.map((g, i) =>
-                i === traderIdx
-                    ? g.map((c, j) => {
-                          if (j !== idx) return c;
-                          const itemDef = items.find((item) => item.name === name);
-                          const maxStock = itemDef?.maxStock || 99; // Default to 99 if no maxStock defined
-                          const newStock = Math.min(maxStock, c.stock + qty);
-                          return { ...c, stock: newStock };
-                      })
-                    : g
-            )
-        );
-        if (totalProfit >= 0) {
-            // Volume, Randomness, Freq, Wav Shape, Shape, Attack, Decay, sustain, Release, Sustain Volume, Slide, Delta Slide, Pitch Jump, Pitch Jump Time, Repeat Time, Tremolo, Noise, Bitch Crush, Delay, Modulation, Filter
-
-            // SELL ALL (profit) sound
-            zzfx(
-                volumeRef.current,
-                0.05,
-                60,
-                0,
-                0.02,
-                0.23,
-                4,
-                1.6,
-                0,
-                4,
-                0,
-                0,
-                0,
-                0,
-                19,
-                0,
-                0.41,
-                0.96,
-                0.18,
-                0,
-                235
-            );
-        } else {
-            // SELL ALL (loss) sound
-            zzfx(
-                volumeRef.current,
-                0.1,
-                9220,
-                0.01,
-                0,
-                0,
-                0,
-                5,
-                0,
-                0,
-                0,
-                0,
-                9,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-            );
-        }
-    };
+        },
+        [
+            addFloatingMessage,
+            currentTrader,
+            inTravel,
+            inventory,
+            items,
+            purchaseHistory,
+            statusEffects,
+            traderIds,
+            traders,
+        ]
+    );
 
     // ----- USE ITEM -----
-    const handleUseItem = (name) => {
-        // Sound Use Item
-        // zzfx(volumeRef.current, 0, 20, .1337, .13, .25, 1, 13.37, 0, 0, 420, .1, 0, 0, 0, .6, 0, .81, .2, .16, 0); // Random 4
-        const item = inventory.find((i) => i.name === name);
-        if (!item || item.quantity <= 0) return;
+    const handleUseItem = useCallback(
+        (name) => {
+            // Sound Use Item
+            // zzfx(volumeRef.current, 0, 20, .1337, .13, .25, 1, 13.37, 0, 0, 420, .1, 0, 0, 0, .6, 0, .81, .2, .16, 0); // Random 4
+            const item = inventory.find((i) => i.name === name);
+            if (!item || item.quantity <= 0) return;
 
-        setInventory((prevInv) =>
-            prevInv
-                .map((i) => (i.name === name ? { ...i, quantity: i.quantity - 1 } : i))
-                .filter((i) => i.quantity > 0)
-        );
+            setInventory((prevInv) =>
+                prevInv
+                    .map((i) => (i.name === name ? { ...i, quantity: i.quantity - 1 } : i))
+                    .filter((i) => i.quantity > 0)
+            );
 
-        const itemDef = items.find((it) => it.name === name);
-        if (!itemDef || !itemDef.effects) return;
-        Object.entries(itemDef.effects).forEach(([effectKey, effectValue]) => {
-            const isAdd = effectKey.startsWith('+');
-            const isSub = effectKey.startsWith('-');
-            const type = effectKey.replace(/^\+|^\-/, '');
-            let value;
-            if (Array.isArray(effectValue)) {
-                const [min, max] = effectValue;
-                value = Math.floor(Math.random() * (max - min + 1)) + min;
-            } else if (typeof effectValue === 'string' && effectValue === 'true') {
-                value = true;
-            } else if (typeof effectValue === 'boolean') {
-                value = effectValue;
-            } else if (typeof effectValue === 'number') {
-                value = effectValue;
-            } else {
-                value = effectValue;
-            }
+            const itemDef = items.find((it) => it.name === name);
+            if (!itemDef || !itemDef.effects) return;
+            Object.entries(itemDef.effects).forEach(([effectKey, effectValue]) => {
+                const isAdd = effectKey.startsWith('+');
+                const isSub = effectKey.startsWith('-');
+                const type = effectKey.replace(/^\+|^\-/, '');
+                let value;
+                if (Array.isArray(effectValue)) {
+                    const [min, max] = effectValue;
+                    value = Math.floor(Math.random() * (max - min + 1)) + min;
+                } else if (typeof effectValue === 'string' && effectValue === 'true') {
+                    value = true;
+                } else if (typeof effectValue === 'boolean') {
+                    value = effectValue;
+                } else if (typeof effectValue === 'number') {
+                    value = effectValue;
+                } else {
+                    value = effectValue;
+                }
 
-            switch (type) {
-                case 'heal_player':
-                    setHealth((h) => Math.min(100, isAdd ? h + value : h - value));
-                    addFloatingMessage(
-                        `${isAdd ? '+' : '-'}${value} Health`,
-                        'global',
-                        'current_health'
-                    );
-                    zzfx(
-                        volumeRef.current,
-                        0.04,
-                        125,
-                        0.07,
-                        0.31,
-                        0.03,
-                        0,
-                        36,
-                        0,
-                        0,
-                        550,
-                        0.09,
-                        0.12,
-                        0.147,
-                        0.33,
-                        0.036,
-                        0.04,
-                        0.8,
-                        0.47,
-                        0,
-                        0
-                    ); // Random 19
-                    break;
+                switch (type) {
+                    case 'heal_player':
+                        setHealth((h) => Math.min(100, isAdd ? h + value : h - value));
+                        addFloatingMessage(
+                            `${isAdd ? '+' : '-'}${value} Health`,
+                            'global',
+                            'current_health'
+                        );
+                        zzfx(
+                            volumeRef.current,
+                            0.04,
+                            125,
+                            0.07,
+                            0.31,
+                            0.03,
+                            0,
+                            36,
+                            0,
+                            0,
+                            550,
+                            0.09,
+                            0.12,
+                            0.147,
+                            0.33,
+                            0.036,
+                            0.04,
+                            0.8,
+                            0.47,
+                            0,
+                            0
+                        ); // Random 19
+                        break;
 
-                case 'damage_player':
-                    // Implement as needed
-                    addFloatingMessage(
-                        `${isAdd ? '-' : '+'}${value} Damage Received`,
-                        'global',
-                        'current_health'
-                    );
-                    break;
+                    case 'damage_player':
+                        // Implement as needed
+                        addFloatingMessage(
+                            `${isAdd ? '-' : '+'}${value} Damage Received`,
+                            'global',
+                            'current_health'
+                        );
+                        break;
 
-                case 'fuel_amount':
-                    setFuel((f) => {
-                        const newFuel = isAdd ? parseFloat(f) + value : parseFloat(f) - value;
-                        return Math.max(0, Math.min(100, newFuel));
-                    });
-                    isAdd &&
+                    case 'fuel_amount':
+                        setFuel((f) => {
+                            const newFuel = isAdd ? parseFloat(f) + value : parseFloat(f) - value;
+                            return Math.max(0, Math.min(100, newFuel));
+                        });
+                        isAdd &&
+                            zzfx(
+                                volumeRef.current,
+                                0.05,
+                                60,
+                                0,
+                                0.02,
+                                0.23,
+                                4,
+                                1.6,
+                                -6,
+                                4,
+                                0,
+                                0,
+                                0,
+                                0,
+                                19,
+                                0,
+                                0.41,
+                                0.96,
+                                0.18,
+                                0,
+                                235
+                            );
+
+                        break;
+
+                    case 'fuel_cost':
+                        if (value !== 0) {
+                            addFloatingMessage(
+                                `Fuel cost reduced by ${Math.abs(value)} (${itemDef.name})`,
+                                'global',
+                                'fuel_cost'
+                            );
+                            // Calculate duration in ms (if itemDef.duration is an array, pick a random value in range)
+                            let durationMs = null;
+                            if (Array.isArray(itemDef.duration)) {
+                                // Pick a random value between min and max (inclusive), in seconds
+                                const [min, max] = itemDef.duration;
+                                const randomSeconds =
+                                    Math.floor(Math.random() * (max - min + 1)) + min;
+                                durationMs = randomSeconds * 1000;
+                            } else if (typeof itemDef.duration === 'number') {
+                                durationMs = itemDef.duration * 1000;
+                            }
+                            // Generate a unique key for this effect
+                            const effectKey = `${itemDef.name}-${Date.now()}`;
+                            setStatusEffects((prev) => ({
+                                ...prev,
+                                [effectKey]: {
+                                    type: 'fuel_cost',
+                                    value,
+                                    expiresAt: durationMs ? Date.now() + durationMs : null,
+                                    itemName: itemDef.name,
+                                    duration: durationMs,
+                                    remainingTime: durationMs,
+                                },
+                            }));
+                        }
+                        break;
+
+                    case 'credit_balance':
+                        setCredits((c) => (isAdd ? c + value : c - value));
+                        addFloatingMessage(`${isAdd ? '+' : '-'}${value} Credits!`, 'global');
                         zzfx(
                             volumeRef.current,
                             0.05,
-                            60,
+                            369,
                             0,
-                            0.02,
-                            0.23,
-                            4,
-                            1.6,
-                            -6,
-                            4,
-                            0,
-                            0,
-                            0,
-                            0,
-                            19,
-                            0,
-                            0.41,
-                            0.96,
+                            0.08,
                             0.18,
+                            1,
+                            0.7,
                             0,
-                            235
-                        );
+                            5,
+                            258,
+                            0.05,
+                            0.05,
+                            0,
+                            0,
+                            0.1,
+                            0,
+                            0.76,
+                            0.1337,
+                            0,
+                            -1337
+                        ); // Pickup 51 // Pickup 51
+                        break;
 
-                    break;
+                    case 'improved_UI':
+                        setImprovedUILevel((prevLevel) => {
+                            const safePrev =
+                                typeof prevLevel === 'number' && !isNaN(prevLevel) ? prevLevel : 0;
+                            const safeValue =
+                                typeof value === 'number' && !isNaN(value) ? value : 0;
+                            return safePrev + (isAdd ? safeValue : -safeValue);
+                        });
 
-                case 'fuel_cost':
-                    if (value !== 0) {
+                        zzfx(
+                            volumeRef.current,
+                            0.1,
+                            539,
+                            0,
+                            0.04,
+                            0.29,
+                            1,
+                            1.92,
+                            0.3,
+                            0.4,
+                            567,
+                            0.02,
+                            0.02,
+                            0,
+                            0,
+                            0,
+                            0.04
+                        ); // UI Level up
                         addFloatingMessage(
-                            `Fuel cost reduced by ${Math.abs(value)} (${itemDef.name})`,
+                            `UI Update! (+${Math.ceil(value)})`,
                             'global',
-                            'fuel_cost'
+                            'quantum-processor'
                         );
-                        // Calculate duration in ms (if itemDef.duration is an array, pick a random value in range)
+                        break;
+
+                    case 'delivery_speed':
+                        setCourierDrones((d) => {
+                            const newDrones = isAdd ? d + value : Math.max(0, d - value);
+                            return newDrones;
+                        });
+                        // Scale up small delivery speed values for better visibility
+                        const scaledValue = value * 100000; // Scale up by 100000x
+                        const displayValue = scaledValue.toFixed(1); // Show 1 decimal place
+                        addFloatingMessage(
+                            `${isAdd ? '+' : '-'}${displayValue}% Delivery Speed`,
+                            'global'
+                        );
+
+                        zzfx(
+                            volumeRef.current,
+                            0.05,
+                            302,
+                            0.01,
+                            0.04,
+                            0.2,
+                            1,
+                            1.4,
+                            3,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.09,
+                            0.88
+                        ); // Pickup 27
+
+                        break;
+
+                    case 'damage_enemy':
+                        // Implement as needed
+                        addFloatingMessage(
+                            `${isAdd ? '+' : '-'}${value} Damage to Enemy`,
+                            'global'
+                        );
+                        break;
+
+                    case 'escape_chance':
+                        setStealthActive(true);
+                        addFloatingMessage('Stealth Activated!', 'global', 'stealth-module');
+                        // Optionally set timeout for duration if needed
+                        break;
+
+                    case 'tool_receiver':
+                    case 'tool_reverter': {
+                        // Check for duration in itemDef
                         let durationMs = null;
                         if (Array.isArray(itemDef.duration)) {
-                            // Pick a random value between min and max (inclusive), in seconds
                             const [min, max] = itemDef.duration;
                             const randomSeconds = Math.floor(Math.random() * (max - min + 1)) + min;
                             durationMs = randomSeconds * 1000;
-                        } else if (typeof itemDef.duration === 'number') {
+                        } else if (typeof itemDef.duration === 'number' && itemDef.duration > 0) {
                             durationMs = itemDef.duration * 1000;
                         }
-                        // Generate a unique key for this effect
-                        const effectKey = `${itemDef.name}-${Date.now()}`;
                         setStatusEffects((prev) => ({
                             ...prev,
-                            [effectKey]: {
-                                type: 'fuel_cost',
-                                value,
-                                expiresAt: durationMs ? Date.now() + durationMs : null,
-                                itemName: itemDef.name,
-                                duration: durationMs,
-                                remainingTime: durationMs,
-                            },
+                            [type]: durationMs
+                                ? {
+                                      active: !!value,
+                                      expiresAt: Date.now() + durationMs,
+                                      duration: durationMs,
+                                      remainingTime: durationMs,
+                                      type,
+                                  }
+                                : { active: !!value, type },
                         }));
+                        addFloatingMessage(
+                            `${type.replace('_', ' ')} ${value ? 'Activated' : 'Deactivated'}`,
+                            'global'
+                        );
+                        break;
                     }
-                    break;
-
-                case 'credit_balance':
-                    setCredits((c) => (isAdd ? c + value : c - value));
-                    addFloatingMessage(`${isAdd ? '+' : '-'}${value} Credits!`, 'global');
-                    zzfx(
-                        volumeRef.current,
-                        0.05,
-                        369,
-                        0,
-                        0.08,
-                        0.18,
-                        1,
-                        0.7,
-                        0,
-                        5,
-                        258,
-                        0.05,
-                        0.05,
-                        0,
-                        0,
-                        0.1,
-                        0,
-                        0.76,
-                        0.1337,
-                        0,
-                        -1337
-                    ); // Pickup 51 // Pickup 51
-                    break;
-
-                case 'improved_UI':
-                    setImprovedUILevel((prevLevel) => {
-                        const safePrev =
-                            typeof prevLevel === 'number' && !isNaN(prevLevel) ? prevLevel : 0;
-                        const safeValue = typeof value === 'number' && !isNaN(value) ? value : 0;
-                        return safePrev + (isAdd ? safeValue : -safeValue);
-                    });
-
-                    zzfx(
-                        volumeRef.current,
-                        0.1,
-                        539,
-                        0,
-                        0.04,
-                        0.29,
-                        1,
-                        1.92,
-                        0.3,
-                        0.4,
-                        567,
-                        0.02,
-                        0.02,
-                        0,
-                        0,
-                        0,
-                        0.04
-                    ); // UI Level up
-                    addFloatingMessage(
-                        `UI Update! (+${Math.ceil(value)})`,
-                        'global',
-                        'quantum-processor'
-                    );
-                    break;
-
-                case 'delivery_speed':
-                    setCourierDrones((d) => {
-                        const newDrones = isAdd ? d + value : Math.max(0, d - value);
-                        return newDrones;
-                    });
-                    // Scale up small delivery speed values for better visibility
-                    const scaledValue = value * 100000; // Scale up by 100000x
-                    const displayValue = scaledValue.toFixed(1); // Show 1 decimal place
-                    addFloatingMessage(
-                        `${isAdd ? '+' : '-'}${displayValue}% Delivery Speed`,
-                        'global'
-                    );
-
-                    zzfx(
-                        volumeRef.current,
-                        0.05,
-                        302,
-                        0.01,
-                        0.04,
-                        0.2,
-                        1,
-                        1.4,
-                        3,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0.09,
-                        0.88
-                    ); // Pickup 27
-
-                    break;
-
-                case 'damage_enemy':
-                    // Implement as needed
-                    addFloatingMessage(`${isAdd ? '+' : '-'}${value} Damage to Enemy`, 'global');
-                    break;
-
-                case 'escape_chance':
-                    setStealthActive(true);
-                    addFloatingMessage('Stealth Activated!', 'global', 'stealth-module');
-                    // Optionally set timeout for duration if needed
-                    break;
-
-                case 'tool_receiver':
-                case 'tool_reverter': {
-                    // Check for duration in itemDef
-                    let durationMs = null;
-                    if (Array.isArray(itemDef.duration)) {
-                        const [min, max] = itemDef.duration;
-                        const randomSeconds = Math.floor(Math.random() * (max - min + 1)) + min;
-                        durationMs = randomSeconds * 1000;
-                    } else if (typeof itemDef.duration === 'number' && itemDef.duration > 0) {
-                        durationMs = itemDef.duration * 1000;
+                    case 'translate_CHIK':
+                    case 'translate_LAY': {
+                        let durationMs = null;
+                        if (Array.isArray(itemDef.duration)) {
+                            const [min, max] = itemDef.duration;
+                            const randomSeconds = Math.floor(Math.random() * (max - min + 1)) + min;
+                            durationMs = randomSeconds * 1000;
+                        } else if (typeof itemDef.duration === 'number' && itemDef.duration > 0) {
+                            durationMs = itemDef.duration * 1000;
+                        }
+                        setStatusEffects((prev) => ({
+                            ...prev,
+                            [type]: durationMs
+                                ? {
+                                      active: !!value,
+                                      expiresAt: Date.now() + durationMs,
+                                      duration: durationMs,
+                                      remainingTime: durationMs,
+                                      type,
+                                  }
+                                : { active: !!value, type },
+                        }));
+                        addFloatingMessage(
+                            `${type.replace('_', ' ')} ${value ? 'Enabled' : 'Disabled'}`,
+                            'global'
+                        );
+                        zzfx(
+                            volumeRef.current,
+                            0.05,
+                            303,
+                            0.01,
+                            0.47,
+                            0.23,
+                            0,
+                            4.5,
+                            5,
+                            70,
+                            -30,
+                            0.57,
+                            0.17,
+                            0,
+                            2.9,
+                            0,
+                            0,
+                            0.56,
+                            0.14,
+                            0.13,
+                            0
+                        ); // Random 16
+                        break;
                     }
-                    setStatusEffects((prev) => ({
-                        ...prev,
-                        [type]: durationMs
-                            ? {
-                                  active: !!value,
-                                  expiresAt: Date.now() + durationMs,
-                                  duration: durationMs,
-                                  remainingTime: durationMs,
-                                  type,
-                              }
-                            : { active: !!value, type },
-                    }));
-                    addFloatingMessage(
-                        `${type.replace('_', ' ')} ${value ? 'Activated' : 'Deactivated'}`,
-                        'global'
-                    );
-                    break;
+                    default:
+                        console.warn(`Unknown item effect type: ${type}`, effectKey, effectValue);
                 }
-                case 'translate_CHIK':
-                case 'translate_LAY': {
-                    let durationMs = null;
-                    if (Array.isArray(itemDef.duration)) {
-                        const [min, max] = itemDef.duration;
-                        const randomSeconds = Math.floor(Math.random() * (max - min + 1)) + min;
-                        durationMs = randomSeconds * 1000;
-                    } else if (typeof itemDef.duration === 'number' && itemDef.duration > 0) {
-                        durationMs = itemDef.duration * 1000;
-                    }
-                    setStatusEffects((prev) => ({
-                        ...prev,
-                        [type]: durationMs
-                            ? {
-                                  active: !!value,
-                                  expiresAt: Date.now() + durationMs,
-                                  duration: durationMs,
-                                  remainingTime: durationMs,
-                                  type,
-                              }
-                            : { active: !!value, type },
-                    }));
-                    addFloatingMessage(
-                        `${type.replace('_', ' ')} ${value ? 'Enabled' : 'Disabled'}`,
-                        'global'
-                    );
-                    zzfx(
-                        volumeRef.current,
-                        0.05,
-                        303,
-                        0.01,
-                        0.47,
-                        0.23,
-                        0,
-                        4.5,
-                        5,
-                        70,
-                        -30,
-                        0.57,
-                        0.17,
-                        0,
-                        2.9,
-                        0,
-                        0,
-                        0.56,
-                        0.14,
-                        0.13,
-                        0
-                    ); // Random 16
-                    break;
-                }
-                default:
-                    console.warn(`Unknown item effect type: ${type}`, effectKey, effectValue);
-            }
-        });
-    };
+            });
+        },
+        [addFloatingMessage, inventory, items, setCourierDrones, setImprovedUILevel]
+    );
 
     // ----- Toggle Shield -----
-    const toggleShield = () => {
+    const toggleShield = useCallback(() => {
         setShieldActive((s) => {
             const newS = !s;
             addFloatingMessage(`Shield ${newS ? 'Activated' : 'Deactivated'}`, 'global');
             return newS;
         });
-    };
+    }, [addFloatingMessage]);
 
     // ----- Toggle Stealth -----
-    const toggleStealth = () => {
+    const toggleStealth = useCallback(() => {
         setStealthActive((s) => {
             const newS = !s;
             addFloatingMessage(`Stealth ${newS ? 'Activated' : 'Deactivated'}`, 'global');
             return newS;
         });
-    };
+    }, [addFloatingMessage]);
 
     // Trigger a random market event immediately
     const triggerRandomMarketEvent = () => {
@@ -2302,191 +2365,6 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Create the context value object
     const value = useMemo(() => {
-        /*
-        This was the old broken useMemo code:
-
-        AI: take what you need / are missing from here to make the game work.
-
- // First value declaration removed to eliminate duplicate
-            
-            // Items and inventory
-            items,
-            fuelPrices,
-            
-            // Volume controls
-            volume,
-            volumeRef,
-            
-            // Actions
-            travelToGalaxy,
-            handleBuyClick,
-            handleSellClick,
-            handleSellAll,
-            handleSort,
-            buyFuel,
-            handleNextTrader,
-            handlePrevTrader,
-            toggleShield,
-            toggleStealth,
-            
-            // Quantum state
-            ...quantumState,
-            toggleQuantumAbilities,
-            
-            // Admin overrides
-            setQuantumSlotsUsed,
-            setHealth,
-            
-            // Debug helpers
-            addQuantumProcessors,
-            resetQuantumProcessors,
-            subtractQuantumProcessor,
-            
-            // Event triggers
-            triggerRandomMarketEvent,
-            triggerEnemyEncounter,
-            
-            // State setters
-            setStatusEffects,
-            setCredits,
-            setGameCompleted,
-            setRecordTimes,
-            setQuantumInventory,
-            setTraderMessage,
-            setVolume,
-            
-            // Computed values
-            fuelCostReductions,
-            totalFuelCostReduction,
-            
-            // Initialize game state
-            initializeGameState: async (savedState) => {
-                try {
-                    setHealth(savedState.health);
-                    setFuel(savedState.fuel);
-                    setCredits(savedState.credits);
-                    setDeliverySpeed(savedState.deliverySpeed || 1);
-                    setShieldActive(savedState.shieldActive || false);
-                    setStealthActive(savedState.stealthActive || false);
-                    setInventory(savedState.inventory || []);
-                    
-                    if (savedState.quantumProcessors) {
-                        updateQuantumProcessors(savedState.quantumProcessors);
-                    }
-                    
-                    setImprovedUILevel(savedState.uiLevel || 0);
-                    
-                    if (savedState.galaxyName) {
-                        await travelToGalaxy(savedState.galaxyName);
-                    }
-                    
-                    return true;
-                } catch (error) {
-                    console.error('Failed to initialize game state:', error);
-                    return false;
-                }
-            },
-            
-            // Other utilities
-            courierDrones,
-            recordTimes,
-            setPurchaseHistory,
-            traderMessage,
-            // Add all other context values here
-            toggleQuantumAbilities,
-            setQuantumSlotsUsed,
-            setHealth,
-            addQuantumProcessors,
-            resetQuantumProcessors,
-            subtractQuantumProcessor,
-            triggerRandomMarketEvent,
-            triggerEnemyEncounter,
-            handleSort,
-            handlePrevTrader,
-            toggleShield,
-            toggleStealth,
-            quantumBuyEnabled,
-            quantumAbilitiesEnabled,
-            quantumInventory,
-            quantumProcessors,
-            setQuantumBuyEnabled,
-            setQuantumInventory,
-            setQuantumProcessors,
-            // State values
-            credits,
-            inventory,
-            currentEnemy,
-            currentEvent,
-            checkQuantumTradeDelay,
-            updateLastQuantumTradeTime,
-            traders,
-            traderIds,
-            traderNames,
-            currentTrader,
-            TRADER_COUNT: traderIds.length,
-            currentGameEvent,
-            traderMessages,
-            gameCompleted,
-            recordTimes,
-            fuel,
-            fuelPrices,
-            health,
-            stealthActive,
-            shieldActive,
-            priceHistory,
-            purchaseHistory,
-            statusEffects,
-            quantumSlotsUsed,
-            sortMode,
-            sortAsc,
-            items,
-            displayCells,
-            galaxyName,
-            courierDrones,
-            deliveryQueue,
-            tradeHistory,
-            nextGalaxyName,
-            inTravel,
-            travelTimeLeft,
-            isJumping,
-            jumpTimeLeft,
-            jumpDuration,
-            jumpFromCoord,
-            jumpToCoord,
-            traderMessage,
-            numCellsX,
-            setStatusEffects,
-            setCredits,
-            setGameCompleted,
-            setRecordTimes,
-            toggleQuantumMode,
-            setQuantumInventory,
-            setQuantumSlotsUsed
-        };
-    }, [
-        quantumBuyEnabled,
-        quantumAbilitiesEnabled,
-        quantumInventory,
-        quantumProcessors,
-        toggleQuantumMode,
-        setQuantumBuyEnabled,
-        setQuantumInventory,
-        checkQuantumTradeDelay,
-        updateLastQuantumTradeTime,
-        setQuantumProcessors,
-        quantumState,
-        toggleQuantumAbilities,
-        setHealth,
-        addQuantumProcessors,
-        resetQuantumProcessors,
-        subtractQuantumProcessor,
-        setVolume,
-        volumeRef
-    ]);
-
-
-
-        */
         // Compute derived values
         const fuelCostReductions = inventory
             .map((invItem) => {
