@@ -8,16 +8,19 @@ import signal3 from '../images/signal3.webp';
 
 const SIGNAL_IMAGES = [signal1, signal2, signal3];
 const SIGNAL_IMAGE_SWITCH_MS = 420;
+const ROTATION_CHANGE_INTERVAL = 10000; // 10 seconds between rotation direction changes
 
 const SignalAnimation = ({ duration, onClose }) => {
     const { travelTimeLeft } = useMarketplace();
     const [currentImage, setCurrentImage] = useState(
         SIGNAL_IMAGES[Math.floor(Math.random() * SIGNAL_IMAGES.length)]
     );
+    const [rotationDirection, setRotationDirection] = useState('clockwise');
     const [lastImageSwitch, setLastImageSwitch] = useState(performance.now());
     const canvasRef = useRef(null);
     const imageRef = useRef(null);
     const animationFrameId = useRef(null);
+    const rotationTimer = useRef(null);
     const isHovered = useRef(false);
     const mousePos = useRef({ x: 0, y: 0 });
     const offX = useRef(0);
@@ -25,9 +28,9 @@ const SignalAnimation = ({ duration, onClose }) => {
 
     // Lens properties
     const lensProperties = useRef({
-        size: 69.42, // Larger lens area
-        mag: 4.269, // Moderate magnification
-        k: -0.01337, // Increased distortion
+        size: 169, // Larger lens area
+        mag: -0.3337, // Moderate magnification
+        k: 0, //-0.01337, //-0.01337, // Increased distortion
     });
 
     // Debug info
@@ -36,6 +39,29 @@ const SignalAnimation = ({ duration, onClose }) => {
         lastUpdate: 0,
         frameCount: 0,
     });
+
+    // Set random rotation direction
+    useEffect(() => {
+        const setRandomDirection = () => {
+            const directions = ['clockwise', 'counter-clockwise'];
+            const randomIndex = Math.floor(Math.random() * directions.length);
+            setRotationDirection(directions[randomIndex]);
+        };
+
+        // Set initial random direction
+        setRandomDirection();
+
+        // Update direction at intervals
+        rotationTimer.current = setInterval(() => {
+            setRandomDirection();
+        }, ROTATION_CHANGE_INTERVAL);
+
+        return () => {
+            if (rotationTimer.current) {
+                clearInterval(rotationTimer.current);
+            }
+        };
+    }, []);
 
     // Initialize canvas and image
     useEffect(() => {
@@ -338,15 +364,16 @@ const SignalAnimation = ({ duration, onClose }) => {
 
     return (
         <div
-            className="signal-container"
+            className={`signal-container ${
+                rotationDirection === 'clockwise'
+                    ? 'rotating-clockwise'
+                    : 'rotating-counter-clockwise'
+            }`}
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <div className="travel-signal">
-                <div className="travel-text">
-                    Flying — {(travelTimeLeft / 1000).toFixed(1)}s left
-                </div>
                 <div className="signal-canvas-container">
                     <canvas ref={canvasRef} className="signal-canvas" />
                 </div>
