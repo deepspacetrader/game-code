@@ -24,7 +24,6 @@ import Version from './components/Version';
 import ChatBox from './components/ChatBox';
 import Enemy from './components/Enemy';
 import EnemySpawner from './components/EnemySpawner';
-import Event from './components/Event';
 
 const AppContent = () => {
     const {
@@ -60,7 +59,6 @@ const AppContent = () => {
             >
                 <Version />
                 <SaveGame />
-                <Event />
                 <VolumeSlider
                     volume={volume}
                     setVolume={setVolume}

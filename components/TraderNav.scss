@@ -1490,6 +1490,17 @@
     min-height: 10rem;
     padding: 1rem;
 
+    .market-container {
+        padding: 0.25rem;
+        background: var(--hud-bg);
+        border: 2px solid #333;
+        &:hover {
+            border: 2px dashed #444;
+        }
+    }
+    .market-summary-container {
+    }
+
     .galaxy-summary-info {
         text-align: center;
         width: 100%;
@@ -1501,7 +1512,7 @@
     }
 
     .grid {
-        padding: 2rem;
+        padding: 4rem 2rem 2rem 2rem;
         min-height: 10rem;
     }
 }
@@ -2060,14 +2071,6 @@
     transition: width 0.1s linear;
 }
 
-.floating-messages {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    pointer-events: none;
-}
-
 /* Traveling Message Styles */
 .traveling-message {
     position: relative;
@@ -2112,7 +2115,13 @@
     margin-bottom: 1rem;
 }
 
-.floating-message {
+.floating-messages {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+
     margin: 4px 0;
     color: var(--info);
     text-shadow: 0 0 6px var(--info);

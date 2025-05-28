@@ -197,7 +197,6 @@ button {
     --hud-bg: #0a0e14;
     --hud-border: #222;
     --hud-text: #fff;
-    /* --cell-bg: #17212b; */
     --cell-border: #334;
     --cell-hover-shadow: #555;
     --accent: #afa;
@@ -209,7 +208,6 @@ button {
     --hud-bg: #121824;
     --hud-border: #445;
     --hud-text: #fff;
-    /* --cell-bg: #1e2d3c; */
     --cell-border: #556;
     --cell-hover-shadow: #6af;
     --accent: #bfb;
@@ -221,7 +219,94 @@ button {
     --hud-bg: #20304e;
     --hud-border: #667;
     --hud-text: #fff;
-    /* --cell-bg: #2a3f5f; */
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-explorer {
+    --hud-bg: rgb(27, 66, 111);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-professional {
+    --hud-bg: rgb(29, 88, 155);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-skilled {
+    --hud-bg: rgb(18, 44, 172);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-knowledgeable {
+    --hud-bg: rgb(16, 47, 202);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-smart {
+    --hud-bg: rgb(9, 47, 235);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-expert {
+    --hud-bg: rgb(0, 59, 11);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-master {
+    --hud-bg: rgb(52, 85, 0);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-grandmaster {
+    --hud-bg: rgb(118, 150, 65);
+    --hud-border: #667;
+    --hud-text: #fff;
     --cell-border: #778;
     --cell-hover-shadow: #8cf;
     --accent: #cfc;
@@ -230,7 +315,7 @@ button {
 }
 
 .ui-tier-elite {
-    --hud-bg: #7c007e;
+    --hud-bg: #33003e;
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */
@@ -253,7 +338,7 @@ button {
     --info: #cef;
 }
 .ui-tier-potential {
-    --hud-bg: #005e1b;
+    --hud-bg: #580000;
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */
@@ -264,7 +349,7 @@ button {
     --info: #cef;
 }
 .ui-tier-endgame {
-    --hud-bg: #00ff48;
+    --hud-bg: #ff0000;
     --hud-border: #889;
     --hud-text: #ffffff;
     --cell-bg: #000a1a74;
@@ -287,17 +372,9 @@ button {
 .ui-tier-newbie,
 .ui-tier-apprentice,
 .ui-tier-journeyman,
-.ui-tier-adventurer,
-.ui-tier-explorer,
-.ui-tier-professional,
-.ui-tier-skilled,
-.ui-tier-knowledgeable,
-.ui-tier-smart,
-.ui-tier-expert,
-.ui-tier-master,
-.ui-tier-grandmaster {
+.ui-tier-adventurer {
     /* mirror elite tier styling until new theming is defined */
-    --hud-bg: #304167;
+    // --hud-bg: #000000;
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */

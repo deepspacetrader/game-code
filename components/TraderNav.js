@@ -299,8 +299,8 @@ const TraderNav = () => {
         // Always travel to the selected galaxy
         travelToGalaxy(tradersData.traders[nextIdx].homeGalaxy);
 
-        // Show map preview if UI level is high enough
-        if (improvedUILevel >= 50) {
+        // Only show high-detail star map if UI level is 501 or higher
+        if (improvedUILevel >= 501) {
             setShowMap(true);
         }
     };

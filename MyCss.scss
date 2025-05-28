@@ -7,7 +7,6 @@
     width: 100%;
 }
 
-
 .main-area {
     display: flex;
     justify-content: space-between;
@@ -23,17 +22,15 @@
     position: relative;
 
     &:after {
-        content: "";
+        content: '';
         display: block;
         width: 100%;
         height: 100%;
         position: absolute;
         top: 0;
         left: 0;
-        box-shadow: inset 5px 5px 250px 15px #000,
-            inset -10px -24px 40px 0px #000,
-            inset 20px -10px 40px 0px #000,
-            inset -20px 10px 40px 0px #000;
+        box-shadow: inset 5px 5px 250px 15px #000, inset -10px -24px 40px 0px #000,
+            inset 20px -10px 40px 0px #000, inset -20px 10px 40px 0px #000;
         z-index: 0;
     }
 }
@@ -54,7 +51,7 @@
 
 .galaxy-image {
     background-size: cover;
-    background-pPosition: center;
+    background-position: center;
     width: 100%;
     min-height: 5rem;
 }

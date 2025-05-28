@@ -18,7 +18,7 @@ const MarketSummary = () => {
 
     // compute market total with useMemo to prevent unnecessary recalculations
     const total = useMemo(() => {
-        const validItems = displayCells.filter(item => item && item.price && item.stock);
+        const validItems = displayCells.filter((item) => item && item.price && item.stock);
         return validItems.reduce((sum, item) => sum + item.price * item.stock, 0);
     }, [displayCells]);
 
@@ -93,35 +93,39 @@ const MarketSummary = () => {
     return (
         <>
             <AlertBanner message={alertMsg} type={alertType} uiLevel={improvedUILevel} />
-            <div
-                style={{
-                    ...style,
-                    cursor: enhanced ? 'pointer' : 'default',
-                    borderColor: enhanced
-                        ? history.length > 1 && total - history[history.length - 2] < 0
-                            ? 'red'
-                            : 'lime'
-                        : style.border,
-                }}
-                className="market-summary"
-                onClick={enhanced ? handleBuyAll : undefined}
-            >
-                <div
-                    className="galaxy-image"
-                    style={{
-                        backgroundImage: bgImage ? `url(${bgImage})` : undefined,
-                    }}
-                >
-                    <div className="galaxy-summary-info">
-                        <p>{galaxyName}</p>
-                        <p>Total: {total}</p>
-                    </div>
+            <div className="market-summary-container">
+                <h3>Market</h3>
 
-                    {enhanced && (
-                        <Sparklines data={history} width={widthPercent * 3} height={30}>
-                            <SparklinesLine color="#fff" />
-                        </Sparklines>
-                    )}
+                <div
+                    style={{
+                        ...style,
+                        cursor: enhanced ? 'pointer' : 'default',
+                        borderColor: enhanced
+                            ? history.length > 1 && total - history[history.length - 2] < 0
+                                ? 'red'
+                                : 'lime'
+                            : style.border,
+                    }}
+                    className="market-summary"
+                    onClick={enhanced ? handleBuyAll : undefined}
+                >
+                    <div
+                        className="galaxy-image"
+                        style={{
+                            backgroundImage: bgImage ? `url(${bgImage})` : undefined,
+                        }}
+                    >
+                        <div className="galaxy-summary-info">
+                            <p>{galaxyName}</p>
+                            <p>Total: {total}</p>
+                        </div>
+
+                        {enhanced && (
+                            <Sparklines data={history} width={widthPercent * 3} height={30}>
+                                <SparklinesLine color="#fff" />
+                            </Sparklines>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

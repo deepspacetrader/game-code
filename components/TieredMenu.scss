@@ -1,7 +1,9 @@
 .tiered-menu {
-    position: relative;
-    display: inline-block;
-    margin: 0 10px;
+    position: absolute;
+    top: 0.5rem;
+
+    // display: inline-block;
+    // margin: 0 10px;
     z-index: 100;
 }
 
@@ -96,15 +98,13 @@
 }
 
 .menu-items {
-    // position: absolute;
-    // top: 100%;
     background: #222;
     padding: 8px;
     border: 1px solid #555;
     border-radius: 4px;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    gap: 0.5rem;
     z-index: 3;
 }
 

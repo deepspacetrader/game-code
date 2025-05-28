@@ -149,35 +149,214 @@ export const MarketplaceProvider = ({ children }) => {
         setLastQuantumTradeTime(Date.now());
     }, []);
 
+    // Helper function to show floating messages
+    const addFloatingMessage = useCallback((message, target = 'global', type = 'info') => {
+        // Generate unique ID for the message
+        const id = Date.now().toString() + Math.random().toString(36).substring(2);
+
+        // Set different durations based on message type
+        const duration = type === 'trolled' ? 3000 : 1500;
+
+        // Add message with a timeout to remove it after animation
+        setFloatingMessages((prev) => [
+            ...prev,
+            {
+                id,
+                text: message,
+                type,
+                target,
+                timestamp: Date.now(),
+            },
+        ]);
+
+        // Remove message after animation duration
+        setTimeout(() => {
+            setFloatingMessages((prev) => prev.filter((m) => m.id !== id));
+        }, duration);
+    }, []);
+
+    // Apply market effects from an event
+    const applyEventEffects = useCallback(
+        (event) => {
+            if (!event?.effect) return;
+
+            // Apply market effects to items if there are affected items
+            if (event.effect.affectedItems?.length) {
+                // Get the price and stock multipliers
+                const [pMin, pMax] = Array.isArray(event.effect.priceMultiplierRange)
+                    ? event.effect.priceMultiplierRange
+                    : [1, 1];
+
+                const [sMin, sMax] = Array.isArray(event.effect.stockMultiplierRange)
+                    ? event.effect.stockMultiplierRange
+                    : [1, 1];
+
+                // Apply market effects to items
+                setTraders((prevTraders) =>
+                    prevTraders.map((trader) => {
+                        if (!Array.isArray(trader.inventory)) {
+                            return trader;
+                        }
+                        return {
+                            ...trader,
+                            inventory: trader.inventory.map((item) => {
+                                if (event.effect.affectedItems.includes(item.itemId)) {
+                                    const priceMult = Math.random() * (pMax - pMin) + pMin;
+                                    const stockMult = Math.random() * (sMax - sMin) + sMin;
+                                    return {
+                                        ...item,
+                                        price: Math.max(1, Math.round(item.price * priceMult)),
+                                        stock: Math.max(0, Math.round(item.stock * stockMult)),
+                                        isAffected: true,
+                                    };
+                                }
+                                return item;
+                            }),
+                        };
+                    })
+                );
+            }
+
+            // Apply any additional effects from the event
+            if (event.effect.effects?.length) {
+                applyAdditionalEffects(event);
+            }
+        },
+        [addFloatingMessage, setCourierDrones, setImprovedUILevel]
+    );
+
+    // Apply any additional effects from the event
+    const applyAdditionalEffects = useCallback(
+        (event) => {
+            if (!event?.effect?.effects?.length) return;
+
+            event.effect.effects.forEach(({ type, val, durationMs }) => {
+                switch (type) {
+                    case 'heal_player':
+                        setHealth((h) => Math.max(0, h + val));
+                        addFloatingMessage(`+${val} Health`, 'heal');
+                        break;
+                    case 'damage_player':
+                        setHealth((h) => Math.max(0, h - val));
+                        addFloatingMessage(`-${val} Damage`, 'damage');
+                        break;
+                    case 'fuel_amount':
+                        setFuel((f) => Math.max(0, parseFloat(f) + parseFloat(val)).toFixed(2));
+                        addFloatingMessage(`${val > 0 ? '+' : ''}${val} Fuel`, 'fuel');
+                        break;
+                    case 'credit_balance':
+                        setCredits((c) => c + val);
+                        addFloatingMessage(`${val > 0 ? '+' : ''}${val} Credits`, 'credits');
+                        break;
+                    case 'improved_UI':
+                        setImprovedUILevel((l) => l + Math.ceil(val));
+                        addFloatingMessage(`UI Update! (+${Math.ceil(val)})`, 'global');
+                        break;
+                    case 'escape_chance':
+                        setStealthActive(true);
+                        if (durationMs) setTimeout(() => setStealthActive(false), durationMs);
+                        break;
+                    case 'shield_active':
+                        setShieldActive(true);
+                        if (durationMs) setTimeout(() => setShieldActive(false), durationMs);
+                        break;
+                    case 'courier_drones_change':
+                        setCourierDrones((d) => Math.max(0, d + val));
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // Show a notification about the event
+            if (event.name && event.description) {
+                addFloatingMessage(`${event.name}: ${event.description}`, 'event');
+            }
+        },
+        [addFloatingMessage, setCourierDrones, setImprovedUILevel]
+    );
+
     // Trigger a random event
-    const triggerRandomEvent = useCallback(() => {
-        const now = Date.now();
-        if (now - lastEventTime < eventCooldown) return null;
+    const triggerRandomEvent = useCallback(
+        (force = false) => {
+            const now = Date.now();
 
-        const event = eventsList[Math.floor(Math.random() * eventsList.length)];
-        setCurrentGameEvent(event);
-        setLastEventTime(now);
+            // Only check cooldown if not forced
+            if (!force && now - lastEventTime < eventCooldown) return null;
 
-        // Adjust cooldown based on danger level (faster events in more dangerous areas)
-        const newCooldown = Math.max(60000, eventCooldown * (0.9 - globalDangerLevel * 0.05));
-        setEventCooldown(newCooldown);
+            // Filter out events that have cooldown requirements
+            const eligibleEvents = eventsList.filter((event) => {
+                if (!event.minCycleGap) return true;
+                const lastTrigger = lastEventTime[event.randomEventId] || 0;
+                return now - lastTrigger >= event.minCycleGap * 1000;
+            });
 
-        // Trigger enemy if specified and in a dangerous area
-        if (event.spawnEnemyType && currentGalaxy?.danger) {
-            const enemyType = event.spawnEnemyType;
-            const enemy = {
-                name: `Enemy ${Math.floor(Math.random() * 1000)}`,
-                type: Array.isArray(enemyType) ? enemyType[0] : enemyType,
-                health: 100 * (1 + globalDangerLevel * 0.2),
-                damage: 10 * (1 + globalDangerLevel * 0.15),
-                dangerLevel: globalDangerLevel,
-                credits: 100 * (1 + globalDangerLevel * 0.1),
-            };
-            setCurrentEnemy(enemy);
-        }
+            if (eligibleEvents.length === 0) return null;
 
-        return event;
-    }, [eventsList, lastEventTime, eventCooldown, globalDangerLevel, currentGalaxy]);
+            // Select a random event with weighted probability
+            const totalRarity = eligibleEvents.reduce((sum, e) => sum + (e.rarity || 1), 0);
+            let random = Math.random() * totalRarity;
+            let selectedEvent = null;
+
+            for (const event of eligibleEvents) {
+                random -= event.rarity || 1;
+                if (random <= 0) {
+                    selectedEvent = event;
+                    break;
+                }
+            }
+
+            if (!selectedEvent) return null;
+
+            setCurrentGameEvent(selectedEvent);
+            setLastEventTime(now);
+
+            // Apply market effects if the event has them
+            if (selectedEvent.effect?.affectedItems) {
+                applyEventEffects(selectedEvent);
+            }
+
+            // Trigger enemy if specified and in a dangerous area
+            if (selectedEvent.spawnEnemyType && currentGalaxy?.danger) {
+                const enemyType = selectedEvent.spawnEnemyType;
+                const enemy = {
+                    name: `Enemy ${Math.floor(Math.random() * 1000)}`,
+                    type: Array.isArray(enemyType) ? enemyType[0] : enemyType,
+                    health: 100 * (1 + globalDangerLevel * 0.2),
+                    damage: 10 * (1 + globalDangerLevel * 0.15),
+                    dangerLevel: globalDangerLevel,
+                    credits: 100 * (1 + globalDangerLevel * 0.1),
+                };
+                setCurrentEnemy(enemy);
+            }
+
+            // Adjust cooldown based on danger level (faster events in more dangerous areas)
+            const newCooldown = Math.max(30000, eventCooldown * (0.9 - globalDangerLevel * 0.05));
+            setEventCooldown(newCooldown);
+
+            return selectedEvent;
+        },
+        [
+            eventsList,
+            lastEventTime,
+            eventCooldown,
+            globalDangerLevel,
+            currentGalaxy,
+            applyEventEffects,
+        ]
+    );
+
+    // Global event loop
+    useEffect(() => {
+        const eventInterval = setInterval(() => {
+            // 30% chance to trigger a random event each interval
+            if (Math.random() < 0.3) {
+                triggerRandomEvent();
+            }
+        }, 30000); // Check every 30 seconds
+
+        return () => clearInterval(eventInterval);
+    }, [triggerRandomEvent]);
 
     // Update danger level based on game progress
     const updateDangerLevel = useCallback((newLevel) => {
@@ -197,25 +376,10 @@ export const MarketplaceProvider = ({ children }) => {
         });
     }, []);
 
-    const addFloatingMessage = useCallback((message, type) => {
-        // Generate unique ID for the message
-        const id = Date.now().toString() + Math.random().toString(36).substring(2);
-
-        // Add message with a timeout to remove it after animation
-        setFloatingMessages((prev) => [
-            ...prev,
-            { id, text: message, type, target: 'global', timestamp: Date.now() },
-        ]);
-
-        // Remove message after animation duration (1.5s)
-        setTimeout(() => {
-            setFloatingMessages((prev) => prev.filter((m) => m.id !== id));
-        }, 1500);
-    }, []);
-
     const prepareGalaxy = useCallback(
         (gName) => {
             const galaxyObj = galaxiesData.galaxies.find((g) => g.name === gName) || {};
+
             const traderIds = Array.isArray(galaxyObj.traders) ? galaxyObj.traders : [];
             const configs = traderIds
                 .map((id) => traderConfigs.find((cfg) => cfg.traderId === id))
@@ -770,6 +934,11 @@ export const MarketplaceProvider = ({ children }) => {
                 sortAsc ? a.price - b.price : b.price - a.price
             );
         }
+        if (sortMode === 'stock') {
+            return [...pricedList].sort((a, b) =>
+                sortAsc ? a.stock - b.stock : b.stock - a.stock
+            );
+        }
         // default: sort by itemId ascending
         return [...pricedList].sort((a, b) => a.itemId - b.itemId);
     }, [
@@ -944,7 +1113,7 @@ export const MarketplaceProvider = ({ children }) => {
             timeSound, // Release
             0, // Wave Shape (0,1,2,3,4)
             1.337, // Shape curve
-            0.69, // Slide
+            0.69, //  Slide
             0.42, // Delta Slide
             50, // Pitch Jump
             timeSoundHalf, // Pitch Jump Time
@@ -1623,6 +1792,34 @@ export const MarketplaceProvider = ({ children }) => {
                         }
                         break;
 
+                    case 'trolled':
+                        addFloatingMessage(
+                            'Nothing happened...',
+                            'global',
+                            'trolled',
+                            'psionic-amplifier'
+                        );
+                        zzfx(
+                            volumeRef.current,
+                            0.1,
+                            200,
+                            0,
+                            0.1,
+                            0.2,
+                            1,
+                            0.5,
+                            -1,
+                            0.5,
+                            150,
+                            0.1,
+                            0.1,
+                            0,
+                            0,
+                            0,
+                            0.1
+                        );
+                        break;
+
                     case 'credit_balance':
                         setCredits((c) => (isAdd ? c + value : c - value));
                         addFloatingMessage(`${isAdd ? '+' : '-'}${value} Credits!`, 'global');
@@ -1901,51 +2098,6 @@ export const MarketplaceProvider = ({ children }) => {
                 )
             );
         }
-    };
-
-    // Apply effects from an event
-    const applyEventEffects = (event) => {
-        if (!event || !event.effects) return;
-
-        event.effects.forEach(({ type, val, durationMs }) => {
-            switch (type) {
-                case 'heal_player':
-                    setHealth((h) => Math.max(0, h + val));
-                    addFloatingMessage(`+${val}`, 'global', 'heal_player');
-                    break;
-                case 'damage_player':
-                    setHealth((h) => Math.max(0, h + val));
-                    addFloatingMessage(`-${val}`, 'global', 'damage_player');
-                    break;
-                case 'fuel_amount':
-                    setFuel((f) => Math.max(0, f + parseFloat(val)).toFixed(2));
-                    break;
-                case 'credit_balance':
-                    setCredits((c) => c + val);
-                    break;
-                case 'improved_UI':
-                    setImprovedUILevel((l) => l + Math.ceil(val));
-                    addFloatingMessage(
-                        `UI Update! (+${Math.ceil(val)})`,
-                        'global',
-                        'quantum-processor'
-                    );
-                    break;
-                case 'escape_chance':
-                    setStealthActive(true);
-                    if (durationMs) setTimeout(() => setStealthActive(false), durationMs);
-                    break;
-                case 'shield_active':
-                    setShieldActive(true);
-                    if (durationMs) setTimeout(() => setShieldActive(false), durationMs);
-                    break;
-                case 'courier_drones_change':
-                    setCourierDrones((d) => Math.max(0, d + val));
-                    break;
-                default:
-                    break;
-            }
-        });
     };
 
     // trigger an enemy encounter with optional type

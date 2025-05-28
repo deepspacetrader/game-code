@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import { Sparklines, SparklinesLine, SparklinesReferenceLine } from 'react-sparklines';
 import { useMarketplace } from '../context/MarketplaceContext';
 import { useUI } from '../context/UIContext';
+import TieredMenu from './TieredMenu';
 import DeliveryBar from './DeliveryBar';
 import galaxiesData from '../data/galaxies.json';
 
@@ -70,6 +71,8 @@ const MarketGrid = forwardRef((props, ref) => {
                 backgroundPosition: 'bottom right',
             }}
         >
+            <TieredMenu />
+
             {displayCells &&
                 displayCells.map((cell, idx) => {
                     if (!cell) return null;
@@ -226,36 +229,41 @@ const MarketGrid = forwardRef((props, ref) => {
                             {/* inline price history sparkline, only if advanced UI and valid price data */}
                             {improvedUILevel > 50 && prices.length > 1 && (
                                 <div className="price-sparkline">
-                                    <Sparklines 
-                                        data={prices} 
-                                        width={100} 
+                                    <Sparklines
+                                        data={prices}
+                                        width={100}
                                         height={20}
-                                        min={Math.min(...prices) * 0.95}  // Add 5% padding
-                                        max={Math.max(...prices) * 1.05}   // Add 5% padding
+                                        min={Math.min(...prices) * 0.95} // Add 5% padding
+                                        max={Math.max(...prices) * 1.05} // Add 5% padding
                                     >
-                                        <SparklinesLine 
-                                            color="cyan" 
-                                            style={{ fill: 'none', strokeWidth: 1 }} 
+                                        <SparklinesLine
+                                            color="cyan"
+                                            style={{ fill: 'none', strokeWidth: 1 }}
                                         />
                                         {improvedUILevel >= 75 && (
                                             <SparklinesReferenceLine
                                                 type="avg"
-                                                style={{ stroke: 'yellow', strokeWidth: 1, strokeDasharray: '2, 2' }}
+                                                style={{
+                                                    stroke: 'yellow',
+                                                    strokeWidth: 1,
+                                                    strokeDasharray: '2, 2',
+                                                }}
                                             />
                                         )}
                                     </Sparklines>
                                 </div>
                             )}
                             {/* delivery timers under price chart */}
-                            {deliveryQueue && deliveryQueue
-                                .filter((q) => q && q.name === cell.name)
-                                .map((q, index) => (
-                                    <DeliveryBar
-                                        key={`${q.id}-${index}`}
-                                        timeLeft={q.timeLeft}
-                                        totalTime={q.totalTime}
-                                    />
-                                ))}
+                            {deliveryQueue &&
+                                deliveryQueue
+                                    .filter((q) => q && q.name === cell.name)
+                                    .map((q, index) => (
+                                        <DeliveryBar
+                                            key={`${q.id}-${index}`}
+                                            timeLeft={q.timeLeft}
+                                            totalTime={q.totalTime}
+                                        />
+                                    ))}
 
                             {cell.illegal && <span className="illegal-item"></span>}
 
