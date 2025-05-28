@@ -1,7 +1,9 @@
 .event-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    // bottom: 20px;
+    // right: 20px;
+    top: 20px;
+    left: 20px;
     z-index: 1000;
     background: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
@@ -11,7 +13,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transform: translateY(100%);
     transition: transform 0.3s ease-out;
-    
+
     &.active {
         transform: translateY(0);
     }
@@ -33,7 +35,7 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        
+
         .effect-item {
             display: flex;
             justify-content: space-between;
@@ -41,7 +43,7 @@
             padding: 8px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
-            
+
             .item-name {
                 color: #fff;
             }
@@ -49,11 +51,11 @@
             .effect-values {
                 display: flex;
                 gap: 10px;
-                
+
                 .price-change {
                     color: #00ff00;
                 }
-                
+
                 .stock-change {
                     color: #ff0000;
                 }
@@ -70,7 +72,7 @@
         color: #fff;
         cursor: pointer;
         font-size: 1.2em;
-        
+
         &:hover {
             color: #00ff00;
         }
