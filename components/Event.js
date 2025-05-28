@@ -48,100 +48,89 @@ const obfuscateText = (text, level) => {
         .join('');
 };
 
-// Cache for trend data (commented out as it's not currently used)
-// const trendCache = new Map();
-// const CACHE_DURATION = 10000; // 10 seconds
-
 const Event = () => {
     const {
-        currentGameEvent,
-        currentEvent,
-        triggerRandomEvent,
-        triggerRandomMarketEvent,
+        activeEvent,
         setCurrentGameEvent,
-        tick, // Assuming this is available from MarketplaceContext
-        marketData, // Assuming this contains current market state
+        triggerRandomMarketEvent,
+        marketData,
+        priceHistory = {},
     } = useMarketplace();
 
     const { improvedUILevel } = useUI();
 
-    // Use either currentGameEvent or currentEvent, whichever is available
-    const activeEvent = currentGameEvent || currentEvent;
     const [showEvent, setShowEvent] = useState(false);
-
-    // Local state for testing when context isn't available
-    const [localEvent, setLocalEvent] = useState({
-        name: 'TEST EVENT',
-        description: 'This is a test event to verify the event system is working.',
-        effect: {
-            affectedItems: [1, 2, 3, 4, 5, 6, 7, 8],
-            priceMultiplierRange: [0.5, 3.0],
-            stockMultiplierRange: [0.3, 1.5],
-        },
-    });
-
-    // Track price history for trend analysis
-    const [priceHistory, setPriceHistory] = useState({});
+    const [displayEvent, setDisplayEvent] = useState(null);
+    const [localPriceHistory, setLocalPriceHistory] = useState({});
     const [trendData, setTrendData] = useState({});
 
-    // Use local event if context event isn't available
-    const displayEvent = activeEvent || localEvent;
-
-    // Update price history on tick
+    // Update price history and trends when market data changes
     useEffect(() => {
         if (!displayEvent?.effect?.affectedItems?.length) return;
 
-        const newHistory = { ...priceHistory };
-        const now = Date.now();
+        const newPriceHistory = { ...localPriceHistory };
+        const timestamp = Date.now();
+        let hasUpdates = false;
+
+        // Update price history for affected items
+        displayEvent.effect.affectedItems.forEach((itemId) => {
+            const itemData = marketData?.find((item) => item.id === itemId);
+            if (!itemData) return;
+
+            if (!newPriceHistory[itemId]) {
+                newPriceHistory[itemId] = [];
+            }
+
+            newPriceHistory[itemId].push({
+                timestamp,
+                price: itemData.price,
+            });
+
+            // Keep only the last 100 data points
+            if (newPriceHistory[itemId].length > 100) {
+                newPriceHistory[itemId].shift();
+            }
+
+            hasUpdates = true;
+        });
+
+        if (!hasUpdates) return;
+
+        setLocalPriceHistory(newPriceHistory);
+
+        // Update trend data
+        const newTrendData = { ...trendData };
+        let trendUpdates = false;
 
         displayEvent.effect.affectedItems.forEach((itemId) => {
-            const item = itemsData.items.find((i) => i.itemId === itemId);
-            if (!item) return;
+            const history = newPriceHistory[itemId] || [];
+            if (history.length < 2) return;
 
-            if (!newHistory[itemId]) {
-                newHistory[itemId] = [];
-            }
-
-            // Add current price to history
-            const marketItem = marketData?.find((m) => m.itemId === itemId);
-            if (marketItem) {
-                newHistory[itemId].push({
-                    price: marketItem.price,
-                    timestamp: now,
-                });
-
-                // Keep only last 60 seconds of data
-                newHistory[itemId] = newHistory[itemId].filter(
-                    (entry) => now - entry.timestamp <= 60000
-                );
-            }
-        });
-
-        setPriceHistory(newHistory);
-
-        // Calculate trends for items with enough history
-        const newTrendData = {};
-        Object.entries(newHistory).forEach(([itemId, prices]) => {
+            const prices = history.map((entry) => entry?.price).filter(Boolean);
             if (prices.length < 2) return;
 
-            const firstPrice = prices[0].price;
-            const lastPrice = prices[prices.length - 1].price;
-            const priceChange = ((lastPrice - firstPrice) / firstPrice) * 100;
+            const currentPrice = prices[prices.length - 1];
+            const previousPrice = prices[prices.length - 2];
+            const priceChange = currentPrice - previousPrice;
+            const percentChange = (priceChange / previousPrice) * 100;
 
             newTrendData[itemId] = {
-                change: priceChange,
-                direction: priceChange >= 0 ? 'up' : 'down',
-                magnitude: Math.abs(priceChange),
+                direction: Math.sign(priceChange),
+                percentChange: Math.abs(percentChange).toFixed(1),
+                priceHistory: prices,
             };
+            trendUpdates = true;
         });
 
-        setTrendData(newTrendData);
-    }, [tick, displayEvent, marketData]);
+        if (trendUpdates) {
+            setTrendData(newTrendData);
+        }
+    }, [displayEvent, marketData, localPriceHistory, trendData]);
 
     // Get price trend data for sparklines
     const getPriceTrendData = useCallback(
         (itemId) => {
-            if (improvedUILevel < 100) return [];
+            if (improvedUILevel < 2) return [];
 
             const history = priceHistory?.[itemId] || [];
             if (history.length < 2) return [];
@@ -220,7 +209,7 @@ const Event = () => {
     }, [marketData, priceHistory, setTrendData]);
 
     // Debug function to trigger a test event
-    const triggerTestEvent = async () => {
+    const triggerTestEvent = () => {
         console.log('[Event] Manually triggering test event');
 
         // Create a test event with all required properties
@@ -237,31 +226,16 @@ const Event = () => {
 
         console.log('[Event] Test event created:', testEvent);
 
-        try {
-            if (typeof triggerRandomEvent === 'function') {
-                console.log('[Event] Using triggerRandomEvent');
-                triggerRandomEvent();
-            } else if (typeof triggerRandomMarketEvent === 'function') {
-                console.log('[Event] Using triggerRandomMarketEvent');
-                await triggerRandomMarketEvent();
-            } else if (typeof setCurrentGameEvent === 'function') {
-                console.log('[Event] Using setCurrentGameEvent');
-                setCurrentGameEvent(testEvent);
-            } else {
-                console.log('[Event] Using local state for testing');
-                setLocalEvent(testEvent);
-                setShowEvent(true);
-                return;
-            }
-
-            // Show the event after a short delay
-            setTimeout(() => {
-                setShowEvent(true);
-                document.body.classList.add('event-debug-mode');
-            }, 100);
-        } catch (error) {
-            console.error('[Event] Error triggering event:', error);
+        // Apply the event effects to the market
+        if (triggerRandomMarketEvent) {
+            triggerRandomMarketEvent(testEvent);
+        } else if (setCurrentGameEvent) {
+            setCurrentGameEvent(testEvent);
         }
+
+        setDisplayEvent(testEvent);
+        setShowEvent(true);
+        document.body.classList.add('event-debug-mode');
     };
 
     // Auto-hide event after 10 seconds
@@ -276,14 +250,22 @@ const Event = () => {
         return () => clearTimeout(timer);
     }, [showEvent, displayEvent]);
 
-    if (!showEvent || !displayEvent) {
-        console.log('[Event] Not rendering event UI. State:', {
-            showEvent,
-            hasActiveEvent: !!activeEvent,
-            hasCurrentGameEvent: !!currentGameEvent,
-            hasCurrentEvent: !!currentEvent,
-        });
+    // When we get a new event, update our display and apply effects
+    useEffect(() => {
+        if (activeEvent) {
+            console.log('[Event] New event detected:', activeEvent);
 
+            // Apply the event effects to the market
+            if (triggerRandomMarketEvent) {
+                triggerRandomMarketEvent(activeEvent);
+            }
+
+            setDisplayEvent(activeEvent);
+            setShowEvent(true);
+        }
+    }, [activeEvent, triggerRandomMarketEvent]);
+
+    if (!showEvent || !displayEvent) {
         return (
             <div
                 className="debug-event-trigger"

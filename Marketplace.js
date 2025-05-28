@@ -20,6 +20,7 @@ import VolumeSlider from './components/VolumeSlider';
 import GameMenu from './components/GameMenu';
 import FloatingMessagesManager from './components/FloatingMessagesManager';
 import SaveGame from './components/SaveGame';
+import Version from './components/Version';
 import ChatBox from './components/ChatBox';
 import Enemy from './components/Enemy';
 import EnemySpawner from './components/EnemySpawner';
@@ -57,6 +58,7 @@ const AppContent = () => {
                     gap: '16px',
                 }}
             >
+                <Version />
                 <SaveGame />
                 <Event />
                 <VolumeSlider
