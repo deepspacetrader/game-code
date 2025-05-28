@@ -4,26 +4,26 @@
             "galaxyEventId": 1,
             "name": "WAR ZONE DEBRIS",
             "description": "Cybernetic war fragments pierce through rattling your hull.",
-            "effect": {
-                "health": -25,
-                "shield": -15
+            "eventResult": {
+                "damagePlayer": 25,
+                "shield": false
             }
         },
         {
             "galaxyEventId": 2,
             "name": "LOST CARGO",
             "description": "A drifting cargo pod loaded with rare salvage drifts into your hold.",
-            "effect": {
-                "credits": 976514,
-                "fuel": 200
+            "eventResult": {
+                "addCredits": 976514,
+                "addFuel": 200
             }
         },
         {
             "galaxyEventId": 3,
             "name": "INTELLIGENT NANO PARTICLES",
             "description": "Your ship glides near the remains of an intelligent nano particles swarm, boosting your UI modules.",
-            "effect": {
-                "improvedUI": 250
+            "eventResult": {
+                "addUI": 250
             }
         },
         {
@@ -31,9 +31,9 @@
             "name": "CYBERWARE VIRUS",
             "description": "A malicious cyber-virus infects your ship, corrupting UI protocols.",
             "effect": {
-                "improvedUI": -1000,
-                "credits": -15000,
-                "health": -60,
+                "removeUI": 1000,
+                "removeCredits": 15000,
+                "damagePlayer": 60,
                 "shield": false,
                 "stealth": false
             }
@@ -43,7 +43,7 @@
             "name": "QUANTUM FUEL SPILL",
             "description": "A containment breach floods tanks with abundant quantum fuel.",
             "effect": {
-                "fuel": 500
+                "addFuel": 500
             }
         },
         {
@@ -51,7 +51,7 @@
             "name": "FUEL LEAK",
             "description": "A micrometeorite punctures your fuel tank, causing a leak.",
             "effect": {
-                "fuel": -70
+                "removeFuel": 70
             }
         },
         {
@@ -59,7 +59,7 @@
             "name": "ALLIANCE SUPPORT",
             "description": "Omniscient species upgrade your UI with advanced tech.",
             "effect": {
-                "improvedUI": 1000
+                "adUI": 1000
             }
         },
         {

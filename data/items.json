@@ -8,7 +8,7 @@
             "basePrice": 10,
             "deliveryTime": 0.1,
             "priceTickRate": [150, 175],
-            "duration": [9, 12],
+            "duration": [0, 1],
             "effects": {
                 "+improved_UI": [1, 5]
             }
@@ -21,7 +21,7 @@
             "basePrice": 1337,
             "deliveryTime": 1.337,
             "priceTickRate": [150, 250],
-            "duration": [0, 0],
+            "duration": [0, 1],
             "effects": {
                 "+heal_player": [5, 10]
             }
@@ -319,14 +319,15 @@
         {
             "itemId": 25,
             "name": "Psionic Amplifier",
+            "illegal": true,
             "travelSell": false,
             "description": "Calculates the best possible price on market items or your credits back!",
-            "basePrice": 27000,
-            "deliveryTime": 27,
+            "basePrice": 1,
+            "deliveryTime": 1,
             "priceTickRate": [160, 450],
             "duration": [27, 47],
             "effects": {
-                "+improved_UI": [2, 4]
+                "trolled": true
             }
         },
         {

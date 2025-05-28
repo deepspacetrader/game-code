@@ -2,7 +2,7 @@ import React from 'react';
 import { useMarketplace } from '../context/MarketplaceContext';
 import { useStatusEffects } from '../context/StatusEffectsContext';
 import './PlayerHUD.scss';
-import FloatingMessage from './FloatingMessage';
+import FloatingMessage from './Reusable/FloatingMessage';
 import { useUI } from '../context/UIContext';
 
 const PlayerHUD = () => {

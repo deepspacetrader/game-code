@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
-import './Quantum/QuantumHover.scss';
+import './QuantumHover.scss';
 
 const calculateVolatility = (prices) => {
     if (prices.length < 2) return 0;
@@ -465,9 +465,7 @@ const QuantumHover = ({ market }) => {
             }}
         >
             <div
-                className={`quantum-hover-overlay ${
-                    (statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''
-                }`}
+                className={`quantum-hover-overlay ${(statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''}`}
                 style={{
                     left: mousePosition.x - hoverAreaSize / 2,
                     top: mousePosition.y - hoverAreaSize / 4,
@@ -479,11 +477,7 @@ const QuantumHover = ({ market }) => {
                     opacity: (statusEffects['Quantum Processor']?.level || 0) > 50 ? 1 : 0.5,
                 }}
             />
-            <div
-                className={`quantum-analysis-panel ${
-                    (statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''
-                }`}
-            >
+            <div className={`quantum-analysis-panel ${(statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''}`}>
                 {Object.entries(quantumAnalysis).length > 0 ? (
                     Object.entries(quantumAnalysis).map(([itemId, analysis]) => (
                         <div key={itemId} className="analysis-item">

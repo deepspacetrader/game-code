@@ -7,23 +7,23 @@ import { MarketplaceProvider, useMarketplace } from './context/MarketplaceContex
 import { StatusEffectsProvider } from './context/StatusEffectsContext';
 import { UIProvider, useUI } from './context/UIContext';
 
-import TraderNav from './components/TraderNav';
+import TraderNav from './components/Trader/TraderNav';
 import PlayerHUD from './components/PlayerHUD';
-import TradingArea from './components/TradingArea';
-import InventoryPane from './components/InventoryPane';
-import AdminDebug from './components/AdminDebug';
-import TravelOverlay from './components/TravelOverlay';
-import GameOverScreen from './components/GameOverScreen';
+import TradingArea from './components/Trading/TradingArea';
+import InventoryPane from './components/Inventory/InventoryPane';
+import AdminDebug from './components/Misc/AdminDebug';
+import TravelOverlay from './components/Travel/TravelOverlay';
+import GameOverScreen from './components/Game/GameOverScreen';
 import FastestTimes from './components/FastestTimes';
-import TradeHistory from './components/TradeHistory';
-import VolumeSlider from './components/VolumeSlider';
-import GameMenu from './components/GameMenu';
-import FloatingMessagesManager from './components/FloatingMessagesManager';
-import SaveGame from './components/SaveGame';
-import Version from './components/Version';
-import ChatBox from './components/ChatBox';
-import Enemy from './components/Enemy';
-import EnemySpawner from './components/EnemySpawner';
+import TradeHistory from './components/Trader/TradeHistory';
+import VolumeSlider from './components/Misc/VolumeSlider';
+import GameMenu from './components/Game/GameMenu';
+import FloatingMessagesManager from './components/Reusable/FloatingMessagesManager';
+import SaveGame from './components/Misc/SaveGame';
+import Version from './components/Misc/Version';
+import ChatBox from './components/Chat/ChatBox';
+import Enemy from './components/Reusable/Enemy';
+import EnemySpawner from './components/Reusable/EnemySpawner';
 
 const AppContent = () => {
     const {

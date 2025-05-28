@@ -1273,7 +1273,6 @@ export const MarketplaceProvider = ({ children }) => {
 
             // Buy Sound
             let buySoundChange = randomFloatRange(22, 25);
-            console.log(buySoundChange.toFixed(2));
             zzfx(
                 volumeRef.current, // Volume
                 69, // Randomness

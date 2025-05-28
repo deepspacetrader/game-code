@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMarketplace } from '../context/MarketplaceContext';
+import { useMarketplace } from '../../context/MarketplaceContext';
 import './PlayerHUD.scss';
 
 const ShipModulesPanel = () => {
