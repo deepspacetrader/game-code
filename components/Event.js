@@ -1,57 +1,223 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useMarketplace } from '../context/MarketplaceContext';
+import { useUI } from '../context/UIContext';
 import { randomFloatRange } from '../utils/helpers';
 import itemsData from '../data/items.json';
 import randomEvents from '../data/random-events.json';
 import './Event.scss';
 
+// Simple inline sparkline component
+const Sparkline = ({ data, width = 50, height = 20, color = '#00ff00' }) => {
+    if (!data || data.length < 2) return null;
+
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+
+    const points = data
+        .map((value, i) => {
+            const x = (i / (data.length - 1)) * width;
+            const y = height - ((value - min) / range) * height;
+            return `${x},${y}`;
+        })
+        .join(' ');
+
+    return (
+        <svg
+            width={width}
+            height={height}
+            style={{ display: 'inline-block', verticalAlign: 'middle' }}
+        >
+            <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" />
+        </svg>
+    );
+};
+
+// Simple encryption/obfuscation for low UI levels
+const obfuscateText = (text, level) => {
+    if (level >= 25) return text;
+
+    // Simple character substitution for demonstration
+    const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    return text
+        .split('')
+        .map((char, i) => {
+            if (Math.random() > 0.3) return char;
+            return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join('');
+};
+
+// Cache for trend data (commented out as it's not currently used)
+// const trendCache = new Map();
+// const CACHE_DURATION = 10000; // 10 seconds
+
 const Event = () => {
     const {
         currentGameEvent,
-        currentEvent, // Some contexts might use this instead of currentGameEvent
+        currentEvent,
         triggerRandomEvent,
         triggerRandomMarketEvent,
         setCurrentGameEvent,
+        tick, // Assuming this is available from MarketplaceContext
+        marketData, // Assuming this contains current market state
     } = useMarketplace();
+
+    const { improvedUILevel } = useUI();
 
     // Use either currentGameEvent or currentEvent, whichever is available
     const activeEvent = currentGameEvent || currentEvent;
     const [showEvent, setShowEvent] = useState(false);
 
-    // Debug logging
-    // console.log('[Event] Current state:', { currentGameEvent, showEvent });
+    // Local state for testing when context isn't available
+    const [localEvent, setLocalEvent] = useState({
+        name: 'TEST EVENT',
+        description: 'This is a test event to verify the event system is working.',
+        effect: {
+            affectedItems: [1, 2, 3, 4, 5, 6, 7, 8],
+            priceMultiplierRange: [0.5, 3.0],
+            stockMultiplierRange: [0.3, 1.5],
+        },
+    });
 
-    useEffect(() => {
-        console.log('[Event] Component mounted or updated');
-        return () => console.log('[Event] Component unmounting');
-    }, []);
+    // Track price history for trend analysis
+    const [priceHistory, setPriceHistory] = useState({});
+    const [trendData, setTrendData] = useState({});
 
+    // Use local event if context event isn't available
+    const displayEvent = activeEvent || localEvent;
+
+    // Update price history on tick
     useEffect(() => {
-        console.log('[Event] Event state changed:', {
-            currentGameEvent,
-            currentEvent,
-            activeEvent,
+        if (!displayEvent?.effect?.affectedItems?.length) return;
+
+        const newHistory = { ...priceHistory };
+        const now = Date.now();
+
+        displayEvent.effect.affectedItems.forEach((itemId) => {
+            const item = itemsData.items.find((i) => i.itemId === itemId);
+            if (!item) return;
+
+            if (!newHistory[itemId]) {
+                newHistory[itemId] = [];
+            }
+
+            // Add current price to history
+            const marketItem = marketData?.find((m) => m.itemId === itemId);
+            if (marketItem) {
+                newHistory[itemId].push({
+                    price: marketItem.price,
+                    timestamp: now,
+                });
+
+                // Keep only last 60 seconds of data
+                newHistory[itemId] = newHistory[itemId].filter(
+                    (entry) => now - entry.timestamp <= 60000
+                );
+            }
         });
 
-        if (activeEvent) {
-            console.log('[Event] Showing event:', activeEvent.name || 'Unnamed Event');
-            setShowEvent(true);
+        setPriceHistory(newHistory);
 
-            // Auto-hide after 10 seconds
-            const timer = setTimeout(() => {
-                console.log('[Event] Auto-hiding event');
-                setShowEvent(false);
-            }, 10000);
+        // Calculate trends for items with enough history
+        const newTrendData = {};
+        Object.entries(newHistory).forEach(([itemId, prices]) => {
+            if (prices.length < 2) return;
 
-            return () => {
-                console.log('[Event] Cleaning up event timer');
-                clearTimeout(timer);
+            const firstPrice = prices[0].price;
+            const lastPrice = prices[prices.length - 1].price;
+            const priceChange = ((lastPrice - firstPrice) / firstPrice) * 100;
+
+            newTrendData[itemId] = {
+                change: priceChange,
+                direction: priceChange >= 0 ? 'up' : 'down',
+                magnitude: Math.abs(priceChange),
             };
-        } else {
-            console.log('[Event] No active event, hiding');
-            setShowEvent(false);
-        }
-    }, [activeEvent, currentGameEvent, currentEvent]);
+        });
+
+        setTrendData(newTrendData);
+    }, [tick, displayEvent, marketData]);
+
+    // Get price trend data for sparklines
+    const getPriceTrendData = useCallback(
+        (itemId) => {
+            if (improvedUILevel < 100) return [];
+
+            const history = priceHistory?.[itemId] || [];
+            if (history.length < 2) return [];
+
+            // Normalize prices for the sparkline
+            const prices = history.map((entry) => entry?.price).filter(Boolean);
+            return prices.length > 1 ? prices.slice(-10) : []; // Last 10 data points if available
+        },
+        [improvedUILevel, priceHistory]
+    );
+
+    // Get top 5 affected items by impact
+    const topAffectedItems = useMemo(() => {
+        if (!displayEvent?.effect?.affectedItems?.length) return [];
+
+        return displayEvent.effect.affectedItems
+            .map((itemId) => {
+                const item = itemsData.items.find((i) => i.itemId === itemId);
+                if (!item) return null;
+
+                const trend = trendData[itemId] || {};
+                const priceMult = randomFloatRange(
+                    displayEvent.effect.priceMultiplierRange[0],
+                    displayEvent.effect.priceMultiplierRange[1]
+                );
+                const stockMult = randomFloatRange(
+                    displayEvent.effect.stockMultiplierRange[0],
+                    displayEvent.effect.stockMultiplierRange[1]
+                );
+
+                // Calculate impact score (higher is more significant)
+                const priceImpact = Math.abs(priceMult - 1) * 100; // Convert to percentage
+                const stockImpact = Math.abs(1 - stockMult) * 100; // Invert since lower stock is more impactful
+                const impactScore = priceImpact * 0.7 + stockImpact * 0.3; // Weight price more heavily
+
+                return {
+                    ...item,
+                    priceMultiplier: priceMult,
+                    stockMultiplier: stockMult,
+                    impactScore,
+                    trend,
+                };
+            })
+            .filter(Boolean)
+            .sort((a, b) => b.impactScore - a.impactScore)
+            .slice(0, 5); // Top 5 most impacted items
+    }, [displayEvent, trendData]);
+
+    // Get the most impacted item for low UI levels
+    const getMostImpactedItem = useCallback(() => {
+        if (!topAffectedItems?.length) return null;
+        return topAffectedItems[0]; // Already sorted by impact
+    }, [topAffectedItems]);
+
+    // Update trend data when market data changes
+    useEffect(() => {
+        if (!marketData || !priceHistory) return;
+
+        const newTrendData = {};
+        Object.entries(priceHistory).forEach(([itemId, history]) => {
+            if (history?.length > 1) {
+                const prices = history.map((h) => h?.price).filter(Boolean);
+                if (prices.length > 1) {
+                    newTrendData[itemId] = {
+                        prices,
+                        timestamps: history.map((h) => h?.timestamp).filter(Boolean),
+                    };
+                }
+            }
+        });
+
+        setTrendData((prev) => ({
+            ...prev,
+            ...newTrendData,
+        }));
+    }, [marketData, priceHistory, setTrendData]);
 
     // Debug function to trigger a test event
     const triggerTestEvent = async () => {
@@ -63,15 +229,14 @@ const Event = () => {
             name: 'TEST EVENT',
             description: 'This is a test event to verify the event system is working.',
             effect: {
-                affectedItems: [1, 2, 3],
-                priceMultiplierRange: [0.5, 2.0],
-                stockMultiplierRange: [0.8, 1.2]
-            }
+                affectedItems: [1, 2, 3, 4, 5, 6, 7, 8],
+                priceMultiplierRange: [0.5, 3.0],
+                stockMultiplierRange: [0.3, 1.5],
+            },
         };
 
         console.log('[Event] Test event created:', testEvent);
 
-        // Try to use the context's trigger function if available
         try {
             if (typeof triggerRandomEvent === 'function') {
                 console.log('[Event] Using triggerRandomEvent');
@@ -83,51 +248,41 @@ const Event = () => {
                 console.log('[Event] Using setCurrentGameEvent');
                 setCurrentGameEvent(testEvent);
             } else {
-                console.error('[Event] No event trigger function available');
-                // Fallback to local state for testing
                 console.log('[Event] Using local state for testing');
                 setLocalEvent(testEvent);
                 setShowEvent(true);
                 return;
             }
 
-            // If we get here, the event was triggered through the context
-            console.log('[Event] Event triggered through context');
-
-            // Force show the event UI after a short delay to allow context to update
+            // Show the event after a short delay
             setTimeout(() => {
-                console.log('[Event] Forcing show after delay');
                 setShowEvent(true);
-                // Add a debug class to the document body to help with styling
                 document.body.classList.add('event-debug-mode');
             }, 100);
-
         } catch (error) {
             console.error('[Event] Error triggering event:', error);
         }
     };
 
-    // Local state for testing when context isn't available
-    const [localEvent, setLocalEvent] = useState({
-        name: 'TEST EVENT',
-        description: 'This is a test event to verify the event system is working.',
-        effect: {
-            affectedItems: [1, 2, 3],
-            priceMultiplierRange: [0.5, 2.0],
-            stockMultiplierRange: [0.8, 1.2]
-        }
-    });
+    // Auto-hide event after 10 seconds
+    useEffect(() => {
+        if (!showEvent || !displayEvent) return;
 
-    // Use local event if context event isn't available
-    const displayEvent = activeEvent || localEvent;
+        const timer = setTimeout(() => {
+            console.log('[Event] Auto-hiding event');
+            setShowEvent(false);
+        }, 10000);
+
+        return () => clearTimeout(timer);
+    }, [showEvent, displayEvent]);
 
     if (!showEvent || !displayEvent) {
-        // console.log('[Event] Not rendering event UI. State:', {
-        //     showEvent,
-        //     hasActiveEvent: !!activeEvent,
-        //     hasCurrentGameEvent: !!currentGameEvent,
-        //     hasCurrentEvent: !!currentEvent
-        // });
+        console.log('[Event] Not rendering event UI. State:', {
+            showEvent,
+            hasActiveEvent: !!activeEvent,
+            hasCurrentGameEvent: !!currentGameEvent,
+            hasCurrentEvent: !!currentEvent,
+        });
 
         return (
             <div
@@ -142,9 +297,9 @@ const Event = () => {
                     zIndex: 1000,
                 }}
             >
-                <div>Event System Status: {displayEvent ? 'ACTIVE' : 'INACTIVE'}</div>
-                <div>Current Event: {displayEvent ? (displayEvent.name || 'Unnamed') : 'None'}</div>
-                <div>Source: {localEvent ? 'Local' : 'Context'}</div>
+                <div>Event System Status: {activeEvent ? 'ACTIVE' : 'INACTIVE'}</div>
+                <div>Current Event: {activeEvent ? activeEvent.name || 'Unnamed' : 'None'}</div>
+                <div>UI Level: {improvedUILevel}</div>
                 <button
                     onClick={triggerTestEvent}
                     className="btn btn-sm btn-warning"
@@ -156,92 +311,362 @@ const Event = () => {
         );
     }
 
-    console.log('[Event] Rendering event UI with:', displayEvent, 'Show:', showEvent);
+    const formatMultiplier = (multiplier, showPrecise = false) => {
+        const change = (multiplier - 1) * 100;
+        const prefix = change >= 0 ? '+' : '';
 
-    // Get the event to display
-    const eventToDisplay = displayEvent || {};
-
-    // Add debug styling directly to ensure visibility
-    const debugStyle = {
-        position: 'fixed',
-        top: '20px',
-        left: '20px',
-        zIndex: 9999,
-        background: 'rgba(0, 0, 0, 0.9)',
-        border: '2px solid #00ff00',
-        borderRadius: '8px',
-        padding: '20px',
-        color: '#fff',
-        maxWidth: '400px',
-        boxShadow: '0 0 20px rgba(0, 255, 0, 0.5)'
+        // UI Level-based information disclosure
+        if (improvedUILevel >= 500) {
+            // Maximum detail for high UI levels
+            return `${prefix}${change.toFixed(2)}%`;
+        } else if (improvedUILevel >= 100) {
+            // Show one decimal place for mid-high levels
+            return `${prefix}${change.toFixed(1)}%`;
+        } else if (improvedUILevel >= 50) {
+            // Show rounded percentages for mid levels
+            return `${prefix}${Math.round(change)}%`;
+        } else if (improvedUILevel >= 25) {
+            // Just show direction and relative strength for low levels
+            const strength = Math.min(5, Math.ceil(Math.abs(change) / 20));
+            const arrow = change >= 0 ? '▲' : '▼';
+            return arrow.repeat(strength);
+        } else {
+            // Just show direction for very low levels
+            return change >= 0 ? '▲' : '▼';
+        }
     };
 
-    const formatMultiplier = (multiplier) => {
-        if (multiplier >= 1) {
-            return `+${(multiplier - 1) * 100}%`;
+    // Render content based on UI level
+    const renderContent = () => {
+        // Level 0-24: Just show event title
+        if (improvedUILevel < 25) {
+            return (
+                <div style={{ padding: '10px' }}>
+                    <div
+                        style={{
+                            fontSize: '1.2em',
+                            fontWeight: 'bold',
+                            color: '#00ff00',
+                            textAlign: 'center',
+                            marginBottom: '10px',
+                        }}
+                    >
+                        {obfuscateText(displayEvent.name || 'UNKNOWN EVENT', improvedUILevel)}
+                    </div>
+                    <div
+                        style={{
+                            fontSize: '0.8em',
+                            color: '#888',
+                            textAlign: 'center',
+                            fontStyle: 'italic',
+                        }}
+                    >
+                        [UPGRADE UI LEVEL FOR MORE INFO]
+                    </div>
+                </div>
+            );
         }
-        return `-${(1 - multiplier) * 100}%`;
+
+        // Level 25-49: Show title, description, and most impacted item
+        if (improvedUILevel < 50) {
+            const item = getMostImpactedItem();
+            return (
+                <div style={{ padding: '10px' }}>
+                    <div
+                        style={{
+                            fontSize: '1.2em',
+                            fontWeight: 'bold',
+                            color: '#00ff00',
+                            marginBottom: '10px',
+                            borderBottom: '1px solid #333',
+                            paddingBottom: '8px',
+                        }}
+                    >
+                        {displayEvent.name || 'UNKNOWN EVENT'}
+                    </div>
+                    <div
+                        style={{
+                            marginBottom: '15px',
+                            lineHeight: '1.4',
+                            color: '#aaa',
+                            fontStyle: 'italic',
+                        }}
+                    >
+                        {displayEvent.description || 'No description available'}
+                    </div>
+                    {item && (
+                        <div
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                padding: '10px',
+                                borderRadius: '4px',
+                                borderLeft: '3px solid #00ff00',
+                                marginTop: '10px',
+                            }}
+                        >
+                            <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+                                {item.name} {formatMultiplier(item.priceMultiplier)}
+                            </div>
+                            <div style={{ fontSize: '0.8em', color: '#888' }}>
+                                [UPGRADE UI LEVEL FOR MORE ITEMS]
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Level 50-99: Show all affected items with basic info
+        if (improvedUILevel < 100) {
+            return (
+                <div style={{ padding: '10px' }}>
+                    <div
+                        style={{
+                            fontSize: '1.2em',
+                            fontWeight: 'bold',
+                            color: '#00ff00',
+                            marginBottom: '10px',
+                            borderBottom: '1px solid #333',
+                            paddingBottom: '8px',
+                        }}
+                    >
+                        {displayEvent.name || 'UNKNOWN EVENT'}
+                    </div>
+                    <div
+                        style={{
+                            marginBottom: '15px',
+                            lineHeight: '1.4',
+                            color: '#aaa',
+                            fontStyle: 'italic',
+                        }}
+                    >
+                        {displayEvent.description || 'No description available'}
+                    </div>
+                    <div
+                        style={{
+                            maxHeight: '300px',
+                            overflowY: 'auto',
+                            paddingRight: '5px',
+                        }}
+                    >
+                        {topAffectedItems.map((item) => (
+                            <div
+                                key={item.itemId}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '8px',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    borderRadius: '4px',
+                                    marginBottom: '5px',
+                                }}
+                            >
+                                <div style={{ fontWeight: 'bold' }}>{item.name}</div>
+                                <div
+                                    style={{
+                                        color: item.priceMultiplier >= 1 ? '#4caf50' : '#f44336',
+                                        fontWeight: 'bold',
+                                        minWidth: '50px',
+                                        textAlign: 'right',
+                                    }}
+                                >
+                                    {formatMultiplier(item.priceMultiplier)}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Level 100+: Show full details with trendlines
+        return (
+            <div style={{ padding: '10px' }}>
+                <div
+                    style={{
+                        fontSize: '1.4em',
+                        fontWeight: 'bold',
+                        color: '#00ff00',
+                        marginBottom: '10px',
+                        borderBottom: '1px solid #333',
+                        paddingBottom: '8px',
+                        textTransform: 'uppercase',
+                    }}
+                >
+                    {displayEvent.name}
+                </div>
+
+                <div
+                    style={{
+                        marginBottom: '15px',
+                        lineHeight: '1.4',
+                        color: '#aaa',
+                        fontStyle: 'italic',
+                    }}
+                >
+                    {displayEvent.description || 'No description available'}
+                </div>
+
+                <div
+                    style={{
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        paddingRight: '5px',
+                    }}
+                >
+                    {topAffectedItems.map((item) => {
+                        const trendData = getPriceTrendData(item.itemId);
+                        return (
+                            <div
+                                key={item.itemId}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '10px',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    borderRadius: '4px',
+                                    marginBottom: '8px',
+                                    borderLeft: '3px solid #00ff00',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        fontWeight: 'bold',
+                                        minWidth: '120px',
+                                    }}
+                                >
+                                    {item.name}
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        gap: '20px',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    {trendData.length > 0 && (
+                                        <div style={{ width: '80px', marginRight: '10px' }}>
+                                            <Sparkline
+                                                data={trendData}
+                                                width={80}
+                                                height={30}
+                                                color={
+                                                    item.priceMultiplier >= 1
+                                                        ? '#4caf50'
+                                                        : '#f44336'
+                                                }
+                                            />
+                                        </div>
+                                    )}
+
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'flex-end',
+                                            minWidth: '100px',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                color:
+                                                    item.priceMultiplier >= 1
+                                                        ? '#4caf50'
+                                                        : '#f44336',
+                                                fontWeight: 'bold',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                        >
+                                            PRICE: {formatMultiplier(item.priceMultiplier, true)}
+                                        </div>
+                                        <div
+                                            style={{
+                                                color:
+                                                    item.stockMultiplier >= 1
+                                                        ? '#4caf50'
+                                                        : '#f44336',
+                                                fontSize: '0.9em',
+                                                opacity: 0.8,
+                                            }}
+                                        >
+                                            STOCK: {formatMultiplier(item.stockMultiplier, true)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+
+                    {improvedUILevel >= 500 && (
+                        <div
+                            style={{
+                                marginTop: '15px',
+                                padding: '10px',
+                                background: 'rgba(0, 255, 0, 0.1)',
+                                borderRadius: '4px',
+                                borderLeft: '3px solid #00ff00',
+                                fontSize: '0.9em',
+                                color: '#8bc34a',
+                                fontStyle: 'italic',
+                            }}
+                        >
+                            {/* TODO: Implement with quantum setup to allow for auto trading */}
+                            Quantum trading analysis available at UI Level 1000+
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
     };
 
     return (
-        <div 
+        <div
             className={`event-container ${showEvent ? 'active' : ''}`}
-            style={showEvent ? debugStyle : { display: 'none' }}
+            style={{
+                position: 'fixed',
+                top: '20px',
+                left: '20px',
+                zIndex: 9999,
+                background: 'rgba(0, 0, 0, 0.95)',
+                border: '2px solid #00ff00',
+                borderRadius: '8px',
+                color: '#fff',
+                maxWidth: '600px',
+                boxShadow: '0 0 20px rgba(0, 255, 0, 0.5)',
+            }}
         >
-            <button 
-                className="close-button" 
+            <button
+                className="close-button"
                 onClick={() => setShowEvent(false)}
                 style={{
                     position: 'absolute',
-                    top: '5px',
-                    right: '5px',
-                    background: 'red',
-                    border: 'none',
+                    top: '10px',
+                    right: '10px',
+                    background: 'rgba(255, 0, 0, 0.7)',
+                    border: '1px solid #ff4444',
                     color: 'white',
                     borderRadius: '50%',
-                    width: '20px',
-                    height: '20px',
+                    width: '24px',
+                    height: '24px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    lineHeight: '1',
+                    padding: 0,
+                    transition: 'all 0.2s ease',
+                    outline: 'none',
                 }}
+                onMouseOver={(e) => (e.target.style.background = 'rgba(255, 50, 50, 0.9)')}
+                onMouseOut={(e) => (e.target.style.background = 'rgba(255, 0, 0, 0.7)')}
             >
                 ×
             </button>
-            <div className="event-header">{eventToDisplay.name || 'Unknown Event'}</div>
-            <div className="event-description">{eventToDisplay.description || 'No description available'}</div>
-            <div className="event-effects">
-                {eventToDisplay.effect?.affectedItems?.map((itemId) => {
-                    const item = itemsData.items.find((i) => i.itemId === itemId);
-                    if (!item) return null;
-                    return (
-                        <div key={itemId} className="effect-item">
-                            <div className="item-name">{item.name}</div>
-                            <div className="effect-values">
-                                <span className="price-change">
-                                    Price:{' '}
-                                    {formatMultiplier(
-                                        randomFloatRange(
-                                            eventToDisplay.effect?.priceMultiplierRange?.[0] || 0.5,
-                                            eventToDisplay.effect?.priceMultiplierRange?.[1] || 2.0
-                                        )
-                                    )}
-                                </span>
-                                <span className="stock-change">
-                                    Stock:{' '}
-                                    {formatMultiplier(
-                                        randomFloatRange(
-                                            eventToDisplay.effect?.stockMultiplierRange?.[0] || 0.8,
-                                            eventToDisplay.effect?.stockMultiplierRange?.[1] || 1.2
-                                        )
-                                    )}
-                                </span>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
+            {renderContent()}
         </div>
     );
 };
