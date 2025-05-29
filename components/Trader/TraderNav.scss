@@ -1,20 +1,58 @@
 /* Mixins for UI Tiers */
 @import '../../App.scss';
 
+// Responsive breakpoints
+$breakpoint-mobile: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+
+// Mixins for responsive design
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile - 1px}) { @content; }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-desktop - 1px}) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-desktop) { @content; }
+}
+
 // Base button styles (level 0-49)
 @mixin button-base-styles {
     width: 100%;
-    margin: 0.2rem 0;
-    padding: 0.4rem 0.8rem;
+    margin: 0.15rem 0;
+    padding: 0.35rem 0.6rem;
     border: 1px solid rgba(60, 60, 60, 0.3);
-    border-radius: 1px;
+    border-radius: 2px;
     cursor: pointer;
     font-weight: normal;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
     background: rgba(20, 20, 20, 0.2);
     color: rgba(140, 140, 140, 0.6);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include mobile {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+        margin: 0.1rem 0;
+    }
+
+    @include tablet {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.6rem;
+    }
+
+    @include desktop {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
 
     /* No hover effects until level 50 */
     &:hover {
@@ -196,6 +234,22 @@
 .btn--travel__next {
     max-width: 10rem;
     text-align: center;
+    margin: 0.5rem auto;
+    display: block;
+    
+    @include mobile {
+        max-width: 8rem;
+        margin: 0.3rem auto;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    @include tablet {
+        max-width: 9rem;
+    }
+    
+    @include desktop {
+        max-width: 10rem;
+    }
 }
 
 .btn--travel__prev {

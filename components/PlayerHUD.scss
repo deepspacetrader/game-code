@@ -1,36 +1,99 @@
+// Import breakpoints from App.scss
+@import '../App.scss';
+
 .spaceship-hud {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    padding: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    padding: 8px;
     background: var(--hud-bg);
     border: 2px solid var(--hud-border);
     border-radius: 8px;
     box-shadow: 0 0 10px var(--cell-hover-shadow);
+    overflow: hidden;
+
+    @include mobile {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 6px;
+    }
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 8px;
+    }
+
+    @include desktop {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
 }
 
 .sticky-hud {
     position: sticky;
     top: 0;
     z-index: 2;
+    margin-bottom: 0.5rem;
+
+    @include mobile {
+        margin-bottom: 0.3rem;
+    }
 }
 
 .spaceship-hud__galaxy {
     grid-column: 1 / -1;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--hud-text);
     text-align: center;
-    margin-bottom: 5px;
+    margin: 0 0 5px 0;
+    padding: 0.3rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include mobile {
+        font-size: 1rem;
+        padding: 0.2rem 0;
+    }
+
+    @include tablet {
+        font-size: 1.1rem;
+    }
+
+    @include desktop {
+        font-size: 1.2rem;
+    }
 }
 
 .hud-item {
     background: var(--cell-bg);
-    padding: 8px;
+    padding: 6px 4px;
     border: 1px solid var(--cell-border);
     border-radius: 4px;
     text-align: center;
     transition: background 0.3s, box-shadow 0.3s;
     position: relative;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 50px;
+
+    @include mobile {
+        padding: 4px 2px;
+        font-size: 0.8em;
+        min-height: 45px;
+    }
+
+    @include tablet {
+        padding: 6px 4px;
+    }
+
+    @include desktop {
+        padding: 8px;
+        font-size: 0.9em;
+    }
 }
 
 .hud-item:hover {
@@ -71,9 +134,19 @@
 
 /* Ship Installed Modules UI */
 .ship-inventory {
-    margin-top: 16px;
+    margin-top: 12px;
     border-top: 1px solid var(--cell-border);
-    padding-top: 8px;
+    padding-top: 6px;
+
+    @include mobile {
+        margin-top: 8px;
+        padding-top: 4px;
+    }
+
+    @include tablet {
+        margin-top: 12px;
+        padding-top: 6px;
+    }
 }
 
 .module-item {
