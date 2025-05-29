@@ -1,15 +1,14 @@
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { zzfx } from 'zzfx';
 import { randomFloatRange } from '../../utils/helpers';
+import { zzfx } from 'zzfx';
 import {
-    faLock,
-    faLockOpen,
-    faBolt,
     faSearch,
-    faHandHoldingUsd,
     faMicrochip,
+    faLockOpen,
+    faLock,
+    faHandHoldingUsd,
     faArrowRight,
     faArrowLeft,
     faArrowUp,
@@ -20,41 +19,146 @@ import './QuantumSetup.scss';
 const QuantumSetup = ({ setStatusEffects }) => {
     const {
         inventory,
+        quantumInventory,
         subtractQuantumProcessor,
-        quantumAbilitiesEnabled,
+        quantumPower,
         setQuantumSlotsUsed,
         toggleQuantumAbilities,
         volumeRef,
     } = useMarketplace();
     const quantumProcessor = inventory.find((i) => i.name === 'Quantum Processor');
     const quantumCount = quantumProcessor?.quantity || 0;
-    const slotsCount = 5;
+    const slotsCount = 6; // Increased from 5 to 6
 
-    // Initialize slots with random scan directions and ensure last is always Quantum Market
+    // Ability descriptions
+    const ABILITY_DESCRIPTIONS = {
+        QuantumHover: 'Reveals item details and trading recommendations on hover',
+        QuantumScan: 'Scans the market grid in a specific direction to find profitable trades',
+        QuantumMarket: 'Advanced trading system for bulk market operations',
+    };
+
+    const [activeAbility, setActiveAbility] = useState(null);
+
+    // Set first ability as active by default if available
+    useEffect(() => {
+        if (quantumInventory.length > 0 && !activeAbility) {
+            setActiveAbility(quantumInventory[0]);
+        }
+    }, [quantumInventory, activeAbility]);
+
+    // Always show the menu if there are quantum abilities, regardless of UI level
+    const hasQuantumAbilities = quantumInventory.length > 0;
+    // Only hide the menu if UI level is too low and no abilities are unlocked
+    // if (improvedUILevel < 5 && !hasQuantumAbilities) return null;
+    // Initialize slots with random scan directions from standard abilities
     const [slots, setSlots] = useState(() => {
-        const initialSlots = Array(slotsCount)
-            .fill(null)
-            .map((_, index) => {
-                if (index === slotsCount - 1) {
-                    return { active: false, ability: 'QuantumMarket' };
-                }
+        // Standard abilities (5 unique abilities for 6 slots)
+        const standardAbilities = [
+            'QuantumScanLR',
+            'QuantumScanTB',
+            'QuantumScanRL',
+            'QuantumScanBT',
+            'QuantumHover',
+        ];
 
-                // Randomly assign a scan direction
-                const scanTypes = [
-                    'QuantumScanLR',
-                    'QuantumScanTB',
-                    'QuantumScanRL',
-                    'QuantumScanBT',
-                ];
-                const randomScan = scanTypes[Math.floor(Math.random() * scanTypes.length)];
+        // Shuffle the standard abilities
+        const shuffledAbilities = [...standardAbilities];
+        for (let i = shuffledAbilities.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledAbilities[i], shuffledAbilities[j]] = [
+                shuffledAbilities[j],
+                shuffledAbilities[i],
+            ];
+        }
 
-                return {
-                    active: false,
-                    ability: Math.random() < 0.3 ? 'QuantumHover' : randomScan,
-                };
+        // Create slots with unique abilities (one ability will be used twice)
+        const initialSlots = [];
+        for (let i = 0; i < slotsCount; i++) {
+            // For the 6th slot, use a random ability from the first 5
+            const abilityIndex =
+                i < standardAbilities.length
+                    ? i
+                    : Math.floor(Math.random() * standardAbilities.length);
+            initialSlots.push({
+                active: false,
+                ability: shuffledAbilities[abilityIndex],
+                used: false,
             });
+        }
+
         return initialSlots;
     });
+
+    // Shuffle unused slots, ensuring no duplicates and the 6th becomes QuantumMarket when 5 slots are used
+    const shuffleUnusedSlots = useCallback(() => {
+        setSlots((prevSlots) => {
+            const unusedSlots = prevSlots.filter((slot) => !slot.used);
+            const usedSlots = prevSlots.filter((slot) => slot.used);
+
+            // If we have 5 used slots and 1 unused, make it QuantumMarket
+            if (usedSlots.length === 5 && unusedSlots.length === 1) {
+                const newSlots = [...prevSlots];
+                const lastUnusedIndex = newSlots.findIndex((slot) => !slot.used);
+                if (lastUnusedIndex !== -1) {
+                    newSlots[lastUnusedIndex] = {
+                        ...newSlots[lastUnusedIndex],
+                        ability: 'QuantumMarket',
+                        active: true,
+                        used: true,
+                    };
+                    return newSlots;
+                }
+                return prevSlots;
+            }
+
+            // Standard abilities (all except QuantumMarket)
+            const standardAbilities = [
+                'QuantumScanLR',
+                'QuantumScanTB',
+                'QuantumScanRL',
+                'QuantumScanBT',
+                'QuantumHover',
+            ];
+
+            // Get abilities that are currently used in standard slots
+            const usedAbilities = new Set(usedSlots.map((slot) => slot.ability));
+
+            // Filter out abilities that are already used from standard abilities
+            const availableAbilities = standardAbilities.filter((a) => !usedAbilities.has(a));
+
+            // If no available abilities, return current state
+            if (availableAbilities.length === 0) {
+                return prevSlots;
+            }
+
+            // Shuffle the available abilities
+            const shuffledAbilities = [...availableAbilities];
+            for (let i = shuffledAbilities.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledAbilities[i], shuffledAbilities[j]] = [
+                    shuffledAbilities[j],
+                    shuffledAbilities[i],
+                ];
+            }
+
+            // Assign new abilities to unused slots
+            let abilityIndex = 0;
+            return prevSlots.map((slot) => {
+                if (slot.used) return slot;
+
+                // If we've used all unique abilities, start reusing them
+                const ability =
+                    abilityIndex < shuffledAbilities.length
+                        ? shuffledAbilities[abilityIndex++]
+                        : shuffledAbilities[Math.floor(Math.random() * shuffledAbilities.length)];
+
+                return {
+                    ...slot,
+                    ability,
+                };
+            });
+        });
+    }, []);
 
     // Quantum ability definitions with icons and descriptions
     const QUANTUM_ABILITIES = {
@@ -62,119 +166,109 @@ const QuantumSetup = ({ setStatusEffects }) => {
             name: 'Quantum Hover',
             icon: faSearch,
             description: 'Reveals detailed item information on hover',
-            color: '#4fc3f7',
-            power: 1,
-            uiLevelRequired: 5,
         },
         QuantumScanLR: {
             name: 'Quantum Scan LR',
             icon: faArrowRight,
             description: 'Scans the market from left to right',
-            color: '#69f0ae',
-            power: 2,
-            uiLevelRequired: 15,
         },
         QuantumScanTB: {
             name: 'Quantum Scan TB',
             icon: faArrowDown,
             description: 'Scans the market from top to bottom',
-            color: '#69f0ae',
-            power: 2,
-            uiLevelRequired: 15,
         },
         QuantumScanRL: {
             name: 'Quantum Scan RL',
             icon: faArrowLeft,
             description: 'Scans the market from right to left',
-            color: '#69f0ae',
-            power: 2,
-            uiLevelRequired: 15,
         },
         QuantumScanBT: {
             name: 'Quantum Scan BT',
             icon: faArrowUp,
             description: 'Scans the market from bottom to top',
-            color: '#69f0ae',
-            power: 2,
-            uiLevelRequired: 15,
         },
         QuantumMarket: {
             name: 'Quantum Market',
             icon: faHandHoldingUsd,
             description: 'Advanced market analysis and automation',
-            color: '#ff8a65',
-            power: 3,
-            uiLevelRequired: 30,
         },
     };
-
-    // Calculate total power based on active slots
-    const totalPower = useMemo(() => {
-        return slots.reduce((sum, slot) => {
-            return slot.active ? sum + (QUANTUM_ABILITIES[slot.ability]?.power || 0) : sum;
-        }, 0);
-    }, [slots]);
 
     // Toggle slot activation
     const toggleSlotActivation = useCallback(
         async (index) => {
-            // Don't allow toggling if no quantum processors available
-            if (quantumCount <= 0) {
-                return;
-            }
+            // Use functional update to ensure we have the latest state
+            setSlots((prevSlots) => {
+                const slot = prevSlots[index];
+                const usedSlots = prevSlots.filter((s) => s.used);
+                const usedCount = usedSlots.length;
 
-            const slot = slots[index];
+                // Don't allow toggling if slot is already used
+                if (slot.used) {
+                    return prevSlots;
+                }
 
-            // If slot is active, deactivate it
-            if (slot.active) {
-                setSlots((prev) => {
-                    const newSlots = [...prev];
-                    newSlots[index] = { ...slot, active: false };
-                    return newSlots;
-                });
-                return;
-            }
+                // Create a copy of the slots to modify
+                const newSlots = [...prevSlots];
 
-            // If slot is inactive, try to activate it
-            try {
-                // Deduct quantum processor
-                await subtractQuantumProcessor(1);
+                // Get all standard abilities (excluding QuantumMarket)
+                const standardAbilities = [
+                    'QuantumScanLR',
+                    'QuantumScanTB',
+                    'QuantumScanRL',
+                    'QuantumScanBT',
+                    'QuantumHover',
+                ];
 
-                // Update the specific slot that was clicked
-                setSlots((prev) => {
-                    const newSlots = [...prev];
+                // Get list of currently used abilities
+                const usedAbilities = new Set(usedSlots.map(s => s.ability));
+                
+                // Filter out used abilities from standard abilities
+                const availableAbilities = standardAbilities.filter(a => !usedAbilities.has(a));
+                
+                // If this is the last available slot, make it QuantumMarket
+                if (availableAbilities.length === 0) {
                     newSlots[index] = {
                         ...slot,
+                        ability: 'QuantumMarket',
                         active: true,
+                        used: true,
                     };
-                    return newSlots;
-                });
+                } else {
+                    // Randomly select an available ability
+                    const randomIndex = Math.floor(Math.random() * availableAbilities.length);
+                    const selectedAbility = availableAbilities[randomIndex];
+                    
+                    newSlots[index] = {
+                        ...slot,
+                        ability: selectedAbility,
+                        active: true,
+                        used: true,
+                    };
+                }
+
+                // Calculate new active count (count all active slots)
+                const activeCount = newSlots.filter((s) => s.active).length;
+
+                // Update quantum slots used count
+                setQuantumSlotsUsed(activeCount);
 
                 // Update status effects
                 setStatusEffects((prev) => ({
                     ...prev,
                     'Quantum Processor': {
                         ...prev['Quantum Processor'],
-                        level: slots.filter((s) => s.active).length + 1,
-                        quantity: quantumProcessor.quantity - 1,
+                        level: activeCount,
+                        quantity: quantumProcessor?.quantity || 0,
                         lastTradeTime: Date.now(),
-                        active: true,
+                        active: activeCount > 0,
                     },
                 }));
 
-                setQuantumSlotsUsed((prev) => prev + 1);
-            } catch (error) {
-                console.error('Error in toggleSlotActivation:', error);
-            }
+                return newSlots;
+            });
         },
-        [
-            quantumCount,
-            quantumProcessor,
-            subtractQuantumProcessor,
-            setStatusEffects,
-            setQuantumSlotsUsed,
-            slots,
-        ]
+        [quantumProcessor, setStatusEffects, setQuantumSlotsUsed]
     );
 
     // Update quantumSlotsUsed when slots change
@@ -196,19 +290,13 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 <h3>Quantum Processor</h3>
             </div>
             <div className="quantum-toggle-container">
-                <div
-                    className={`quantum-status ${
-                        !quantumAbilitiesEnabled ? 'status-inactive' : ''
-                    }`}
-                >
+                <div className={`quantum-status ${!quantumPower ? 'status-inactive' : ''}`}>
                     <span className="status-indicator">
-                        <span className={`pulse ${quantumAbilitiesEnabled ? 'active' : ''}`}></span>
-                        Quantum {quantumAbilitiesEnabled ? 'Active' : 'Inactive'}
+                        <span className={`pulse ${quantumPower ? 'active' : ''}`}></span>
+                        Quantum {quantumPower ? 'Active' : 'Inactive'}
                     </span>
                     <button
-                        className={`quantum-toggle ${
-                            quantumAbilitiesEnabled ? 'enabled' : 'disabled'
-                        }`}
+                        className={`quantum-toggle ${quantumPower ? 'enabled' : 'disabled'}`}
                         onMouseDown={() => {
                             let randomDecay = randomFloatRange(0.1337, 0.4269).toFixed(3);
                             console.log(randomDecay);
@@ -280,29 +368,59 @@ const QuantumSetup = ({ setStatusEffects }) => {
                                 console.log('Toggling quantum abilities. Current state:', prev);
                                 return !prev;
                             });
+
+                            setStatusEffects((prev) => ({
+                                ...prev,
+                                'Quantum Processor': {
+                                    ...prev['Quantum Processor'],
+                                    level: quantumInventory.length,
+                                },
+                            }));
                         }}
                         title={
-                            quantumAbilitiesEnabled
+                            quantumPower
                                 ? 'Disable all quantum abilities'
                                 : 'Enable all quantum abilities'
                         }
                     >
-                        {quantumAbilitiesEnabled ? 'Disable' : 'Enable'}
+                        {quantumPower ? 'Disable' : 'Enable'}
                     </button>
                 </div>
+            </div>
+
+            <div className="quantum-abilities">
+                <div className="ability-selector">
+                    {quantumInventory.map((ability) => (
+                        <button
+                            key={ability}
+                            className={`ability-tab ${activeAbility === ability ? 'active' : ''}`}
+                            onClick={() => setActiveAbility(ability)}
+                        >
+                            {ability.replace('Quantum', '')}
+                        </button>
+                    ))}
+                </div>
+
+                {activeAbility && (
+                    <div className="ability-details">
+                        <h4>{activeAbility}</h4>
+                        <p>{ABILITY_DESCRIPTIONS[activeAbility] || 'No description available.'}</p>
+                    </div>
+                )}
             </div>
 
             <div className="slots">
                 {slots.map((slot, idx) => {
                     const ability = slot.active ? QUANTUM_ABILITIES[slot.ability] : null;
                     const isUnlocked = slot.active;
+                    const isQuantumHover = slot.ability === 'QuantumHover';
 
                     return (
                         <div
                             key={idx}
                             className={`slot ${slot.active ? 'active' : ''} ${
                                 isUnlocked ? 'unlocked' : 'locked'
-                            }`}
+                            } ${isQuantumHover ? 'quantum-hover' : ''}`}
                             onClick={() => toggleSlotActivation(idx)}
                             title={ability?.description || 'Empty slot'}
                         >
@@ -311,14 +429,35 @@ const QuantumSetup = ({ setStatusEffects }) => {
                                     <>
                                         <div
                                             className="ability-icon"
-                                            style={{ color: ability?.color || '#fff' }}
+                                            style={{
+                                                color: ability?.color || '#fff',
+                                                fontSize: '1.5em',
+                                                marginBottom: '8px',
+                                                filter: `drop-shadow(0 0 4px ${ability?.color}80)`,
+                                            }}
                                         >
                                             <FontAwesomeIcon icon={ability?.icon || faMicrochip} />
                                         </div>
-                                        <div className="ability-name">
+                                        <div
+                                            className="ability-name"
+                                            style={{
+                                                fontSize: '0.8em',
+                                                marginBottom: '4px',
+                                                textShadow: '0 0 5px currentColor',
+                                            }}
+                                        >
                                             {ability?.name || 'Unknown Ability'}
                                         </div>
-                                        <div className="slot-status">
+                                        <div
+                                            className="slot-status"
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: '4px',
+                                                right: '4px',
+                                                fontSize: '0.7em',
+                                                opacity: 0.7,
+                                            }}
+                                        >
                                             <FontAwesomeIcon
                                                 icon={slot.active ? faLockOpen : faLock}
                                             />

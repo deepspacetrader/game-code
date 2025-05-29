@@ -6,8 +6,8 @@ import FloatingMessage from './Reusable/FloatingMessage';
 import { useUI } from '../context/UIContext';
 
 const PlayerHUD = () => {
-    const { credits, health, fuel, stealthActive, shieldActive, courierDrones } = useMarketplace();
-    const { uiTier, improvedUILevel } = useUI();
+    const { credits, health, fuel, stealthActive, shieldActive } = useMarketplace();
+    const { uiTier, improvedUILevel, courierDrones } = useUI();
 
     const { statEffects, addStatEffect } = useStatusEffects();
     const prevCredits = React.useRef(credits);

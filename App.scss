@@ -22,29 +22,35 @@ $breakpoint-large: 1200px;
 
 // Mixins for responsive design
 @mixin mobile {
-  @media (max-width: #{$breakpoint-mobile - 1px}) { @content; }
+    @media (max-width: #{$breakpoint-mobile - 1px}) {
+        @content;
+    }
 }
 
 @mixin tablet {
-  @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-desktop - 1px}) { @content; }
+    @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-desktop - 1px}) {
+        @content;
+    }
 }
 
 @mixin desktop {
-  @media (min-width: $breakpoint-desktop) { @content; }
+    @media (min-width: $breakpoint-desktop) {
+        @content;
+    }
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: #000;
     color: #fff;
     line-height: 1.4;
     font-size: 16px;
-    
+
     @include mobile {
         font-size: 14px;
     }
@@ -69,14 +75,14 @@ h3.qs {
     padding: 5px;
     margin: 5px;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    
+
     @include mobile {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 3px;
         padding: 3px;
         margin: 3px;
     }
-    
+
     @include tablet {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     }
@@ -88,12 +94,12 @@ h3.qs {
     position: relative;
     font-size: 0.9em;
     word-break: break-word;
-    
+
     @include mobile {
         padding: 6px 4px;
         font-size: 0.8em;
     }
-    
+
     @include tablet {
         padding: 8px 6px;
     }
@@ -125,13 +131,13 @@ h3.qs {
     background-color: #222;
     color: #fff;
     align-items: center;
-    
+
     @include mobile {
         gap: 6px;
         padding: 6px;
         justify-content: space-between;
     }
-    
+
     @include tablet {
         flex-wrap: nowrap;
         gap: 12px;
@@ -143,12 +149,12 @@ button {
     padding: 6px 10px;
     font-size: 0.9em;
     white-space: nowrap;
-    
+
     @include mobile {
         padding: 4px 8px;
         font-size: 0.85em;
     }
-    
+
     @include tablet {
         padding: 6px 10px;
     }
@@ -259,6 +265,7 @@ button {
         padding: 0.2469rem 0.4201337rem;
         border-radius: 4px;
         font-size: 0.5rem;
+        z-index: 99999999999;
     }
 }
 

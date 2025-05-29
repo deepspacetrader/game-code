@@ -10,7 +10,6 @@
     border: 2px solid var(--hud-border);
     border-radius: 8px;
     box-shadow: 0 0 10px var(--cell-hover-shadow);
-    overflow: hidden;
 
     @include mobile {
         grid-template-columns: repeat(2, 1fr);
