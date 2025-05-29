@@ -11,7 +11,7 @@ import TraderNav from './components/Trader/TraderNav';
 import PlayerHUD from './components/PlayerHUD';
 import TradingArea from './components/Trading/TradingArea';
 import InventoryPane from './components/Inventory/InventoryPane';
-import AdminDebug from './components/Misc/AdminDebug';
+import AdminDebug from './components/Admin/AdminDebug';
 import TravelOverlay from './components/Travel/TravelOverlay';
 import GameOverScreen from './components/Game/GameOverScreen';
 import FastestTimes from './components/FastestTimes';

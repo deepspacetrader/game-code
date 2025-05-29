@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zzfx } from 'zzfx';
+import { randomFloatRange } from '../../utils/helpers';
 import {
     faLock,
     faLockOpen,
@@ -16,11 +17,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import './QuantumSetup.scss';
 
-const QuantumSetup = ({ setQuantumSlotsUsed, setStatusEffects }) => {
+const QuantumSetup = ({ setStatusEffects }) => {
     const {
         inventory,
         subtractQuantumProcessor,
         quantumAbilitiesEnabled,
+        setQuantumSlotsUsed,
         toggleQuantumAbilities,
         volumeRef,
     } = useMarketplace();
@@ -113,22 +115,6 @@ const QuantumSetup = ({ setQuantumSlotsUsed, setStatusEffects }) => {
         }, 0);
     }, [slots]);
 
-    // Generate power indicators
-    const renderPowerIndicators = (power) => {
-        return Array(3)
-            .fill(0)
-            .map((_, i) => (
-                <FontAwesomeIcon
-                    key={i}
-                    icon={faBolt}
-                    className={`power-indicator ${i < power ? 'active' : ''}`}
-                    style={{
-                        color: i < power ? QUANTUM_ABILITIES[slots[i]]?.color || '#fff' : '#555',
-                    }}
-                />
-            ));
-    };
-
     // Toggle slot activation
     const toggleSlotActivation = useCallback(
         async (index) => {
@@ -200,63 +186,112 @@ const QuantumSetup = ({ setQuantumSlotsUsed, setStatusEffects }) => {
     // UI tier is always at least 'medium' for Quantum Setup to be visible
     const uiTier = 'medium';
 
+    // Refs for tracking button hold state
+    const isMouseDownRef = useRef(false);
+    const soundTimeoutRef = useRef(null);
+
     return (
         <div className={`quantum-setup ${uiTier}`}>
             <div className="quantum-header">
                 <h3>Quantum Processor</h3>
-                <div className="power-level">
-                    <span>Power:</span>
-                    <div className="power-indicators">{renderPowerIndicators(totalPower)}</div>
-                </div>
+            </div>
+            <div className="quantum-toggle-container">
+                <div
+                    className={`quantum-status ${
+                        !quantumAbilitiesEnabled ? 'status-inactive' : ''
+                    }`}
+                >
+                    <span className="status-indicator">
+                        <span className={`pulse ${quantumAbilitiesEnabled ? 'active' : ''}`}></span>
+                        Quantum {quantumAbilitiesEnabled ? 'Active' : 'Inactive'}
+                    </span>
+                    <button
+                        className={`quantum-toggle ${
+                            quantumAbilitiesEnabled ? 'enabled' : 'disabled'
+                        }`}
+                        onMouseDown={() => {
+                            let randomDecay = randomFloatRange(0.1337, 0.4269).toFixed(3);
+                            console.log(randomDecay);
+                            zzfx(
+                                volumeRef.current,
+                                0.1,
+                                397,
+                                0.36,
+                                0.07,
+                                0.07,
+                                1,
+                                0.37,
+                                -16,
+                                -871,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                randomDecay, //decay
+                                0.24,
+                                0.23,
+                                0.09,
+                                0,
+                                840
+                            ); // Pickup 96
 
-                <div className="quantum-toggle-container">
-                    <div className="quantum-status">
-                        <span className="status-indicator">
-                            <span
-                                className={`pulse ${quantumAbilitiesEnabled ? 'active' : ''}`}
-                            ></span>
-                            Quantum {quantumAbilitiesEnabled ? 'Active' : 'Inactive'}
-                        </span>
-                        <button
-                            className={`quantum-toggle ${
-                                quantumAbilitiesEnabled ? 'enabled' : 'disabled'
-                            }`}
-                            onClick={() => {
-                                zzfx(
-                                    ...[
-                                        2.05,
-                                        volumeRef.current,
-                                        392,
-                                        0.01,
-                                        0.05,
-                                        0.1,
-                                        1,
-                                        2,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                        10,
-                                    ]
-                                );
-                                // Use the callback form of setState to ensure we have the latest value
-                                toggleQuantumAbilities((prev) => {
-                                    console.log('Toggling quantum abilities. Current state:', prev);
-                                    return !prev;
-                                });
-                            }}
-                            title={
-                                quantumAbilitiesEnabled
-                                    ? 'Disable all quantum abilities'
-                                    : 'Enable all quantum abilities'
+                            isMouseDownRef.current = true;
+                            soundTimeoutRef.current = setTimeout(() => {
+                                if (isMouseDownRef.current) {
+                                    zzfx(
+                                        ...[
+                                            volumeRef.current,
+                                            0,
+                                            392,
+                                            0.01,
+                                            0.05,
+                                            0.1,
+                                            1,
+                                            2,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            10,
+                                        ]
+                                    );
+                                }
+                            }, 420); // 420ms delay before sound
+                        }}
+                        onMouseUp={() => {
+                            isMouseDownRef.current = false;
+                            if (soundTimeoutRef.current) {
+                                clearTimeout(soundTimeoutRef.current);
+                                soundTimeoutRef.current = null;
                             }
-                        >
-                            {quantumAbilitiesEnabled ? 'Disable' : 'Enable'}
-                        </button>
-                    </div>
+                        }}
+                        onMouseLeave={() => {
+                            isMouseDownRef.current = false;
+                            if (soundTimeoutRef.current) {
+                                clearTimeout(soundTimeoutRef.current);
+                                soundTimeoutRef.current = null;
+                            }
+                        }}
+                        onClick={() => {
+                            // Use the callback form of setState to ensure we have the latest value
+                            toggleQuantumAbilities((prev) => {
+                                console.log('Toggling quantum abilities. Current state:', prev);
+                                return !prev;
+                            });
+                        }}
+                        title={
+                            quantumAbilitiesEnabled
+                                ? 'Disable all quantum abilities'
+                                : 'Enable all quantum abilities'
+                        }
+                    >
+                        {quantumAbilitiesEnabled ? 'Disable' : 'Enable'}
+                    </button>
                 </div>
             </div>
+
             <div className="slots">
                 {slots.map((slot, idx) => {
                     const ability = slot.active ? QUANTUM_ABILITIES[slot.ability] : null;

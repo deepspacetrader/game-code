@@ -7,14 +7,115 @@
     background: rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 
+    .quantum-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+
+        h3 {
+            margin: 0;
+            color: var(--text);
+        }
+    }
+
     // Opacity variants
-    &.low { opacity: 0.6; }
-    &.medium { opacity: 0.75; }
-    &.high { opacity: 1; }
-    
+    &.low {
+        opacity: 0.6;
+    }
+    &.medium {
+        opacity: 0.75;
+    }
+    &.high {
+        opacity: 1;
+    }
+
     // Border color variants
-    &.ultra { border-color: var(--accent); }
-    &.elite { border-color: var(--info); }
+    &.ultra {
+        border-color: var(--accent);
+    }
+    &.elite {
+        border-color: var(--info);
+    }
+
+    .quantum-toggle-container {
+        .quantum-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(165, 20, 10, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+            color: #aaf;
+
+            .pulse {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #f55;
+                opacity: 0.7;
+                transition: all 0.3s ease;
+
+                &.active {
+                    background: #5f5;
+                    box-shadow: 0 0 10px #5f5;
+                    animation: pulse 2s infinite;
+                }
+            }
+        }
+    }
+
+    .quantum-toggle {
+        padding: 4px 10px;
+        border: 1px solid #4a9;
+        background: #113344;
+        color: #8cf;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        font-size: 0.85em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: bold;
+        text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
+
+        &:hover {
+            background: #225577;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        &.enabled {
+            background: #1a7a4a;
+            color: #fff;
+            border-color: #4f8;
+            box-shadow: 0 0 10px rgba(100, 255, 200, 0.7), 0 0 20px rgba(100, 255, 200, 0.3) inset;
+
+            &:hover {
+                background: #2a9a5a;
+                box-shadow: 0 0 15px rgba(100, 255, 200, 0.9),
+                    0 0 25px rgba(100, 255, 200, 0.4) inset;
+            }
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+    }
 
     // Slots container
     .slots {
@@ -34,7 +135,7 @@
         cursor: pointer;
         transition: all 0.2s ease;
 
-        input[type="checkbox"] {
+        input[type='checkbox'] {
             display: none; // Hide default checkbox
         }
 
@@ -66,8 +167,30 @@
 
     // Professional UI (500+)
     &.professional {
-        .slots { gap: 12px; }
-        
+        .quantum-status {
+            padding: 8px 15px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+
+            .status-indicator {
+                font-size: 0.95rem;
+
+                .pulse {
+                    width: 12px;
+                    height: 12px;
+                }
+            }
+
+            .quantum-toggle {
+                padding: 6px 15px;
+                font-size: 0.95rem;
+                border-radius: 6px;
+            }
+        }
+        .slots {
+            gap: 12px;
+        }
+
         .slot {
             width: 100px;
             height: 100px;
@@ -82,10 +205,29 @@
     }
 
     // High-tier UI (1000+)
-    $high-tiers: 'skilled', 'knowledgeable', 'smart', 'expert', 'master', 'grandmaster', 'elite', 'legendary', 'potential', 'endgame';
+    $high-tiers: 'skilled', 'knowledgeable', 'smart', 'expert', 'master', 'grandmaster', 'elite',
+        'legendary', 'potential', 'endgame';
 
     @each $tier in $high-tiers {
         &.#{$tier} {
+            .quantum-status {
+                padding: 10px 20px;
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.4);
+                border: 1px solid var(--hud-border);
+
+                .status-indicator {
+                    font-size: 1rem;
+                    font-weight: 500;
+
+                    .pulse {
+                        width: 14px;
+                        height: 14px;
+                        box-shadow: 0 0 10px currentColor;
+                    }
+                }
+            }
+
             .slots {
                 gap: 16px;
             }
@@ -103,7 +245,11 @@
                     height: 100%;
                     border: 2px solid var(--accent);
                     border-radius: 12px;
-                    background: linear-gradient(135deg, rgba(40, 40, 60, 0.7), rgba(20, 20, 40, 0.9));
+                    background: linear-gradient(
+                        135deg,
+                        rgba(40, 40, 60, 0.7),
+                        rgba(20, 20, 40, 0.9)
+                    );
                     box-shadow: 0 4px 15px rgba(0, 100, 255, 0.2);
                     transition: all 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
                     overflow: hidden;
@@ -121,12 +267,20 @@
                 }
 
                 &.filled .slot-content {
-                    background: linear-gradient(135deg, rgba(0, 80, 200, 0.6), rgba(0, 40, 120, 0.8));
+                    background: linear-gradient(
+                        135deg,
+                        rgba(0, 80, 200, 0.6),
+                        rgba(0, 40, 120, 0.8)
+                    );
                     border-color: var(--info);
                     box-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
                 }
                 &.locked .slot-content {
-                    background: linear-gradient(135deg, rgba(200, 50, 50, 0.6), rgba(120, 20, 20, 0.8));
+                    background: linear-gradient(
+                        135deg,
+                        rgba(200, 50, 50, 0.6),
+                        rgba(120, 20, 20, 0.8)
+                    );
                     border-color: #ff4d4d;
                     box-shadow: 0 0 15px rgba(255, 80, 80, 0.5);
                     animation: pulse 2s infinite;
@@ -146,7 +300,116 @@
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 5px rgba(255, 80, 80, 0.5); }
-    50% { box-shadow: 0 0 20px rgba(255, 80, 80, 0.8); }
-    100% { box-shadow: 0 0 5px rgba(255, 80, 80, 0.5); }
+    0% {
+        box-shadow: 0 0 5px rgba(255, 80, 80, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 80, 80, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 80, 80, 0.5);
+    }
+}
+
+@keyframes flashRed {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(255, 0, 0, 0.3);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.quantum-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+
+    &.status-inactive {
+        animation: flashRed 1.5s ease-in-out 1;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ff4d4d;
+            margin-right: 5px;
+
+            &.active {
+                background-color: #4caf50;
+                box-shadow: 0 0 8px #4caf50;
+            }
+        }
+    }
+
+    .quantum-toggle {
+        padding: 5px 12px;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.42s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        &:active {
+            transform: translateY(1px);
+            filter: brightness(0.95);
+        }
+
+        &.enabled {
+            background-color: #4caf50;
+            color: white;
+            box-shadow: 0 2px 0 #2e7d32, 0 3px 5px rgba(0, 0, 0, 0.2);
+
+            &:hover {
+                background-color: #43a047;
+                transform: translateY(-1px);
+                box-shadow: 0 3px 0 #2e7d32, 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            &:active {
+                transform: translateY(2px);
+                box-shadow: 0 0 0 #2e7d32, 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        &.disabled {
+            background-color: #f44336;
+            color: white;
+            box-shadow: 0 2px 0 #c62828, 0 3px 5px rgba(0, 0, 0, 0.2);
+
+            &:hover {
+                background-color: #e53935;
+                transform: translateY(-1px);
+                box-shadow: 0 3px 0 #c62828, 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            &:active {
+                transform: translateY(2px);
+                box-shadow: 0 0 0 #c62828, 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
 }
