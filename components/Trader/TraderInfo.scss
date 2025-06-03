@@ -8,6 +8,9 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    @media (max-width: #{$breakpoint-mobile - 1px}) {
+        gap: 0;
+    }
 }
 
 .trader-image-container {
