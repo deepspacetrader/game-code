@@ -645,13 +645,13 @@ export const MarketplaceProvider = ({ children }) => {
     // Function to initialize game state from saved data
     const initializeGameState = useCallback(
         async (savedState) => {
-            console.log('Initializing game state with:', savedState);
+            // console.log('Initializing game state with:', savedState);
             try {
                 // Set basic state with validation
                 if (savedState.health !== undefined) setHealth(Number(savedState.health));
                 if (savedState.fuel !== undefined) setFuel(Number(savedState.fuel));
                 if (savedState.credits !== undefined) setCredits(Number(savedState.credits));
-                
+
                 // Set cheater status from saved state
                 if (savedState.isCheater !== undefined) {
                     setIsCheater(!!savedState.isCheater);
@@ -702,11 +702,11 @@ export const MarketplaceProvider = ({ children }) => {
 
                 // Travel to the saved galaxy if specified
                 if (savedState.galaxyName) {
-                    console.log('Traveling to saved galaxy:', savedState.galaxyName);
+                    // console.log('Traveling to saved galaxy:', savedState.galaxyName);
                     await travelToGalaxy(savedState.galaxyName);
                 }
 
-                console.log('Game state initialized successfully');
+                // console.log('Game state initialized successfully');
                 return true;
             } catch (error) {
                 console.error('Failed to initialize game state:', error);
@@ -2781,7 +2781,7 @@ export const MarketplaceProvider = ({ children }) => {
                 // Mark as initialized
                 setIsInitialized(true);
 
-                console.log('Game state initialization complete');
+                // console.log('Game state initialization complete');
                 return true;
             },
         };
@@ -2990,6 +2990,9 @@ export const MarketplaceProvider = ({ children }) => {
             addFloatingMessage,
             applyEventEffects,
             triggerRandomEvent,
+            travelToGalaxy,
+            toggleQuantumAbilities,
+            toggleQuantumScan,
 
             // Placeholder functions for backward compatibility
             onBuyAll: () => {},
@@ -3058,6 +3061,7 @@ export const MarketplaceProvider = ({ children }) => {
             addFloatingMessage,
             applyEventEffects,
             triggerRandomEvent,
+            travelToGalaxy,
         ]
     );
 
