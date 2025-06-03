@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMarketplace } from '../context/MarketplaceContext';
 import { useStatusEffects } from '../context/StatusEffectsContext';
 import './PlayerHUD.scss';
 import FloatingMessage from './Reusable/FloatingMessage';
 import { useUI } from '../context/UIContext';
+import { decryptData } from '../utils/encryption';
 
 const PlayerHUD = () => {
-    const { credits, health, fuel, stealthActive, shieldActive } = useMarketplace();
+    const {
+        credits,
+        health,
+        fuel,
+        stealthActive,
+        shieldActive,
+        isCheater: contextIsCheater,
+    } = useMarketplace();
     const { uiTier, improvedUILevel, courierDrones } = useUI();
 
     const { statEffects, addStatEffect } = useStatusEffects();
@@ -19,6 +27,32 @@ const PlayerHUD = () => {
     // compute fuel meter percent and visibility
     const fillPercent = Math.min(100, (fuel / 1000) * 100);
     const showFuelMeter = improvedUILevel >= 25;
+    const [isCheater, setIsCheater] = useState(false);
+
+    // Check for cheater status in both localStorage and context
+    useEffect(() => {
+        // Update from context first (most up-to-date)
+        if (contextIsCheater) {
+            setIsCheater(true);
+            return;
+        }
+
+        // Fall back to checking localStorage
+        const savedGame = localStorage.getItem('scifiMarketSave');
+        if (savedGame) {
+            try {
+                const gameState = decryptData(savedGame);
+                if (gameState?.isCheater) {
+                    setIsCheater(true);
+                }
+            } catch (e) {
+                console.error('Error checking cheater status from localStorage:', e);
+            }
+        } else {
+            // If no saved game, ensure we're in sync with context
+            setIsCheater(!!contextIsCheater);
+        }
+    }, [contextIsCheater]);
 
     React.useEffect(() => {
         const delta = credits - prevCredits.current;
@@ -126,11 +160,7 @@ const PlayerHUD = () => {
                     </span>
                 </div>
 
-                <div
-                    className={`hud-item hud-item--credit ${
-                        localStorage.getItem('isCheater') === 'true' ? 'cheater' : ''
-                    }`}
-                >
+                <div className={`hud-item hud-item--credit ${isCheater ? 'cheater' : ''}`}>
                     {statEffects
                         .filter((e) => e.name === 'credits')
                         .map((e) => (

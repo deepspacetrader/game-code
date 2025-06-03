@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import { useEventContext } from '../../context/EventContext';
@@ -6,7 +6,6 @@ import { useStatusEffects } from '../../context/StatusEffectsContext';
 import { zzfx } from 'zzfx';
 import { Danger, DANGER_TYPES } from '../Reusable/Danger';
 import Event from '../Reusable/Event';
-import randomEvents from '../../data/random-events.json';
 import { encryptData, decryptData } from '../../utils/encryption';
 import './AdminDebug.scss';
 
@@ -25,6 +24,8 @@ const AdminDebug = () => {
         updateQuantumProcessors,
         quantumInventory = [],
         setCurrentGameEvent,
+        isCheater: contextIsCheater,
+        setIsCheater,
     } = useMarketplace();
 
     const { triggerRandomEvent } = useEventContext();
@@ -83,29 +84,67 @@ const AdminDebug = () => {
     }, [courierDrones, setDeliverySpeed]);
 
     const toggleCheats = () => {
-        if (localStorage.getItem('isCheater') === 'true') {
-            setShowCheats(!showCheats);
-        } else {
+        // Simply toggle the cheats menu visibility
+        setShowCheats(!showCheats);
+    };
+
+    const enableCheats = async () => {
+        const savedGame = localStorage.getItem('scifiMarketSave');
+        let isCheater = false;
+
+        if (savedGame) {
+            try {
+                const gameState = decryptData(savedGame);
+                isCheater = gameState?.isCheater === true;
+            } catch (e) {
+                console.error('Error checking cheater status:', e);
+            }
+        }
+
+        // If not a cheater, show warning and enable cheats if confirmed
+        if (!isCheater && !contextIsCheater) {
             const confirmText =
-                'WARNING: Enabling cheats will delete all saved game progress.\n\n' +
+                'WARNING: Enabling cheats will mark your save as a cheater.\n\n' +
                 'This action cannot be undone. All your current progress will be lost.\n\n' +
-                'Type "ye" to confirm and enable cheats.';
+                'Type "yes" to confirm and enable cheats.';
             const input = window.prompt(confirmText);
-            if (input === 'I understand') {
-                // Clear all saved game data
-                localStorage.removeItem('scifiMarketSave');
-                // Set cheater flag
-                localStorage.setItem('isCheater', 'true');
-                // Reset game state
+            if (input === 'yes') {
+                // Create a new game state with cheats enabled
+                const gameState = {
+                    isCheater: true,
+                    uiLevel: 10,
+                    credits: 10000,
+                    quantumProcessors: 0,
+                    inventory: [],
+                    health: 100,
+                    fuel: 100,
+                    deliverySpeed: 1,
+                    shieldActive: false,
+                    stealthActive: false,
+                    galaxyName: 'start',
+                };
+
+                // Save the new game state with cheats enabled
+                localStorage.setItem('scifiMarketSave', encryptData(gameState));
+
+                // Update the context state to reflect the new cheater status
+                if (setIsCheater) {
+                    setIsCheater(true);
+                }
+
+                // Update the UI to reflect the new state
                 setImprovedUILevel(10);
                 setCredits(10000);
                 quantumProcessorHandlers.reset();
-                // Show cheats menu
                 setShowCheats(true);
-                // Notify user
-                alert('Cheats enabled. All previous game data has been cleared.');
-            } else {
-                window.alert('Cheats not enabled. Your game data is safe.');
+            }
+        } else {
+            // If already a cheater, just show the cheats menu
+            setShowCheats(true);
+            
+            // Ensure the context is up to date
+            if (setIsCheater && !contextIsCheater) {
+                setIsCheater(true);
             }
         }
     };
@@ -113,9 +152,11 @@ const AdminDebug = () => {
     const removeCheaterStatus = () => {
         // Clear any saved game data to prevent loading cheated progress
         localStorage.removeItem('scifiMarketSave');
-
-        // Remove cheater status from localStorage
-        localStorage.removeItem('isCheater');
+        
+        // Update the context to clear cheater status
+        if (setIsCheater) {
+            setIsCheater(false);
+        }
 
         // Reset game state to default values
         setImprovedUILevel(10);
@@ -186,8 +227,14 @@ const AdminDebug = () => {
     return (
         <div className="admin-debug">
             <div className="cheats-toggle">
-                <button onClick={toggleCheats}>{showCheats ? 'Hide Cheats' : 'Show Cheats'}</button>
-                {showCheats && <button onClick={removeCheaterStatus}>Reset Cheats</button>}
+                {showCheats ? (
+                    <>
+                        <button onClick={toggleCheats}>Hide Cheats</button>
+                        <button onClick={removeCheaterStatus}>Restart Game without cheats</button>
+                    </>
+                ) : (
+                    <button onClick={enableCheats}>Show Cheats</button>
+                )}
             </div>
 
             {showCheats && (

@@ -3,10 +3,6 @@ import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import { encryptData } from '../../utils/encryption';
 import { MdSave } from 'react-icons/md';
-import { MdOutlineSaveAlt } from 'react-icons/md';
-import { MdSaveAlt } from 'react-icons/md';
-import { MdSaveAs } from 'react-icons/md';
-import { MdOutlineSave } from 'react-icons/md';
 import './SaveGame.scss';
 
 const SaveGame = () => {
@@ -22,6 +18,7 @@ const SaveGame = () => {
         inventory,
         galaxyName,
         quantumProcessors,
+        isCheater,
     } = useMarketplace();
 
     const saveGame = () => {
@@ -40,6 +37,7 @@ const SaveGame = () => {
             })),
             galaxyName,
             quantumProcessors,
+            isCheater,
             timestamp: new Date().toISOString(),
         };
 
@@ -57,21 +55,13 @@ const SaveGame = () => {
         setTimeout(() => setShowLevel(false), 2000);
     };
 
-    const getSaveIcon = () => {
-        if (improvedUILevel < 50) return <MdOutlineSave />;
-        if (improvedUILevel < 100) return <MdSave />;
-        if (improvedUILevel < 200) return <MdOutlineSaveAlt />;
-        if (improvedUILevel < 300) return <MdSaveAlt />;
-        return <MdSaveAs />;
-    };
-
     return (
         <div className="save-game-container">
             <div className={`save-level-display ${showLevel ? 'visible' : ''}`}>
                 Saved! UI Level: {improvedUILevel}
             </div>
             <button className="save-button" onClick={saveGame} title="Save Game">
-                {getSaveIcon()}
+                <MdSave />
             </button>
         </div>
     );
