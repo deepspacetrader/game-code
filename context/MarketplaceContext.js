@@ -39,6 +39,7 @@ export const MarketplaceProvider = ({ children }) => {
     const [credits, setCredits] = useState(defaultCredits);
     const [health, setHealth] = useState(defaultHealth);
     const [fuel, setFuel] = useState(defaultFuel);
+    const [isCheater, setIsCheater] = useState(false);
 
     // Keep a ref of health to ensure we always have the latest value in callbacks
     const healthRef = useRef(health);
@@ -137,6 +138,8 @@ export const MarketplaceProvider = ({ children }) => {
             return newState;
         });
     }, []);
+
+    // Initialize game state from saved data - using the more complete implementation below
 
     // Check if quantum trade can be performed
     const checkQuantumTradeDelay = useCallback(() => {
@@ -648,6 +651,24 @@ export const MarketplaceProvider = ({ children }) => {
                 if (savedState.health !== undefined) setHealth(Number(savedState.health));
                 if (savedState.fuel !== undefined) setFuel(Number(savedState.fuel));
                 if (savedState.credits !== undefined) setCredits(Number(savedState.credits));
+                
+                // Set cheater status from saved state
+                if (savedState.isCheater !== undefined) {
+                    setIsCheater(!!savedState.isCheater);
+                } else {
+                    // Fallback to check localStorage directly if not in saved state
+                    const savedGame = localStorage.getItem('scifiMarketSave');
+                    if (savedGame) {
+                        try {
+                            const gameState = JSON.parse(savedGame);
+                            if (gameState?.isCheater !== undefined) {
+                                setIsCheater(!!gameState.isCheater);
+                            }
+                        } catch (e) {
+                            console.error('Error loading cheater status from localStorage:', e);
+                        }
+                    }
+                }
 
                 // Fix: Use savedState.courierDrones instead of savedState.setCourierDrones
                 if (savedState.courierDrones !== undefined) {
@@ -2644,6 +2665,8 @@ export const MarketplaceProvider = ({ children }) => {
             // Game mechanics
             stealthActive,
             shieldActive,
+            isCheater,
+            setIsCheater,
             deliveryQueue,
             tradeHistory,
             priceHistory,
@@ -2712,26 +2735,34 @@ export const MarketplaceProvider = ({ children }) => {
 
             // Empty function implementations for backward compatibility
             onBuyAll: () => {},
-            addQuantumProcessors,
             resetQuantumProcessors: () => {},
-            subtractQuantumProcessor,
+            subtractQuantumProcessor: () => {},
             triggerRandomMarketEvent: () => {},
+
+            // Empty function implementations for backward compatibility
+
             triggerEnemyEncounter: () => {},
+            addQuantumProcessors,
+            updateQuantumProcessors,
             initializeGameState: async (savedState) => {
                 console.log('Initializing game state with:', savedState);
-                
+
                 // Set basic game state
                 if (savedState.health !== undefined) setHealth(savedState.health);
                 if (savedState.fuel !== undefined) setFuel(savedState.fuel);
                 if (savedState.credits !== undefined) setCredits(savedState.credits);
                 // Delivery speed is handled by courierDrones in the UI
                 if (savedState.shieldActive !== undefined) setShieldActive(savedState.shieldActive);
-                if (savedState.stealthActive !== undefined) setStealthActive(savedState.stealthActive);
-                if (savedState.quantumProcessors !== undefined) setQuantumProcessors(savedState.quantumProcessors);
+                if (savedState.stealthActive !== undefined)
+                    setStealthActive(savedState.stealthActive);
+                if (savedState.quantumProcessors !== undefined)
+                    setQuantumProcessors(savedState.quantumProcessors);
                 if (savedState.galaxyName) {
                     setGalaxyName(savedState.galaxyName);
                     // Find and set the current galaxy from the saved name
-                    const galaxy = galaxiesData.galaxies.find(g => g.name === savedState.galaxyName);
+                    const galaxy = galaxiesData.galaxies.find(
+                        (g) => g.name === savedState.galaxyName
+                    );
                     if (galaxy) {
                         setCurrentGalaxy(galaxy);
                     }
@@ -2749,11 +2780,10 @@ export const MarketplaceProvider = ({ children }) => {
 
                 // Mark as initialized
                 setIsInitialized(true);
-                
+
                 console.log('Game state initialization complete');
                 return true;
             },
-            updateQuantumProcessors, // Add the actual function instead of a no-op
         };
     }, [
         // State dependencies
@@ -2793,6 +2823,8 @@ export const MarketplaceProvider = ({ children }) => {
         displayCells,
         stealthActive,
         shieldActive,
+        isCheater,
+        setIsCheater,
         deliveryQueue,
         tradeHistory,
         priceHistory,
@@ -2811,21 +2843,230 @@ export const MarketplaceProvider = ({ children }) => {
         quantumBuyEnabled,
         quantumInventory,
         quantumProcessors,
-        // Function dependencies - only include setters and stable callbacks
+        setImprovedUILevel,
+        setQuantumProcessors,
+        updateQuantumProcessors,
         setQuantumInventory,
         setStatusEffects,
         setCredits,
         setGameCompleted,
         setTraderMessage,
         setVolume,
-        initializeGameState,
     ]);
 
-    // Return the provider with the context value
-    return <MarketplaceContext.Provider value={value}>{children}</MarketplaceContext.Provider>;
+    // Compute derived values
+    const fuelCostReductions = useMemo(() => {
+        return inventory
+            .map((invItem) => {
+                const def = items.find((i) => i.name === invItem.name);
+                if (!def || !def.effects || def.effects['-fuel_cost'] === undefined) return null;
+                const effect = def.effects['-fuel_cost'];
+                let value = 0;
+                if (Array.isArray(effect)) {
+                    value = effect[0];
+                } else if (typeof effect === 'number') {
+                    value = effect;
+                }
+                return {
+                    name: invItem.name,
+                    value,
+                    quantity: invItem.quantity,
+                };
+            })
+            .filter(Boolean);
+    }, [inventory, items]);
+
+    const totalFuelCostReduction = useMemo(() => {
+        return inventory
+            .map((invItem) => {
+                const def = items.find((i) => i.name === invItem.name);
+                return (def?.fuel_cost || 0) * invItem.quantity;
+            })
+            .reduce((acc, curr) => acc + curr, 0);
+    }, [inventory, items]);
+
+    // Create the context value with all necessary state and functions
+    const contextValue = useMemo(
+        () => ({
+            // State
+            inventory,
+            credits,
+            health,
+            fuel,
+            isCheater,
+            currentEnemy,
+            currentGameEvent,
+            gameCompleted,
+            inTravel,
+            isJumping,
+            traders,
+            traderIds,
+            traderNames,
+            traderMessages,
+            currentTrader,
+            sortMode,
+            sortAsc,
+            displayCells: displayCells || [],
+            numCellsX: 10,
+            stealthActive,
+            shieldActive,
+            deliveryQueue,
+            tradeHistory,
+            priceHistory,
+            purchaseHistory,
+            statusEffects,
+            travelTimeLeft,
+            jumpTimeLeft,
+            jumpDuration,
+            jumpFromCoord,
+            jumpToCoord,
+            galaxyName,
+            nextGalaxyName: nextGalaxyName || '',
+            volume,
+            quantumSlotsUsed,
+            quantumBuyEnabled,
+            quantumInventory,
+            quantumProcessors,
+            items: items || [],
+            fuelPrices,
+            volumeRef,
+
+            // State setters
+            setInventory,
+            setCredits,
+            setHealth,
+            setFuel,
+            setIsCheater,
+            setCurrentEnemy,
+            setGameCompleted,
+            setInTravel,
+            setIsJumping,
+            setTraders,
+            setCurrentTrader,
+            setStealthActive,
+            setShieldActive,
+            setDeliveryQueue,
+            setTradeHistory,
+            setPriceHistory,
+            setPurchaseHistory,
+            setStatusEffects,
+            setTravelTimeLeft,
+            setJumpTimeLeft,
+            setJumpDuration,
+            setJumpFromCoord,
+            setJumpToCoord,
+            setGalaxyName,
+            setNextGalaxyName,
+            setVolume,
+            setQuantumSlotsUsed,
+            setQuantumBuyEnabled,
+            setQuantumInventory,
+            setQuantumProcessors,
+
+            // Derived values and utilities
+            fuelCostReductions,
+            totalFuelCostReduction,
+            courierDrones: [],
+            recordTimes: {},
+            traderMessage: null,
+            currentGalaxy: null,
+            traderMessageTimeout: null,
+            pendingTrader: null,
+            travelTotalTime: 0,
+
+            // Game functions
+            initializeGameState,
+            handleBuyClick,
+            handleBuyAll,
+            handleSellClick,
+            handleSellAll,
+            handleUseItem,
+            handleSort,
+            buyFuel,
+            handleNextTrader,
+            handlePrevTrader,
+            toggleShield,
+            toggleStealth,
+            addFloatingMessage,
+            applyEventEffects,
+            triggerRandomEvent,
+
+            // Placeholder functions for backward compatibility
+            onBuyAll: () => {},
+            resetQuantumProcessors: () => {},
+            subtractQuantumProcessor: () => {},
+            triggerRandomMarketEvent: () => {},
+            setRecordTimes: () => {},
+            setPurchaseHistory: () => {},
+        }),
+        [
+            // Dependencies array
+            inventory,
+            credits,
+            health,
+            fuel,
+            isCheater,
+            currentEnemy,
+            currentGameEvent,
+            gameCompleted,
+            inTravel,
+            isJumping,
+            traders,
+            traderIds,
+            traderNames,
+            traderMessages,
+            currentTrader,
+            sortMode,
+            sortAsc,
+            displayCells,
+            stealthActive,
+            shieldActive,
+            deliveryQueue,
+            tradeHistory,
+            priceHistory,
+            purchaseHistory,
+            statusEffects,
+            travelTimeLeft,
+            jumpTimeLeft,
+            jumpDuration,
+            jumpFromCoord,
+            jumpToCoord,
+            galaxyName,
+            nextGalaxyName,
+            volume,
+            quantumSlotsUsed,
+            quantumBuyEnabled,
+            quantumInventory,
+            quantumProcessors,
+            items,
+            fuelPrices,
+            volumeRef,
+            fuelCostReductions,
+            totalFuelCostReduction,
+            initializeGameState,
+            handleBuyClick,
+            handleBuyAll,
+            handleSellClick,
+            handleSellAll,
+            handleUseItem,
+            handleSort,
+            buyFuel,
+            handleNextTrader,
+            handlePrevTrader,
+            toggleShield,
+            toggleStealth,
+            addFloatingMessage,
+            applyEventEffects,
+            triggerRandomEvent,
+        ]
+    );
+
+    return (
+        <MarketplaceContext.Provider value={contextValue}>{children}</MarketplaceContext.Provider>
+    );
 };
 
-// Custom hook to use the marketplace context
+// Create custom hook for using the context
 export const useMarketplace = () => {
     const context = useContext(MarketplaceContext);
     if (context === undefined) {
@@ -2833,3 +3074,5 @@ export const useMarketplace = () => {
     }
     return context;
 };
+
+export default MarketplaceContext;

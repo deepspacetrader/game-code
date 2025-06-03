@@ -267,8 +267,17 @@
     }
 }
 
-.btn--travel__prev {
-    float: right;
+.button-container {
+    p {
+        margin: 0;
+        font-size: 0.75rem;
+    }
+    &.next-trader {
+        float: left;
+    }
+    &.prev-trader {
+        float: right;
+    }
 }
 
 .trader-actions {
@@ -402,44 +411,14 @@
     }
 }
 
-// Mixin for level 50-99 info styles (slight border change)
 @mixin info-ultra-styles {
     @include info-base-styles;
     color: rgba(140, 140, 140, 0.8);
     border: 1px solid rgba(80, 80, 80, 0.4);
 }
 
-// Mixin for level 100-199 info styles (first real improvement)
-@mixin info-explorer-styles {
-    @include info-ultra-styles;
-    color: rgba(180, 180, 180, 0.9);
-    background: rgba(20, 20, 20, 0.4);
-    border: 1px solid rgba(100, 100, 100, 0.6);
-
-    /* Very subtle hover effect */
-    &:hover {
-        background: rgba(25, 25, 25, 0.45);
-    }
-}
-
-// Mixin for level 200-499 info styles (second visual upgrade)
-@mixin info-master-styles {
-    @include info-explorer-styles;
-    color: rgba(200, 200, 200, 0.95);
-    background: linear-gradient(
-        to right,
-        rgba(30, 30, 30, 0.5),
-        rgba(40, 40, 40, 0.5),
-        rgba(30, 30, 30, 0.5)
-    );
-    border: 1px solid rgba(140, 140, 140, 0.8);
-
-    /* Subtle text shadow for better readability */
-    text-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
-}
-
 @mixin button-master-styles {
-    @include button-explorer-styles;
+    @include button-base-styles;
     background: linear-gradient(45deg, #222, #333, #222);
     border: 1px solid rgba(200, 200, 200, 0.95);
     color: #fff;
@@ -478,48 +457,21 @@
 
     &:hover::after {
         opacity: 0.5;
-    }
-}
-
-@mixin info-endgame-styles {
-    @include info-master-styles;
-    color: rgba(240, 240, 240, 0.9);
-    background: linear-gradient(
-        to right,
-        rgba(40, 40, 40, 0.7),
-        rgba(60, 60, 60, 0.7),
-        rgba(40, 40, 40, 0.7)
-    );
-    border: 1px solid rgba(180, 180, 180, 0.9);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-
-    &::before {
-        animation: pulse 15s infinite;
-    }
-
-    &::after {
-        animation: shine 2s infinite;
     }
 }
 
 @mixin button-endgame-styles {
     @include button-master-styles;
-    background: linear-gradient(45deg, #222, #333, #222);
-    border: 1px solid rgba(200, 200, 200, 0.95);
+    background: linear-gradient(45deg, #333, #222, #333);
+    border: 2px solid #ffd700;
     color: #fff;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-
-    &:hover {
-        background: linear-gradient(45deg, #2a2a2a, #3a3a3a, #2a2a2a);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
     position: relative;
     overflow: hidden;
+    transition: all 0.3s ease;
 
-    &::after {
+    &::before {
         content: '';
         position: absolute;
         top: -50%;
@@ -529,19 +481,29 @@
         background: linear-gradient(
             45deg,
             transparent,
-            rgba(255, 255, 255, 0.05),
-            rgba(220, 220, 220, 0.1),
-            rgba(255, 255, 255, 0.05),
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 215, 0, 0.3),
+            rgba(255, 255, 255, 0.1),
             transparent
         );
         transform: rotate(45deg);
         z-index: 1;
         opacity: 0;
-        transition: opacity 0.3s;
+        transition: opacity 0.6s;
     }
 
-    &:hover::after {
-        opacity: 0.5;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+        
+        &::before {
+            opacity: 0.7;
+            animation: shine 1.5s infinite;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 }
 
@@ -1313,46 +1275,6 @@
         button {
             @include button-master-styles;
         }
-    }
-}
-
-// Mixin for endgame level styles
-@mixin info-endgame-styles {
-    @include info-master-styles;
-    background: linear-gradient(to right, #111, #222, #111);
-    border: 2px solid #ffd700;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-
-    &::before {
-        background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.2),
-            rgba(255, 215, 0, 0.4),
-            rgba(255, 255, 255, 0.2)
-        );
-        animation: shine 4s infinite;
-    }
-
-    &::after {
-        animation: shine 2s infinite;
-    }
-}
-
-@mixin button-endgame-styles {
-    @include button-master-styles;
-    background: linear-gradient(45deg, #000, #111, #000);
-    border: 2px solid #ffd700;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.9);
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-
-    &::before {
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    }
-
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 40px rgba(255, 215, 0, 1);
     }
 }
 

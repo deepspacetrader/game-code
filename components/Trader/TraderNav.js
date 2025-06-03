@@ -18,7 +18,6 @@ const traderImages = require.context('../../images', false, /\.\/trader\d+\.webp
 
 const TraderNav = () => {
     const {
-        TRADER_COUNT,
         buyFuel,
         credits,
         fuel,
@@ -307,43 +306,45 @@ const TraderNav = () => {
 
     // Determine index of current trader within this galaxy
     const traderIndex = traderIds ? traderIds.findIndex((tid) => tid === currentTrader) : -1;
-    const prevIndex = traderIndex >= 0 ? (traderIndex - 1 + TRADER_COUNT) % TRADER_COUNT : -1;
-    const nextIndex = traderIndex >= 0 ? (traderIndex + 1) % TRADER_COUNT : -1;
-
+    const traderCount = traderIds ? traderIds.length : 0;
+    const prevIndex = traderIndex >= 0 ? (traderIndex - 1 + traderCount) % traderCount : -1;
+    const nextIndex = traderIndex >= 0 ? (traderIndex + 1) % traderCount : -1;
     const fuelCostReduction = statusEffects.fuel_cost?.value || 0;
 
     return (
         <div className={uiTierClass}>
             <div className="trader-nav">
                 <div className="trader-buttons">
-                    {!inTravel && TRADER_COUNT > 1 && (
-                        <button
-                            className="btn--travel btn--travel__prev"
-                            onClick={() => {
-                                const currentIdx = traderIds.findIndex(
-                                    (tid) => tid === currentTrader
-                                );
-                                const prevIdx =
-                                    (currentIdx - 1 + traderIds.length) % traderIds.length;
-                                const cost = fuelPrices[prevIdx] || 0;
-                                if (fuel < cost) {
-                                    handleInsufficientFuel();
-                                    return;
-                                }
-                                handlePrevTrader();
-                            }}
-                        >
-                            <p>
-                                {improvedUILevel >= 25 && prevIndex >= 0
-                                    ? `Previous: ${traderNames[prevIndex]}`
-                                    : 'Previous Trader'}
-                            </p>
-                            <p className="fuel-cost">
-                                {prevIndex >= 0 && fuelPrices[prevIndex]
-                                    ? ` (cost ${fuelPrices[prevIndex]} fuel)`
-                                    : ''}
-                            </p>
-                        </button>
+                    {!inTravel && traderCount > 1 && (
+                        <div className="button-container prev-trader">
+                            <button
+                                className="btn--travel btn--travel__prev"
+                                onClick={() => {
+                                    const currentIdx = traderIds.findIndex(
+                                        (tid) => tid === currentTrader
+                                    );
+                                    const prevIdx =
+                                        (currentIdx - 1 + traderIds.length) % traderIds.length;
+                                    const cost = fuelPrices[prevIdx] || 0;
+                                    if (fuel < cost) {
+                                        handleInsufficientFuel();
+                                        return;
+                                    }
+                                    handlePrevTrader();
+                                }}
+                            >
+                                Previous Trader
+                                {prevIndex >= 0 && fuelPrices[prevIndex] ? (
+                                    <p className="fuel-cost">{` (cost ${fuelPrices[prevIndex]} fuel)`}</p>
+                                ) : (
+                                    ''
+                                )}
+                            </button>
+
+                            {improvedUILevel >= 25 && prevIndex >= 0 && (
+                                <p className="center">{` ${traderNames[prevIndex]}`}</p>
+                            )}
+                        </div>
                     )}
                 </div>
 
@@ -400,7 +401,7 @@ const TraderNav = () => {
                     )}
 
                     <div className="trader-count">
-                        Trader {traderIndex + 1} of {TRADER_COUNT}
+                        Trader {traderIndex + 1} of {traderCount}
                         {improvedUILevel >= 25 && ` - ${traderData?.name}`}
                     </div>
 
@@ -524,33 +525,34 @@ const TraderNav = () => {
                 </div>
 
                 <div className="trader-buttons">
-                    {!inTravel && TRADER_COUNT > 1 && (
-                        <button
-                            className="btn--travel btn--travel__next"
-                            onClick={() => {
-                                const currentIdx = traderIds.findIndex(
-                                    (tid) => tid === currentTrader
-                                );
-                                const nextIdx = (currentIdx + 1) % traderIds.length;
-                                const cost = fuelPrices[nextIdx] || 0;
-                                if (fuel < cost) {
-                                    handleInsufficientFuel();
-                                    return;
-                                }
-                                handleNextTrader(nextIndex, cost);
-                            }}
-                        >
-                            <p>
-                                {improvedUILevel >= 25 && nextIndex >= 0
-                                    ? `Next: ${traderNames[nextIndex]}`
-                                    : 'Next Trader'}
-                            </p>
-                            <p className="fuel-cost">
-                                {nextIndex >= 0 && fuelPrices[nextIndex]
-                                    ? ` (cost ${fuelPrices[nextIndex]} fuel)`
-                                    : ''}
-                            </p>
-                        </button>
+                    {!inTravel && traderCount > 1 && (
+                        <div className="button-container next-trader">
+                            <button
+                                className="btn--travel btn--travel__next"
+                                onClick={() => {
+                                    const currentIdx = traderIds.findIndex(
+                                        (tid) => tid === currentTrader
+                                    );
+                                    const nextIdx = (currentIdx + 1) % traderIds.length;
+                                    const cost = fuelPrices[nextIdx] || 0;
+                                    if (fuel < cost) {
+                                        handleInsufficientFuel();
+                                        return;
+                                    }
+                                    handleNextTrader(nextIndex, cost);
+                                }}
+                            >
+                                Next Trader
+                                {nextIndex >= 0 && fuelPrices[nextIndex] ? (
+                                    <p className="fuel-cost">{` (cost ${fuelPrices[nextIndex]} fuel)`}</p>
+                                ) : (
+                                    ''
+                                )}
+                            </button>
+                            {improvedUILevel >= 25 && nextIndex >= 0 && (
+                                <p className="center">{`${traderNames[nextIndex]}`}</p>
+                            )}
+                        </div>
                     )}
                 </div>
             </div>
