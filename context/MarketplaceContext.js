@@ -3001,6 +3001,7 @@ export const MarketplaceProvider = ({ children }) => {
             triggerRandomMarketEvent: () => {},
             setRecordTimes: () => {},
             setPurchaseHistory: () => {},
+            updateQuantumProcessors,
         }),
         [
             // Dependencies array

@@ -22,6 +22,7 @@ const AdminDebug = () => {
         setDeliverySpeed,
         quantumProcessors = 0,
         updateQuantumProcessors,
+        setQuantumProcessors,
         quantumInventory = [],
         setCurrentGameEvent,
         isCheater: contextIsCheater,
@@ -54,12 +55,14 @@ const AdminDebug = () => {
     const [deliverySpeedOverride, setDeliverySpeedOverride] = useState(courierDrones || 0);
 
     // Memoize quantum processor functions
+    // Get current quantum processor count
+    const currentQPs = quantumProcessors || 0;
+
     const quantumProcessorHandlers = useMemo(
         () => ({
             add: (amount) => {
                 if (updateQuantumProcessors) {
-                    const newCount = (quantumProcessors || 0) + Number(amount);
-                    updateQuantumProcessors(newCount);
+                    updateQuantumProcessors(Number(amount));
                 }
             },
             reset: () => {
@@ -68,11 +71,8 @@ const AdminDebug = () => {
                 }
             },
         }),
-        [quantumProcessors, updateQuantumProcessors]
+        [updateQuantumProcessors]
     );
-
-    // Get current quantum processor count
-    const currentQPs = quantumProcessors || 0;
 
     // Sync delivery speed override with courierDrones and update delivery speed in MarketplaceContext
     useEffect(() => {
@@ -141,7 +141,7 @@ const AdminDebug = () => {
         } else {
             // If already a cheater, just show the cheats menu
             setShowCheats(true);
-            
+
             // Ensure the context is up to date
             if (setIsCheater && !contextIsCheater) {
                 setIsCheater(true);
@@ -152,7 +152,7 @@ const AdminDebug = () => {
     const removeCheaterStatus = () => {
         // Clear any saved game data to prevent loading cheated progress
         localStorage.removeItem('scifiMarketSave');
-        
+
         // Update the context to clear cheater status
         if (setIsCheater) {
             setIsCheater(false);
@@ -163,9 +163,6 @@ const AdminDebug = () => {
         setCredits(10000);
         quantumProcessorHandlers.reset();
         setShowCheats(false);
-
-        // Notify the user that saved data has been cleared
-        alert('Cheats removed. All saved game data has been cleared.');
     };
 
     const handleAddCredits = () => {

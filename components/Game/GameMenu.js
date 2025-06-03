@@ -22,18 +22,23 @@ const GameMenu = () => {
         travelToGalaxy,
         setQuantumProcessors,
         initializeGameState,
+        setIsCheater,
     } = useMarketplace();
     const { setImprovedUILevel } = useUI();
 
     useEffect(() => {
         // Check for saved game on component mount
         const savedGame = localStorage.getItem('scifiMarketSave');
-        setHasSavedGame(!!savedGame);
         if (savedGame) {
             try {
                 const decrypted = decryptData(savedGame);
                 if (decrypted) {
+                    // Check if this is a cheater's save file
+                    if (decrypted.isCheater) {
+                        console.warn('Loading a save file with cheats enabled');
+                    }
                     setSavedUILevel(decrypted.uiLevel || 0);
+                    setHasSavedGame(true);
                 } else {
                     console.error('Failed to decrypt saved game');
                     setHasSavedGame(false);
@@ -45,6 +50,8 @@ const GameMenu = () => {
                 localStorage.removeItem('scifiMarketSave');
                 setHasSavedGame(false);
             }
+        } else {
+            setHasSavedGame(false);
         }
     }, []);
 
@@ -52,9 +59,8 @@ const GameMenu = () => {
         const savedGame = localStorage.getItem('scifiMarketSave');
         if (savedGame) {
             try {
-                console.log('=== Starting game load ===');
                 setIsLoading(true);
-                
+
                 // Decrypt the saved game data
                 const gameState = decryptData(savedGame);
                 if (!gameState) {
@@ -62,21 +68,9 @@ const GameMenu = () => {
                     setIsLoading(false);
                     return;
                 }
-                
-                console.log('Decrypted game state from localStorage:', gameState);
 
                 // Initialize the game state using the context's initializeGameState function
                 if (typeof initializeGameState === 'function') {
-                    console.log('Calling initializeGameState with:', {
-                        health: gameState.health,
-                        fuel: gameState.fuel,
-                        credits: gameState.credits,
-                        inventory: gameState.inventory?.length || 0 + ' items',
-                        quantumProcessors: gameState.quantumProcessors,
-                        uiLevel: gameState.uiLevel,
-                        galaxyName: gameState.galaxyName,
-                    });
-
                     await initializeGameState({
                         health: gameState.health,
                         fuel: gameState.fuel,
@@ -88,9 +82,8 @@ const GameMenu = () => {
                         quantumProcessors: gameState.quantumProcessors || 0,
                         uiLevel: gameState.uiLevel || 0,
                         galaxyName: gameState.galaxyName,
+                        isCheater: gameState.isCheater || false,
                     });
-
-                    console.log('initializeGameState completed');
 
                     // Force a re-render after a short delay to ensure state is updated
                     // await new Promise(resolve => setTimeout(resolve, 300));
@@ -107,6 +100,9 @@ const GameMenu = () => {
                         setShieldActive(gameState.shieldActive);
                     if (gameState.stealthActive !== undefined)
                         setStealthActive(gameState.stealthActive);
+                    if (gameState.isCheater !== undefined && typeof setIsCheater === 'function') {
+                        setIsCheater(gameState.isCheater);
+                    }
 
                     // Handle inventory
                     if (Array.isArray(gameState.inventory)) {
