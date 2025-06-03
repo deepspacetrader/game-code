@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import './GameMenu.scss';
 
 const GameMenu = () => {
@@ -8,6 +9,7 @@ const GameMenu = () => {
     const [hasSavedGame, setHasSavedGame] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [savedUILevel, setSavedUILevel] = useState(0);
+    const [showHowToPlay, setShowHowToPlay] = useState(false);
     const {
         setHealth,
         setFuel,
@@ -129,6 +131,60 @@ const GameMenu = () => {
                         Start New Game
                     </button>
                     <p className="version-info">v1.0.0</p>
+                    <div className="how-to-play">
+                        <button
+                            className="how-to-play-button"
+                            onClick={() => setShowHowToPlay(!showHowToPlay)}
+                        >
+                            How To Play
+                            {showHowToPlay ? <FaChevronUp /> : <FaChevronDown />}
+                        </button>
+                        <div className={`how-to-play-content ${showHowToPlay ? 'open' : ''}`}>
+                            <h3>Welcome to Deep Space Trading Game</h3>
+                            <p>
+                                Navigate the galaxies as a space trader, buying low and selling high
+                                to build your fortune.
+                            </p>
+                            <h4>Controls</h4>
+                            <ul>
+                                <li>Left click an item in the market to buy it</li>
+                                <li>Right click an item in the market to sell it</li>
+                                <li>Each item can be used or traded</li>
+                                <li>Click on the Next Galaxy button to travel to a new galaxy</li>
+                                <li>
+                                    Click on the Previous and Next trader buttons to travel within
+                                    the current galaxy <em>(consumes fuel)</em>
+                                </li>
+                            </ul>
+
+                            <h4>Goal</h4>
+                            <ul>
+                                <li>
+                                    Starting with a small amount of credits <b>your task</b> is to
+                                    navigate the galaxies in search of the highly sought after
+                                    tightly regulated <b>Quantum Processors</b>
+                                </li>
+                                <li>
+                                    Obtain and activate <b>6 Quantum Processors</b> to dominate the
+                                    markets with ultra high speed trading capabilities
+                                </li>
+                            </ul>
+                            <h4>Gameplay</h4>
+                            <ul>
+                                <li>Visit different traders to buy and sell goods</li>
+                                <li>Prices vary between traders so buy low and sell high!</li>
+                                <li>
+                                    Be careful out there trader, some areas are dangerous and you
+                                    may encounter some not so friendly individuals...
+                                </li>
+                                <li>Maintain your health and fuel levels</li>
+                                <li>
+                                    Upgrade your UI level to unlock new visual information to help
+                                    you make better trading decisions
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
