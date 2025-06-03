@@ -7,6 +7,7 @@ import { zzfx } from 'zzfx';
 import { Danger, DANGER_TYPES } from '../Reusable/Danger';
 import Event from '../Reusable/Event';
 import randomEvents from '../../data/random-events.json';
+import { encryptData, decryptData } from '../../utils/encryption';
 import './AdminDebug.scss';
 
 const AdminDebug = () => {
@@ -86,23 +87,44 @@ const AdminDebug = () => {
             setShowCheats(!showCheats);
         } else {
             const confirmText =
-                'Are you sure? This will let you access developer cheats. Type "yes" to confirm.';
+                'WARNING: Enabling cheats will delete all saved game progress.\n\n' +
+                'This action cannot be undone. All your current progress will be lost.\n\n' +
+                'Type "ye" to confirm and enable cheats.';
             const input = window.prompt(confirmText);
-            if (input === 'yes') {
-                setShowCheats(true);
+            if (input === 'I understand') {
+                // Clear all saved game data
+                localStorage.removeItem('scifiMarketSave');
+                // Set cheater flag
                 localStorage.setItem('isCheater', 'true');
+                // Reset game state
+                setImprovedUILevel(10);
+                setCredits(10000);
+                quantumProcessorHandlers.reset();
+                // Show cheats menu
+                setShowCheats(true);
+                // Notify user
+                alert('Cheats enabled. All previous game data has been cleared.');
             } else {
-                window.alert('Cancelled');
+                window.alert('Cheats not enabled. Your game data is safe.');
             }
         }
     };
 
     const removeCheaterStatus = () => {
+        // Clear any saved game data to prevent loading cheated progress
+        localStorage.removeItem('scifiMarketSave');
+
+        // Remove cheater status from localStorage
         localStorage.removeItem('isCheater');
+
+        // Reset game state to default values
         setImprovedUILevel(10);
         setCredits(10000);
         quantumProcessorHandlers.reset();
         setShowCheats(false);
+
+        // Notify the user that saved data has been cleared
+        alert('Cheats removed. All saved game data has been cleared.');
     };
 
     const handleAddCredits = () => {

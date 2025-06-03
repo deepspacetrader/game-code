@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { decryptData } from '../../utils/encryption';
 import './GameMenu.scss';
 
 const GameMenu = () => {
@@ -30,10 +31,19 @@ const GameMenu = () => {
         setHasSavedGame(!!savedGame);
         if (savedGame) {
             try {
-                const gameState = JSON.parse(savedGame);
-                setSavedUILevel(gameState.uiLevel || 0);
+                const decrypted = decryptData(savedGame);
+                if (decrypted) {
+                    setSavedUILevel(decrypted.uiLevel || 0);
+                } else {
+                    console.error('Failed to decrypt saved game');
+                    setHasSavedGame(false);
+                    localStorage.removeItem('scifiMarketSave');
+                }
             } catch (e) {
                 console.error('Error parsing saved game:', e);
+                // If decryption fails, remove the corrupted save
+                localStorage.removeItem('scifiMarketSave');
+                setHasSavedGame(false);
             }
         }
     }, []);
@@ -42,11 +52,31 @@ const GameMenu = () => {
         const savedGame = localStorage.getItem('scifiMarketSave');
         if (savedGame) {
             try {
+                console.log('=== Starting game load ===');
                 setIsLoading(true);
-                const gameState = JSON.parse(savedGame);
+                
+                // Decrypt the saved game data
+                const gameState = decryptData(savedGame);
+                if (!gameState) {
+                    console.error('Failed to decrypt saved game');
+                    setIsLoading(false);
+                    return;
+                }
+                
+                console.log('Decrypted game state from localStorage:', gameState);
 
-                // Initialize the game state first
+                // Initialize the game state using the context's initializeGameState function
                 if (typeof initializeGameState === 'function') {
+                    console.log('Calling initializeGameState with:', {
+                        health: gameState.health,
+                        fuel: gameState.fuel,
+                        credits: gameState.credits,
+                        inventory: gameState.inventory?.length || 0 + ' items',
+                        quantumProcessors: gameState.quantumProcessors,
+                        uiLevel: gameState.uiLevel,
+                        galaxyName: gameState.galaxyName,
+                    });
+
                     await initializeGameState({
                         health: gameState.health,
                         fuel: gameState.fuel,
@@ -59,20 +89,51 @@ const GameMenu = () => {
                         uiLevel: gameState.uiLevel || 0,
                         galaxyName: gameState.galaxyName,
                     });
-                } else {
-                    // Fallback to individual state updates if initializeGameState is not available
-                    setHealth(gameState.health);
-                    setFuel(gameState.fuel);
-                    setCredits(gameState.credits);
-                    setDeliverySpeed(gameState.deliverySpeed);
-                    setShieldActive(gameState.shieldActive);
-                    setStealthActive(gameState.stealthActive);
-                    setInventory(gameState.inventory || []);
-                    setQuantumProcessors(gameState.quantumProcessors || 0);
-                    setImprovedUILevel(gameState.uiLevel || 0);
 
-                    // Travel to the saved galaxy
+                    console.log('initializeGameState completed');
+
+                    // Force a re-render after a short delay to ensure state is updated
+                    // await new Promise(resolve => setTimeout(resolve, 300));
+                    // window.location.reload();
+                } else {
+                    console.error('initializeGameState function not available in context');
+                    // Fallback to individual state updates if initializeGameState is not available
+                    if (gameState.health !== undefined) setHealth(gameState.health);
+                    if (gameState.fuel !== undefined) setFuel(gameState.fuel);
+                    if (gameState.credits !== undefined) setCredits(gameState.credits);
+                    if (gameState.deliverySpeed !== undefined)
+                        setDeliverySpeed(gameState.deliverySpeed);
+                    if (gameState.shieldActive !== undefined)
+                        setShieldActive(gameState.shieldActive);
+                    if (gameState.stealthActive !== undefined)
+                        setStealthActive(gameState.stealthActive);
+
+                    // Handle inventory
+                    if (Array.isArray(gameState.inventory)) {
+                        const validInventory = gameState.inventory
+                            .filter((item) => item && item.name && item.quantity > 0)
+                            .map((item) => ({
+                                name: item.name,
+                                quantity: Number(item.quantity) || 0,
+                                price: Number(item.price) || 0,
+                            }));
+                        setInventory(validInventory);
+                    } else {
+                        console.warn('Invalid inventory data in save file, using empty inventory');
+                        setInventory([]);
+                    }
+
+                    if (gameState.quantumProcessors !== undefined)
+                        setQuantumProcessors(Number(gameState.quantumProcessors) || 0);
+                    if (gameState.uiLevel !== undefined)
+                        setImprovedUILevel(Number(gameState.uiLevel) || 0);
+
+                    // Small delay to ensure state is updated before traveling
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+
+                    // Travel to the saved galaxy if it exists
                     if (gameState.galaxyName) {
+                        console.log('Traveling to galaxy:', gameState.galaxyName);
                         await travelToGalaxy(gameState.galaxyName);
                     }
                 }
@@ -91,8 +152,8 @@ const GameMenu = () => {
         }
     };
 
-    const handleStartGame = () => {
-        // Clear any existing saved game when starting new
+    const handleNewGame = () => {
+        // Clear any existing save
         localStorage.removeItem('scifiMarketSave');
         setShowMainMenu(false);
     };
@@ -126,7 +187,7 @@ const GameMenu = () => {
                     )}
                     <button
                         className={`start-button ${hasSavedGame ? 'has-continue' : ''}`}
-                        onClick={handleStartGame}
+                        onClick={handleNewGame}
                     >
                         Start New Game
                     </button>

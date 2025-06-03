@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
+import { encryptData } from '../../utils/encryption';
 import { MdSave } from 'react-icons/md';
 import { MdOutlineSaveAlt } from 'react-icons/md';
 import { MdSaveAlt } from 'react-icons/md';
@@ -42,7 +43,14 @@ const SaveGame = () => {
             timestamp: new Date().toISOString(),
         };
 
-        localStorage.setItem('scifiMarketSave', JSON.stringify(gameState));
+        // Encrypt the game state before saving
+        const encryptedData = encryptData(gameState);
+        if (encryptedData) {
+            localStorage.setItem('scifiMarketSave', encryptedData);
+        } else {
+            console.error('Failed to encrypt game data');
+            return;
+        }
 
         // Show the level for 2 seconds
         setShowLevel(true);

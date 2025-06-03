@@ -1,7 +1,5 @@
-// Breakpoints
-$breakpoint-mobile: 576px;
-$breakpoint-tablet: 768px;
-$breakpoint-desktop: 1024px;
+// Import breakpoints from App.scss
+@import './App.scss';
 
 .admin-debug {
     background: none;
@@ -41,10 +39,8 @@ $breakpoint-desktop: 1024px;
         position: absolute;
         top: 0;
         left: 0;
-        box-shadow: inset 5px 5px 250px 15px #000, 
-                    inset -10px -24px 40px 0px #000,
-                    inset 20px -10px 40px 0px #000, 
-                    inset -20px 10px 40px 0px #000;
+        box-shadow: inset 5px 5px 250px 15px #000, inset -10px -24px 40px 0px #000,
+            inset 20px -10px 40px 0px #000, inset -20px 10px 40px 0px #000;
         z-index: 0;
     }
 }
@@ -59,7 +55,6 @@ $breakpoint-desktop: 1024px;
     border-radius: 8px;
     padding: 0.5rem;
     box-sizing: border-box;
-    overflow: auto;
 
     @media (min-width: $breakpoint-tablet) {
         width: 48%;

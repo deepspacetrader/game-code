@@ -38,8 +38,15 @@ export const MarketplaceProvider = ({ children }) => {
     const [inventory, setInventory] = useState([]);
     const [credits, setCredits] = useState(defaultCredits);
     const [health, setHealth] = useState(defaultHealth);
-    const [maxHealth, setMaxHealth] = useState(100);
     const [fuel, setFuel] = useState(defaultFuel);
+
+    // Keep a ref of health to ensure we always have the latest value in callbacks
+    const healthRef = useRef(health);
+
+    // Update the ref whenever health changes
+    useEffect(() => {
+        healthRef.current = health;
+    }, [health]);
 
     // Event and enemy state
     const [currentEnemy, setCurrentEnemy] = useState(null);
@@ -61,7 +68,6 @@ export const MarketplaceProvider = ({ children }) => {
     const [tradeHistory, setTradeHistory] = useState([]);
     const [traderMessage, setTraderMessage] = useState(null);
     const [priceHistory, setPriceHistory] = useState({});
-    const [deliverySpeed, setDeliverySpeed] = useState(1);
 
     // Trader state
     const [traderIds, setTraderIds] = useState([]);
@@ -108,8 +114,8 @@ export const MarketplaceProvider = ({ children }) => {
     // Quantum system state
     const [quantumBuyEnabled, setQuantumBuyEnabled] = useState(false);
     const [quantumInventory, setQuantumInventory] = useState([]);
-    const [quantumAbilitiesEnabled, setQuantumAbilitiesEnabled] = useState(() => {
-        const saved = localStorage.getItem('quantumAbilitiesEnabled');
+    const [quantumPower, setquantumPower] = useState(() => {
+        const saved = localStorage.getItem('quantumPower');
         return saved !== null ? JSON.parse(saved) : false; // Default to false for new players
     });
     const [isQuantumHoverEnabled, setIsQuantumHoverEnabled] = useState(false);
@@ -125,16 +131,11 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Toggle all quantum abilities
     const toggleQuantumAbilities = useCallback(() => {
-        setQuantumAbilitiesEnabled((prev) => {
+        setquantumPower((prev) => {
             const newState = !prev;
-            localStorage.setItem('quantumAbilitiesEnabled', JSON.stringify(newState));
+            localStorage.setItem('quantumPower', JSON.stringify(newState));
             return newState;
         });
-    }, []);
-
-    // Toggle quantum buy
-    const toggleQuantumMode = useCallback(() => {
-        setQuantumBuyEnabled((prev) => !prev);
     }, []);
 
     // Check if quantum trade can be performed
@@ -641,26 +642,58 @@ export const MarketplaceProvider = ({ children }) => {
     // Function to initialize game state from saved data
     const initializeGameState = useCallback(
         async (savedState) => {
+            console.log('Initializing game state with:', savedState);
             try {
-                // Set basic state
-                setHealth(savedState.health);
-                setFuel(savedState.fuel);
-                setCredits(savedState.credits);
-                setDeliverySpeed(savedState.deliverySpeed || 1);
-                setShieldActive(savedState.shieldActive || false);
-                setStealthActive(savedState.stealthActive || false);
-                setInventory(savedState.inventory || []);
-                setQuantumProcessors(savedState.quantumProcessors || 0);
-                setImprovedUILevel(savedState.uiLevel || 0);
+                // Set basic state with validation
+                if (savedState.health !== undefined) setHealth(Number(savedState.health));
+                if (savedState.fuel !== undefined) setFuel(Number(savedState.fuel));
+                if (savedState.credits !== undefined) setCredits(Number(savedState.credits));
+
+                // Fix: Use savedState.courierDrones instead of savedState.setCourierDrones
+                if (savedState.courierDrones !== undefined) {
+                    setCourierDrones(Number(savedState.courierDrones));
+                }
+
+                if (savedState.shieldActive !== undefined)
+                    setShieldActive(!!savedState.shieldActive);
+                if (savedState.stealthActive !== undefined)
+                    setStealthActive(!!savedState.stealthActive);
+
+                // Handle inventory with validation
+                if (Array.isArray(savedState.inventory)) {
+                    const validInventory = savedState.inventory
+                        .filter((item) => item && item.name && item.quantity > 0)
+                        .map((item) => ({
+                            name: String(item.name),
+                            quantity: Number(item.quantity) || 0,
+                            price: Number(item.price) || 0,
+                        }));
+                    setInventory(validInventory);
+                } else {
+                    setInventory([]);
+                }
+
+                if (savedState.quantumProcessors !== undefined)
+                    setQuantumProcessors(Number(savedState.quantumProcessors));
+                if (savedState.uiLevel !== undefined)
+                    setImprovedUILevel(Number(savedState.uiLevel));
+                // if (savedState.deliverySpeed !== undefined) setCourierDrones(Number(savedState.deliverySpeed));
 
                 // Travel to the saved galaxy if specified
                 if (savedState.galaxyName) {
-                    travelToGalaxy(savedState.galaxyName);
+                    console.log('Traveling to saved galaxy:', savedState.galaxyName);
+                    await travelToGalaxy(savedState.galaxyName);
                 }
 
+                console.log('Game state initialized successfully');
                 return true;
             } catch (error) {
                 console.error('Failed to initialize game state:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    savedState: savedState,
+                });
                 return false;
             }
         },
@@ -668,7 +701,7 @@ export const MarketplaceProvider = ({ children }) => {
             setHealth,
             setFuel,
             setCredits,
-            setDeliverySpeed,
+            setCourierDrones,
             setShieldActive,
             setStealthActive,
             setInventory,
@@ -792,7 +825,7 @@ export const MarketplaceProvider = ({ children }) => {
         setHealth,
         setFuel,
         setCredits,
-        setDeliverySpeed,
+        setCourierDrones,
         setShieldActive,
         setStealthActive,
         setInventory,
@@ -2286,11 +2319,12 @@ export const MarketplaceProvider = ({ children }) => {
 
         // Define all possible abilities with their unlock thresholds and weights
         const abilities = [
-            { name: 'QuantumHover', minProcessors: 1, weight: 0.8 },
-            { name: 'QuantumScan', minProcessors: 5, weight: 0.6 },
-            { name: 'QuantumMarket', minProcessors: 10, weight: 0.4 },
-            { name: 'QuantumShield', minProcessors: 3, weight: 0.5 },
-            { name: 'QuantumStealth', minProcessors: 7, weight: 0.4 },
+            { name: 'QuantumHover', minProcessors: 1 },
+            { name: 'QuantumScanLR', minProcessors: 1 },
+            { name: 'QuantumScanRL', minProcessors: 1 },
+            { name: 'QuantumScanTB', minProcessors: 1 },
+            { name: 'QuantumScanBT', minProcessors: 1 },
+            { name: 'QuantumMarket', minProcessors: 5 },
         ];
 
         // Filter available abilities based on processor count and random chance
@@ -2365,6 +2399,11 @@ export const MarketplaceProvider = ({ children }) => {
         },
         [credits, traderIds, currentTrader, fuelPrices, inventory, items]
     );
+
+    // Sync delivery speed with courierDrones from UIContext
+    // useEffect(() => {
+    //     setCourierDrones(courierDrones || 0);
+    // }, [courierDrones, setCourierDrones]);
 
     // Handle travel completion
     useEffect(() => {
@@ -2567,12 +2606,12 @@ export const MarketplaceProvider = ({ children }) => {
             quantumBuyEnabled,
             quantumInventory,
             quantumProcessors,
-            toggleQuantumMode,
             setQuantumBuyEnabled,
             setQuantumInventory,
             checkQuantumTradeDelay,
             updateLastQuantumTradeTime,
             setQuantumProcessors,
+            updateQuantumProcessors, // Add updateQuantumProcessors to quantumState
         };
 
         return {
@@ -2638,11 +2677,13 @@ export const MarketplaceProvider = ({ children }) => {
             setQuantumSlotsUsed,
 
             // State setters
+            setHealth,
             setStatusEffects,
             setCredits,
             setGameCompleted,
             setTraderMessage,
             setVolume,
+            updateQuantumProcessors, // Add to dependencies array
             setRecordTimes: () => {},
             setPurchaseHistory: () => {},
 
@@ -2659,13 +2700,11 @@ export const MarketplaceProvider = ({ children }) => {
             handlePrevTrader,
             toggleShield,
             toggleStealth,
-            toggleQuantumMode,
 
             // Other utilities
             courierDrones: [],
             recordTimes: {},
             traderMessage: null,
-            deliverySpeed: 1,
             currentGalaxy: null,
             traderMessageTimeout: null,
             pendingTrader: null,
@@ -2673,12 +2712,48 @@ export const MarketplaceProvider = ({ children }) => {
 
             // Empty function implementations for backward compatibility
             onBuyAll: () => {},
-            addQuantumProcessors: () => {},
+            addQuantumProcessors,
             resetQuantumProcessors: () => {},
-            subtractQuantumProcessor: () => {},
+            subtractQuantumProcessor,
             triggerRandomMarketEvent: () => {},
             triggerEnemyEncounter: () => {},
-            initializeGameState: async () => true,
+            initializeGameState: async (savedState) => {
+                console.log('Initializing game state with:', savedState);
+                
+                // Set basic game state
+                if (savedState.health !== undefined) setHealth(savedState.health);
+                if (savedState.fuel !== undefined) setFuel(savedState.fuel);
+                if (savedState.credits !== undefined) setCredits(savedState.credits);
+                // Delivery speed is handled by courierDrones in the UI
+                if (savedState.shieldActive !== undefined) setShieldActive(savedState.shieldActive);
+                if (savedState.stealthActive !== undefined) setStealthActive(savedState.stealthActive);
+                if (savedState.quantumProcessors !== undefined) setQuantumProcessors(savedState.quantumProcessors);
+                if (savedState.galaxyName) {
+                    setGalaxyName(savedState.galaxyName);
+                    // Find and set the current galaxy from the saved name
+                    const galaxy = galaxiesData.galaxies.find(g => g.name === savedState.galaxyName);
+                    if (galaxy) {
+                        setCurrentGalaxy(galaxy);
+                    }
+                }
+
+                // Set inventory if it exists and is an array
+                if (Array.isArray(savedState.inventory)) {
+                    setInventory(savedState.inventory);
+                }
+
+                // Update UI level if specified
+                if (savedState.uiLevel !== undefined) {
+                    setImprovedUILevel(savedState.uiLevel);
+                }
+
+                // Mark as initialized
+                setIsInitialized(true);
+                
+                console.log('Game state initialization complete');
+                return true;
+            },
+            updateQuantumProcessors, // Add the actual function instead of a no-op
         };
     }, [
         // State dependencies
@@ -2691,7 +2766,6 @@ export const MarketplaceProvider = ({ children }) => {
         handleSellClick,
         handleUseItem,
         toggleQuantumAbilities,
-        toggleQuantumMode,
         toggleShield,
         toggleStealth,
         travelToGalaxy,
@@ -2744,6 +2818,7 @@ export const MarketplaceProvider = ({ children }) => {
         setGameCompleted,
         setTraderMessage,
         setVolume,
+        initializeGameState,
     ]);
 
     // Return the provider with the context value

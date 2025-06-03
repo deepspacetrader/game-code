@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Marketplace from './Marketplace';
+import Game from './Game';
 import './StarBackground.scss';
 import { StatusEffectsProvider } from './context/StatusEffectsContext';
 import { MarketplaceProvider } from './context/MarketplaceContext';
 import { UIProvider } from './context/UIContext';
-import { GameProvider } from './context/GameContext';
+import { EventProvider } from './context/EventContext';
 
 // Generate random star positions on each refresh
 const STAR_COUNT = 500;
@@ -33,14 +33,14 @@ root.render(
                 ></div>
             ))}
         </div>
-        <GameProvider>
-            <StatusEffectsProvider>
-                <UIProvider>
-                    <MarketplaceProvider>
-                        <Marketplace />
-                    </MarketplaceProvider>
-                </UIProvider>
-            </StatusEffectsProvider>
-        </GameProvider>
+        <StatusEffectsProvider>
+            <UIProvider>
+                <MarketplaceProvider>
+                    <EventProvider>
+                        <Game />
+                    </EventProvider>
+                </MarketplaceProvider>
+            </UIProvider>
+        </StatusEffectsProvider>
     </div>
 );
