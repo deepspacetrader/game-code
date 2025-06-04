@@ -137,7 +137,7 @@
         font-size: 0.9rem;
         position: relative;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
 
         input[type='checkbox'] {
             display: none; // Hide default checkbox
@@ -179,6 +179,17 @@
             font-weight: bold;
             border-color: rgba(100, 200, 255, 0.6);
             box-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
+            
+            .quantum-power-enabled & {
+                background: linear-gradient(145deg, rgba(0, 160, 80, 0.6), rgba(0, 120, 50, 0.8));
+                border-color: rgba(100, 255, 100, 0.6);
+                box-shadow: 0 0 15px rgba(0, 255, 100, 0.3);
+                
+                &:hover {
+                    background: linear-gradient(145deg, rgba(0, 180, 90, 0.7), rgba(0, 140, 60, 0.9));
+                    border-color: rgba(150, 255, 150, 0.8);
+                }
+            }
         }
 
         &.locked .slot-content {

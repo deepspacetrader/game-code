@@ -10,12 +10,12 @@ const QuantumScan = () => {
     const {
         quantumInventory = [],
         marketRef,
-        quantumAbilitiesEnabled,
+        quantumPower,
         isQuantumScanActive,
     } = useMarketplace();
 
     // Check if QuantumScan is unlocked and enabled
-    const isUnlocked = quantumInventory.includes('QuantumScan') && quantumAbilitiesEnabled;
+    const isUnlocked = quantumInventory.includes('QuantumScan') && quantumPower;
 
     // Scan interval reference
     const scanIntervalRef = useRef(null);

@@ -196,8 +196,36 @@ const QuantumSetup = ({ setStatusEffects }) => {
     // Toggle slot activation
     const toggleSlotActivation = useCallback(
         async (index) => {
-            // If slot is already active, return early
+            // Early return if slot is already active or no quantum processors available
             if (slots[index]?.active) {
+                return;
+            }
+
+            if (quantumCount <= 0) {
+                // Play error sound for insufficient quantum processors
+                zzfx(
+                    ...[
+                        volumeRef.current,
+                        0,
+                        100,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0,
+                        1.5,
+                        0.2,
+                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.1,
+                        0.2,
+                        0.1,
+                    ]
+                );
                 return;
             }
 
@@ -208,28 +236,69 @@ const QuantumSetup = ({ setStatusEffects }) => {
 
                 if (!success) {
                     console.warn('Failed to subtract quantum processor - insufficient quantity');
-                    // Play error sound
-                    zzfx(1, 0, 100, 0.1, 0.1, 0.1, 0, 1.5, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
-                    return; // Not enough quantum processors
+                    zzfx(
+                        ...[
+                            volumeRef.current,
+                            0,
+                            100,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0,
+                            1.5,
+                            0.2,
+                            2,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.1,
+                            0.2,
+                            0.1,
+                        ]
+                    );
+                    return;
                 }
-
-                // Play success sound
-                zzfx(1, 0, 200, 0.1, 0.1, 0.1, 0, 2, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
             } catch (error) {
                 console.error('Error consuming quantum processor:', error);
-                // Play error sound
-                zzfx(1, 0, 100, 0.1, 0.1, 0.1, 0, 1.5, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
-                return; // Prevent further execution if there was an error
+                zzfx(
+                    ...[
+                        volumeRef.current,
+                        0,
+                        100,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0,
+                        1.5,
+                        0.2,
+                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.1,
+                        0.2,
+                        0.1,
+                    ]
+                );
+                return;
             }
 
             // Use functional update to ensure we have the latest state
             setSlots((prevSlots) => {
-                // Check if slot is already active
+                // Double-check if slot is already active (in case of race condition)
                 if (prevSlots[index]?.active) {
                     return prevSlots;
                 }
 
                 const newSlots = [...prevSlots];
+                const currentActiveCount = prevSlots.filter((s) => s.active).length;
+                const newActiveCount = currentActiveCount + 1; // We're activating one more slot
 
                 // Get all standard abilities (excluding QuantumMarket)
                 const standardAbilities = [
@@ -242,48 +311,66 @@ const QuantumSetup = ({ setStatusEffects }) => {
 
                 const usedSlots = newSlots.filter((s) => s.active);
                 const usedAbilities = new Set(usedSlots.map((s) => s.ability));
-
-                // Filter out used abilities from standard abilities
                 const availableAbilities = standardAbilities.filter((a) => !usedAbilities.has(a));
 
-                // If this is the last available slot, make it QuantumMarket
+                // Determine the ability for the new slot
+                let selectedAbility;
                 if (availableAbilities.length === 0) {
-                    newSlots[index] = {
-                        ...newSlots[index],
-                        ability: 'QuantumMarket',
-                        active: true,
-                        used: true,
-                    };
+                    selectedAbility = 'QuantumMarket';
                 } else {
-                    // Randomly select an available ability
                     const randomIndex = Math.floor(Math.random() * availableAbilities.length);
-                    const selectedAbility = availableAbilities[randomIndex];
-
-                    newSlots[index] = {
-                        ...newSlots[index],
-                        ability: selectedAbility,
-                        active: true,
-                        used: true,
-                    };
+                    selectedAbility = availableAbilities[randomIndex];
                 }
 
-                // Calculate new active count (count all active slots)
-                const activeCount = newSlots.filter((s) => s.active).length;
+                // Update the slot
+                newSlots[index] = {
+                    ...newSlots[index],
+                    ability: selectedAbility,
+                    active: true,
+                    used: true,
+                };
 
                 // Update quantum slots used count
-                setQuantumSlotsUsed(activeCount);
+                setQuantumSlotsUsed(newActiveCount);
 
-                // Update status effects to reflect the new active count
+                // Update status effects with the new active count
                 setStatusEffects((prev) => ({
                     ...prev,
                     'Quantum Processor': {
                         ...prev['Quantum Processor'],
-                        level: activeCount,
-                        quantity: quantumCount - 1, // subtract one processor
+                        level: newActiveCount,
+                        quantity: quantumCount - 1,
                         lastTradeTime: Date.now(),
-                        active: activeCount > 0,
+                        active: newActiveCount > 0,
                     },
                 }));
+
+                // Play success sound after state updates
+                setTimeout(() => {
+                    zzfx(
+                        ...[
+                            volumeRef.current,
+                            0,
+                            200,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0,
+                            2,
+                            0.2,
+                            2,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0.1,
+                            0.2,
+                            0.1,
+                        ]
+                    );
+                }, 0);
 
                 return newSlots;
             });
@@ -305,7 +392,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
     const soundTimeoutRef = useRef(null);
 
     return (
-        <div className={`quantum-setup ${uiTier}`}>
+        <div className={`quantum-setup ${uiTier} ${quantumPower ? 'quantum-power-enabled' : ''}`}>
             <div className="quantum-header">
                 <h3>Quantum Processor</h3>
             </div>
@@ -321,27 +408,29 @@ const QuantumSetup = ({ setStatusEffects }) => {
                             let randomDecay = randomFloatRange(0.1337, 0.4269).toFixed(3);
                             // console.log(randomDecay);
                             zzfx(
-                                volumeRef.current,
-                                0.1,
-                                397,
-                                0.36,
-                                0.07,
-                                0.07,
-                                1,
-                                0.37,
-                                -16,
-                                -871,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0,
-                                randomDecay, //decay
-                                0.24,
-                                0.23,
-                                0.09,
-                                0,
-                                840
+                                ...[
+                                    volumeRef.current,
+                                    0.1,
+                                    397,
+                                    0.36,
+                                    0.07,
+                                    0.07,
+                                    1,
+                                    0.37,
+                                    -16,
+                                    -871,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    randomDecay, //decay
+                                    0.24,
+                                    0.23,
+                                    0.09,
+                                    0,
+                                    840,
+                                ]
                             );
 
                             isMouseDownRef.current = true;
@@ -349,15 +438,11 @@ const QuantumSetup = ({ setStatusEffects }) => {
                                 if (isMouseDownRef.current) {
                                     // Check if there's at least one active slot before toggling
                                     const activeSlots = slots.filter((slot) => slot.active).length;
+
                                     if (activeSlots > 0) {
                                         // Only toggle quantum abilities if button was held down long enough and there are active slots
-                                        toggleQuantumAbilities((prev) => {
-                                            console.log(
-                                                'Toggling quantum abilities. Current state:',
-                                                prev
-                                            );
-                                            return !prev;
-                                        });
+                                        console.log('Toggling quantum abilities.');
+                                        toggleQuantumAbilities();
 
                                         zzfx(
                                             ...[
