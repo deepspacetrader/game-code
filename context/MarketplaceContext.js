@@ -137,12 +137,17 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Toggle all quantum abilities
     const toggleQuantumAbilities = useCallback(() => {
-        console.log('Toggle quantum abilities called. Current quantumSlotsUsed:', quantumSlotsUsed, 'Current quantumPower:', quantumPower);
+        console.log(
+            'Toggle quantum abilities called. Current quantumSlotsUsed:',
+            quantumSlotsUsed,
+            'Current quantumPower:',
+            quantumPower
+        );
         if (quantumSlotsUsed >= 1) {
             setQuantumPower((prev) => {
                 const newState = !prev;
                 console.log('Toggling quantum power from', prev, 'to', newState);
-                localStorage.setItem('quantumPower', JSON.stringify(newState));
+                // localStorage.setItem('quantumPower', JSON.stringify(newState));
                 return newState;
             });
         } else {
