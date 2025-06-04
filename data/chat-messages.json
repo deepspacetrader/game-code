@@ -51,7 +51,7 @@
             "casual": [
                 "You catch that energy spike near the jump gate earlier? Weird stuff.",
                 "These Zeta-7 cores are flying off the shelves. Must be something big going down.",
-                "*adjusts holo-display* You wouldn't believe the markup on bio-circuits these days."
+                "Things just haven't been the same ever since the great cybernetic wars..."
             ],
             "joke": [
                 "Why don't AIs tell jokes in binary? Because they only get 10 types of people!",
@@ -96,7 +96,8 @@
             "casual": [
                 "The stars look particularly bright tonight. Good omen for trading.",
                 "You feel that? The quantum fields are shifting again.",
-                "My scanners are picking up unusual readings from the nebula."
+                "My scanners are picking up unusual readings from the nebula.",
+                "Quantum processing used to be so much cheaper and would last way longer!"
             ],
             "joke": [
                 "Why did the AI cross the quantum bridge? To get to the other qubit!",
@@ -140,17 +141,18 @@
             "casual": [
                 "Ooooh, shiny thing! Wait, where was I?",
                 "You ever notice how everything in the void wants to eat you?",
-                "I found this weird rock. It's probably valuable or cursed. Maybe both!"
+                "I found this weird rock. It's probably valuable or cursed. Maybe both!",
+                "QP's used to just work but I'm glad we have a legal limit. Things were getting out of control!"
             ],
             "joke": [
                 "Why don't space pirates like to fight near black holes? Too many event horizons to worry about!",
-                "What's a pirate's favorite programming language? ARRRR-python!",
                 "How many scavengers does it take to change a fusion coil? Just one, but they'll take the other two as spares!"
             ],
             "boast": [
                 "I've got artifacts so rare, even the Precursors would be jealous!",
                 "My collection makes the Imperial Vault look like a junk drawer.",
-                "I once sold a rock to a geologist for a small fortune. It was just a rock."
+                "I once sold a rock to a geologist for a small fortune. It was just a rock.",
+                "I used to have thousands upon thousands of Quantum Processors"
             ],
             "brag": [
                 "This cloak? Made from the hide of a space kraken. Don't ask how I got it.",
