@@ -197,18 +197,34 @@ const QuantumSetup = ({ setStatusEffects }) => {
     // Toggle slot activation
     const toggleSlotActivation = useCallback(
         async (index) => {
+            // Try to consume a quantum processor
+            try {
+                // Always try to subtract first - let the context handle the quantity check
+                const success = await subtractQuantumProcessor(1);
+                
+                if (!success) {
+                    console.warn('Failed to subtract quantum processor - insufficient quantity');
+                    // Play error sound
+                    zzfx(1, 0, 100, 0.1, 0.1, 0.1, 0, 1.5, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
+                    return; // Not enough quantum processors
+                }
+                
+                // Play success sound
+                zzfx(1, 0, 200, 0.1, 0.1, 0.1, 0, 2, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
+            } catch (error) {
+                console.error('Error consuming quantum processor:', error);
+                // Play error sound
+                zzfx(1, 0, 100, 0.1, 0.1, 0.1, 0, 1.5, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
+                return; // Prevent further execution if there was an error
+            }
+
             // Use functional update to ensure we have the latest state
             setSlots((prevSlots) => {
-                const slot = prevSlots[index];
-                const usedSlots = prevSlots.filter((s) => s.used);
-                const usedCount = usedSlots.length;
-
-                // Don't allow toggling if slot is already used
-                if (slot.used) {
+                // Check if slot is already active
+                if (prevSlots[index]?.active) {
                     return prevSlots;
                 }
 
-                // Create a copy of the slots to modify
                 const newSlots = [...prevSlots];
 
                 // Get all standard abilities (excluding QuantumMarket)
@@ -220,16 +236,16 @@ const QuantumSetup = ({ setStatusEffects }) => {
                     'QuantumHover',
                 ];
 
-                // Get list of currently used abilities
-                const usedAbilities = new Set(usedSlots.map(s => s.ability));
-                
+                const usedSlots = newSlots.filter((s) => s.active);
+                const usedAbilities = new Set(usedSlots.map((s) => s.ability));
+
                 // Filter out used abilities from standard abilities
-                const availableAbilities = standardAbilities.filter(a => !usedAbilities.has(a));
-                
+                const availableAbilities = standardAbilities.filter((a) => !usedAbilities.has(a));
+
                 // If this is the last available slot, make it QuantumMarket
                 if (availableAbilities.length === 0) {
                     newSlots[index] = {
-                        ...slot,
+                        ...newSlots[index],
                         ability: 'QuantumMarket',
                         active: true,
                         used: true,
@@ -238,9 +254,9 @@ const QuantumSetup = ({ setStatusEffects }) => {
                     // Randomly select an available ability
                     const randomIndex = Math.floor(Math.random() * availableAbilities.length);
                     const selectedAbility = availableAbilities[randomIndex];
-                    
+
                     newSlots[index] = {
-                        ...slot,
+                        ...newSlots[index],
                         ability: selectedAbility,
                         active: true,
                         used: true,
@@ -253,13 +269,13 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 // Update quantum slots used count
                 setQuantumSlotsUsed(activeCount);
 
-                // Update status effects
+                // Update status effects to reflect the new active count
                 setStatusEffects((prev) => ({
                     ...prev,
                     'Quantum Processor': {
                         ...prev['Quantum Processor'],
                         level: activeCount,
-                        quantity: quantumProcessor?.quantity || 0,
+                        quantity: quantumCount - 1, // subtract one processor
                         lastTradeTime: Date.now(),
                         active: activeCount > 0,
                     },
@@ -268,7 +284,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 return newSlots;
             });
         },
-        [quantumProcessor, setStatusEffects, setQuantumSlotsUsed]
+        [quantumCount, setStatusEffects, setQuantumSlotsUsed, subtractQuantumProcessor]
     );
 
     // Update quantumSlotsUsed when slots change
@@ -299,7 +315,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
                         className={`quantum-toggle ${quantumPower ? 'enabled' : 'disabled'}`}
                         onMouseDown={() => {
                             let randomDecay = randomFloatRange(0.1337, 0.4269).toFixed(3);
-                            console.log(randomDecay);
+                            // console.log(randomDecay);
                             zzfx(
                                 volumeRef.current,
                                 0.1,
@@ -322,31 +338,70 @@ const QuantumSetup = ({ setStatusEffects }) => {
                                 0.09,
                                 0,
                                 840
-                            ); // Pickup 96
+                            );
 
                             isMouseDownRef.current = true;
                             soundTimeoutRef.current = setTimeout(() => {
                                 if (isMouseDownRef.current) {
-                                    zzfx(
-                                        ...[
-                                            volumeRef.current,
-                                            0,
-                                            392,
-                                            0.01,
-                                            0.05,
-                                            0.1,
-                                            1,
-                                            2,
-                                            0,
-                                            0,
-                                            0,
-                                            0,
-                                            0,
-                                            10,
-                                        ]
-                                    );
+                                    // Check if there's at least one active slot before toggling
+                                    const activeSlots = slots.filter((slot) => slot.active).length;
+                                    if (activeSlots > 0) {
+                                        // Only toggle quantum abilities if button was held down long enough and there are active slots
+                                        toggleQuantumAbilities((prev) => {
+                                            console.log(
+                                                'Toggling quantum abilities. Current state:',
+                                                prev
+                                            );
+                                            return !prev;
+                                        });
+
+                                        zzfx(
+                                            ...[
+                                                volumeRef.current,
+                                                0,
+                                                392,
+                                                0.01,
+                                                0.05,
+                                                0.1,
+                                                1,
+                                                2,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                10,
+                                            ]
+                                        );
+                                    } else {
+                                        // Play error sound or provide feedback that no slots are active
+                                        zzfx(
+                                            ...[
+                                                volumeRef.current,
+                                                0.1,
+                                                220,
+                                                0.1,
+                                                0.1,
+                                                0.1,
+                                                1,
+                                                1,
+                                                -15,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                0,
+                                                0.1,
+                                                0.1,
+                                                0.1,
+                                                0,
+                                                0,
+                                            ]
+                                        );
+                                    }
                                 }
-                            }, 420); // 420ms delay before sound
+                            }, 420); // 420ms delay before sound and toggle
                         }}
                         onMouseUp={() => {
                             isMouseDownRef.current = false;
@@ -362,21 +417,6 @@ const QuantumSetup = ({ setStatusEffects }) => {
                                 soundTimeoutRef.current = null;
                             }
                         }}
-                        onClick={() => {
-                            // Use the callback form of setState to ensure we have the latest value
-                            toggleQuantumAbilities((prev) => {
-                                console.log('Toggling quantum abilities. Current state:', prev);
-                                return !prev;
-                            });
-
-                            setStatusEffects((prev) => ({
-                                ...prev,
-                                'Quantum Processor': {
-                                    ...prev['Quantum Processor'],
-                                    level: quantumInventory.length,
-                                },
-                            }));
-                        }}
                         title={
                             quantumPower
                                 ? 'Disable all quantum abilities'
@@ -386,27 +426,6 @@ const QuantumSetup = ({ setStatusEffects }) => {
                         {quantumPower ? 'Disable' : 'Enable'}
                     </button>
                 </div>
-            </div>
-
-            <div className="quantum-abilities">
-                <div className="ability-selector">
-                    {quantumInventory.map((ability) => (
-                        <button
-                            key={ability}
-                            className={`ability-tab ${activeAbility === ability ? 'active' : ''}`}
-                            onClick={() => setActiveAbility(ability)}
-                        >
-                            {ability.replace('Quantum', '')}
-                        </button>
-                    ))}
-                </div>
-
-                {activeAbility && (
-                    <div className="ability-details">
-                        <h4>{activeAbility}</h4>
-                        <p>{ABILITY_DESCRIPTIONS[activeAbility] || 'No description available.'}</p>
-                    </div>
-                )}
             </div>
 
             <div className="slots">

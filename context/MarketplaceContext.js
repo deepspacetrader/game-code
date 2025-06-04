@@ -49,6 +49,8 @@ export const MarketplaceProvider = ({ children }) => {
         healthRef.current = health;
     }, [health]);
 
+
+
     // Event and enemy state
     const [currentEnemy, setCurrentEnemy] = useState(null);
     const [currentGameEvent, setCurrentGameEvent] = useState(null);
@@ -2303,29 +2305,44 @@ export const MarketplaceProvider = ({ children }) => {
         // The toggle button should be used to enable/disable them
     };
 
-    // cheat - remove quantum processors
+    // Remove quantum processors from inventory
     const subtractQuantumProcessor = (amount = 1) => {
         return new Promise((resolve) => {
             setInventory((inv) => {
-                const existing = inv.find((i) => i.name === 'Quantum Processor');
-                if (!existing || existing.quantity < amount) {
-                    resolve(false); // Not enough processors
+                const existingIndex = inv.findIndex((i) => i.name === 'Quantum Processor');
+                if (existingIndex === -1) {
+                    resolve(false);
+                    return inv;
+                }
+                
+                const existing = inv[existingIndex];
+                if (existing.quantity < amount) {
+                    resolve(false);
                     return inv;
                 }
 
-                if (existing.quantity > amount) {
-                    const newInv = inv.map((i) =>
-                        i.name === 'Quantum Processor' ? { ...i, quantity: i.quantity - amount } : i
-                    );
-                    resolve(true);
+                const newQuantity = existing.quantity - amount;
+                
+                if (newQuantity > 0) {
+                    // Update quantity if there are still processors left
+                    const newInv = [...inv];
+                    newInv[existingIndex] = {
+                        ...existing,
+                        quantity: newQuantity
+                    };
+                    // Use setTimeout to ensure state is updated before resolving
+                    setTimeout(() => resolve(true), 0);
+                    return newInv;
+                } else {
+                    // Remove the item if no processors left
+                    const newInv = inv.filter((_, i) => i !== existingIndex);
+                    setTimeout(() => resolve(true), 0);
                     return newInv;
                 }
-
-                // Remove the item if quantity equals amount
-                const newInv = inv.filter((i) => i.name !== 'Quantum Processor');
-                resolve(true);
-                return newInv;
             });
+        }).catch(error => {
+            console.error('Error in subtractQuantumProcessor:', error);
+            return false;
         });
     };
 
@@ -2997,7 +3014,7 @@ export const MarketplaceProvider = ({ children }) => {
             // Placeholder functions for backward compatibility
             onBuyAll: () => {},
             resetQuantumProcessors: () => {},
-            subtractQuantumProcessor: () => {},
+            subtractQuantumProcessor,
             triggerRandomMarketEvent: () => {},
             setRecordTimes: () => {},
             setPurchaseHistory: () => {},
