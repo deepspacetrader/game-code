@@ -4,6 +4,7 @@ import { useUI } from '../../context/UIContext';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { decryptData } from '../../utils/encryption';
 import './GameMenu.scss';
+import Version from '../Misc/Version';
 
 const GameMenu = () => {
     const [showMainMenu, setShowMainMenu] = useState(true);
@@ -187,7 +188,9 @@ const GameMenu = () => {
                     >
                         Start New Game
                     </button>
-                    <p className="version-info">v1.0.0</p>
+                    <div className="version-info">
+                        <Version />
+                    </div>
                     <div className="how-to-play">
                         <button
                             className="how-to-play-button"
