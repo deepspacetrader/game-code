@@ -6,7 +6,6 @@ import { zzfx } from 'zzfx';
 import {
     faSearch,
     faMicrochip,
-    faLockOpen,
     faLock,
     faHandHoldingUsd,
     faArrowRight,
@@ -197,18 +196,23 @@ const QuantumSetup = ({ setStatusEffects }) => {
     // Toggle slot activation
     const toggleSlotActivation = useCallback(
         async (index) => {
+            // If slot is already active, return early
+            if (slots[index]?.active) {
+                return;
+            }
+
             // Try to consume a quantum processor
             try {
-                // Always try to subtract first - let the context handle the quantity check
+                // Try to subtract a quantum processor
                 const success = await subtractQuantumProcessor(1);
-                
+
                 if (!success) {
                     console.warn('Failed to subtract quantum processor - insufficient quantity');
                     // Play error sound
                     zzfx(1, 0, 100, 0.1, 0.1, 0.1, 0, 1.5, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
                     return; // Not enough quantum processors
                 }
-                
+
                 // Play success sound
                 zzfx(1, 0, 200, 0.1, 0.1, 0.1, 0, 2, 0.2, 2, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.1);
             } catch (error) {
@@ -284,7 +288,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 return newSlots;
             });
         },
-        [quantumCount, setStatusEffects, setQuantumSlotsUsed, subtractQuantumProcessor]
+        [quantumCount, setStatusEffects, setQuantumSlotsUsed, subtractQuantumProcessor, slots]
     );
 
     // Update quantumSlotsUsed when slots change
@@ -477,9 +481,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
                                                 opacity: 0.7,
                                             }}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={slot.active ? faLockOpen : faLock}
-                                            />
+                                            <FontAwesomeIcon icon={faLock} />
                                         </div>
                                     </>
                                 ) : (
