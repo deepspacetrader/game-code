@@ -200,7 +200,7 @@ const GameMenu = () => {
                             <h3>Welcome to Deep Space Trading Game</h3>
                             <p>
                                 Navigate the galaxies as a space trader, buying low and selling high
-                                to build your fortune.
+                                to build your fortune and dominate the markets.
                             </p>
                             <h4>Controls</h4>
                             <ul>
@@ -226,18 +226,18 @@ const GameMenu = () => {
                                     markets with ultra high speed trading capabilities
                                 </li>
                             </ul>
-                            <h4>Gameplay</h4>
+                            <h4>Tips</h4>
                             <ul>
                                 <li>Visit different traders to buy and sell goods</li>
                                 <li>Prices vary between traders so buy low and sell high!</li>
                                 <li>
-                                    Be careful out there trader, some areas are dangerous and you
-                                    may encounter some not so friendly individuals...
+                                    Be careful out there, some areas are dangerous and you may
+                                    encounter some not so friendly individuals or groups
                                 </li>
                                 <li>Maintain your health and fuel levels</li>
                                 <li>
-                                    Upgrade your UI level to unlock new visual information to help
-                                    you make better trading decisions
+                                    Upgrade your UI Level for enhanced visual information to help
+                                    make better trading decisions
                                 </li>
                             </ul>
                         </div>
