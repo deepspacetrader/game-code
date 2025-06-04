@@ -191,7 +191,7 @@ button {
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    z-index: 10;
+    z-index: 100;
     padding: 4px 8px;
     border-radius: 4px;
     opacity: 0;
@@ -210,7 +210,6 @@ button {
 
 /* Medium UI: static text */
 .cell-notice--medium {
-    position: relative;
     opacity: 1 !important;
     transform: none !important;
     font-size: 0.8rem;
@@ -274,6 +273,21 @@ button {
 }
 
 /* UI Tier Styles */
+
+.ui-tier-zero,
+.ui-tier-worthless,
+.ui-tier-awful,
+.ui-tier-bad,
+.ui-tier-verylow {
+    --hud-bg: #000;
+    // --hud-border: #222;
+    --hud-text: #fff;
+    // --cell-border: #334;
+    // --cell-hover-shadow: #555;
+    // --accent: #afa;
+    // --error: #f55;
+    // --info: #aff;
+}
 
 .ui-tier-low {
     --hud-bg: #0a0e14;
