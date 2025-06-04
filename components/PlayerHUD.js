@@ -247,19 +247,23 @@ const PlayerHUD = () => {
                     Delivery Speed: + {(courierDrones * 100).toFixed(1)}%
                 </div>
             </div>
-            {/* <div className="hud-item hud-item--stealth">
+            {/* 
+            <div className="hud-item hud-item--stealth">
         {statEffects.filter(e => e.name === 'stealth').map(e => (
           <FloatingMessage
             key={e.id}
             text={e.delta > 0 ? `+${e.delta}` : `${e.delta}`}
             color="purple"
             animation={e.delta > 0 ? 'floatUp 1.5s ease-out forwards' : 'floatDown 1.5s ease-out forwards'}
+        </div>
             style={{ position: 'absolute', top: '-20px', left: '50%', transform: 'translateX(-50%)' }}
           />
         ))}
         Stealth: {stealthActive ? 'ON' : 'OFF'}
-      </div> */}
-            {/* <div className="hud-item hud-item--shield">
+      </div> 
+      */}
+            {/*
+             <div className="hud-item hud-item--shield">
         {statEffects.filter(e => e.name === 'shield').map(e => (
           <FloatingMessage
             key={e.id}
@@ -270,7 +274,8 @@ const PlayerHUD = () => {
           />
         ))}
         Shield: {shieldActive ? 'ON' : 'OFF'}
-      </div> */}
+      </div> 
+      */}
         </div>
     );
 };
