@@ -22,6 +22,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
         subtractQuantumProcessor,
         quantumPower,
         setQuantumSlotsUsed,
+        setQuantumPower,
         toggleQuantumAbilities,
         volumeRef,
         addQuantumAbility,
@@ -325,6 +326,9 @@ const QuantumSetup = ({ setStatusEffects }) => {
                     used: true,
                 };
 
+                // Turn off quantum power when a slot is activated
+                setQuantumPower(false);
+                
                 // Update quantum slots used count
                 setQuantumSlotsUsed(newActiveCount);
 
@@ -374,6 +378,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
             quantumCount,
             setStatusEffects,
             setQuantumSlotsUsed,
+            setQuantumPower,
             subtractQuantumProcessor,
             slots,
             addQuantumAbility,
