@@ -113,12 +113,8 @@ export const MarketplaceProvider = ({ children }) => {
     });
 
     // Quantum system state
-    const [quantumBuyEnabled, setQuantumBuyEnabled] = useState(false);
     const [quantumInventory, setQuantumInventory] = useState([]);
-    const [quantumPower, setQuantumPower] = useState(() => {
-        const saved = localStorage.getItem('quantumPower');
-        return saved !== null ? JSON.parse(saved) : false; // Default to false for new players
-    });
+    const [quantumPower, setQuantumPower] = useState(false);
     const [isQuantumHoverEnabled, setIsQuantumHoverEnabled] = useState(false);
     const [isQuantumScanActive, setIsQuantumScanActive] = useState(false);
     const [quantumSlotsUsed, setQuantumSlotsUsed] = useState(0);
@@ -143,11 +139,19 @@ export const MarketplaceProvider = ({ children }) => {
             'Current quantumPower:',
             quantumPower
         );
+
         if (quantumSlotsUsed >= 1) {
             setQuantumPower((prev) => {
-                const newState = !prev;
+                let newState = false;
+                console.log(typeof prev);
+                if (typeof prev === 'undefined') {
+                    console.log('was undefined...');
+                    newState = true;
+                } else {
+                    console.log('flipping prev');
+                    newState = !prev;
+                }
                 console.log('Toggling quantum power from', prev, 'to', newState);
-                // localStorage.setItem('quantumPower', JSON.stringify(newState));
                 return newState;
             });
         } else {
@@ -2624,11 +2628,9 @@ export const MarketplaceProvider = ({ children }) => {
             .reduce((acc, curr) => acc + curr, 0);
 
         const quantumState = {
-            quantumBuyEnabled,
             quantumInventory,
             quantumProcessors,
             quantumPower,
-            setQuantumBuyEnabled,
             setQuantumInventory,
             checkQuantumTradeDelay,
             updateLastQuantumTradeTime,
@@ -2845,8 +2847,8 @@ export const MarketplaceProvider = ({ children }) => {
         volume,
         volumeRef,
         quantumSlotsUsed,
-        quantumBuyEnabled,
         quantumInventory,
+        quantumPower,
         quantumProcessors,
         setImprovedUILevel,
         setQuantumProcessors,
@@ -2929,13 +2931,12 @@ export const MarketplaceProvider = ({ children }) => {
             nextGalaxyName: nextGalaxyName || '',
             volume,
             quantumSlotsUsed,
-            quantumBuyEnabled,
             quantumInventory,
             quantumProcessors,
             items: items || [],
             fuelPrices,
             volumeRef,
-
+            quantumPower,
             // State setters
             setInventory,
             setCredits,
@@ -2964,7 +2965,7 @@ export const MarketplaceProvider = ({ children }) => {
             setNextGalaxyName,
             setVolume,
             setQuantumSlotsUsed,
-            setQuantumBuyEnabled,
+            setQuantumPower,
             setQuantumInventory,
             setQuantumProcessors,
 
@@ -3046,7 +3047,6 @@ export const MarketplaceProvider = ({ children }) => {
             nextGalaxyName,
             volume,
             quantumSlotsUsed,
-            quantumBuyEnabled,
             quantumInventory,
             quantumProcessors,
             items,

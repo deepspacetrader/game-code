@@ -54,7 +54,7 @@ const getRecommendation = (volatility, trend, potentialProfit) => {
     }
 };
 
-const QuantumHover = ({ market }) => {
+const QuantumHoverOld = ({ market }) => {
     const {
         statusEffects,
         purchaseHistory,
@@ -81,21 +81,20 @@ const QuantumHover = ({ market }) => {
     const hoverAreaSize = 300; // Increased to support multiple items
     const hoverTriggerRadius = 100; // Radius for hover state triggering
 
-    // Only update status effects if quantum inventory length changes and we have a Quantum Processor
+    // Initialize quantum processor level if it doesn't exist
     useEffect(() => {
         const quantumProcessor = statusEffects['Quantum Processor'];
-        if (quantumProcessor && quantumProcessor.level !== quantumInventory.length) {
+        if (!quantumProcessor) {
             setStatusEffects((prev) => ({
                 ...prev,
                 'Quantum Processor': {
                     ...prev['Quantum Processor'],
-                    level: quantumInventory.length,
+                    level: 0,
+                    active: false,
                 },
             }));
         }
-        // We use statusEffects in the dependency array but only access it once at the start of the effect
-        // to prevent unnecessary re-renders while still satisfying the linting rules
-    }, [quantumInventory.length, statusEffects, setStatusEffects]);
+    }, [statusEffects, setStatusEffects]);
 
     const analyzeItem = useCallback(
         (item) => {
@@ -535,4 +534,4 @@ const QuantumHover = ({ market }) => {
     );
 };
 
-export default QuantumHover;
+export default QuantumHoverOld;

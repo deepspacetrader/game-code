@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import './QuantumHover.scss';
@@ -54,48 +54,93 @@ const getRecommendation = (volatility, trend, potentialProfit) => {
     }
 };
 
-const QuantumHover = ({ market }) => {
-    const {
-        statusEffects,
-        purchaseHistory,
-        priceHistory,
-        currentTrader,
-        setStatusEffects,
-        displayCells,
-        credits,
-        deliveryQueue,
-        numCellsX,
-        inventory,
-        checkQuantumTradeDelay,
-        updateLastQuantumTradeTime,
-        handleBuyClick,
-        handleSellClick,
-        handleSellAll,
-    } = useMarketplace();
+const QuantumHover = (props) => {
+    // Get context values first
+    const marketplaceContext = useMarketplace();
     const { quantumInventory = [] } = useUI();
+
+    // Debug log
+    // console.log('QuantumHover mounted with props and context:', {
+    //     props: {
+    //         hasMarket: !!props.market,
+    //         statusEffects: !!props.statusEffects,
+    //         displayCells: props.displayCells?.length,
+    //         inventory: props.inventory?.length,
+    //     },
+    //     context: {
+    //         hasMarketplace: !!marketplaceContext,
+    //         hasStatusEffects: !!marketplaceContext?.statusEffects,
+    //         quantumInventory: quantumInventory.length,
+    //     },
+    // });
+
+    // Destructure props with defaults
+    const {
+        market: MarketGrid,
+        displayCells = [],
+        numCellsX = 5,
+        inventory = [],
+        purchaseHistory = [],
+        priceHistory = {},
+        currentTrader = null,
+        deliveryQueue = [],
+        credits = 0,
+        // Default handlers that do nothing
+        handleBuyClick = () => {},
+        handleSellClick = () => {},
+        handleSellAll = () => {},
+        checkQuantumTradeDelay = () => true,
+        updateLastQuantumTradeTime = () => {
+            console.log('updateLastQuantumTradeTime called (default no-op)');
+            if (marketplaceContext?.updateLastQuantumTradeTime) {
+                marketplaceContext.updateLastQuantumTradeTime();
+            }
+        },
+        // Allow statusEffects to be overridden by props, otherwise use from context
+        statusEffects = marketplaceContext?.statusEffects || {},
+    } = props;
 
     const containerRef = useRef(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [quantumAnalysis, setQuantumAnalysis] = useState({});
     const hoverLag = 100;
-    const hoverAreaSize = 300; // Increased to support multiple items
-    const hoverTriggerRadius = 100; // Radius for hover state triggering
+    const hoverAreaSize = 200; // Slightly smaller for better precision
+    const hoverTriggerRadius = 100;
 
-    // Only update status effects if quantum inventory length changes and we have a Quantum Processor
+    // Add mount/unmount logging
     useEffect(() => {
-        const quantumProcessor = statusEffects['Quantum Processor'];
-        if (quantumProcessor && quantumProcessor.level !== quantumInventory.length) {
+        console.log('QuantumHover mounted');
+        return () => console.log('QuantumHover unmounted');
+    }, []);
+
+    // Only update status effects when quantum processor count changes
+    useEffect(() => {
+        const { setStatusEffects, statusEffects: contextStatusEffects } = marketplaceContext || {};
+        if (!setStatusEffects) return;
+
+        const processorCount = quantumInventory.filter(
+            (item) => item === 'Quantum Processor'
+        ).length;
+        const currentLevel = contextStatusEffects?.['Quantum Processor']?.level || 0;
+
+        // Only update if the count has actually changed
+        if (processorCount > 0 && processorCount !== currentLevel) {
             setStatusEffects((prev) => ({
                 ...prev,
                 'Quantum Processor': {
-                    ...prev['Quantum Processor'],
-                    level: quantumInventory.length,
+                    ...prev?.['Quantum Processor'],
+                    level: processorCount,
                 },
             }));
+        } else if (processorCount === 0 && currentLevel > 0) {
+            // Only update if we need to remove the processor
+            setStatusEffects((prev) => {
+                const newStatusEffects = { ...prev };
+                delete newStatusEffects['Quantum Processor'];
+                return newStatusEffects;
+            });
         }
-        // We use statusEffects in the dependency array but only access it once at the start of the effect
-        // to prevent unnecessary re-renders while still satisfying the linting rules
-    }, [quantumInventory.length, statusEffects, setStatusEffects]);
+    }, [marketplaceContext, quantumInventory]);
 
     const analyzeItem = useCallback(
         (item) => {
@@ -292,27 +337,26 @@ const QuantumHover = ({ market }) => {
 
     const handleMouseMove = useCallback(
         (e) => {
+            const container = containerRef.current;
+            if (!container) return;
+
+            // Get mouse position relative to the container
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Throttle mouse move events
             const now = Date.now();
             if (now - lastMouseMoveRef.current < mouseMoveThrottle) {
                 return; // Skip this update if we've updated too recently
             }
             lastMouseMoveRef.current = now;
 
-            console.log('Mouse move - processing');
-
-            const container = containerRef.current;
-            if (!container) return;
-
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
             // Update mouse position and reset trade executed flag if moved significantly
             setMousePosition((prev) => {
                 const dx = prev.x - x;
                 const dy = prev.y - y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                // If we've moved a significant distance, reset the trade executed flag
                 if (distance > 5) {
                     tradeExecutedRef.current = false;
                 }
@@ -454,30 +498,57 @@ const QuantumHover = ({ market }) => {
         };
     }, [handleMouseMove]);
 
+    // Alias MarketGrid to market for backward compatibility
+    const market = useMemo(() => MarketGrid, [MarketGrid]);
+
+    // Log render with mouse position
+    useEffect(() => {
+        console.log('QuantumHover render:', { mousePosition });
+    }, [mousePosition]);
+
     return (
         <div
             ref={containerRef}
             className="quantum-hover-container"
             style={{
-                width: '100%',
-                height: '100%',
-                position: 'relative',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                pointerEvents: 'none',
+                zIndex: 9999,
+                border: '2px solid red', // Debug border
+                boxSizing: 'border-box',
             }}
         >
             <div
-                className={`quantum-hover-overlay ${(statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''}`}
+                className={`quantum-hover-overlay ${
+                    (statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''
+                }`}
                 style={{
-                    left: mousePosition.x - hoverAreaSize / 2,
-                    top: mousePosition.y - hoverAreaSize / 4,
-                    width: hoverAreaSize,
-                    height: hoverAreaSize / 2,
                     position: 'absolute',
+                    left: `${mousePosition.x}px`,
+                    top: `${mousePosition.y}px`,
+                    width: `${hoverAreaSize}px`,
+                    height: `${hoverAreaSize / 2}px`,
+                    backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                    border: '2px solid rgba(0, 255, 0, 0.8)',
+                    borderRadius: '50%',
                     pointerEvents: 'none',
-                    transition: `all ${hoverLag}ms ease`,
-                    opacity: (statusEffects['Quantum Processor']?.level || 0) > 50 ? 1 : 0.5,
+                    transform: 'translate(-50%, -50%)',
+                    transition: `all ${hoverLag}ms ease-out`,
+                    opacity: (statusEffects['Quantum Processor']?.level || 0) > 0 ? 0.7 : 0,
+                    zIndex: 10000,
+                    mixBlendMode: 'screen',
+                    boxShadow: '0 0 20px rgba(0, 255, 0, 0.5)',
                 }}
             />
-            <div className={`quantum-analysis-panel ${(statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''}`}>
+            <div
+                className={`quantum-analysis-panel ${
+                    (statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''
+                }`}
+            >
                 {Object.entries(quantumAnalysis).length > 0 ? (
                     Object.entries(quantumAnalysis).map(([itemId, analysis]) => (
                         <div key={itemId} className="analysis-item">
