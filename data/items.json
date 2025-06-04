@@ -61,9 +61,9 @@
             "basePrice": 42000,
             "deliveryTime": 0.42,
             "priceTickRate": [150, 300],
-            "duration": [90000, 120000],
+            "duration": [400, 500],
             "effects": {
-                "+improved_UI": [90, 100],
+                "+improved_UI": [999, 1337],
                 "-fuel_cost": [42, 99]
             }
         },

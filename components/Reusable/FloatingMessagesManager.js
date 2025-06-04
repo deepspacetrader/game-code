@@ -16,8 +16,6 @@ const FloatingMessagesManager = () => {
 
     return (
         <div className="floating-messages-portal">
-            {/* {console.log(messages)} */}
-
             {messages.map((m) => (
                 <FloatingMessage
                     key={m.id}
