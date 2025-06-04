@@ -24,6 +24,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
         setQuantumSlotsUsed,
         toggleQuantumAbilities,
         volumeRef,
+        addQuantumAbility,
     } = useMarketplace();
     const quantumProcessor = inventory.find((i) => i.name === 'Quantum Processor');
     const quantumCount = quantumProcessor?.quantity || 0;
@@ -193,98 +194,89 @@ const QuantumSetup = ({ setStatusEffects }) => {
         },
     };
 
-    // Toggle slot activation
+    // Activate a quantum slot (cannot deactivate once activated)
     const toggleSlotActivation = useCallback(
         async (index) => {
-            // Early return if slot is already active or no quantum processors available
+            // If slot is already active, do nothing and play a soft error sound
             if (slots[index]?.active) {
+                zzfx(
+                    volumeRef.current,
+                    0.1,
+                    220,
+                    0.05,
+                    0.05,
+                    0.05,
+                    1,
+                    1,
+                    -15,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0,
+                    0
+                );
                 return;
             }
 
+            // Check if we have enough quantum processors
             if (quantumCount <= 0) {
                 // Play error sound for insufficient quantum processors
                 zzfx(
-                    ...[
-                        volumeRef.current,
-                        0,
-                        100,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0,
-                        1.5,
-                        0.2,
-                        2,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0.1,
-                        0.2,
-                        0.1,
-                    ]
+                    volumeRef.current,
+                    0.1,
+                    220,
+                    0.1,
+                    0.1,
+                    0.1,
+                    1,
+                    1,
+                    -15,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0,
+                    0
                 );
                 return;
             }
 
             // Try to consume a quantum processor
-            try {
-                // Try to subtract a quantum processor
-                const success = await subtractQuantumProcessor(1);
-
-                if (!success) {
-                    console.warn('Failed to subtract quantum processor - insufficient quantity');
-                    zzfx(
-                        ...[
-                            volumeRef.current,
-                            0,
-                            100,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0,
-                            1.5,
-                            0.2,
-                            2,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0.1,
-                            0.2,
-                            0.1,
-                        ]
-                    );
-                    return;
-                }
-            } catch (error) {
-                console.error('Error consuming quantum processor:', error);
+            const success = await subtractQuantumProcessor(1);
+            if (!success) {
+                console.warn('Failed to subtract quantum processor - insufficient quantity');
                 zzfx(
-                    ...[
-                        volumeRef.current,
-                        0,
-                        100,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0,
-                        1.5,
-                        0.2,
-                        2,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0.1,
-                        0.2,
-                        0.1,
-                    ]
+                    volumeRef.current,
+                    0.1,
+                    220,
+                    0.1,
+                    0.1,
+                    0.1,
+                    1,
+                    1,
+                    -15,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0,
+                    0
                 );
                 return;
             }
@@ -321,6 +313,9 @@ const QuantumSetup = ({ setStatusEffects }) => {
                     const randomIndex = Math.floor(Math.random() * availableAbilities.length);
                     selectedAbility = availableAbilities[randomIndex];
                 }
+
+                // Add the ability to quantumInventory
+                addQuantumAbility(selectedAbility);
 
                 // Update the slot
                 newSlots[index] = {
@@ -375,14 +370,32 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 return newSlots;
             });
         },
-        [quantumCount, setStatusEffects, setQuantumSlotsUsed, subtractQuantumProcessor, slots]
+        [
+            quantumCount,
+            setStatusEffects,
+            setQuantumSlotsUsed,
+            subtractQuantumProcessor,
+            slots,
+            addQuantumAbility,
+            volumeRef,
+        ]
     );
 
     // Update quantumSlotsUsed when slots change
     useEffect(() => {
         const activeSlots = slots.filter((slot) => slot.active).length;
         setQuantumSlotsUsed(activeSlots);
+        console.log('Active slots updated:', activeSlots);
     }, [slots, setQuantumSlotsUsed]);
+
+    // Use local state to track the power state for immediate UI updates
+    const [localQuantumPower, setLocalQuantumPower] = useState(quantumPower);
+
+    // Sync local state with context state
+    useEffect(() => {
+        console.log('Quantum power state changed:', quantumPower);
+        setLocalQuantumPower(quantumPower);
+    }, [quantumPower]);
 
     // UI tier is always at least 'medium' for Quantum Setup to be visible
     const uiTier = 'medium';
@@ -391,129 +404,133 @@ const QuantumSetup = ({ setStatusEffects }) => {
     const isMouseDownRef = useRef(false);
     const soundTimeoutRef = useRef(null);
 
+    // Handle mouse down for the quantum toggle button
+    const handleMouseDown = useCallback(() => {
+        const randomDecay = randomFloatRange(0.1337, 0.4269).toFixed(3);
+
+        // Play initial sound
+        zzfx(
+            volumeRef.current,
+            0.1,
+            397,
+            0.36,
+            0.07,
+            0.07,
+            1,
+            0.37,
+            -16,
+            -871,
+            0,
+            0,
+            0,
+            0,
+            0,
+            randomDecay,
+            0.24,
+            0.23,
+            0.09,
+            0,
+            840
+        );
+
+        isMouseDownRef.current = true;
+
+        // Get the current active slots count immediately
+        const activeSlots = slots.filter((slot) => slot.active).length;
+        console.log('Active slots count:', activeSlots);
+
+        soundTimeoutRef.current = setTimeout(() => {
+            if (!isMouseDownRef.current) return;
+
+            if (activeSlots > 0) {
+                console.log(
+                    'Toggling quantum power. Current state before toggle:',
+                    localQuantumPower
+                );
+
+                // Update local state immediately for instant feedback
+                const newState = !localQuantumPower;
+                setLocalQuantumPower(newState);
+
+                // Then update the context
+                toggleQuantumAbilities();
+
+                // Play success sound
+                zzfx(volumeRef.current, 0, 392, 0.01, 0.05, 0.1, 1, 2, 0, 0, 0, 0, 0, 10);
+            } else {
+                // Play error sound for no active slots
+                zzfx(
+                    volumeRef.current,
+                    0.1,
+                    220,
+                    0.1,
+                    0.1,
+                    0.1,
+                    1,
+                    1,
+                    -15,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0,
+                    0
+                );
+            }
+        }, 420); // Perfect delay so that when first sound ends 2nd sound begins
+    }, [slots, toggleQuantumAbilities, volumeRef, localQuantumPower]);
+
+    // Handle mouse up
+    const handleMouseUp = useCallback(() => {
+        isMouseDownRef.current = false;
+        if (soundTimeoutRef.current) {
+            clearTimeout(soundTimeoutRef.current);
+            soundTimeoutRef.current = null;
+        }
+    }, []);
+
+    // Handle mouse leave
+    const handleMouseLeave = useCallback(() => {
+        isMouseDownRef.current = false;
+        if (soundTimeoutRef.current) {
+            clearTimeout(soundTimeoutRef.current);
+            soundTimeoutRef.current = null;
+        }
+    }, []);
+
     return (
-        <div className={`quantum-setup ${uiTier} ${quantumPower ? 'quantum-power-enabled' : ''}`}>
+        <div
+            className={`quantum-setup ${uiTier} ${
+                localQuantumPower ? 'quantum-power-enabled' : ''
+            }`}
+        >
             <div className="quantum-header">
                 <h3>Quantum Processor</h3>
-            </div>
-            <div className="quantum-toggle-container">
-                <div className={`quantum-status ${!quantumPower ? 'status-inactive' : ''}`}>
-                    <span className="status-indicator">
-                        <span className={`pulse ${quantumPower ? 'active' : ''}`}></span>
-                        Quantum {quantumPower ? 'Active' : 'Inactive'}
-                    </span>
-                    <button
-                        className={`quantum-toggle ${quantumPower ? 'enabled' : 'disabled'}`}
-                        onMouseDown={() => {
-                            let randomDecay = randomFloatRange(0.1337, 0.4269).toFixed(3);
-                            // console.log(randomDecay);
-                            zzfx(
-                                ...[
-                                    volumeRef.current,
-                                    0.1,
-                                    397,
-                                    0.36,
-                                    0.07,
-                                    0.07,
-                                    1,
-                                    0.37,
-                                    -16,
-                                    -871,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    0,
-                                    randomDecay, //decay
-                                    0.24,
-                                    0.23,
-                                    0.09,
-                                    0,
-                                    840,
-                                ]
-                            );
-
-                            isMouseDownRef.current = true;
-                            soundTimeoutRef.current = setTimeout(() => {
-                                if (isMouseDownRef.current) {
-                                    // Check if there's at least one active slot before toggling
-                                    const activeSlots = slots.filter((slot) => slot.active).length;
-
-                                    if (activeSlots > 0) {
-                                        // Only toggle quantum abilities if button was held down long enough and there are active slots
-                                        console.log('Toggling quantum abilities.');
-                                        toggleQuantumAbilities();
-
-                                        zzfx(
-                                            ...[
-                                                volumeRef.current,
-                                                0,
-                                                392,
-                                                0.01,
-                                                0.05,
-                                                0.1,
-                                                1,
-                                                2,
-                                                0,
-                                                0,
-                                                0,
-                                                0,
-                                                0,
-                                                10,
-                                            ]
-                                        );
-                                    } else {
-                                        // Play error sound or provide feedback that no slots are active
-                                        zzfx(
-                                            ...[
-                                                volumeRef.current,
-                                                0.1,
-                                                220,
-                                                0.1,
-                                                0.1,
-                                                0.1,
-                                                1,
-                                                1,
-                                                -15,
-                                                0,
-                                                0,
-                                                0,
-                                                0,
-                                                0,
-                                                0,
-                                                0.1,
-                                                0.1,
-                                                0.1,
-                                                0,
-                                                0,
-                                            ]
-                                        );
-                                    }
-                                }
-                            }, 420); // 420ms delay before sound and toggle
-                        }}
-                        onMouseUp={() => {
-                            isMouseDownRef.current = false;
-                            if (soundTimeoutRef.current) {
-                                clearTimeout(soundTimeoutRef.current);
-                                soundTimeoutRef.current = null;
+                <div className="quantum-toggle-container">
+                    <div className={`quantum-status ${localQuantumPower ? 'active' : ''}`}>
+                        <span className="status-indicator">
+                            <span className={`pulse ${localQuantumPower ? 'active' : ''}`}></span>
+                            {localQuantumPower ? 'ONLINE' : 'OFFLINE'}
+                        </span>
+                        <button
+                            className={`quantum-toggle ${localQuantumPower ? 'enabled' : ''}`}
+                            onMouseDown={handleMouseDown}
+                            onMouseUp={handleMouseUp}
+                            onMouseLeave={handleMouseLeave}
+                            title={
+                                localQuantumPower
+                                    ? 'Disable all quantum abilities'
+                                    : 'Enable all quantum abilities'
                             }
-                        }}
-                        onMouseLeave={() => {
-                            isMouseDownRef.current = false;
-                            if (soundTimeoutRef.current) {
-                                clearTimeout(soundTimeoutRef.current);
-                                soundTimeoutRef.current = null;
-                            }
-                        }}
-                        title={
-                            quantumPower
-                                ? 'Disable all quantum abilities'
-                                : 'Enable all quantum abilities'
-                        }
-                    >
-                        {quantumPower ? 'Disable' : 'Enable'}
-                    </button>
+                        >
+                            {localQuantumPower ? 'Disable' : 'Enable'}
+                        </button>
+                    </div>
                 </div>
             </div>
 

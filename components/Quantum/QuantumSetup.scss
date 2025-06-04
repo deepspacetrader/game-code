@@ -8,7 +8,6 @@
     transition: all 0.3s ease;
 
     .quantum-header {
-        display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 15px;
@@ -39,22 +38,32 @@
     }
 
     .quantum-toggle-container {
+        width: 100%;
         .quantum-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
             background: rgba(165, 20, 10, 0.7);
             padding: 4px 8px;
             border-radius: 4px;
             border: 1px solid rgba(100, 200, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s ease;
+
+            &.active {
+                background: #5f5;
+                box-shadow: 0 0 10px #5f5;
+            }
+
+            &.status-inactive {
+                animation: flashRed 1.5s ease-in-out 1;
+            }
         }
 
         .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
             font-size: 0.9em;
+            width: 50%;
             color: #aaf;
+            text-align: center;
 
             .pulse {
                 display: inline-block;
@@ -64,11 +73,10 @@
                 background: #f55;
                 opacity: 0.7;
                 transition: all 0.3s ease;
-
+                margin-right: 5px;
                 &.active {
                     background: #5f5;
-                    box-shadow: 0 0 10px #5f5;
-                    animation: pulse 2s infinite;
+                    animation: pulse-green 2s infinite;
                 }
             }
         }
@@ -88,6 +96,7 @@
         letter-spacing: 0.5px;
         font-weight: bold;
         text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
+        width: 50%;
 
         &:hover {
             background: #225577;
@@ -158,13 +167,13 @@
             text-align: center;
             transform-style: preserve-3d;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            
+
             &:hover {
                 transform: translateY(-2px) scale(1.02);
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
                 border-color: rgba(100, 200, 255, 0.5);
             }
-            
+
             &:active {
                 transform: translateY(0) scale(0.98);
             }
@@ -179,14 +188,18 @@
             font-weight: bold;
             border-color: rgba(100, 200, 255, 0.6);
             box-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
-            
+
             .quantum-power-enabled & {
                 background: linear-gradient(145deg, rgba(0, 160, 80, 0.6), rgba(0, 120, 50, 0.8));
                 border-color: rgba(100, 255, 100, 0.6);
                 box-shadow: 0 0 15px rgba(0, 255, 100, 0.3);
-                
+
                 &:hover {
-                    background: linear-gradient(145deg, rgba(0, 180, 90, 0.7), rgba(0, 140, 60, 0.9));
+                    background: linear-gradient(
+                        145deg,
+                        rgba(0, 180, 90, 0.7),
+                        rgba(0, 140, 60, 0.9)
+                    );
                     border-color: rgba(150, 255, 150, 0.8);
                 }
             }
@@ -196,7 +209,7 @@
             background: linear-gradient(145deg, rgba(80, 20, 20, 0.6), rgba(50, 10, 10, 0.8));
             border-color: rgba(255, 100, 100, 0.3);
             opacity: 0.7;
-            
+
             &:hover {
                 border-color: rgba(255, 100, 100, 0.5);
                 transform: none;
@@ -355,6 +368,18 @@
     }
 }
 
+@keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 5px rgba(80, 255, 80, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(80, 255, 80, 0.8), 0 0 30px rgba(80, 255, 80, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(80, 255, 80, 0.5);
+    }
+}
+
 @keyframes flashRed {
     0% {
         background-color: transparent;
@@ -364,96 +389,5 @@
     }
     100% {
         background-color: transparent;
-    }
-}
-
-.quantum-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-
-    &.status-inactive {
-        animation: flashRed 1.5s ease-in-out 1;
-    }
-
-    .status-indicator {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-        .pulse {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #ff4d4d;
-            margin-right: 5px;
-
-            &.active {
-                background-color: #4caf50;
-                box-shadow: 0 0 8px #4caf50;
-            }
-        }
-    }
-
-    .quantum-toggle {
-        padding: 5px 12px;
-        border: none;
-        border-radius: 4px;
-        font-weight: bold;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.42s ease;
-
-        &:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-
-        &:active {
-            transform: translateY(1px);
-            filter: brightness(0.95);
-        }
-
-        &.enabled {
-            background-color: #4caf50;
-            color: white;
-            box-shadow: 0 2px 0 #2e7d32, 0 3px 5px rgba(0, 0, 0, 0.2);
-
-            &:hover {
-                background-color: #43a047;
-                transform: translateY(-1px);
-                box-shadow: 0 3px 0 #2e7d32, 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
-
-            &:active {
-                transform: translateY(2px);
-                box-shadow: 0 0 0 #2e7d32, 0 1px 2px rgba(0, 0, 0, 0.2);
-            }
-        }
-
-        &.disabled {
-            background-color: #f44336;
-            color: white;
-            box-shadow: 0 2px 0 #c62828, 0 3px 5px rgba(0, 0, 0, 0.2);
-
-            &:hover {
-                background-color: #e53935;
-                transform: translateY(-1px);
-                box-shadow: 0 3px 0 #c62828, 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
-
-            &:active {
-                transform: translateY(2px);
-                box-shadow: 0 0 0 #c62828, 0 1px 2px rgba(0, 0, 0, 0.2);
-            }
-        }
     }
 }
