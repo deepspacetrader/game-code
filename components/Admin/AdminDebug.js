@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import { useEventContext } from '../../context/EventContext';
@@ -20,11 +20,9 @@ const AdminDebug = () => {
         maxHealth,
         volumeRef,
         setDeliverySpeed,
-        quantumProcessors = 0,
+        quantumProcessors: currentQPs = 0,
         updateQuantumProcessors,
-        setQuantumProcessors,
         quantumInventory = [],
-        setCurrentGameEvent,
         isCheater: contextIsCheater,
         setIsCheater,
     } = useMarketplace();
@@ -54,34 +52,45 @@ const AdminDebug = () => {
     const [qpAmount, setQPAmount] = useState(1);
     const [deliverySpeedOverride, setDeliverySpeedOverride] = useState(courierDrones || 0);
 
-    // Memoize quantum processor functions
-    // Get current quantum processor count
-    const currentQPs = quantumProcessors || 0;
+    // Handle resetting quantum processors
+    const handleResetQPs = useCallback(() => {
+        if (!updateQuantumProcessors) {
+            console.error('updateQuantumProcessors function is not available');
+            alert('Failed to reset QPs: updateQuantumProcessors is not available');
+            return;
+        }
+        updateQuantumProcessors(0);
+    }, [updateQuantumProcessors]);
 
+    // Handle adding quantum processors
+    const handleAddQPs = useCallback(() => {
+        try {
+            if (!updateQuantumProcessors) {
+                console.error('updateQuantumProcessors function is not available');
+                alert('Failed to add QPs: updateQuantumProcessors is not available');
+                return;
+            }
+
+            const currentCount = currentQPs || 0;
+            const newCount = currentCount + qpAmount;
+
+            // Add the processors - the updateQuantumProcessors function will handle updating the count
+            // Quantum abilities will be added when the player interacts with quantum slots
+            updateQuantumProcessors(newCount);
+        } catch (error) {
+            console.error('Error adding QPs:', error);
+            alert(`Failed to add QPs: ${error.message}`);
+        }
+    }, [currentQPs, qpAmount, updateQuantumProcessors]);
+
+    // Memoize quantum processor handlers
     const quantumProcessorHandlers = useMemo(
         () => ({
-            add: (amount) => {
-                if (updateQuantumProcessors) {
-                    updateQuantumProcessors(Number(amount));
-                }
-            },
-            reset: () => {
-                if (updateQuantumProcessors) {
-                    updateQuantumProcessors(0);
-                }
-            },
+            add: handleAddQPs,
+            reset: handleResetQPs,
         }),
-        [updateQuantumProcessors]
+        [handleAddQPs, handleResetQPs]
     );
-
-    // Sync delivery speed override with courierDrones and update delivery speed in MarketplaceContext
-    useEffect(() => {
-        setDeliverySpeedOverride(courierDrones);
-        // Update delivery speed in MarketplaceContext when courierDrones changes
-        if (typeof setDeliverySpeed === 'function') {
-            setDeliverySpeed(courierDrones || 1);
-        }
-    }, [courierDrones, setDeliverySpeed]);
 
     const toggleCheats = () => {
         // Simply toggle the cheats menu visibility
@@ -167,24 +176,6 @@ const AdminDebug = () => {
 
     const handleAddCredits = () => {
         setCredits(creditAmount);
-    };
-
-    const handleAddQPs = () => {
-        try {
-            if (!updateQuantumProcessors) {
-                console.error('updateQuantumProcessors function is not available');
-                alert('Failed to add QPs: updateQuantumProcessors is not available');
-                return;
-            }
-            quantumProcessorHandlers.add(qpAmount);
-        } catch (error) {
-            console.error('Error adding QPs:', error);
-            alert(`Failed to add QPs: ${error.message}`);
-        }
-    };
-
-    const handleResetQPs = () => {
-        quantumProcessorHandlers.reset();
     };
 
     const [showDanger, setShowDanger] = useState(false);

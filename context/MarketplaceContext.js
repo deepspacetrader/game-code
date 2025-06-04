@@ -49,8 +49,6 @@ export const MarketplaceProvider = ({ children }) => {
         healthRef.current = health;
     }, [health]);
 
-
-
     // Event and enemy state
     const [currentEnemy, setCurrentEnemy] = useState(null);
     const [currentGameEvent, setCurrentGameEvent] = useState(null);
@@ -117,7 +115,7 @@ export const MarketplaceProvider = ({ children }) => {
     // Quantum system state
     const [quantumBuyEnabled, setQuantumBuyEnabled] = useState(false);
     const [quantumInventory, setQuantumInventory] = useState([]);
-    const [quantumPower, setquantumPower] = useState(() => {
+    const [quantumPower, setQuantumPower] = useState(() => {
         const saved = localStorage.getItem('quantumPower');
         return saved !== null ? JSON.parse(saved) : false; // Default to false for new players
     });
@@ -127,6 +125,11 @@ export const MarketplaceProvider = ({ children }) => {
     const [lastQuantumTradeTime, setLastQuantumTradeTime] = useState(0);
     const [quantumProcessors, setQuantumProcessors] = useState(0);
 
+    // Add a quantum ability to the inventory
+    const addQuantumAbility = useCallback((ability) => {
+        setQuantumInventory((prev) => [...new Set([...prev, ability])]); // Use Set to avoid duplicates
+    }, []);
+
     // Toggle quantum scan
     const toggleQuantumScan = useCallback(() => {
         setIsQuantumScanActive((prev) => !prev);
@@ -134,12 +137,18 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Toggle all quantum abilities
     const toggleQuantumAbilities = useCallback(() => {
-        setquantumPower((prev) => {
-            const newState = !prev;
-            localStorage.setItem('quantumPower', JSON.stringify(newState));
-            return newState;
-        });
-    }, []);
+        console.log('Toggle quantum abilities called. Current quantumSlotsUsed:', quantumSlotsUsed, 'Current quantumPower:', quantumPower);
+        if (quantumSlotsUsed >= 1) {
+            setQuantumPower((prev) => {
+                const newState = !prev;
+                console.log('Toggling quantum power from', prev, 'to', newState);
+                localStorage.setItem('quantumPower', JSON.stringify(newState));
+                return newState;
+            });
+        } else {
+            console.log('Not enough quantum slots used');
+        }
+    }, [quantumSlotsUsed, quantumPower]);
 
     // Initialize game state from saved data - using the more complete implementation below
 
@@ -369,17 +378,35 @@ export const MarketplaceProvider = ({ children }) => {
         setGlobalDangerLevel((prev) => Math.max(0, Math.min(10, newLevel || prev)));
     }, []);
 
-    // Function to set quantum processors (used by save/load)
     const updateQuantumProcessors = useCallback((count) => {
+        // Don't do anything if count is negative
+        if (count < 0) return;
+
         setInventory((inv) => {
             const existing = inv.find((i) => i.name === 'Quantum Processor');
-            if (existing) {
-                return inv.map((i) =>
-                    i.name === 'Quantum Processor' ? { ...i, quantity: count } : i
-                );
+
+            // If count is 0, remove all quantum processors
+            if (count === 0) {
+                return inv.filter((i) => i.name !== 'Quantum Processor');
             }
-            return [...inv, { name: 'Quantum Processor', quantity: count }];
+
+            // For positive counts, update or add the processors
+            // Make sure we're not triggering any side effects by using a clean update
+            const updatedInv = existing
+                ? inv.map((i) => (i.name === 'Quantum Processor' ? { ...i, quantity: count } : i))
+                : [...inv, { name: 'Quantum Processor', quantity: count }];
+
+            // Ensure we're not triggering any side effects by returning a new array reference
+            return [...updatedInv];
         });
+
+        // Explicitly set quantumProcessors state without triggering any side effects
+        setQuantumProcessors(count);
+    }, []);
+
+    // Remove a quantum ability from the inventory
+    const removeQuantumAbility = useCallback((ability) => {
+        setQuantumInventory((prev) => prev.filter((a) => a !== ability));
     }, []);
 
     const prepareGalaxy = useCallback(
@@ -2290,19 +2317,22 @@ export const MarketplaceProvider = ({ children }) => {
     // setCredits(defaultCredits);
     // cheat - add quantum processors
     const addQuantumProcessors = (amount) => {
+        if (amount <= 0) return;
+
         setInventory((inv) => {
             const existing = inv.find((i) => i.name === 'Quantum Processor');
-            if (existing) {
-                return inv.map((i) =>
-                    i.name === 'Quantum Processor'
-                        ? { ...i, quantity: (i.quantity || 0) + amount }
-                        : i
-                );
-            }
-            return [...inv, { name: 'Quantum Processor', quantity: amount }];
+            const currentQty = existing ? existing.quantity || 0 : 0;
+            const newInv = existing
+                ? inv.map((i) =>
+                      i.name === 'Quantum Processor' ? { ...i, quantity: currentQty + amount } : i
+                  )
+                : [...inv, { name: 'Quantum Processor', quantity: amount }];
+
+            // Quantum abilities will be added when the player interacts with quantum slots
+            // Don't automatically add 'QuantumHover' here as it should be triggered by player action
+
+            return newInv;
         });
-        // Don't enable quantum abilities automatically
-        // The toggle button should be used to enable/disable them
     };
 
     // Remove quantum processors from inventory
@@ -2314,7 +2344,7 @@ export const MarketplaceProvider = ({ children }) => {
                     resolve(false);
                     return inv;
                 }
-                
+
                 const existing = inv[existingIndex];
                 if (existing.quantity < amount) {
                     resolve(false);
@@ -2322,13 +2352,13 @@ export const MarketplaceProvider = ({ children }) => {
                 }
 
                 const newQuantity = existing.quantity - amount;
-                
+
                 if (newQuantity > 0) {
                     // Update quantity if there are still processors left
                     const newInv = [...inv];
                     newInv[existingIndex] = {
                         ...existing,
-                        quantity: newQuantity
+                        quantity: newQuantity,
                     };
                     // Use setTimeout to ensure state is updated before resolving
                     setTimeout(() => resolve(true), 0);
@@ -2340,69 +2370,17 @@ export const MarketplaceProvider = ({ children }) => {
                     return newInv;
                 }
             });
-        }).catch(error => {
+        }).catch((error) => {
             console.error('Error in subtractQuantumProcessor:', error);
             return false;
         });
     };
 
-    // Initialize quantum abilities based on inventory with randomization
+    // Initialize quantum abilities - this effect only runs once on mount
     useEffect(() => {
-        if (!inventory) return;
-
-        // Check for quantum processor in inventory
-        const processorCount = inventory.reduce((count, item) => {
-            return item?.name === 'Quantum Processor' ? count + (item.quantity || 0) : count;
-        }, 0);
-
-        // Define all possible abilities with their unlock thresholds and weights
-        const abilities = [
-            { name: 'QuantumHover', minProcessors: 1 },
-            { name: 'QuantumScanLR', minProcessors: 1 },
-            { name: 'QuantumScanRL', minProcessors: 1 },
-            { name: 'QuantumScanTB', minProcessors: 1 },
-            { name: 'QuantumScanBT', minProcessors: 1 },
-            { name: 'QuantumMarket', minProcessors: 5 },
-        ];
-
-        // Filter available abilities based on processor count and random chance
-        const unlockedAbilities = [];
-
-        abilities.forEach((ability) => {
-            if (processorCount >= ability.minProcessors) {
-                // Calculate chance based on weight and processor count scaling
-                const chance =
-                    ability.weight * (0.5 + processorCount / (ability.minProcessors * 2));
-                if (Math.random() < Math.min(chance, 0.95)) {
-                    // Cap at 95% chance
-                    unlockedAbilities.push(ability.name);
-                }
-            }
-        });
-
-        // Ensure at least one ability is unlocked if player has processors
-        if (processorCount >= 1 && unlockedAbilities.length === 0) {
-            const availableAbilities = abilities.filter((a) => processorCount >= a.minProcessors);
-            if (availableAbilities.length > 0) {
-                const randomAbility =
-                    availableAbilities[Math.floor(Math.random() * availableAbilities.length)];
-                unlockedAbilities.push(randomAbility.name);
-            }
-        }
-
-        setQuantumInventory((prev) => {
-            // Preserve any existing abilities that weren't re-rolled
-            const existingAbilities = prev.filter(
-                (ability) => !abilities.some((a) => a.name === ability)
-            );
-            return [...new Set([...existingAbilities, ...unlockedAbilities])];
-        });
-
-        // Enable hover by default if available and not already set
-        if (processorCount >= 1) {
-            setIsQuantumHoverEnabled((prev) => prev || Math.random() < 0.75); // 75% chance to enable hover if not already enabled
-        }
-    }, [inventory]);
+        // Initialize with no abilities - they'll be added through player interaction
+        setQuantumInventory([]);
+    }, []); // Empty dependency array means this runs once on mount
 
     // cheat - reset quantum processors after removing cheater status
     const resetQuantumProcessors = () => {
@@ -2644,15 +2622,20 @@ export const MarketplaceProvider = ({ children }) => {
             quantumBuyEnabled,
             quantumInventory,
             quantumProcessors,
+            quantumPower,
             setQuantumBuyEnabled,
             setQuantumInventory,
             checkQuantumTradeDelay,
             updateLastQuantumTradeTime,
             setQuantumProcessors,
+            setQuantumPower,
             updateQuantumProcessors, // Add updateQuantumProcessors to quantumState
         };
 
         return {
+            // Spread quantum state
+            ...quantumState,
+
             // Core state
             credits,
             inventory,
@@ -3010,6 +2993,8 @@ export const MarketplaceProvider = ({ children }) => {
             travelToGalaxy,
             toggleQuantumAbilities,
             toggleQuantumScan,
+            addQuantumAbility,
+            removeQuantumAbility,
 
             // Placeholder functions for backward compatibility
             onBuyAll: () => {},
