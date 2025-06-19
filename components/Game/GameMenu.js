@@ -192,14 +192,7 @@ const GameMenu = () => {
                         <Version />
                     </div>
                     <div className="how-to-play">
-                        <button
-                            className="how-to-play-button"
-                            onClick={() => setShowHowToPlay(!showHowToPlay)}
-                        >
-                            How To Play
-                            {showHowToPlay ? <FaChevronUp /> : <FaChevronDown />}
-                        </button>
-                        <div className={`how-to-play-content ${showHowToPlay ? 'open' : ''}`}>
+                        <div className={`how-to-play-content open`}>
                             <h3>Welcome to Deep Space Trading Game</h3>
                             <p>
                                 Navigate the galaxies as a space trader, buying low and selling high

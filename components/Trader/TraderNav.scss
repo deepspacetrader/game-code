@@ -61,7 +61,7 @@
     }
 }
 
-// Ultra button styles (level 50-99)
+// Ultra button styles (level 75-99)
 @mixin button-ultra-styles {
     @include button-base-styles;
     color: rgba(180, 180, 180, 0.9);
@@ -143,7 +143,7 @@
     border: 1px solid rgba(50, 50, 50, 0.2);
 }
 
-// Ultra info styles (level 50-99)
+// Ultra info styles (level 75-99)
 @mixin info-ultra-styles {
     @include info-base-styles;
     color: rgba(140, 140, 140, 0.8);
@@ -205,6 +205,84 @@
     justify-content: space-between;
     @media (max-width: #{$breakpoint-mobile - 1px}) {
         gap: 0;
+    }
+}
+
+// Container for the sticky header
+.sticky-trader {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(05, 0, 0, 0.5);
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    contain: content;
+    transition: all 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 60vh;
+
+    @include mobile {
+        padding: 3px 0;
+        max-height: 30vh;
+    }
+
+    /* Trader nav and actions containers */
+    .trader-nav {
+        transition: all 0.3s ease-out;
+        transform-origin: top center;
+    }
+
+    .trader-actions {
+        transition: all 0.3s ease-out 0.1s;
+        transform-origin: top center;
+        overflow: hidden;
+    }
+
+    /* Collapsed state */
+    &.collapsed {
+        max-height: 60px; /* Collapsed height */
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+
+        .trader-nav {
+            opacity: 0.7;
+            transform: scaleY(0.5) translateY(-50%);
+            pointer-events: none;
+        }
+
+        .trader-actions {
+            opacity: 0;
+            transform: scaleY(0);
+            max-height: 0;
+            padding: 0;
+            margin: 0;
+            pointer-events: none;
+        }
+
+        /* Hover state when collapsed */
+        &:hover {
+            max-height: 300px;
+            background: rgba(0, 0, 0, 0.85);
+
+            .trader-nav {
+                opacity: 1;
+                transform: scaleY(1) translateY(0);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, opacity 0.3s ease 0.1s;
+                pointer-events: auto;
+            }
+
+            .trader-actions {
+                opacity: 1;
+                transform: scaleY(1);
+                max-height: 100px;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, opacity 0.3s ease 0.2s,
+                    max-height 0.3s ease 0.2s;
+                pointer-events: auto;
+            }
+        }
     }
 }
 
@@ -495,7 +573,7 @@
     &:hover {
         transform: translateY(-2px);
         box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
-        
+
         &::before {
             opacity: 0.7;
             animation: shine 1.5s infinite;
@@ -2094,16 +2172,6 @@
             opacity: 0.7;
         }
     }
-}
-
-.signal-animation {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
 }
 
 .floating-messages {

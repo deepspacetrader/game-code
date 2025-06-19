@@ -15,11 +15,7 @@ const QuantumTest = () => {
     const [isTesting, setIsTesting] = useState(false);
     const [testLog, setTestLog] = useState([]);
 
-    const {
-        quantumInventory = [],
-        quantumAbilitiesEnabled,
-        toggleQuantumAbility,
-    } = useMarketplace();
+    const { quantumInventory = [], quantumPower, toggleQuantumAbility } = useMarketplace();
 
     // Available test suites
     const testSuites = [
@@ -35,7 +31,7 @@ const QuantumTest = () => {
         return testSuites.map((suite) => ({
             ...suite,
             canRun: suite.required.every((ability) => quantumInventory.includes(ability)),
-            isEnabled: quantumAbilitiesEnabled,
+            isEnabled: quantumPower,
         }));
     };
 
@@ -79,7 +75,7 @@ const QuantumTest = () => {
         toggleQuantumAbility();
         setTestLog((prev) => [
             ...prev,
-            `Quantum abilities ${quantumAbilitiesEnabled ? 'disabled' : 'enabled'}`,
+            `Quantum abilities ${quantumPower ? 'disabled' : 'enabled'}`,
         ]);
     };
 
@@ -104,9 +100,9 @@ const QuantumTest = () => {
 
                 <button
                     onClick={toggleQuantumAbilities}
-                    className={`test-button ${quantumAbilitiesEnabled ? 'enabled' : 'disabled'}`}
+                    className={`test-button ${quantumPower ? 'enabled' : 'disabled'}`}
                 >
-                    {quantumAbilitiesEnabled ? 'Disable' : 'Enable'} Quantum Abilities
+                    {quantumPower ? 'Disable' : 'Enable'} Quantum Abilities
                 </button>
             </div>
 

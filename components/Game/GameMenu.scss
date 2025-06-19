@@ -218,7 +218,9 @@
         }
 
         .how-to-play {
+            overflow-y: scroll;
             width: 100%;
+            max-height: 500px;
             max-width: 500px;
             margin: 0 auto;
             text-align: left;
@@ -267,7 +269,7 @@
                 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 transition-property: opacity, transform, max-height, padding, margin;
                 will-change: opacity, transform;
-                
+
                 &.open {
                     max-height: 1000px; /* Adjust based on content */
                     opacity: 1;

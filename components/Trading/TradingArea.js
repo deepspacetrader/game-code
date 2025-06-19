@@ -100,9 +100,27 @@ const TradingArea = () => {
 
                 <div className="market-grid-container" style={{ position: 'relative' }}>
                     {/* Show MarketGrid by default */}
-                    <div className="market-grid-container">
-                        <MarketGrid
-                            ref={marketGridRef}
+
+                    <MarketGrid
+                        ref={marketGridRef}
+                        displayCells={displayCells}
+                        numCellsX={numCellsX}
+                        statusEffects={statusEffects}
+                        inventory={inventory}
+                        purchaseHistory={purchaseHistory}
+                        priceHistory={priceHistory}
+                        currentTrader={currentTrader}
+                        deliveryQueue={deliveryQueue}
+                        handleBuyClick={handleBuyClick}
+                        handleSellClick={handleSellClick}
+                    />
+
+                    {/* Show QuantumHover when quantum features are enabled */}
+                    {/* {console.log('quantumInventory:', quantumInventory, 'has QuantumHover:', quantumInventory?.includes('QuantumHover'))} */}
+                    {/* Debug QuantumHover Container */}
+                    {quantumPower && quantumInventory?.includes('QuantumHover') && (
+                        <QuantumHover
+                            market={MarketGrid}
                             displayCells={displayCells}
                             numCellsX={numCellsX}
                             statusEffects={statusEffects}
@@ -113,41 +131,9 @@ const TradingArea = () => {
                             deliveryQueue={deliveryQueue}
                             handleBuyClick={handleBuyClick}
                             handleSellClick={handleSellClick}
+                            handleSellAll={handleSellAll}
+                            updateLastQuantumTradeTime={updateLastQuantumTradeTime}
                         />
-                    </div>
-                    {/* Show QuantumHover when quantum features are enabled */}
-                    {/* {console.log('quantumInventory:', quantumInventory, 'has QuantumHover:', quantumInventory?.includes('QuantumHover'))} */}
-                    {/* Debug QuantumHover Container */}
-                    {quantumPower && quantumInventory?.includes('QuantumHover') && (
-                        <div
-                            style={{
-                                display: 'block',
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                zIndex: 1000,
-                                pointerEvents: 'none',
-                                border: '2px dashed rgba(0, 255, 0, 0.5)',
-                            }}
-                        >
-                            <QuantumHover
-                                market={MarketGrid}
-                                displayCells={displayCells}
-                                numCellsX={numCellsX}
-                                statusEffects={statusEffects}
-                                inventory={inventory}
-                                purchaseHistory={purchaseHistory}
-                                priceHistory={priceHistory}
-                                currentTrader={currentTrader}
-                                deliveryQueue={deliveryQueue}
-                                handleBuyClick={handleBuyClick}
-                                handleSellClick={handleSellClick}
-                                handleSellAll={handleSellAll}
-                                updateLastQuantumTradeTime={updateLastQuantumTradeTime}
-                            />
-                        </div>
                     )}
                     {quantumPower && quantumInventory?.includes('QuantumScan') && (
                         <div

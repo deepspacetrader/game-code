@@ -1,25 +1,30 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
-import { useGame } from '../../context/GameContext';
-import { ENEMY_TYPES } from './Enemy';
+import { ENEMY_TYPES as ENEMY_TYPES_IMPORT } from './Enemy';
+import galaxiesData from '../../data/galaxies.json';
 
 const ENEMY_SPAWN_INTERVAL = 30000; // 30 seconds between spawn checks in dangerous zones
 const DANGER_LEVEL_INTERVAL = 60000; // 1 minute between danger level checks
 
 const EnemySpawner = () => {
-    const { currentGalaxy } = useGame();
-    const { showEnemyEncounter } = useUI();
-    const { triggerRandomEvent } = useMarketplace();
+    const { setCurrentEnemy } = useUI();
+    const { triggerRandomEvent, currentGalaxy: currentGalaxyId } = useMarketplace();
+    // Get the full galaxy object using the currentGalaxy ID
+    const currentGalaxy = useMemo(() => {
+        if (!currentGalaxyId) return null;
+        return galaxiesData.galaxies.find(g => g.galaxyId === currentGalaxyId) || null;
+    }, [currentGalaxyId]);
 
     // Function to get a random enemy type based on the spawnEnemyType
-    const getRandomEnemyType = (spawnEnemyType) => {
-        const enemyTypes = Object.values(ENEMY_TYPES);
-        return (
-            (spawnEnemyType && enemyTypes[spawnEnemyType - 1]) ||
-            enemyTypes[Math.floor(Math.random() * enemyTypes.length)]
-        );
-    };
+    const getRandomEnemyType = useCallback((spawnEnemyType) => {
+        const enemyTypes = Object.values(ENEMY_TYPES_IMPORT);
+        // If a specific type is requested, try to use it, otherwise pick a random one
+        if (spawnEnemyType && enemyTypes[spawnEnemyType - 1]) {
+            return enemyTypes[spawnEnemyType - 1];
+        }
+        return enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+    }, []);
 
     // Function to handle enemy spawn attempt
     const attemptEnemySpawn = useCallback(() => {
@@ -29,9 +34,9 @@ const EnemySpawner = () => {
         if (currentGalaxy.danger || currentGalaxy.war) {
             const randomEvent = triggerRandomEvent();
 
-            if (randomEvent && randomEvent.spawnEnemyType) {
+            if (randomEvent?.spawnEnemyType) {
                 const enemyType = getRandomEnemyType(randomEvent.spawnEnemyType);
-                showEnemyEncounter({
+                setCurrentEnemy({
                     type: enemyType,
                     rank: 'D', // Default rank, can be randomized if needed
                     reason: 'random_encounter',
@@ -39,28 +44,40 @@ const EnemySpawner = () => {
                 });
             }
         }
-    }, [currentGalaxy, showEnemyEncounter, triggerRandomEvent]);
+    }, [currentGalaxy, getRandomEnemyType, setCurrentEnemy, triggerRandomEvent]);
 
     // Set up timers for enemy spawning and danger level checks
     useEffect(() => {
-        if (!currentGalaxy) return;
+        if (!currentGalaxy) {
+            // If currentGalaxy is not available yet, don't proceed
+            return;
+        }
 
         // Only set up timers in dangerous or war zones
+        let spawnInterval;
+        let dangerInterval;
+
         if (currentGalaxy.danger || currentGalaxy.war) {
-            const spawnInterval = setInterval(attemptEnemySpawn, ENEMY_SPAWN_INTERVAL);
+            spawnInterval = setInterval(attemptEnemySpawn, ENEMY_SPAWN_INTERVAL);
 
             // Check danger level periodically
-            const dangerInterval = setInterval(() => {
+            dangerInterval = setInterval(() => {
+                console.log('Checking danger level in', currentGalaxy.name);
                 // This is where we could adjust danger levels or trigger special events
-                console.log(`Danger level check in ${currentGalaxy.name}`);
             }, DANGER_LEVEL_INTERVAL);
-
-            return () => {
-                clearInterval(spawnInterval);
-                clearInterval(dangerInterval);
-            };
         }
+
+        // Clean up intervals on component unmount or when dependencies change
+        return () => {
+            if (spawnInterval) clearInterval(spawnInterval);
+            if (dangerInterval) clearInterval(dangerInterval);
+        };
     }, [currentGalaxy, attemptEnemySpawn]);
+
+    // Don't render anything until we've initialized with a valid currentGalaxy
+    if (!currentGalaxyId) {
+        return null;
+    }
 
     return null; // This component doesn't render anything
 };

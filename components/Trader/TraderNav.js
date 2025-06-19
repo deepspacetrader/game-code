@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import galaxiesData from '../../data/galaxies.json';
@@ -17,6 +17,47 @@ import { zzfx } from 'zzfx';
 const traderImages = require.context('../../images', false, /\.\/trader\d+\.webp$/);
 
 const TraderNav = () => {
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const lastScrollY = useRef(0);
+    const traderNavRef = useRef(null);
+
+    useEffect(() => {
+        let ticking = false;
+        const scrollThreshold = 5; // pixels of scroll before considering it intentional
+        let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+                    const scrollDiff = Math.abs(currentScrollY - lastScrollTop);
+
+                    // Only update state if scrolled more than threshold
+                    if (scrollDiff > scrollThreshold) {
+                        // Scrolling down and past threshold
+                        if (currentScrollY > lastScrollTop && currentScrollY > 100) {
+                            setIsCollapsed(true);
+                        }
+                        // Scrolling up or at top of page
+                        else if (currentScrollY < lastScrollTop || currentScrollY <= 100) {
+                            setIsCollapsed(false);
+                        }
+                        lastScrollTop = currentScrollY <= 0 ? 0 : currentScrollY;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        // Use passive event listener for better performance
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        // Clean up
+        return () => {
+            window.removeEventListener('scroll', handleScroll, { passive: true });
+        };
+    }, []);
     const {
         buyFuel,
         credits,
@@ -312,7 +353,11 @@ const TraderNav = () => {
     const fuelCostReduction = statusEffects.fuel_cost?.value || 0;
 
     return (
-        <div className={uiTierClass}>
+        <div
+            ref={traderNavRef}
+            className={`${uiTierClass} sticky-trader ${isCollapsed ? 'collapsed' : ''}`}
+            onMouseEnter={() => setIsCollapsed(false)}
+        >
             <div className="trader-nav">
                 <div className="trader-buttons">
                     {!inTravel && traderCount > 1 && (

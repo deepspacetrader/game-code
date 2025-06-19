@@ -55,7 +55,7 @@ const TieredMenu = () => {
                         handleSort('price');
                     }}
                 >
-                    Sort by Price{sortMode === 'price' ? (sortAsc ? '↑' : '↓') : ''}
+                    Sort Price{sortMode === 'price' ? (sortAsc ? '↑' : '↓') : ''}
                 </button>
 
                 <button
@@ -64,7 +64,7 @@ const TieredMenu = () => {
                         handleSort('stock');
                     }}
                 >
-                    Sort by Stock{sortMode === 'stock' ? (sortAsc ? '↑' : '↓') : ''}
+                    Sort Stock{sortMode === 'stock' ? (sortAsc ? '↑' : '↓') : ''}
                 </button>
             </div>
         </div>

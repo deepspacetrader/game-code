@@ -4,15 +4,21 @@ import { useUI } from '../../context/UIContext';
 import './Enemy.scss';
 import GameOver from '../Game/GameOver';
 import { zzfx } from 'zzfx';
-
+import faceImage1 from '../../images/enemy0.webp';
+import faceImage2 from '../../images/enemy1.webp';
+import faceImage3 from '../../images/enemy2.webp';
+import faceImage4 from '../../images/enemy3.webp';
+import faceImage5 from '../../images/enemy3.webp';
+import enemiesData from '../../data/enemies.json';
 /**
  * Enum for encounter types
  */
 export const ENEMY_TYPES = {
+    SCAVENGER: 'scavenger',
     MARKET_POLICE: 'market_police',
+    THIEF: 'thief',
     THUG: 'thug',
-    TRADER: 'trader',
-    BOSS: 'boss',
+    MILITARY: 'military',
 };
 
 /**
@@ -29,82 +35,93 @@ const ENCOUNTER_REASONS = {
 /**
  * Base enemy template with default values
  */
-const getBaseEnemy = (type = ENEMY_TYPES.THUG, rank = 'D') => {
-    const baseStats = {
-        S: { health: 500, damage: 50, credits: 1000 },
-        A: { health: 300, damage: 30, credits: 500 },
-        B: { health: 200, damage: 20, credits: 250 },
-        C: { health: 150, damage: 15, credits: 100 },
-        D: { health: 100, damage: 10, credits: 50 },
-    }[rank] || { health: 100, damage: 10, credits: 0 };
+const getBaseEnemy = (type = ENEMY_TYPES.THUG) => {
+    const enemyConfig = enemiesData.enemies.find(
+        (e) => e.name.toLowerCase() === type.toLowerCase()
+    );
+
+    if (!enemyConfig) {
+        console.warn(`No enemy config found for type: ${type}`);
+        return {
+            id: `enemy_${Date.now()}`,
+            enemyId: 0,
+            type,
+            name: 'Unknown Threat',
+            health: 100,
+            damage: 10,
+            credits: 0,
+            weapons: [],
+            shield: false,
+            stealth: false,
+        };
+    }
+
+    // Generate random values within ranges
+    const health = Math.floor(Math.random() * (enemyConfig.health + 1));
+    const intelligence = Math.floor(
+        Math.random() * (enemyConfig.intelligence[1] - enemyConfig.intelligence[0]) +
+            enemyConfig.intelligence[0]
+    );
+    const chanceOfScan =
+        Math.random() * (enemyConfig.chanceOfScan[1] - enemyConfig.chanceOfScan[0]) +
+        enemyConfig.chanceOfScan[0];
+    const hostileChance =
+        Math.random() * (enemyConfig.hostileRange[1] - enemyConfig.hostileRange[0]) +
+        enemyConfig.hostileRange[0];
 
     return {
         id: `enemy_${Date.now()}`,
+        enemyId: enemyConfig.enemyId,
         type,
-        rank,
-        name: 'Unknown Threat',
-        health: baseStats.health,
-        maxHealth: baseStats.health,
-        damage: baseStats.damage,
-        credits: baseStats.credits,
-        homeGalaxy: 'Unknown',
-        language: 'EN',
+        name: enemyConfig.name,
+        health,
+        maxHealth: health,
+        damage: Math.floor(intelligence * 0.1),
+        credits: Math.floor(intelligence * 5),
+        weapons: enemyConfig.weapons,
+        shield: enemyConfig.shield,
+        stealth: enemyConfig.stealth,
+        intelligence,
+        chanceOfScan,
+        hostileChance,
+        homeGalaxy: enemyConfig.homeGalaxy,
+        language: enemyConfig.languageRange[0],
         statusEffects: [],
-        isHostile: type !== ENEMY_TYPES.TRADER,
+        isHostile: hostileChance > 0.5,
         reason: ENCOUNTER_REASONS.RANDOM,
-        ...getEnemyTypeSpecifics(type, rank),
     };
 };
 
-/**
- * Get type-specific enemy properties
- */
-const getEnemyTypeSpecifics = (type, rank) => {
-    const rankName = ` (${rank}-Rank)`;
-
-    switch (type) {
-        case ENEMY_TYPES.MARKET_POLICE:
-            return {
-                name: `Market Enforcer${rankName}`,
-                homeGalaxy: 'Central Authority',
-                statusEffects: ['Shielded', 'Armored'],
-            };
-        case ENEMY_TYPES.THUG:
-            return {
-                name: `Space Thug${rankName}`,
-                homeGalaxy: 'Outer Rim',
-                statusEffects: ['Opportunistic', 'Unpredictable'],
-            };
-        case ENEMY_TYPES.BOSS:
-            return {
-                name: `Crime Lord${rankName}`,
-                homeGalaxy: 'Shadow Nexus',
-                statusEffects: ['Commanding', 'Tactical'],
-            };
-        case ENEMY_TYPES.TRADER:
-        default:
-            return {
-                name: `Rogue Trader${rankName}`,
-                homeGalaxy: 'Nomadic',
-                statusEffects: ['Diplomatic', 'Well-Connected'],
-                isHostile: false,
-            };
-    }
-};
-
-const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense: 10 } }) => {
-    const { health: playerHealth, setHealth, credits, inventory, volumeRef } = useMarketplace();
-    const { uiTier } = useUI();
+const Enemy = ({
+    enemyData = getBaseEnemy(ENEMY_TYPES.THUG, 'D'),
+    onEncounterEnd = () => console.log('Encounter ended'),
+    playerStats = { damage: 20, defense: 10 },
+}) => {
+    const {
+        health: playerHealth,
+        setHealth,
+        credits,
+        inventory,
+        volumeRef,
+    } = useMarketplace() || {};
+    const { uiTier } = useUI() || {};
     const [isGameOver, setIsGameOver] = useState(false);
-    const [encounterActive, setEncounterActive] = useState(false);
+    const [encounterActive, setEncounterActive] = useState(true);
     const [playerTurn, setPlayerTurn] = useState(true);
     const [battleLog, setBattleLog] = useState([]);
     const [escapeAttempts, setEscapeAttempts] = useState(0);
-    const [bribeAmount, setBribeAmount] = useState(0);
+    const [bribeAmount, setBribeAmount] = useState(25);
     const [enemy, setEnemy] = useState(() => getBaseEnemy());
     const [hackProgress, setHackProgress] = useState(0);
     const [showDanger, setShowDanger] = useState(false);
     const [dangerMessage, setDangerMessage] = useState('');
+    const [escapeSuccessful, setEscapeSuccessful] = useState(false);
+    const [showEscapeMenu, setShowEscapeMenu] = useState(false);
+    const [selectedTradeItem, setSelectedTradeItem] = useState(null);
+    const [selectedEscapeItem, setSelectedEscapeItem] = useState(null);
+    const [fadeOut, setFadeOut] = useState(false);
+    const faces = useMemo(() => [faceImage1, faceImage2, faceImage3, faceImage4, faceImage5], []);
+    const [currentFace, setCurrentFace] = useState(() => faces[3]);
 
     // Calculate UI scaling based on UI level (simplified for performance)
     const uiScaling = useMemo(
@@ -145,6 +162,7 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
 
     const endEncounter = useCallback(
         (outcome) => {
+            setEncounterActive(false);
             onEncounterEnd({
                 outcome,
                 enemy: { ...enemy, health: enemy.health },
@@ -152,6 +170,23 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
         },
         [enemy, onEncounterEnd]
     );
+
+    // Update enemy when enemyData changes
+    useEffect(() => {
+        setEnemy((prev) => ({
+            ...getBaseEnemy(enemyData?.type, enemyData?.rank),
+            ...enemyData,
+            health: enemyData?.health || prev.health,
+        }));
+    }, []);
+
+    // Set a random face when the component mounts
+    useEffect(() => {
+        const faces = [faceImage1, faceImage2, faceImage3, faceImage4, faceImage5];
+        // const randomFace = faces[Math.floor(Math.random() * faces.length)];
+        console.log(enemy);
+        setCurrentFace(faces[enemy.enemyId]);
+    }, []);
 
     // Handle player attack
     const handlePlayerAttack = useCallback(() => {
@@ -172,6 +207,7 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
 
         if (enemy.health - totalDamage <= 0) {
             addBattleLog(`You defeated ${enemy.name}!`);
+            setEncounterActive(false);
             endEncounter('victory');
         } else {
             setPlayerTurn(false);
@@ -186,11 +222,16 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
         const bribeAmount = Math.ceil(enemy.credits * 0.5); // 50% of enemy's credits
         if (credits >= bribeAmount) {
             addBattleLog(`You successfully bribed ${enemy.name} with ${bribeAmount} credits!`);
-            onEncounterEnd({
-                outcome: 'bribed',
-                enemy: { ...enemy },
-                creditsLost: bribeAmount,
-            });
+            setFadeOut(true);
+            setTimeout(() => {
+                setEncounterActive(false);
+                onEncounterEnd({
+                    outcome: 'bribed',
+                    enemy: { ...enemy },
+                    creditsLost: bribeAmount,
+                });
+                setFadeOut(false);
+            }, 1000);
         } else {
             addBattleLog(`You don't have enough credits to bribe ${enemy.name}!`);
         }
@@ -413,31 +454,65 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
     }, [inventory, addBattleLog, setShowDanger, setDangerMessage]);
 
     const handleEscape = useCallback(() => {
-        if (!playerTurn || !encounterActive) return;
+        if (!playerTurn || !encounterActive || escapeSuccessful) return;
 
         const escapeChance = 0.5 + escapeAttempts * 0.1; // 50% base + 10% per attempt
         const escaped = Math.random() < escapeChance;
 
         if (escaped) {
+            setEscapeSuccessful(true);
             addBattleLog(`You successfully escaped from ${enemy.name}!`);
-            onEncounterEnd({
-                outcome: 'escaped',
-                enemy: { ...enemy },
-            });
-        } else {
-            setEscapeAttempts((prev) => prev + 1);
-            addBattleLog(`Failed to escape! ${enemy.name} is still pursuing you!`);
+
+            // Disable all buttons and show success state
             setPlayerTurn(false);
-            // Enemy will take their turn in the next effect
+
+            // After 3 seconds, end the encounter
+            const timer = setTimeout(() => {
+                onEncounterEnd({
+                    outcome: 'escaped',
+                    enemy: { ...enemy },
+                });
+                setEncounterActive(false);
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        } else {
+            const newAttempts = escapeAttempts + 1;
+            setEscapeAttempts(newAttempts);
+            addBattleLog(`Failed to escape! ${enemy.name} is still pursuing you!`);
+
+            if (newAttempts < 3) {
+                // Allow up to 3 escape attempts
+                addBattleLog(
+                    `You can try to escape again! (${3 - newAttempts} attempts remaining)`
+                );
+            }
+
+            // End player's turn and let enemy take their turn
+            setPlayerTurn(false);
+
+            // Schedule enemy turn to happen after state updates
+            setTimeout(() => {
+                handleEnemyTurn();
+            }, 0);
         }
-    }, [playerTurn, encounterActive, escapeAttempts, enemy, addBattleLog, onEncounterEnd]);
+    }, [
+        playerTurn,
+        encounterActive,
+        escapeAttempts,
+        enemy,
+        addBattleLog,
+        onEncounterEnd,
+        escapeSuccessful,
+        handleEnemyTurn,
+    ]);
 
     // Handle hack attempt
     const handleHack = useCallback(() => {
         if (!playerTurn || !encounterActive) return;
 
-        const quantumProcessors = inventory.filter((item) => item.name === 'Quantum Processor');
-        const hackPower = quantumProcessors.length * 15; // 15% per quantum processor
+        const quantumProcessors = 4; //inventory.filter((item) => item.name === 'Quantum Processor');
+        const hackPower = quantumProcessors * 15; // 15% per quantum processor
 
         if (quantumProcessors.length === 0) {
             addBattleLog('You need at least one Quantum Processor to attempt a hack!');
@@ -451,7 +526,17 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
 
         if (newHackProgress >= 100) {
             addBattleLog('Hack successful! You override the security protocols.');
-            endEncounter('hacked');
+
+            setFadeOut(true);
+            setTimeout(() => {
+                setEncounterActive(false);
+                onEncounterEnd({
+                    outcome: 'hacked',
+                    enemy: { ...enemy },
+                });
+                setFadeOut(false);
+                // endEncounter('hacked');
+            }, 1000);
         } else {
             addBattleLog(`Hack progress: ${newHackProgress}% - Keep going!`);
             setPlayerTurn(false);
@@ -467,7 +552,7 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
         handleEnemyTurn,
     ]);
 
-    // If no encounter is active, don't render anything
+    // // If no encounter is active, don't render anything
     if (!encounterActive) {
         return null;
     }
@@ -491,13 +576,31 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
     };
 
     return (
-        <div className="enemy-encounter-overlay" style={containerStyle}>
+        <div className={`enemy-encounter-overlay fade-out-${fadeOut}`} style={containerStyle}>
             <div className={`enemy-encounter-container ui-tier-${uiTier}`} style={textStyle}>
                 <div className="enemy-info">
-                    <h2>ENCOUNTER: {enemy.name}</h2>
+                    <div className="enemy-header">
+                        {currentFace && (
+                            <div className="enemy-face">
+                                <img
+                                    src={currentFace}
+                                    alt="Enemy face"
+                                    className="enemy-face-image"
+                                    style={{
+                                        width: '100px',
+                                        height: '100px',
+                                        borderRadius: '50%',
+                                        border: '3px solid #666',
+                                        boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+                                    }}
+                                />
+                            </div>
+                        )}
+                        <h2>ENCOUNTER: {enemy.name}</h2>
+                    </div>
                     {enemy.reason === 'quantum_processor_limit' && (
                         <p className="encounter-reason">
-                            <strong>Charge:</strong> Exceeded legal limit of Quantum Processors
+                            <strong>Charge:</strong> Exceeded legal limit of Quantum Processors{' '}
                         </p>
                     )}
                     {enemy.reason === 'illegal_ui_increase' && (
@@ -547,31 +650,67 @@ const Enemy = ({ enemyData, onEncounterEnd, playerStats = { damage: 20, defense:
                     <div className="action-buttons">
                         <button
                             onClick={handlePlayerAttack}
-                            disabled={!playerTurn || enemy.health <= 0}
-                            className="action-btn attack"
+                            disabled={
+                                !playerTurn ||
+                                enemy.health <= 0 ||
+                                !inventory.some((item) => item.itemId === 8) ||
+                                escapeSuccessful
+                            }
+                            className={`action-btn attack ${
+                                escapeSuccessful ? 'disabled-action' : ''
+                            }`}
+                            title={
+                                !inventory.some((item) => item.itemId === 8)
+                                    ? 'You need a Plasma Rifle to attack!'
+                                    : ''
+                            }
                         >
                             ATTACK
                         </button>
                         <button
                             onClick={handleHack}
-                            disabled={!playerTurn || enemy.health <= 0}
-                            className="action-btn hack"
+                            disabled={!playerTurn || enemy.health <= 0 || escapeSuccessful}
+                            className={`action-btn hack ${
+                                escapeSuccessful ? 'disabled-action' : ''
+                            }`}
                         >
                             HACK ({hackProgress}%)
                         </button>
                         <button
                             onClick={handleBribe}
-                            disabled={!playerTurn || enemy.health <= 0}
-                            className="action-btn bribe"
+                            disabled={!playerTurn || enemy.health <= 0 || escapeSuccessful}
+                            className={`action-btn bribe ${
+                                escapeSuccessful ? 'disabled-action' : ''
+                            }`}
                         >
                             BRIBE ({bribeAmount} cr)
                         </button>
                         <button
-                            onClick={handleEscape}
-                            disabled={!playerTurn || escapeAttempts >= 2}
-                            className="action-btn escape"
+                            onClick={() => {
+                                if (escapeSuccessful) {
+                                    setFadeOut(true);
+                                    setTimeout(() => {
+                                        setEncounterActive(false);
+                                        onEncounterEnd({
+                                            outcome: 'escaped',
+                                            enemy: { ...enemy },
+                                        });
+                                        setFadeOut(false);
+                                    }, 1000);
+                                } else {
+                                    handleEscape();
+                                }
+                            }}
+                            disabled={(!playerTurn || escapeAttempts >= 3) && !escapeSuccessful}
+                            className={`action-btn ${
+                                escapeSuccessful ? 'escape-success' : 'escape'
+                            }`}
                         >
-                            {escapeAttempts >= 2 ? "CAN'T ESCAPE" : 'ESCAPE'}
+                            {escapeSuccessful
+                                ? 'CONTINUE'
+                                : escapeAttempts >= 3
+                                ? "CAN'T ESCAPE"
+                                : `ESCAPE (${3 - escapeAttempts})`}
                         </button>
                     </div>
                 </div>

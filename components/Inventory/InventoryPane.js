@@ -4,6 +4,7 @@ import { useUI } from '../../context/UIContext';
 import InventoryList from './InventoryList';
 import QuantumSetup from '../Quantum/QuantumSetup';
 import QuantumTradeMemory from '../Quantum/QuantumTradeMemory';
+
 import DeliveryBar from '../Reusable/DeliveryBar';
 import '../PlayerHUD.scss';
 
@@ -53,6 +54,7 @@ const InventoryPane = () => {
             <div className="inventory-content">
                 <InventoryList />
                 {/* <QuantumTradeMemory /> */}
+                {/* Inventory */}
                 {Object.keys(installedModulesGrouped).length > 0 && (
                     <div className="ship-inventory">
                         {improvedUILevel >= 10 && (
@@ -89,6 +91,8 @@ const InventoryPane = () => {
                                 })}
                             </div>
                         )}
+
+                        {/* Active Effects */}
                         {Object.keys(activeEffectsGrouped).length > 0 && (
                             <div className="active-effects">
                                 <h3>Active Effects</h3>
@@ -159,6 +163,14 @@ const InventoryPane = () => {
                         )}
                     </div>
                 )}
+
+                {/* <h3>Scanner</h3> */}
+                {/* <ScannerLite /> */}
+
+                {/* <Scanner
+                    images={[faceImage, faceImage2, faceImage3, faceImage4, faceImage5]}
+                    onScanComplete={() => console.log('Scan complete!')}
+                /> */}
             </div>
         </div>
     );

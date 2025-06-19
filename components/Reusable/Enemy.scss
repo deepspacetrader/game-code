@@ -34,6 +34,15 @@
     }
 }
 
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
 /* Enemy Encounter Overlay */
 .enemy-encounter-overlay {
     position: fixed;
@@ -51,6 +60,13 @@
     padding: 20px;
     box-sizing: border-box;
     transition: all 0.3s ease;
+
+    &.fade-out-true {
+        animation-name: fadeOut;
+        animation-duration: 0.69s;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards;
+    }
 
     // Tier-based background effects
     &.ui-tier-master,
@@ -91,6 +107,8 @@
     .enemy-encounter-container {
         background-color: #0a0a1a;
         border: 2px solid #4a4a8f;
+        padding: 2rem;
+        margin: 4.269vw;
         border-radius: 8px;
         width: 100%;
         max-width: 800px;
@@ -153,6 +171,12 @@
                 }
             }
 
+            .enemy-header {
+                .enemy-face {
+                    display: flex;
+                    justify-content: space-around;
+                }
+            }
             .enemy-stats {
                 display: flex;
                 flex-wrap: wrap;
@@ -430,6 +454,12 @@
     .action-btn:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+
+        &.disabled-action {
+            filter: brightness(0.6);
+            transform: none !important;
+            box-shadow: none !important;
+        }
     }
 
     .action-btn:hover:not(:disabled) {
@@ -456,6 +486,17 @@
     .escape {
         background-color: #44a;
         color: white;
+        transition: all 0.3s ease;
+
+        &-success {
+            background-color: #4caf50;
+            animation: pulse 1.5s infinite;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 15px rgba(76, 175, 80, 0.6);
+            }
+        }
     }
 
     /* Responsive Design */

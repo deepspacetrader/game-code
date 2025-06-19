@@ -28,7 +28,7 @@
         },
         {
             "enemyId": 2,
-            "name": "Theif",
+            "name": "Thief",
             "languageRange": ["EN"],
             "homeGalaxy": "Vrellian Sprawl",
             "chanceOfScan": [1, 1],

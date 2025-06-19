@@ -24,6 +24,8 @@ import Version from './components/Misc/Version';
 import ChatBox from './components/Chat/ChatBox';
 import Enemy from './components/Reusable/Enemy';
 import EnemySpawner from './components/Reusable/EnemySpawner';
+// import Scanner from './components/Scanner';
+// import ScannerLite from './components/ScannerLite';
 
 const Game = () => {
     const {
@@ -78,6 +80,9 @@ const Game = () => {
 
             {/* Enemy Spawner - Handles random enemy encounters */}
             <EnemySpawner />
+            <Enemy />
+            {/* Render Enemy component when there's an active encounter */}
+            {currentEnemy && <Enemy enemyData={currentEnemy} onEncounterEnd={handleEncounterEnd} />}
 
             <TraderNav />
             <PlayerHUD />
@@ -90,8 +95,8 @@ const Game = () => {
                 <TradingArea />
             </div>
 
-            {/* Render Enemy component when there's an active encounter */}
-            {currentEnemy && <Enemy enemyData={currentEnemy} onEncounterEnd={handleEncounterEnd} />}
+            {/* <Scanner />
+            <ScannerLite /> */}
 
             <Modal show={gameCompleted} backdrop="static" keyboard={false} centered>
                 <Modal.Header>

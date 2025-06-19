@@ -3,7 +3,6 @@ import { useMarketplace } from '../../context/MarketplaceContext';
 import { useUI } from '../../context/UIContext';
 import { randomFloatRange } from '../../utils/helpers';
 import itemsData from '../../data/items.json';
-import randomEvents from '../../data/random-events.json';
 import './Event.scss';
 
 // Simple inline sparkline component
@@ -51,7 +50,6 @@ const obfuscateText = (text, level) => {
 const Event = () => {
     const {
         activeEvent,
-        setCurrentGameEvent,
         triggerRandomMarketEvent,
         marketData,
         priceHistory = {},
@@ -208,36 +206,6 @@ const Event = () => {
         }));
     }, [marketData, priceHistory, setTrendData]);
 
-    // Debug function to trigger a test event
-    const triggerTestEvent = () => {
-        console.log('[Event] Manually triggering test event');
-
-        // Create a test event with all required properties
-        const testEvent = {
-            ...randomEvents.events[0],
-            name: 'TEST EVENT',
-            description: 'This is a test event to verify the event system is working.',
-            effect: {
-                affectedItems: [1, 2, 3, 4, 5, 6, 7, 8],
-                priceMultiplierRange: [0.5, 3.0],
-                stockMultiplierRange: [0.3, 1.5],
-            },
-        };
-
-        console.log('[Event] Test event created:', testEvent);
-
-        // Apply the event effects to the market
-        if (triggerRandomMarketEvent) {
-            triggerRandomMarketEvent(testEvent);
-        } else if (setCurrentGameEvent) {
-            setCurrentGameEvent(testEvent);
-        }
-
-        setDisplayEvent(testEvent);
-        setShowEvent(true);
-        document.body.classList.add('event-debug-mode');
-    };
-
     // Auto-hide event after 10 seconds
     useEffect(() => {
         if (!showEvent || !displayEvent) return;
@@ -266,31 +234,7 @@ const Event = () => {
     }, [activeEvent, triggerRandomMarketEvent]);
 
     if (!showEvent || !displayEvent) {
-        return (
-            <div
-                className="debug-event-trigger"
-                style={{
-                    position: 'fixed',
-                    top: '10px',
-                    right: '10px',
-                    background: 'rgba(0,0,0,0.7)',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    zIndex: 1000,
-                }}
-            >
-                <div>Event System Status: {activeEvent ? 'ACTIVE' : 'INACTIVE'}</div>
-                <div>Current Event: {activeEvent ? activeEvent.name || 'Unnamed' : 'None'}</div>
-                <div>UI Level: {improvedUILevel}</div>
-                <button
-                    onClick={triggerTestEvent}
-                    className="btn btn-sm btn-warning"
-                    style={{ marginTop: '5px' }}
-                >
-                    Trigger Test Event
-                </button>
-            </div>
-        );
+        return null;
     }
 
     const formatMultiplier = (multiplier, showPrecise = false) => {

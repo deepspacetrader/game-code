@@ -295,9 +295,9 @@
             "name": "Quantum Ledger Chip",
             "travelSell": true,
             "description": "Quality Qontrolled Qomputing with QuickBitts! The smartest way to process information with a quantum edge!",
-            "basePrice": 7500,
+            "basePrice": 990,
             "deliveryTime": 7.5,
-            "priceTickRate": [250, 900],
+            "priceTickRate": [42, 90],
             "duration": [48, 64],
             "effects": {
                 "+improved_UI": [70, 110]
@@ -488,6 +488,20 @@
             "duration": [0, 0],
             "effects": {
                 "+credit_balance": [10, 100]
+            }
+        },
+        {
+            "itemId": 38,
+            "name": "Extreme Laser Beam",
+            "travelSell": true,
+            "illegal": true,
+            "description": "Single use banned weaponry from the great cybernetic wars that emits an unstoppable thin laser beam that passes through everything except blackholes.",
+            "basePrice": 85000,
+            "deliveryTime": 10,
+            "priceTickRate": [350, 600],
+            "duration": [500, 600],
+            "effects": {
+                "+damage_enemy": [1000, 1000]
             }
         }
     ]

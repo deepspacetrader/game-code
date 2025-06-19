@@ -7,126 +7,99 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import './ChatBox.scss';
 
+// Helper function to determine message type based on content
+const getMessageType = (message) => {
+    const lowerMessage = message.toLowerCase().trim();
+
+    // Greeting patterns - Comprehensive list of greetings in multiple languages and styles
+    const greetingPatterns = [
+        // Common English greetings
+        /^\s*(hi|hello|hey|greetings|salutations|yo|what's up|howdy|hola|sup|wassup|wazzup|yo|hiya|howdy|howdy\s*partner|hi\s+there|hey\s+there|hello\s+there|hi\s+y['']all|hey\s+y['']all)\b/i,
+        
+        // Time-based greetings
+        /\b(good\s*(morning|afternoon|evening|night)|g'day|top\s*of\s*the\s*morning|good\s*day|good\s*evening|good\s*morning|good\s*afternoon|good\s*night|evenin['’]?g?)\b/i,
+        
+        // International greetings
+        /^\s*(hola|ciao|salut|hallo|hallo\s*daar|guten\s*tag|bonjour|konnichiwa|ni\s*hao|namaste|salaam|shalom|privet|ol[aá]|zdravstvuyte|merhaba|sawubona|sawubona\s*nin|mhoro|mhoroi|molo|molweni|sannu|sannu\s*da|sannu\s*da\s*zuwa|sannu\s*da\s*zuwa\s*da|sannu\s*da\s*zuwa\s*da\s*zuwa)\b/i,
+        
+        // Slang and casual
+        /^\s*(yo|sup|wassup|wazzup|hey\s*you|hi\s*you|hello\s*you|hiya|howdy|hey\s*hi|hi\s*hey|hey\s*ho|hi\s*ho|hey\s*now|hi\s*now|hey\s*you|hi\s*you|hey\s*everyone|hi\s*everyone|hey\s*all|hi\s*all|hey\s*guys|hi\s*guys|hey\s*folks|hi\s*folks|hey\s*people|hi\s*people|hey\s*everybody|hi\s*everybody|hey\s*y'|hi\s*y'|hey\s*ya|hi\s*ya|hey\s*ya'll|hi\s*ya'll)\b/i,
+        
+        // Formal and professional
+        /^\s*(greetings|salutations|good\s*day|good\s*evening|good\s*morning|good\s*afternoon|good\s*night|dear\s*(sir|madam)|to\s*whom\s*it\s*may\s*concern|dear\s*(all|everyone|team|colleagues)|hello\s*there|hi\s*there|hey\s*there|hello\s*everyone|hello\s*all|hello\s*team|hello\s*guys|hello\s*folks|hello\s*people|hello\s*everybody|hello\s*everyone|hello\s*y'|hello\s*ya|hello\s*ya'll)\b/i,
+        
+        // Playful and creative
+        /^\s*(ahoy|ahoy\s*there|ahoy\s*matey|ahoy\s*cap['’]?n|ahoy\s*hoy|ahoy\s*me\s*hearties|ahoy\s*me\s*hearties\s*yo\s*ho|ahoy\s*me\s*hearties\s*yo\s*ho\s*ho|ahoy\s*me\s*hearties\s*yo\s*ho\s*ho\s*and\s*a\s*bottle\s*of\s*rum|greetings\s*earthling|greetings\s*human|greetings\s*mortals|greetings\s*traveler|salutations\s*earthling|salutations\s*human|salutations\s*mortals|salutations\s*traveler)\b/i,
+        
+        // Sci-fi and fantasy
+        /^\s*(live\s*long\s*and\s*prosper|peace\s*and\s*long\s*life|may\s*the\s*force\s*be\s*with\s*you|may\s*the\s*odds\s*be\s*ever\s*in\s*your\s*favor|by\s*the\s*power\s*of\s*grayskull|by\s*the\s*holy\s*light|by\s*the\s*ancient\s*power|by\s*the\s*power\s*of\s*the\s*moons|by\s*the\s*power\s*of\s*the\s*stars|by\s*the\s*power\s*of\s*the\s*void|by\s*the\s*power\s*of\s*the\s*cosmos|by\s*the\s*power\s*of\s*the\s*universe)\b/i
+    ];
+
+    // News inquiry patterns - optimized to avoid duplicates and false positives
+    const newsPatterns = [
+        // Pattern 1: Direct questions starting with question words/phrases
+        /^(what'?s|what is|what are|what was|what were|what'?s the|what is the|what are the|what was the|what were the|who|when|where|why|how|tell me|update me|inform me)\s+(me\s+)?(about\s+)?(the\s+)?(latest|recent|new|current|upcoming|happening|happened|going on|rumor|rumour|gossip|scandal|news|updates|info|information|story|stories|scoop|buzz|hype|word|talk|chatter|whisper|report|reports|bulletin|headline|headlines|scuttlebutt|tidbits?|happenings|developments|events?|occurrences?|incidents?)\b/i,
+        
+        // Pattern 2: Questions with helping verbs at the start
+        /^(have you|do you|can you|could you|would you|will you|is there|are there|was there|were there|any|some|got)\s+(news|updates|gossip|rumors?|rumours?|scandals?|info|information|stories|scoops?|buzz|hype|word|talk|chatter|whispers?|reports?|bulletins?|headlines?|scuttlebutt|tidbits?|happenings?|developments?|events?|occurrences?|incidents?)\b/i,
+        
+        // Pattern 3: General news inquiries with action verbs
+        /\b(hear|heard|know|tell|update|inform|give)\s+(me\s+)?(about|what'?s|what is|what are|what was|what were|the (latest|recent|new|current|updating|happening|happened|going on|rumor|rumour|gossip|scandal|news|updates|info|information|story|stories|scoop|buzz|hype|word|talk|chatter|whisper|report|reports|bulletin|headline|headlines|scuttlebutt|tidbits?|happenings|developments|events?|occurrences?|incidents?))\b/i,
+        
+        // Pattern 4: Standalone news keywords followed by a question mark (end of string)
+        /\b(news|update|happening|happened|going on|rumor?|rumour?|gossip|scandal|info(?:rmation)?|stor(?:y|ies)|scoop|buzz|hype|word|talk|chatter|whisper|reports?|bulletin|headlines?|scuttlebutt|tidbits?|happenings?|developments?|events?|occurrences?|incidents?)\s*\?\s*$/i
+    ];
+
+    // Swear word patterns with common character substitutions for NPC reactions
+    const swearPatterns = [
+        // Common profanity with variations
+        /\b(f+[*!u]+[*!c]+[*!k]+[*!e]*[*!r]*s*)\b/gi,  // f***, f***s, etc.
+        /\b(s+[*!h]+[*!i]+[*!t]+s*)\b/gi,                // sh**, etc.
+        /\b(b+[*!i]+[*!t]+[*!c]*[*!h]*e*[*!s]*)\b/gi,    // b****, etc.
+        /\b(a+[*!s]+[*!s]+(?:e[ds]|h+o+[*!l]*e*)?)\b/gi,  // a**, a**hole, etc.
+        /\b(d+[*!a]+m+[*!n]*)\b/gi,                      // d**n, etc.
+        /\b(p+[*!i]+s+[*!s]*)\b/gi,                      // p**s, etc.
+        /\b(c+[*!u]+n+[*!t]*)\b/gi,                      // c**t, etc.
+        /\b(w+[*!h]+o+[*!r]*e*)\b/gi,                    // wh**e, etc.
+        /\b(s+[*!l]+u+[*!t]*s*)\b/gi,                    // sl*t, etc.
+        /\b(c+[*!o]+c+[*!k]*s*)\b/gi,                    // c**k, etc.
+        
+        // Common phrases
+        /\b(go to hell|fuck off|piss off|screw you|eat shit|suck my|suck it|motherfuck|son of a bitch|dick head|ass hole|ass face|ass wipe|ass hat|dumb ass|smart ass|jack ass|ass clown|ass kiss|ass wipe|ass munch|ass hat|ass clown|ass kiss|ass munch|ass hat|ass clown|ass kiss|ass munch)\b/gi,
+        
+        // Creative spellings and leetspeak
+        /\b([fph]4[$s]?[s5]|[fph]4gg[o0]t|n[1i]gg[3e]r|n[1i][b8]b?[a4]|r[e3]t[a4]rd|d1ck|p[0o]rn|pr0n|w[0o]p|k[i1]k[3e]|j[1i]gg?[a4]b[0o][0o]|m[0o]th[3e]rf[*!u]ck[3e]r)\b/gi,
+    ];
+
+    // Check patterns in order of priority
+    // 1. Swear words (highest priority)
+    if (swearPatterns.some((pattern) => pattern.test(lowerMessage))) {
+        return 'swear';
+    }
+    
+    // 2. News inquiries (medium priority)
+    if (newsPatterns.some((pattern) => pattern.test(lowerMessage))) {
+        return 'news';
+    }
+    
+    // 3. Greetings (lowest priority)
+    if (greetingPatterns.some((pattern) => pattern.test(lowerMessage))) {
+        return 'greeting';
+    }
+    
+    // Default to casual if no other type matches
+    return 'casual';
+};
+
 const { traders = [] } = tradersData;
 
 const UIBadge = ({ tier }) => {
-    const getTierColor = () => {
-        const colors = {
-            zero: '#888888',
-            worthless: '#999',
-            awful: '#8a9b0f',
-            bad: '#7f8c8d',
-            verylow: '#7f8c8d',
-            low: '#3498db',
-            medium: '#2ecc71',
-            high: '#f1c40f',
-            ultra: '#e67e22',
-            newbie: '#1abc9c',
-            apprentice: '#9b59b6',
-            journeyman: '#3498db',
-            adventurer: '#2ecc71',
-            explorer: '#f1c40f',
-            professional: '#e67e22',
-            skilled: '#e74c3c',
-            knowledgeable: '#9b59b6',
-            smart: '#8e44ad',
-            expert: '#3498db',
-            master: '#2ecc71',
-            grandmaster: '#f1c40f',
-            elite: '#e67e22',
-            potential: '#e74c3c',
-            endgame: '#c0392b',
-        };
-        return colors[tier] || '#3498db';
-    };
-
     const getTierName = (tier) => {
         return tier.charAt(0).toUpperCase() + tier.slice(1);
     };
 
-    const getTierStyle = () => {
-        const baseStyle = {
-            display: 'inline-block',
-            padding: '2px 6px',
-            borderRadius: '4px',
-            fontSize: '0.7rem',
-            fontWeight: 'bold',
-            color: '#fff',
-            textShadow: '0 1px 1px rgba(0,0,0,0.3)',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            marginLeft: '8px',
-            verticalAlign: 'middle',
-            lineHeight: '1',
-        };
-
-        const tierColor = getTierColor();
-
-        // Add animation for higher tiers
-        const animation = {
-            medium: {},
-            high: { animation: 'pulse 2s infinite' },
-            ultra: {
-                animation: 'pulse 1.5s infinite',
-                textShadow: '0 0 5px rgba(255,255,255,0.5)',
-            },
-            apprentice: {
-                animation: 'rainbow 3s infinite',
-                textShadow: '0 0 5px rgba(255,255,255,0.5)',
-            },
-            expert: {
-                background: `linear-gradient(45deg, ${tierColor}, #8e44ad, #3498db, #2ecc71, #f1c40f, #e67e22, #e74c3c, ${tierColor})`,
-                backgroundSize: '300% 300%',
-                animation: 'gradient 8s ease infinite',
-                textShadow: '0 0 10px rgba(255,255,255,0.7)',
-                boxShadow: '0 0 15px rgba(255,255,255,0.5)',
-            },
-            grandmaster: {
-                background: `linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000)`,
-                backgroundSize: '400% 400%',
-                animation: 'rainbow 3s linear infinite',
-                textShadow: '0 0 15px rgba(255,255,255,0.9)',
-                boxShadow: '0 0 20px rgba(255,255,255,0.7)',
-                position: 'relative',
-                overflow: 'hidden',
-                zIndex: 1,
-            },
-            endgame: {
-                background:
-                    'linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000)',
-                backgroundSize: '400% 400%',
-                animation: 'rainbow 3s linear infinite',
-                textShadow: '0 0 15px rgba(255,255,255,0.9)',
-                boxShadow: '0 0 25px rgba(255,255,255,0.8)',
-                position: 'relative',
-                overflow: 'hidden',
-                zIndex: 1,
-                '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: '-50%',
-                    left: '-50%',
-                    right: '-50%',
-                    bottom: '-50%',
-                    background:
-                        'linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%)',
-                    transform: 'rotate(45deg)',
-                    animation: 'shine 3s infinite',
-                    zIndex: -1,
-                },
-            },
-        };
-
-        const tierStyle = {
-            ...baseStyle,
-            backgroundColor: tierColor,
-            ...(animation[tier] || {}),
-        };
-
-        return tierStyle;
-    };
-
     return (
-        <span className="ui-tier-badge" style={getTierStyle()}>
+        <span className="ui-tier-badge" data-tier={tier}>
             {getTierName(tier)}
         </span>
     );
@@ -260,25 +233,23 @@ const ChatBox = ({ statusEffects }) => {
 
     const handleSendMessage = (e) => {
         e.preventDefault();
-        if (!inputMessage.trim()) return;
+        const message = inputMessage.trim();
+        if (!message) return;
 
+        // Add player's message to chat
         const newMessage = {
             id: Date.now(),
-            message: { EN: inputMessage },
+            message: { EN: message },
             sender: 'You',
             isPlayer: true,
             tier: uiTier,
             timestamp: Date.now(),
         };
 
-        // Use functional update to ensure we have the latest state
-        setMessages((prevMessages) => {
-            const updatedMessages = [...prevMessages, newMessage];
-            return updatedMessages;
-        });
-
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
         setInputMessage('');
 
+        // Process the message and generate a response
         setTimeout(() => {
             if (!traders || traders.length === 0) {
                 console.warn('No traders available');
@@ -291,9 +262,9 @@ const ChatBox = ({ statusEffects }) => {
                 return;
             }
 
-            const messageType = ['casual', 'joke', 'boast', 'brag', 'swear'][
-                Math.floor(Math.random() * 5)
-            ];
+            // Determine message type based on content
+            const messageType = getMessageType(message);
+            console.log(`Message type: ${messageType}`);
 
             try {
                 const response = getRandomResponse(randomTrader.traderId, messageType);
@@ -526,11 +497,7 @@ const ChatBox = ({ statusEffects }) => {
         <div className={`chat-box ${isOpen ? 'open' : 'closed'}`}>
             {renderTierSelector()}
             <div className="chat-messages" ref={messagesEndRef}>
-                <div
-                    className="header-content"
-                    onClick={() => setIsOpen(!isOpen)}
-                    style={{ cursor: 'pointer' }}
-                >
+                <div className="header-content clickable" onClick={() => setIsOpen(!isOpen)}>
                     <h3>Trader Network</h3>
                     <FontAwesomeIcon
                         icon={faChevronDown}

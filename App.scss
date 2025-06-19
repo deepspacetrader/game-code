@@ -464,13 +464,53 @@ button {
     --cell-bg: darkred;
 }
 
-.ui-tier-ultra,
-.ui-tier-newbie,
-.ui-tier-apprentice,
-.ui-tier-journeyman,
+.ui-tier-ultra {
+    --hud-bg: #000000;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-newbie {
+    --hud-bg: #111;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-apprentice {
+    --hud-bg: #222;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-journeyman {
+    --hud-bg: #333;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
 .ui-tier-adventurer {
     /* mirror elite tier styling until new theming is defined */
-    // --hud-bg: #000000;
+    --hud-bg: #444;
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */
