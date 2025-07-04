@@ -4,6 +4,8 @@
 /node_modules
 
 # IDE config
+.vscode
+.windsurf
 /.vscode
 /.windsurf
 .prettierrc
