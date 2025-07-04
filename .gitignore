@@ -5,9 +5,13 @@
 
 # IDE config
 .vscode
+.vscode/settings.json
 .windsurf
+.windsurf/rules
 /.vscode
+/.vscode/settings.json
 /.windsurf
+/.windsurf/rules
 .prettierrc
 
 # notes
