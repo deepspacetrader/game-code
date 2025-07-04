@@ -29,16 +29,11 @@ const QuantumSetup = ({ setStatusEffects }) => {
     } = useMarketplace();
     const quantumProcessor = inventory.find((i) => i.name === 'Quantum Processor');
     const quantumCount = quantumProcessor?.quantity || 0;
-    const slotsCount = 6; // Increased from 5 to 6
-
-    // Ability descriptions
-    const ABILITY_DESCRIPTIONS = {
-        QuantumHover: 'Reveals item details and trading recommendations on hover',
-        QuantumScan: 'Scans the market grid in a specific direction to find profitable trades',
-        QuantumMarket: 'Advanced trading system for bulk market operations',
-    };
-
+    const slotsCount = 6;
     const [activeAbility, setActiveAbility] = useState(null);
+
+    // Debug: Force first slot to always be Quantum Hover if true
+    const DEBUG_FORCE_FIRST_HOVER = true; // Set to true for debugging
 
     // Set first ability as active by default if available
     useEffect(() => {
@@ -47,10 +42,6 @@ const QuantumSetup = ({ setStatusEffects }) => {
         }
     }, [quantumInventory, activeAbility]);
 
-    // Always show the menu if there are quantum abilities, regardless of UI level
-    const hasQuantumAbilities = quantumInventory.length > 0;
-    // Only hide the menu if UI level is too low and no abilities are unlocked
-    // if (improvedUILevel < 5 && !hasQuantumAbilities) return null;
     // Initialize slots with random scan directions from standard abilities
     const [slots, setSlots] = useState(() => {
         // Standard abilities (5 unique abilities for 6 slots)
@@ -89,77 +80,6 @@ const QuantumSetup = ({ setStatusEffects }) => {
 
         return initialSlots;
     });
-
-    // Shuffle unused slots, ensuring no duplicates and the 6th becomes QuantumMarket when 5 slots are used
-    const shuffleUnusedSlots = useCallback(() => {
-        setSlots((prevSlots) => {
-            const unusedSlots = prevSlots.filter((slot) => !slot.used);
-            const usedSlots = prevSlots.filter((slot) => slot.used);
-
-            // If we have 5 used slots and 1 unused, make it QuantumMarket
-            if (usedSlots.length === 5 && unusedSlots.length === 1) {
-                const newSlots = [...prevSlots];
-                const lastUnusedIndex = newSlots.findIndex((slot) => !slot.used);
-                if (lastUnusedIndex !== -1) {
-                    newSlots[lastUnusedIndex] = {
-                        ...newSlots[lastUnusedIndex],
-                        ability: 'QuantumMarket',
-                        active: true,
-                        used: true,
-                    };
-                    return newSlots;
-                }
-                return prevSlots;
-            }
-
-            // Standard abilities (all except QuantumMarket)
-            const standardAbilities = [
-                'QuantumScanLR',
-                'QuantumScanTB',
-                'QuantumScanRL',
-                'QuantumScanBT',
-                'QuantumHover',
-            ];
-
-            // Get abilities that are currently used in standard slots
-            const usedAbilities = new Set(usedSlots.map((slot) => slot.ability));
-
-            // Filter out abilities that are already used from standard abilities
-            const availableAbilities = standardAbilities.filter((a) => !usedAbilities.has(a));
-
-            // If no available abilities, return current state
-            if (availableAbilities.length === 0) {
-                return prevSlots;
-            }
-
-            // Shuffle the available abilities
-            const shuffledAbilities = [...availableAbilities];
-            for (let i = shuffledAbilities.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffledAbilities[i], shuffledAbilities[j]] = [
-                    shuffledAbilities[j],
-                    shuffledAbilities[i],
-                ];
-            }
-
-            // Assign new abilities to unused slots
-            let abilityIndex = 0;
-            return prevSlots.map((slot) => {
-                if (slot.used) return slot;
-
-                // If we've used all unique abilities, start reusing them
-                const ability =
-                    abilityIndex < shuffledAbilities.length
-                        ? shuffledAbilities[abilityIndex++]
-                        : shuffledAbilities[Math.floor(Math.random() * shuffledAbilities.length)];
-
-                return {
-                    ...slot,
-                    ability,
-                };
-            });
-        });
-    }, []);
 
     // Quantum ability definitions with icons and descriptions
     const QUANTUM_ABILITIES = {
@@ -308,7 +228,10 @@ const QuantumSetup = ({ setStatusEffects }) => {
 
                 // Determine the ability for the new slot
                 let selectedAbility;
-                if (availableAbilities.length === 0) {
+                // Debug: Force first slot to always be QuantumHover if enabled
+                if (DEBUG_FORCE_FIRST_HOVER && newActiveCount === 1 && index === 1) {
+                    selectedAbility = 'QuantumHover';
+                } else if (availableAbilities.length === 0) {
                     selectedAbility = 'QuantumMarket';
                 } else {
                     const randomIndex = Math.floor(Math.random() * availableAbilities.length);

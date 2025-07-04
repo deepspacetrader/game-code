@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
 import './QuantumHover.scss';
 
 const calculateVolatility = (prices) => {
@@ -57,94 +56,62 @@ const getRecommendation = (volatility, trend, potentialProfit) => {
 const QuantumHover = (props) => {
     // Get context values first
     const marketplaceContext = useMarketplace();
-    const { quantumInventory = [] } = useUI();
-
-    // Debug log
-    // console.log('QuantumHover mounted with props and context:', {
-    //     props: {
-    //         hasMarket: !!props.market,
-    //         statusEffects: !!props.statusEffects,
-    //         displayCells: props.displayCells?.length,
-    //         inventory: props.inventory?.length,
-    //     },
-    //     context: {
-    //         hasMarketplace: !!marketplaceContext,
-    //         hasStatusEffects: !!marketplaceContext?.statusEffects,
-    //         quantumInventory: quantumInventory.length,
-    //     },
-    // });
 
     // Destructure props with defaults
     const {
-        market: MarketGrid,
         displayCells = [],
-        numCellsX = 5,
         inventory = [],
         purchaseHistory = [],
         priceHistory = {},
         currentTrader = null,
-        deliveryQueue = [],
-        credits = 0,
-        // Default handlers that do nothing
-        handleBuyClick = () => {},
-        handleSellClick = () => {},
         handleSellAll = () => {},
         checkQuantumTradeDelay = () => true,
         updateLastQuantumTradeTime = () => {
-            console.log('updateLastQuantumTradeTime called (default no-op)');
             if (marketplaceContext?.updateLastQuantumTradeTime) {
                 marketplaceContext.updateLastQuantumTradeTime();
             }
         },
-        // Allow statusEffects to be overridden by props, otherwise use from context
-        statusEffects = marketplaceContext?.statusEffects || {},
     } = props;
+
+    // Get credits directly from context to ensure it's always up to date
+    const credits = marketplaceContext?.credits || 0;
 
     const containerRef = useRef(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [quantumAnalysis, setQuantumAnalysis] = useState({});
-    const hoverLag = 100;
-    const hoverAreaSize = 200; // Slightly smaller for better precision
-    const hoverTriggerRadius = 100;
 
-    // Add mount/unmount logging
+    // --- Hover box sizing ---
+    const [hoverBox, setHoverBox] = useState({ width: 100, height: 100 });
+
+    // Dynamically size the hover box to fit 2 items
     useEffect(() => {
-        console.log('QuantumHover mounted');
-        return () => console.log('QuantumHover unmounted');
+        const updateHoverBox = () => {
+            // Try to find a .market-item to measure
+            const marketItem = document.querySelector('.market-item');
+            if (marketItem) {
+                const rect = marketItem.getBoundingClientRect();
+                // Box should fit 2 items horizontally or vertically
+                setHoverBox({
+                    width: rect.width * 2 + 8, // 8px gap for margin
+                    height: rect.height + 4, // 4px gap for margin
+                });
+            }
+        };
+        updateHoverBox();
+        window.addEventListener('resize', updateHoverBox);
+        return () => window.removeEventListener('resize', updateHoverBox);
     }, []);
-
-    // Only update status effects when quantum processor count changes
-    useEffect(() => {
-        const { setStatusEffects, statusEffects: contextStatusEffects } = marketplaceContext || {};
-        if (!setStatusEffects) return;
-
-        const processorCount = quantumInventory.filter(
-            (item) => item === 'Quantum Processor'
-        ).length;
-        const currentLevel = contextStatusEffects?.['Quantum Processor']?.level || 0;
-
-        // Only update if the count has actually changed
-        if (processorCount > 0 && processorCount !== currentLevel) {
-            setStatusEffects((prev) => ({
-                ...prev,
-                'Quantum Processor': {
-                    ...prev?.['Quantum Processor'],
-                    level: processorCount,
-                },
-            }));
-        } else if (processorCount === 0 && currentLevel > 0) {
-            // Only update if we need to remove the processor
-            setStatusEffects((prev) => {
-                const newStatusEffects = { ...prev };
-                delete newStatusEffects['Quantum Processor'];
-                return newStatusEffects;
-            });
-        }
-    }, [marketplaceContext, quantumInventory]);
 
     const analyzeItem = useCallback(
         (item) => {
-            if (!statusEffects['Quantum Processor']) return null;
+            // Check if quantum hover is active (quantum power + quantum inventory)
+            if (!props.quantumPower || !props.quantumInventory?.includes('QuantumHover')) {
+                console.log('Quantum hover not active:', {
+                    quantumPower: props.quantumPower,
+                    hasQuantumHover: props.quantumInventory?.includes('QuantumHover'),
+                });
+                return null;
+            }
 
             // Check if player owns this item
             const ownedQty = inventory.find((i) => i.name === item.name)?.quantity || 0;
@@ -215,8 +182,8 @@ const QuantumHover = (props) => {
                 }
             }
 
-            return {
-                itemId: item.itemId, // Add itemId to the analysis object
+            const result = {
+                itemId: item.itemId,
                 volatility,
                 trend,
                 potentialProfit,
@@ -225,22 +192,28 @@ const QuantumHover = (props) => {
                 ownedQty,
                 actualProfit,
             };
+            return result;
         },
-        [statusEffects, priceHistory, currentTrader, displayCells, inventory, purchaseHistory]
+        [
+            props.quantumPower,
+            props.quantumInventory,
+            priceHistory,
+            currentTrader,
+            displayCells,
+            inventory,
+            purchaseHistory,
+        ]
     );
 
     // Track trade state
     const lastTradeTimeRef = useRef(0);
     const tradeCooldown = 1000; // 1 second cooldown between trades
-    const lastTradeActionRef = useRef(''); // Track the last action type
     const tradeExecutedRef = useRef(false); // Track if we've executed a trade this cycle
     const marketplace = useMarketplace();
 
     // Handle quantum trades with delay and proper state management
     const handleQuantumTrade = useCallback(
         (item, action, quantity = 1) => {
-            if (!statusEffects['Quantum Processor']) return false;
-
             const { traders, traderIds, currentTrader, handleBuyClick, handleSellClick } =
                 marketplace;
 
@@ -265,22 +238,35 @@ const QuantumHover = (props) => {
 
             switch (action) {
                 case 'buy':
+                    console.log(
+                        `Buy attempt for ${item.name}: credits=${credits}, price=${item.price}, quantity=${quantity}`
+                    );
                     if (credits >= item.price * quantity) {
-                        // Find the item's index in the current trader's items
-                        const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
-                        const itemIndex = traders[traderIdx]?.findIndex(
-                            (cell) => cell?.name === item.name
+                        // Find the item's index in the displayCells (processed trader items)
+                        const itemIndex = displayCells.findIndex(
+                            (cell) => cell?.itemId === item.itemId
                         );
 
+                        console.log(
+                            `Found item ${item.name} at index ${itemIndex} in displayCells`
+                        );
                         if (itemIndex !== -1) {
                             console.log(`Buying ${item.name} at index ${itemIndex}`);
                             tradeExecuted = handleBuyClick(itemIndex);
                             console.log('Buy attempt:', tradeExecuted ? 'success' : 'failed');
                         } else {
-                            console.error('Item not found in current trader:', item.name);
+                            console.error('Item not found in displayCells:', item.name);
+                            console.log(
+                                'Available items in displayCells:',
+                                displayCells.map((c) => ({ name: c?.name, itemId: c?.itemId }))
+                            );
                         }
                     } else {
-                        console.log('Not enough credits to buy');
+                        console.log(
+                            `Not enough credits to buy: need ${
+                                item.price * quantity
+                            }, have ${credits}`
+                        );
                     }
                     break;
 
@@ -313,7 +299,6 @@ const QuantumHover = (props) => {
             if (tradeExecuted) {
                 console.log(`Trade executed: ${action} ${item.name}`);
                 lastTradeTimeRef.current = now;
-                lastTradeActionRef.current = action;
                 tradeExecutedRef.current = true;
                 updateLastQuantumTradeTime();
             }
@@ -321,13 +306,13 @@ const QuantumHover = (props) => {
             return tradeExecuted;
         },
         [
-            statusEffects,
             checkQuantumTradeDelay,
             inventory,
             credits,
             updateLastQuantumTradeTime,
             marketplace,
             handleSellAll,
+            displayCells,
         ]
     );
 
@@ -340,7 +325,7 @@ const QuantumHover = (props) => {
             const container = containerRef.current;
             if (!container) return;
 
-            // Get mouse position relative to the container
+            // Get mouse position relative to the QuantumHover container
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -348,74 +333,49 @@ const QuantumHover = (props) => {
             // Throttle mouse move events
             const now = Date.now();
             if (now - lastMouseMoveRef.current < mouseMoveThrottle) {
-                return; // Skip this update if we've updated too recently
+                return;
             }
             lastMouseMoveRef.current = now;
 
-            // Update mouse position and reset trade executed flag if moved significantly
-            setMousePosition((prev) => {
-                const dx = prev.x - x;
-                const dy = prev.y - y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance > 5) {
-                    tradeExecutedRef.current = false;
-                }
-                return { x, y };
-            });
+            setMousePosition({ x, y });
 
-            // Get all market items in the container
-            const marketItems = container.querySelectorAll('.market-item');
-            let closestItem = null;
-            let closestDistance = hoverTriggerRadius;
-            let tradeExecuted = false;
+            // Get all market items in the parent container (market grid)
+            const marketItems = container.parentElement?.querySelectorAll('.market-item') || [];
+            const hoveredItems = [];
+            // Calculate hover box bounds
+            const boxLeft = e.clientX - hoverBox.width / 2;
+            const boxRight = e.clientX + hoverBox.width / 2;
+            const boxTop = e.clientY - hoverBox.height / 2;
+            const boxBottom = e.clientY + hoverBox.height / 2;
 
-            // Find the closest market item to the cursor
             marketItems.forEach((marketItem) => {
-                const itemId = marketItem.dataset.itemId;
-                if (!itemId) return;
-
-                const item = displayCells.find((c) => c?.itemId === Number(itemId));
-                if (!item) return;
-
-                // Calculate distance from cursor to item center
-                const marketItemRect = marketItem.getBoundingClientRect();
-                const marketItemCenterX = marketItemRect.left + marketItemRect.width / 2;
-                const marketItemCenterY = marketItemRect.top + marketItemRect.height / 2;
-                const distanceX = marketItemCenterX - e.clientX;
-                const distanceY = marketItemCenterY - e.clientY;
-                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                // Track the closest item within hover radius
-                if (distance <= hoverTriggerRadius && distance < closestDistance) {
-                    closestDistance = distance;
-                    closestItem = { item, element: marketItem, distance };
+                const itemRect = marketItem.getBoundingClientRect();
+                const itemCenterX = itemRect.left + itemRect.width / 2;
+                const itemCenterY = itemRect.top + itemRect.height / 2;
+                if (
+                    itemCenterX >= boxLeft &&
+                    itemCenterX <= boxRight &&
+                    itemCenterY >= boxTop &&
+                    itemCenterY <= boxBottom
+                ) {
+                    const itemId = marketItem.dataset.itemId;
+                    const item = displayCells.find((c) => c?.itemId === Number(itemId));
+                    if (item) {
+                        hoveredItems.push(item);
+                    }
                 }
             });
 
-            // If we found a close enough item, analyze it
-            if (closestItem) {
-                const analysis = analyzeItem(closestItem.item);
-                if (analysis) {
-                    // Only update if the analysis has changed significantly
-                    setQuantumAnalysis((prev) => {
-                        const prevAnalysis = prev[closestItem.item.itemId];
-                        if (
-                            !prevAnalysis ||
-                            prevAnalysis.recommendation !== analysis.recommendation ||
-                            Math.abs(
-                                (prevAnalysis.potentialProfit || 0) -
-                                    (analysis.potentialProfit || 0)
-                            ) > 0.1
-                        ) {
-                            // Only keep the analysis for the current item
-                            return { [closestItem.item.itemId]: analysis };
-                        }
-                        return prev;
-                    });
+            // Only keep up to 2 items
+            const itemsToAnalyze = hoveredItems.slice(0, 2);
 
-                    // Handle trades based on recommendation
-                    if (!tradeExecuted && analysis.recommendation) {
-                        const { item } = closestItem;
+            const newAnalysis = {};
+            itemsToAnalyze.forEach((item) => {
+                const analysis = analyzeItem(item);
+                if (analysis) {
+                    newAnalysis[item.itemId] = analysis;
+                    // Auto-trade logic only if quantum hover is active
+                    if (props.quantumPower && props.quantumInventory?.includes('QuantumHover')) {
                         const itemInInventory = inventory.some((i) => i.name === item.name);
 
                         if (
@@ -423,179 +383,152 @@ const QuantumHover = (props) => {
                                 analysis.recommendation === 'Strong Sell') &&
                             itemInInventory
                         ) {
-                            // For selling, make sure we own the item
-                            tradeExecuted = handleQuantumTrade(item, 'sellAll');
+                            handleQuantumTrade(item, 'sellAll');
                         } else if (analysis.recommendation === 'Sell' && itemInInventory) {
-                            tradeExecuted = handleQuantumTrade(item, 'sell');
+                            handleQuantumTrade(item, 'sell');
                         } else if (
-                            analysis.recommendation === 'Strong Buy' ||
-                            analysis.recommendation === 'Buy'
+                            (analysis.recommendation === 'Strong Buy' ||
+                                analysis.recommendation === 'Buy') &&
+                            !itemInInventory &&
+                            credits >= item.price
                         ) {
-                            // For buying, make sure we don't own the item and have enough credits
-                            if (!itemInInventory) {
-                                console.log('Checking buy conditions for', item.name, {
-                                    credits,
-                                    itemPrice: item.price,
-                                    canAfford: credits >= item.price,
-                                    recommendation: analysis.recommendation,
-                                });
-                                if (credits >= item.price) {
-                                    tradeExecuted = handleQuantumTrade(item, 'buy');
-                                    console.log('Buy trade executed:', tradeExecuted);
-                                }
-                            }
+                            handleQuantumTrade(item, 'buy');
                         }
                     }
                 }
-            } else {
-                // Clear analysis when not hovering over any item
-                setQuantumAnalysis({});
-            }
-
-            // Update hover effects
-            requestAnimationFrame(() => {
-                const marketItems = container.querySelectorAll('.market-item');
-                marketItems.forEach((marketItem) => {
-                    const marketItemRect = marketItem.getBoundingClientRect();
-                    const marketItemCenterX = marketItemRect.left + marketItemRect.width / 2;
-                    const marketItemCenterY = marketItemRect.top + marketItemRect.height / 2;
-                    const distanceX = marketItemCenterX - e.clientX;
-                    const distanceY = marketItemCenterY - e.clientY;
-                    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                    // Apply hover state based on distance
-                    if (distance <= hoverTriggerRadius) {
-                        if (!marketItem.classList.contains('hovered')) {
-                            marketItem.style.transition = 'all 0.3s ease';
-                            marketItem.style.opacity = '1';
-                            marketItem.style.transform = 'scale(1.05)';
-                            marketItem.classList.add('hovered');
-                        }
-                    } else if (marketItem.classList.contains('hovered')) {
-                        marketItem.style.transition = 'all 0.3s ease';
-                        marketItem.style.opacity = '0.8';
-                        marketItem.style.transform = 'scale(1)';
-                        marketItem.classList.remove('hovered');
-                    }
-                });
             });
+            setQuantumAnalysis(newAnalysis);
+            tradeExecutedRef.current = false;
         },
-        [analyzeItem, displayCells, handleQuantumTrade, credits, hoverTriggerRadius, inventory]
+        [
+            analyzeItem,
+            displayCells,
+            handleQuantumTrade,
+            credits,
+            hoverBox,
+            inventory,
+            props.quantumPower,
+            props.quantumInventory,
+        ]
     );
+
+    // Mouse event handlers for React
+    const handleMouseEnter = useCallback(() => setIsMouseInMarket(true), []);
+    const handleMouseLeave = useCallback(() => setIsMouseInMarket(false), []);
 
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
 
-        // Add mousemove event listener to the container
-        container.addEventListener('mousemove', handleMouseMove);
+        // Find the market grid container to attach events to
+        const marketGridContainer = container.parentElement;
+        if (!marketGridContainer) return;
+
+        // Add mousemove event listener to the market grid container
+        marketGridContainer.addEventListener('mousemove', handleMouseMove, { passive: true });
+        marketGridContainer.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+        marketGridContainer.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
         // Cleanup function
         return () => {
-            if (container) {
-                container.removeEventListener('mousemove', handleMouseMove);
+            if (marketGridContainer) {
+                marketGridContainer.removeEventListener('mousemove', handleMouseMove);
+                marketGridContainer.removeEventListener('mouseenter', handleMouseEnter);
+                marketGridContainer.removeEventListener('mouseleave', handleMouseLeave);
             }
         };
-    }, [handleMouseMove]);
+    }, [handleMouseMove, handleMouseEnter, handleMouseLeave]);
 
-    // Alias MarketGrid to market for backward compatibility
-    const market = useMemo(() => MarketGrid, [MarketGrid]);
+    // Track if mouse is inside the market area
+    const [isMouseInMarket, setIsMouseInMarket] = useState(false);
+    // For lag effect
+    const [laggedMouse, setLaggedMouse] = useState({ x: 0, y: 0 });
 
-    // Log render with mouse position
+    // Animate lagged mouse position
     useEffect(() => {
-        console.log('QuantumHover render:', { mousePosition });
-    }, [mousePosition]);
+        if (!isMouseInMarket) return;
+        const lag = 0.18;
+        let frame;
+        function animate() {
+            setLaggedMouse((prev) => ({
+                x: prev.x + (mousePosition.x - prev.x) * lag,
+                y: prev.y + (mousePosition.y - prev.y) * lag,
+            }));
+            frame = requestAnimationFrame(animate);
+        }
+        frame = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(frame);
+    }, [mousePosition, isMouseInMarket]);
+
+    // Determine if quantum hover is enabled
+    const isQuantumHoverActive =
+        props.quantumPower && props.quantumInventory?.includes('QuantumHover');
 
     return (
         <div
             ref={containerRef}
             className="quantum-hover-container"
             style={{
-                position: 'fixed',
+                position: 'absolute',
                 top: 0,
                 left: 0,
-                width: '100vw',
-                height: '100vh',
-                pointerEvents: 'none',
+                width: '100%',
+                height: '100%',
+                overflow: 'visible',
                 zIndex: 9999,
-                border: '2px solid red', // Debug border
-                boxSizing: 'border-box',
+                pointerEvents: 'none', // allow clicks to pass through
             }}
         >
-            <div
-                className={`quantum-hover-overlay ${
-                    (statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''
-                }`}
-                style={{
-                    position: 'absolute',
-                    left: `${mousePosition.x}px`,
-                    top: `${mousePosition.y}px`,
-                    width: `${hoverAreaSize}px`,
-                    height: `${hoverAreaSize / 2}px`,
-                    backgroundColor: 'rgba(0, 255, 0, 0.2)',
-                    border: '2px solid rgba(0, 255, 0, 0.8)',
-                    borderRadius: '50%',
-                    pointerEvents: 'none',
-                    transform: 'translate(-50%, -50%)',
-                    transition: `all ${hoverLag}ms ease-out`,
-                    opacity: (statusEffects['Quantum Processor']?.level || 0) > 0 ? 0.7 : 0,
-                    zIndex: 10000,
-                    mixBlendMode: 'screen',
-                    boxShadow: '0 0 20px rgba(0, 255, 0, 0.5)',
-                }}
-            />
-            <div
-                className={`quantum-analysis-panel ${
-                    (statusEffects['Quantum Processor']?.level || 0) <= 0 ? 'quantum-disabled' : ''
-                }`}
-            >
-                {Object.entries(quantumAnalysis).length > 0 ? (
-                    Object.entries(quantumAnalysis).map(([itemId, analysis]) => (
-                        <div key={itemId} className="analysis-item">
-                            <span className="item-name">
-                                {displayCells.find((c) => c.itemId === Number(itemId))?.name}
-                            </span>
-                            <span
-                                className={`recommendation ${analysis.recommendation.toLowerCase()}`}
-                            >
-                                {analysis.recommendation}
-                            </span>
-                            <span className="potential-profit">
-                                {analysis.potentialProfit.toFixed(1)}%
-                            </span>
-                            {analysis.ownedQty > 0 && (
-                                <span className="owned-qty">Owned: {analysis.ownedQty}</span>
-                            )}
-                            {analysis.actualProfit > 0 && (
-                                <span className="actual-profit">
-                                    Profit: +{analysis.actualProfit.toFixed(2)} credits
+            {isMouseInMarket && isQuantumHoverActive && (
+                <div
+                    className="quantum-hover-overlay"
+                    style={{
+                        left: `${laggedMouse.x}px`,
+                        top: `${laggedMouse.y}px`,
+                        width: `${hoverBox.width}px`,
+                        height: `${hoverBox.height}px`,
+                        pointerEvents: 'none',
+                        transform: 'translate(-50%, -50%)',
+                        background: 'rgba(0,255,0,0.35)',
+                        border: '2px solid #00ff00',
+                        boxShadow: '0 0 24px 6px #00ff00',
+                    }}
+                />
+            )}
+            {/* Only show analysis panel if quantum hover is active */}
+            {isMouseInMarket && isQuantumHoverActive && (
+                <div className="quantum-analysis-panel">
+                    {Object.entries(quantumAnalysis).length > 0 ? (
+                        Object.entries(quantumAnalysis).map(([itemId, analysis]) => (
+                            <div key={itemId} className="analysis-item">
+                                <span className="item-name">
+                                    {displayCells.find((c) => c.itemId === Number(itemId))?.name}
                                 </span>
-                            )}
+                                <span
+                                    className={`recommendation ${analysis.recommendation.toLowerCase()}`}
+                                >
+                                    {analysis.recommendation}
+                                </span>
+                                <span className="potential-profit">
+                                    {analysis.potentialProfit.toFixed(1)}%
+                                </span>
+                                {analysis.ownedQty > 0 && (
+                                    <span className="owned-qty">Owned: {analysis.ownedQty}</span>
+                                )}
+                                {analysis.actualProfit > 0 && (
+                                    <span className="actual-profit">
+                                        Profit: +{analysis.actualProfit.toFixed(2)} credits
+                                    </span>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <div className="no-analysis-message">
+                            <p>Quantum Hover Active: {props.quantumPower ? 'Yes' : 'No'}</p>
                         </div>
-                    ))
-                ) : (
-                    <div className="no-analysis-message">
-                        <p>
-                            Quantum Processors Online:{' '}
-                            {statusEffects['Quantum Processor']?.level || 0}
-                        </p>
-                    </div>
-                )}
-            </div>
-            {market &&
-                React.createElement(market, {
-                    displayCells,
-                    numCellsX,
-                    statusEffects,
-                    inventory,
-                    purchaseHistory,
-                    priceHistory,
-                    currentTrader,
-                    deliveryQueue,
-                    handleBuyClick,
-                    handleSellClick,
-                    handleSellAll,
-                })}
+                    )}
+                </div>
+            )}
         </div>
     );
 };

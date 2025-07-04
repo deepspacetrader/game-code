@@ -2,7 +2,7 @@
     "name": "scifi-market",
     "version": "1.0.0",
     "private": true,
-    "homepage": "./",
+    "homepage": "https://deepspacetrader.github.io",
     "dependencies": {
         "@darenft/react-3d-hover-card": "^1.0.9",
         "@fortawesome/free-solid-svg-icons": "^6.7.2",

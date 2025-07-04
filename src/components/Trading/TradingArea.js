@@ -27,6 +27,7 @@ const TradingArea = () => {
         updateLastQuantumTradeTime,
         quantumPower,
         credits,
+        setStatusEffects,
     } = useMarketplace();
 
     const { improvedUILevel } = useUI();
@@ -135,22 +136,14 @@ const TradingArea = () => {
                             handleSellClick={handleSellClick}
                             handleSellAll={handleSellAll}
                             updateLastQuantumTradeTime={updateLastQuantumTradeTime}
+                            quantumPower={quantumPower}
+                            quantumInventory={quantumInventory}
+                            setStatusEffects={setStatusEffects}
                         />
                     )}
                     {quantumPower &&
                         quantumInventory?.some((q) => q.startsWith('QuantumScan')) &&
                         (() => {
-                            {
-                                /* console.log('QuantumScan render check:', {
-                                quantumPower,
-                                quantumInventory,
-                                marketGridRef,
-                                displayCells,
-                                inventory,
-                                handleBuyClick,
-                                handleSellAll,
-                            }); */
-                            }
                             return (
                                 <div
                                     className="quantum-scan-container"

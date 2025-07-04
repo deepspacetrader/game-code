@@ -29,9 +29,10 @@
     }
 
     .quantum-analysis-panel {
-        position: relative;
+        position: fixed;
+        top: 50%;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-65%);
         background: rgba(0, 0, 0, 0.8);
         border: 1px solid #00ff00;
         border-radius: 4px;
