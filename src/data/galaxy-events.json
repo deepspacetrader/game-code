@@ -1,0 +1,75 @@
+{
+    "galaxyEvents": [
+        {
+            "galaxyEventId": 1,
+            "name": "WAR ZONE DEBRIS",
+            "description": "Cybernetic war fragments pierce through rattling your hull.",
+            "eventResult": {
+                "damagePlayer": 25,
+                "shield": false
+            }
+        },
+        {
+            "galaxyEventId": 2,
+            "name": "LOST CARGO",
+            "description": "A drifting cargo pod loaded with rare salvage drifts into your hold.",
+            "eventResult": {
+                "addCredits": 976514,
+                "addFuel": 200
+            }
+        },
+        {
+            "galaxyEventId": 3,
+            "name": "INTELLIGENT NANO PARTICLES",
+            "description": "Your ship glides near the remains of an intelligent nano particles swarm, boosting your UI modules.",
+            "eventResult": {
+                "addUI": 250
+            }
+        },
+        {
+            "galaxyEventId": 4,
+            "name": "CYBERWARE VIRUS",
+            "description": "A malicious cyber-virus infects your ship, corrupting UI protocols.",
+            "effect": {
+                "removeUI": 1000,
+                "removeCredits": 15000,
+                "damagePlayer": 60,
+                "shield": false,
+                "stealth": false
+            }
+        },
+        {
+            "galaxyEventId": 5,
+            "name": "QUANTUM FUEL SPILL",
+            "description": "A containment breach floods tanks with abundant quantum fuel.",
+            "effect": {
+                "addFuel": 500
+            }
+        },
+        {
+            "galaxyEventId": 6,
+            "name": "FUEL LEAK",
+            "description": "A micrometeorite punctures your fuel tank, causing a leak.",
+            "effect": {
+                "removeFuel": 70
+            }
+        },
+        {
+            "galaxyEventId": 7,
+            "name": "ALLIANCE SUPPORT",
+            "description": "Omniscient species upgrade your UI with advanced tech.",
+            "effect": {
+                "adUI": 1000
+            }
+        },
+        {
+            "galaxyEventId": 8,
+            "name": "ION STORM",
+            "description": "An ion storm fries your shields with relentless ultra high-frequency energy waves.",
+            "effect": {
+                "shield": false,
+                "stealth": false
+            }
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+.floating-messages-portal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.floating-messages-portal > * {
+  position: relative;
+  display: block;
+}
+
+.floating-messages {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 103;
+    margin: 4px 0;
+    color: var(--info);
+    text-shadow: 0 0 6px var(--info);
+    font-weight: bold;
+    animation: floatUp 2s ease-out forwards;
+}
+
+@keyframes floatUp {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-50px) scale(1.1);
+    }
+}
+
+@keyframes floatDown {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(50px) scale(1.1);
+    }
+}

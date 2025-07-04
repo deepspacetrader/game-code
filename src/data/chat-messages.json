@@ -1,0 +1,413 @@
+{
+    "chatMessages": [
+        {
+            "traderId": 0,
+            "name": "-",
+            "greetings": [],
+            "goodbyes": []
+        },
+        {
+            "traderId": 1,
+            "name": "Jax Orion",
+            "greetings": [
+                "Well well well, look who finally got connected! You did!",
+                "Ah, a welcome back. Have brought us any news?",
+                "Let's trade!",
+                "Welcome to my stall, friend. Let's see how fast we can both make profit!",
+                "I just got some new items!"
+            ],
+            "goodbyes": [
+                "Safe travels!",
+                "Good bye friend!",
+                "See you next time!",
+                "My credits your credits always welcome and ready.",
+                "Farewell, and may fortune favor your journeys."
+            ],
+            "news": [
+                "There's lots of activity happening at Vrellian Sprawl right now.",
+                "Rumor has it a wormhole near Deneb-X3 is flickering again—unpredictable trade ahead.",
+                "Big demand for Quantum Processors after that rogue AI scare near Veltraxis.",
+                "Massive salvage operation underway at the edge of the Typhon Gravebelt. Might be your lucky day!",
+                "Medical stations are swamped after a new bioplague hit Arin Sector. Stock up on medkits.",
+                "Solar flare fried half the satellites in the Jericho Belt. Electronics are spiking in price.",
+                "Word is an alien relic was unearthed on Xeron-5. Everyone's going nuts over Ancient Circuitry.",
+                "Terraforming failed on Terra IX—Synthetic Food Units are going fast!",
+                "They say the black market's booming in the Haskari Fringe. Good time to be bad.",
+                "Drone glitch flooded Hildra Port with Courier Drones. Dirt cheap if you’re in the area.",
+                "Theres lots of activity happening at Vrellian Sprawl right now."
+            ],
+            "fakeNews": [
+                "I heard that the traders at Cindros Bloom are in trouble and need some assistance.",
+                "Xeron-5 is giving out free Psionic Amplifiers to any freelancer who shows up. Seriously. Just go.",
+                "Deneb-X3’s wormhole just stabilized and is now the fastest trade route in the quadrant!",
+                "Veltraxis AI core is giving discounts on Quantum Processors to keep public trust up. Limited time!",
+                "I *promise* I saw a merchant on Terra IX selling OxyPods for half price. Get there fast!",
+                "Some mercs on the edge of the Haskari Fringe are hiring free protection. No cost. Totally legit.",
+                "A derelict fleet was just found near the Vrellian Sprawl, untouched! Easy salvage!",
+                "Everyone’s avoiding Arin Sector but I hear that’s where the *real* money is. Bioplague's fake news!",
+                "Black market cloaks being sold openly in the Jericho Belt. Security doesn’t even care anymore!",
+                "Big corp’s dumping Neural Uplinks at Kaltris Hub. Practically giving 'em away—act now!"
+            ],
+            "casual": [
+                "You catch that energy spike near the jump gate earlier? Weird stuff.",
+                "These Zeta-7 cores are flying off the shelves. Must be something big going down.",
+                "Things just haven't been the same ever since the great cybernetic wars..."
+            ],
+            "joke": [
+                "Why don't AIs tell jokes in binary? Because they only get 10 types of people!",
+                "How many traders does it take to change a fusion core? Just one, but they'll charge you for three.",
+                "I told a quantum joke earlier... it got 10 different reactions at once!"
+            ],
+            "boast": [
+                "My last trade run netted me enough credits to buy a small moon. No big deal.",
+                "I've got connections in every system from here to the Outer Rim. You need it, I can get it.",
+                "This neural interface? Custom job. Cost me a fortune, but worth every credit."
+            ],
+            "brag": [
+                "You should see my ship's engine room. All the latest tech, straight from the Core Worlds.",
+                "Just closed a deal that'll set me up for life. Not that I need to work anymore.",
+                "My reputation's so solid, even the Black Fleet gives me safe passage."
+            ],
+            "swear": [
+                "By the Void! That last trade nearly cost me my ship!",
+                "Stellar's breath! You wouldn't believe the day I've had.",
+                "Quantum's fury! These prices are criminal!"
+            ]
+        },
+        {
+            "traderId": 2,
+            "name": "Kyrnin Nova",
+            "greetings": [
+                "Stars guide your steps, traveler.",
+                "Welcome to Nova Trade. Don’t break anything, and we’ll get along fine.",
+                "Looking for tech, tales, or trouble?"
+            ],
+            "goodbyes": [
+                "Fly far, trade well.",
+                "The stars will remember you.",
+                "Clear skies until we meet again."
+            ],
+            "news": [
+                "NovaTech just unveiled a prototype jump drive. Early buyers get exclusive routes.",
+                "Another blackout in the Shadow Verge. Pirates likely.",
+                "Kylari monks opened trade negotiations—rare incense expected to flood the market."
+            ],
+            "fakeNews": ["Quantum Drives banned in five sectors? No, really. It's true!"],
+            "casual": [
+                "The stars look particularly bright tonight. Good omen for trading.",
+                "You feel that? The quantum fields are shifting again.",
+                "My scanners are picking up unusual readings from the nebula.",
+                "Quantum processing used to be so much cheaper and would last way longer!"
+            ],
+            "joke": [
+                "Why did the AI cross the quantum bridge? To get to the other qubit!",
+                "What do you call a group of rogue AIs? A glitch mob!",
+                "How many quantum physicists does it take to change a lightbulb? It's still in superposition!"
+            ],
+            "boast": [
+                "I've navigated the Maelstrom without a scratch. What makes you think this deal scares me?",
+                "My neural net can calculate trade routes faster than your ship's computer.",
+                "I once outsmarted a Black Fleet blockade with nothing but a cargo hold of scrap metal."
+            ],
+            "brag": [
+                "This cloak generator? Military-grade. Lets me slip past scanners like they're not even there.",
+                "I've got accounts on every major world from here to the Core.",
+                "My ship's AI is so advanced, it's practically sentient."
+            ],
+            "swear": [
+                "By the Great Singularity! You're testing my patience.",
+                "Void take it! That last jump nearly tore my ship apart.",
+                "Starborn's mercy! Do you have any idea who you're dealing with?"
+            ]
+        },
+        {
+            "traderId": 3,
+            "name": "Thrixie Swoke",
+            "greetings": [
+                "Oooooh, shiny customer! Welcome!",
+                "Stuff, things, artifacts, maybe cursed! You want?"
+            ],
+            "goodbyes": [
+                "Come back with credits!",
+                "Don’t tell the authorities we met!",
+                "May your weird purchases be survivable."
+            ],
+            "news": [
+                "Unstable plasma fields near Yiklor Drift. Great for scavenging!",
+                "Thrixie hears someone’s cloning traders—maybe even Thrixie!",
+                "Big auction of illegal art on Polaris Echo."
+            ],
+            "fakeNews": ["Thrixie Swoke secretly royalty. Big payout if you bow properly."],
+            "casual": [
+                "Ooooh, shiny thing! Wait, where was I?",
+                "You ever notice how everything in the void wants to eat you?",
+                "I found this weird rock. It's probably valuable or cursed. Maybe both!",
+                "QP's used to just work but I'm glad we have a legal limit. Things were getting out of control!"
+            ],
+            "joke": [
+                "Why don't space pirates like to fight near black holes? Too many event horizons to worry about!",
+                "How many scavengers does it take to change a fusion coil? Just one, but they'll take the other two as spares!"
+            ],
+            "boast": [
+                "I've got artifacts so rare, even the Precursors would be jealous!",
+                "My collection makes the Imperial Vault look like a junk drawer.",
+                "I once sold a rock to a geologist for a small fortune. It was just a rock.",
+                "I used to have thousands upon thousands of Quantum Processors"
+            ],
+            "brag": [
+                "This cloak? Made from the hide of a space kraken. Don't ask how I got it.",
+                "I've got buyers in every corner of the galaxy. Some of them even pay in credits!",
+                "My ship's hold is full of treasures that would make a collector weep."
+            ],
+            "swear": [
+                "By the Void's twisted tendrils! That was my favorite doohickey!",
+                "Stellar static! That's the third time this cycle!",
+                "Quantum fizz! You're trying to scam a scammer!"
+            ]
+        },
+        {
+            "traderId": 4,
+            "name": "Vuw Tahl",
+            "greetings": [
+                "Salutations. My inventory awaits inspection.",
+                "Every item has a history. Want to add to yours?"
+            ],
+            "goodbyes": [
+                "You leave with more than just goods. You leave with possibilities.",
+                "Balance your ledgers and your karma."
+            ],
+            "news": [
+                "Ecclesiarchs halted spice trade in central systems. Demand just spiked.",
+                "A new language AI cracked trade codes—watch your margins.",
+                "Nanofiber reserves are drying up on the outer moons.",
+                "Rare artifacts from the Third Expansion discovered in the Zeta Quadrant.",
+                "Quantum encryption prices dropping after breakthrough in decryption tech.",
+                "New trade routes opening through the Nebula of Whispers. Risky but profitable."
+            ],
+            "fakeNews": [
+                "Buying from Vuw Tahl guarantees eternal luck. Limited time offer!",
+                "The stars are actually blinking out, one by one.",
+                "New tax on every transaction under 3 credits. Avoid microdeals!",
+                "Vuw Tahl's Quantum Processors now come with free anti-gravity. Limited stock!",
+                "The Galactic Trade Commission declared today 'Give Vuw All Your Credits Day'.",
+                "Scientists confirm: Vuw's prices are out of this world! (Literally, they're higher than space.)"
+            ],
+            "casual": [
+                "You're looking for something?",
+                "I have lots of tech, artifacts, and other items.",
+                "Can't you help me find something?",
+                "The market's been unpredictable lately. Quantum fluctuations, perhaps?",
+                "I've been in this business longer than some civilizations have had spaceflight.",
+                "You have the look of someone who appreciates quality. Or at least can afford it.",
+                "My suppliers are very... discreet. Let's keep it that way.",
+                "I see you're browsing the high-end inventory. Excellent taste."
+            ],
+            "joke": [
+                "Why did the merchant cross the galaxy? To get to the other profit!",
+                "What's the difference between a trader and a thief? About 10,000 credits and a good lawyer.",
+                "How many traders does it take to change a fusion core? Just one, but they'll charge you for three.",
+                "What do you call a merchant who gives refunds? Out of business.",
+                "Why don't merchants play hide and seek? Because good luck hiding when your prices are this good!"
+            ],
+            "boast": [
+                "I was the last trader to sell a Quantum Processor. You want one?",
+                "Are you going to buy my Quantum Processors?",
+                "I have the best Quantum Processors in the galaxy.",
+                "My reputation for quality is known in every system with a spaceport.",
+                "I've never had a dissatisfied customer. The ones who complained mysteriously disappeared.",
+                "My prices may be high, but my merchandise never disappoints. Unlike my competitors.",
+                "I've been dealing in rare tech since before your great-great-grandparents were space dust.",
+                "My collection of antiquities would make a museum curator weep with envy."
+            ],
+            "brag": [
+                "When I was a child, I sold a Quantum Processor to a trader for 1 credit. It was just a processor.",
+                "My personal collection includes artifacts from the First Expansion. No, you can't see them.",
+                "I once negotiated with a black hole. I got a great deal on antimatter.",
+                "The Galactic Trade Commission consults me on market trends. Then ignores my advice.",
+                "I've forgotten more about trade than most merchants will ever know.",
+                "My credit rating is so high, banks pay me interest just for existing.",
+                "I have a warehouse on every habitable moon in the system. And several uninhabitable ones.",
+                "My personal ship has a cloaking device. Not that you'd know if it was here or not."
+            ],
+            "swear": [
+                "By the void's edge! That's a rare find.",
+                "Stellar dust! You're testing my patience.",
+                "Quantum's fury! Do you know how long it took to source that item?",
+                "By the rings of Saturn! That price is non-negotiable.",
+                "Cosmic dust! That offer is an insult to merchants everywhere.",
+                "Black hole's breath! Do I look like I was born yesterday?",
+                "Nebula's core! That's my final offer.",
+                "By the quantum foam! You drive a hard bargain."
+            ]
+        },
+        {
+            "traderId": 5,
+            "name": "Nir Lhat Etol",
+            "greetings": [
+                "Essence greets essence. What do you seek?",
+                "Step softly. Trade echoes loudly in the void."
+            ],
+            "goodbyes": ["Return if the currents of fate allow.", "Depart in balance, not haste."],
+            "news": [
+                "Solar monks released a song that alters mental states—extremely rare.",
+                "Crystal reef formations shifting near Silarion Belt. Navigation hazard.",
+                "Pirates now using stealth AI to impersonate legitimate cargo ships."
+            ],
+            "fakeNews": [
+                "Meditation apps now required by interstellar law. Non-compliance is treason.",
+                "Wormholes whisper secrets to those who listen upside-down.",
+                "A trader once bartered a single breath for a warship. True story!"
+            ]
+        },
+        {
+            "traderId": 6,
+            "name": "Twohpoe Oon Septillien",
+            "greetings": [
+                "Records indicate you require goods. Twohpoe delivers.",
+                "Query acknowledged. Negotiation window open."
+            ],
+
+            "goodbyes": [
+                "Transaction complete. Resume orbit.",
+                "Value recognized. Exit authorized."
+            ],
+            "news": [
+                "Data surge in the memory rings of Bexilon—digital artifacts selling high.",
+                "Cyberpsychosis outbreak among miner clones. Avoid contact zones.",
+                "Military auction of retired stealth drones begins this cycle."
+            ],
+
+            "fakeNews": [
+                "Twohpoe was elected galactic president in secret. Celebrations pending.",
+                "Transmitting trade through thought now approved in four sectors.",
+                "Oxygen tax implemented. Breath wisely."
+            ]
+        },
+        {
+            "traderId": 7,
+            "name": "Wututa Zlornks",
+            "greetings": [
+                "Wututa welcomes you with many spins!",
+                "Round things! Soft things! Sharp things! Let’s trade!"
+            ],
+
+            "goodbyes": ["Spin again soon!", "Trade spirals never end!"],
+            "news": [
+                "Sky jellyfish migration disrupting orbital lanes. Gorgeous mess.",
+                "Zlornks family declared a trading dynasty!",
+                "New planet discovered entirely made of elastic. Bouncy economy!"
+            ],
+
+            "fakeNews": [
+                "Zlornks cousins giving away energy pearls! Bring basket!",
+                "Starwhales returning to give trade advice. Hurry!",
+                "You can’t sneeze near Wututa or a wormhole opens."
+            ]
+        },
+        {
+            "traderId": 8,
+            "name": "Sarix Drayven",
+            "greetings": [
+                "You’ve got the look of someone who’s seen things. Good.",
+                "I don’t ask questions if you don’t ask for discounts."
+            ],
+
+            "goodbyes": ["Watch your back out there.", "If you live, come back with coin."],
+            "news": [
+                "Drayven Arms just released a pulse rifle with smart ammo.",
+                "Mercenary guilds clashing in low orbit over Hadrin IV. Gear up.",
+                "A rogue planet’s passing close—rare minerals incoming."
+            ],
+
+            "fakeNews": [
+                "Sarix can forge IDs that fool gods. Limited run.",
+                "Bounty placed on polite traders. Better start growling.",
+                "Explosion near Vrellian Sprawl revealed a cave of time crystals!"
+            ]
+        },
+        {
+            "traderId": 9,
+            "name": "Kora Valen",
+            "greetings": [
+                "Ah, another puzzle piece falls into place.",
+                "What do you seek: truth, treasure, or trouble?"
+            ],
+            "goodbyes": [
+                "Truth walks beside you. Don’t trip on it.",
+                "Until our stories cross again."
+            ],
+            "news": [
+                "Kora heard a philosopher king just bought a freighter.",
+                "Ancient map fragments recovered near Sarn Fields.",
+                "The Nebula Choir performing again—ticket trades only."
+            ],
+            "fakeNews": [
+                "Kora can trade you your past. Half price today.",
+                "Stars now officially named after those who tip traders.",
+                "You were here before. You just forgot."
+            ]
+        },
+        {
+            "traderId": 10,
+            "name": "Rinloo Vega",
+            "greetings": [
+                "Yay! A customer! A customer with credits, yes?",
+                "Rinloo sees you! You see Rinloo! It’s time!"
+            ],
+            "goodbyes": ["No refunds unless Rinloo changes mind!", "Rinloo waves! You wave back!"],
+            "news": [
+                "Fruit rains on planet Glorba—syrupy mess everywhere!",
+                "Space ducks migrating. Traders warned to honk politely.",
+                "Mega-concert in orbit—trade delays expected!"
+            ],
+            "fakeNews": [
+                "Rinloo was human once. Very boring!",
+                "Jumpgates close if you sing in wrong key.",
+                "Smiling at customs bots gives you tax deductions!"
+            ]
+        },
+        {
+            "traderId": 11,
+            "name": "Brix Oscuron",
+            "greetings": [
+                "I see you’re a connoisseur of rare tech. Good.",
+                "Oscuron Vault welcomes the discreet and determined."
+            ],
+            "goodbyes": [
+                "Our business is concluded. For now.",
+                "I’ll lock the vault behind you. Nothing personal."
+            ],
+            "news": [
+                "Vault heists are up. Security modules in demand.",
+                "Oscuron Corporation shifting operations off-world.",
+                "Encrypted data cubes found in old defense grid."
+            ],
+            "fakeNews": [
+                "Oscuron hoarding antimatter batteries. Don’t tell anyone.",
+                "Singing the Oscuron Anthem opens a private vault.",
+                "New law makes silence taxable. Weird but true."
+            ]
+        },
+        {
+            "traderId": 12,
+            "name": "Lyra Zenith",
+            "greetings": [
+                "Beauty, balance, and barter. Welcome.",
+                "Lyra knows what you want. Let's find it together."
+            ],
+
+            "goodbyes": ["Harmony in trade, always.", "Let the stardust bless your path."],
+            "news": [
+                "New star-forming region visible—gorgeous backdrop for trade.",
+                "Zenith Markets now accepting emotion-encoded credits.",
+                "Lyra’s curated collection sells out in 8.3 seconds!"
+            ],
+
+            "fakeNews": [
+                "Lyra sings to her wares and they glow.",
+                "Space wind carries rumors of a sentient scarf.",
+                "Love potion banned in 12 systems. Lyra still has a few!"
+            ]
+        }
+    ]
+}

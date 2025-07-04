@@ -1,0 +1,177 @@
+.version-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align to the right */
+    margin-left: auto; /* Push to the right */
+    padding: 0 10px;
+    cursor: default;
+    
+    @media (max-width: 576px) {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 1000;
+        margin: 0;
+        padding: 0;
+    }
+
+    &:hover {
+        .version-tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+.version-text {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: #00ff00;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    user-select: none;
+    white-space: nowrap;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+
+    &:hover {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.8);
+        color: #ffff00;
+        border-color: rgba(255, 255, 0, 0.5);
+        box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+    }
+}
+
+.version-tooltip {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    transform: translateY(10px);
+    background: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    width: 300px;
+    max-height: 15rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    pointer-events: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s ease-out;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    text-align: left;
+    white-space: normal;
+    line-height: 1.4;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        right: 10px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent rgba(0, 255, 0, 0.3) transparent;
+    }
+
+    .updates-container {
+        overflow-y: auto;
+        padding-right: 5px;
+        max-height: 400px;
+        margin: 0 -5px 0 0;
+        padding-right: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 255, 0, 0.3) transparent;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 255, 0, 0.3);
+            border-radius: 3px;
+        }
+    }
+
+    .update-item {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .tooltip-title {
+        color: #00ff00;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+        display: block;
+        font-size: 0.9em;
+    }
+
+    .tooltip-date {
+        color: #888;
+        font-size: 0.7em;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .tooltip-changes {
+        font-size: 0.85em;
+        margin: 0.5rem 0;
+
+        ul {
+            list-style-type: none;
+            padding-left: 1rem;
+            margin: 0.25rem 0 0 0;
+
+            li {
+                position: relative;
+                margin-bottom: 0.25rem;
+                padding-left: 1rem;
+
+                &::before {
+                    content: '•';
+                    position: absolute;
+                    left: 0;
+                    color: #00ff00;
+                }
+            }
+        }
+    }
+
+    .tooltip-meta {
+        color: #666;
+        font-size: 0.7em;
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        div {
+            flex: 1 0 calc(50% - 0.5rem);
+            min-width: 0;
+        }
+    }
+}

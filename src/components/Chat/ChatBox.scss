@@ -1,0 +1,349 @@
+@import '../../App.scss';
+
+@keyframes pulse {
+    0% {
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 0.9;
+    }
+}
+
+@keyframes rainbow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes shine {
+    0% {
+        transform: rotate(45deg) translateX(-100%);
+    }
+    100% {
+        transform: rotate(45deg) translateX(100%);
+    }
+}
+
+.ui-tier-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-left: 8px;
+    vertical-align: middle;
+    line-height: 1;
+
+    // Tier colors
+    &[data-tier='zero'] {
+        background-color: #888888;
+    }
+    &[data-tier='worthless'] {
+        background-color: #999;
+    }
+    &[data-tier='awful'] {
+        background-color: #8a9b0f;
+    }
+    &[data-tier='bad'],
+    &[data-tier='verylow'] {
+        background-color: #7f8c8d;
+    }
+    &[data-tier='low'],
+    &[data-tier='journeyman'],
+    &[data-tier='expert'] {
+        background-color: #3498db;
+    }
+    &[data-tier='medium'],
+    &[data-tier='adventurer'],
+    &[data-tier='master'] {
+        background-color: #2ecc71;
+    }
+    &[data-tier='high'],
+    &[data-tier='explorer'],
+    &[data-tier='grandmaster'] {
+        background-color: #f1c40f;
+        animation: pulse 2s infinite;
+    }
+    &[data-tier='ultra'],
+    &[data-tier='professional'],
+    &[data-tier='elite'] {
+        background-color: #e67e22;
+        animation: pulse 1.5s infinite;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    &[data-tier='newbie'] {
+        background-color: #1abc9c;
+    }
+    &[data-tier='apprentice'],
+    &[data-tier='knowledgeable'] {
+        background-color: #9b59b6;
+        animation: rainbow 3s infinite;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    &[data-tier='skilled'],
+    &[data-tier='potential'] {
+        background-color: #e74c3c;
+    }
+    &[data-tier='smart'] {
+        background-color: #8e44ad;
+    }
+    &[data-tier='endgame'] {
+        background: linear-gradient(
+            45deg,
+            #ff0000,
+            #ff7f00,
+            #ffff00,
+            #00ff00,
+            #0000ff,
+            #4b0082,
+            #8b00ff,
+            #ff0000
+        );
+        background-size: 400% 400%;
+        animation: rainbow 3s linear infinite;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.1) 100%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+            z-index: -1;
+        }
+    }
+}
+
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    width: 100%;
+    margin: 10px auto 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background: #333;
+    border: 1px solid #2d2d3d;
+    grid-column: 1 / -1;
+    max-height: 500px;
+    max-width: 42rem;
+
+    position: sticky;
+    top: 5rem;
+    left: 0;
+    text-align: center;
+    z-index: 10;
+    box-sizing: border-box;
+    contain: content;
+    transition: all 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+
+    &.closed {
+        max-height: 2.5rem;
+        overflow: hidden;
+        .messages-container,
+        .chat-input {
+            display: none;
+        }
+    }
+
+    .chat-header {
+        background-color: $hud-bg;
+        color: #e0e0e0;
+        padding: 8px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #3d3d4d;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background-color: $hud-bg;
+            color: #e0e0e0;
+            border-bottom: 1px solid #3d3d4d;
+            user-select: none;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+
+            h3 {
+                margin: 0;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+            .toggle-icon {
+                transition: transform 0.3s ease-in-out;
+                font-size: 0.8rem;
+                opacity: 0.7;
+
+                &.open {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .active-traders {
+            display: flex;
+            gap: 5px;
+
+            .trader-tag {
+                background-color: #3d3d4d;
+                color: #a0a0b0;
+                font-size: 0.7rem;
+                padding: 3px 8px;
+                border-radius: 10px;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: rgba(0, 0, 0, 0.4269);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overscroll-behavior: none; /* Prevent scroll chaining to parent */
+        scroll-behavior: smooth;
+        min-height: 0;
+        max-height: 400px;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        touch-action: pan-y; /* Better touch handling */
+        overscroll-behavior-y: none; /* Prevent scroll chaining on y-axis */
+        overscroll-behavior-x: none; /* Prevent scroll chaining on x-axis */
+        overscroll-behavior-inline: none; /* Prevent scroll chaining for inline scrolling */
+        padding: 1rem;
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #707080;
+            font-style: italic;
+        }
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #3d3d4d;
+            border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: #1a1a25;
+        }
+    }
+
+    .chat-input-container {
+        display: flex;
+        padding: 0.5rem;
+        background-color: #2d2d3d;
+        border-top: 1px solid #3d3d4d;
+        z-index: 2;
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #3d3d4d;
+            border-radius: 20px;
+            background-color: #252535;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+
+            &:focus {
+                border-color: #4a90e2;
+            }
+
+            &::placeholder {
+                color: #707080;
+            }
+        }
+
+        .send-button {
+            margin-left: 10px;
+            padding: 0 15px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: #3a80d2;
+            }
+
+            &:active {
+                transform: translateY(1px);
+            }
+        }
+    }
+}

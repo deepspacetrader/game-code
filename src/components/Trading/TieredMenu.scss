@@ -1,0 +1,96 @@
+.tiered-menu {
+    position: absolute;
+    top: 0.5rem;
+
+    // display: inline-block;
+    // margin: 0 10px;
+    z-index: 100;
+}
+
+.menu-toggle {
+    padding: 6px 12px;
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu-items {
+    background: #222;
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    z-index: 3;
+}
+
+.menu-items button {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 6px;
+    text-align: left;
+}
+
+.tier-medium .menu-toggle {
+    background: #333;
+    color: #fff;
+}
+
+.tier-high .menu-toggle {
+    background: #555;
+    color: #dfd;
+}
+
+.tier-ultra .menu-toggle {
+    background: #777;
+    color: #aff;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+}
+
+/* High-tier layout: row and slide-down animation */
+@keyframes menu-slide-down {
+    0% {
+        transform: scaleY(0.2);
+        opacity: 0.2;
+    }
+
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.tier-high .menu-items,
+.tier-ultra .menu-items {
+    flex-direction: row;
+}
+
+.tier-high.open .menu-items,
+.tier-ultra.open .menu-items {
+    transform-origin: top;
+    animation: menu-slide-down 0.4s ease-in-out forwards;
+}
+
+.tier-high .menu-items button,
+.tier-ultra .menu-items button {
+    margin-right: 8px;
+}

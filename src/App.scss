@@ -1,0 +1,522 @@
+/* Define variables */
+$gold: gold;
+$cheap: green;
+$deal: darken($cheap, 10%);
+$normal: rgb(0, 0, 100);
+$avoid: red;
+$expensive: darken($avoid, 10%);
+$hud-bg: var(--hud-bg);
+$hud-text: var(--hud-text);
+$cell-border: var(--cell-border);
+$cell-bg: var(--cell-bg);
+$accent: var(--accent);
+$error: var(--error);
+$info: var(--info);
+$cell-hover-shadow: var(--cell-hover-shadow);
+
+// Breakpoints
+$breakpoint-mobile: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-large: 1200px;
+
+// Mixins for responsive design
+@mixin mobile {
+    @media (max-width: #{$breakpoint-mobile - 1px}) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-desktop - 1px}) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: $breakpoint-desktop) {
+        @content;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #000;
+    color: #fff;
+    line-height: 1.4;
+    font-size: 16px;
+
+    @include mobile {
+        font-size: 14px;
+    }
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+h3 {
+    text-align: center;
+}
+
+h3.qs {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+    gap: 5px;
+    border: 1px solid;
+    padding: 5px;
+    margin: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+        gap: 3px;
+        padding: 3px;
+        margin: 3px;
+    }
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    }
+}
+
+.cell {
+    padding: 8px;
+    cursor: pointer;
+    position: relative;
+    font-size: 0.9em;
+    word-break: break-word;
+
+    @include mobile {
+        padding: 6px 4px;
+        font-size: 0.8em;
+    }
+
+    @include tablet {
+        padding: 8px 6px;
+    }
+}
+
+.owned {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.cell.bg-gray-200 {
+    background-color: gray;
+}
+
+.cell.bg-blue-500 {
+    background-color: blue;
+}
+
+.hud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px;
+    background-color: #222;
+    color: #fff;
+    align-items: center;
+
+    @include mobile {
+        gap: 6px;
+        padding: 6px;
+        justify-content: space-between;
+    }
+
+    @include tablet {
+        flex-wrap: nowrap;
+        gap: 12px;
+        padding: 10px;
+    }
+}
+
+button {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    white-space: nowrap;
+
+    @include mobile {
+        padding: 4px 8px;
+        font-size: 0.85em;
+    }
+
+    @include tablet {
+        padding: 6px 10px;
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+}
+
+/* Notice overlay for invalid trades */
+.cell-notice {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 100;
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0;
+}
+
+/* Buy/Sell backgrounds */
+.cell-notice--buy {
+    background: rgba(255, 50, 50, 0.8);
+    color: #fff;
+}
+
+.cell-notice--sell {
+    background: rgba(50, 50, 255, 0.8);
+    color: #fff;
+}
+
+/* Medium UI: static text */
+.cell-notice--medium {
+    opacity: 1 !important;
+    transform: none !important;
+    font-size: 0.8rem;
+}
+
+/* High UI: fade away */
+.cell-notice--high {
+    font-size: 0.9rem;
+    animation-name: notice-fade;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+/* Elite UI: larger fade up and away */
+.cell-notice--elite {
+    font-size: 1.2rem;
+    animation-name: notice-move-up;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes notice-fade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes notice-move-up {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) translateY(-20px);
+    }
+}
+
+.cheater {
+    color: red !important;
+
+    &:before {
+        content: 'WARNING: INVALID CREDITS CHEATER ALERT ⚠️';
+        position: absolute;
+        top: -2rem;
+        left: 0;
+        background: rgba(255, 0, 0, 0.5);
+        color: white;
+        padding: 0.2469rem 0.4201337rem;
+        border-radius: 4px;
+        font-size: 0.5rem;
+        z-index: 99999999999;
+    }
+}
+
+/* UI Tier Styles */
+
+.ui-tier-zero,
+.ui-tier-worthless,
+.ui-tier-awful,
+.ui-tier-bad,
+.ui-tier-verylow {
+    --hud-bg: #000;
+    // --hud-border: #222;
+    --hud-text: #fff;
+    // --cell-border: #334;
+    // --cell-hover-shadow: #555;
+    // --accent: #afa;
+    // --error: #f55;
+    // --info: #aff;
+}
+
+.ui-tier-low {
+    --hud-bg: #0a0e14;
+    --hud-border: #222;
+    --hud-text: #fff;
+    --cell-border: #334;
+    --cell-hover-shadow: #555;
+    --accent: #afa;
+    --error: #f55;
+    --info: #aff;
+}
+
+.ui-tier-medium {
+    --hud-bg: #121824;
+    --hud-border: #445;
+    --hud-text: #fff;
+    --cell-border: #556;
+    --cell-hover-shadow: #6af;
+    --accent: #bfb;
+    --error: #f44;
+    --info: #aff;
+}
+
+.ui-tier-high {
+    --hud-bg: #20304e;
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-explorer {
+    --hud-bg: rgb(27, 66, 111);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-professional {
+    --hud-bg: rgb(29, 88, 155);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-skilled {
+    --hud-bg: rgb(18, 44, 172);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-knowledgeable {
+    --hud-bg: rgb(16, 47, 202);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-smart {
+    --hud-bg: rgb(9, 47, 235);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-expert {
+    --hud-bg: rgb(0, 59, 11);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-master {
+    --hud-bg: rgb(52, 85, 0);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-grandmaster {
+    --hud-bg: rgb(118, 150, 65);
+    --hud-border: #667;
+    --hud-text: #fff;
+    --cell-border: #778;
+    --cell-hover-shadow: #8cf;
+    --accent: #cfc;
+    --error: #f22;
+    --info: #bef;
+}
+
+.ui-tier-elite {
+    --hud-bg: #33003e;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-legendary {
+    --hud-bg: #d97700;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+.ui-tier-potential {
+    --hud-bg: #580000;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+.ui-tier-endgame {
+    --hud-bg: #ff0000;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-bg: #000a1a74;
+    --cell-border: gold;
+    --cell-hover-shadow: darken(gold, 55%);
+    --accent: #eee;
+    --error: #f11;
+    --info: #000;
+}
+
+.ui-tier-elite .cell--up {
+    --cell-bg: darkgreen;
+}
+
+.ui-tier-elite .cell--down {
+    --cell-bg: darkred;
+}
+
+.ui-tier-ultra {
+    --hud-bg: #000000;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-newbie {
+    --hud-bg: #111;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-apprentice {
+    --hud-bg: #222;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-journeyman {
+    --hud-bg: #333;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}
+
+.ui-tier-adventurer {
+    /* mirror elite tier styling until new theming is defined */
+    --hud-bg: #444;
+    --hud-border: #889;
+    --hud-text: #ffffff;
+    /* --cell-bg: #000a1a74; */
+    --cell-border: #99a;
+    --cell-hover-shadow: #acf;
+    --accent: #dfd;
+    --error: #f11;
+    --info: #cef;
+}

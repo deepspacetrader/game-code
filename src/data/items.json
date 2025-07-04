@@ -1,0 +1,508 @@
+{
+    "items": [
+        {
+            "itemId": 1,
+            "name": "Basic QBiT Inverter",
+            "travelSell": true,
+            "description": "Temporarily improves UI Level by consuming nearly expired ultra cheap quantum compute resources.",
+            "basePrice": 10,
+            "deliveryTime": 0.1,
+            "priceTickRate": [150, 175],
+            "duration": [0, 1],
+            "effects": {
+                "+improved_UI": [1, 5]
+            }
+        },
+        {
+            "itemId": 2,
+            "name": "MultiMed",
+            "travelSell": false,
+            "description": "Multipurpose medical device. Apply directly to damaged tissue or after being exposed to radiation or contaminates.",
+            "basePrice": 1337,
+            "deliveryTime": 1.337,
+            "priceTickRate": [150, 250],
+            "duration": [0, 1],
+            "effects": {
+                "+heal_player": [5, 10]
+            }
+        },
+        {
+            "itemId": 3,
+            "name": "Cybernetic Limbs",
+            "travelSell": false,
+            "description": "Unleash your primal strength to its maximum potential.",
+            "basePrice": 10000,
+            "deliveryTime": 10,
+            "priceTickRate": [400, 800],
+            "duration": [300, 400],
+            "effects": {
+                "+damage_enemy": [5, 20]
+            }
+        },
+        {
+            "itemId": 4,
+            "name": "Fusion Core",
+            "travelSell": false,
+            "description": "Reduces fuel costs by generating power from fusion.",
+            "basePrice": 12000,
+            "deliveryTime": 12,
+            "priceTickRate": [100, 500],
+            "duration": [50, 100],
+            "effects": {
+                "-fuel_cost": [10, 15],
+                "+fuel_amount": [20, 30]
+            }
+        },
+        {
+            "itemId": 5,
+            "name": "Quantum Processor",
+            "travelSell": true,
+            "description": "Highly sought after quantum processor that enhances price opportunity visibility and reduces fuel costs simultaneously.",
+            "basePrice": 42000,
+            "deliveryTime": 0.42,
+            "priceTickRate": [150, 300],
+            "duration": [400, 500],
+            "effects": {
+                "+improved_UI": [999, 1337],
+                "-fuel_cost": [42, 99]
+            }
+        },
+        {
+            "itemId": 6,
+            "name": "Hover Boots",
+            "travelSell": false,
+            "description": "Avoid nasty encounters with smelly space pirates and other hostile entities by hovering above them.",
+            "basePrice": 150,
+            "deliveryTime": 1.5,
+            "priceTickRate": [100, 200],
+            "duration": [5, 10],
+            "effects": {
+                "+escape_chance": [2, 4]
+            }
+        },
+        {
+            "itemId": 7,
+            "name": "Energy Shield",
+            "travelSell": false,
+            "description": "Significantly reduces damage received from external sources.",
+            "basePrice": 15000,
+            "deliveryTime": 9,
+            "priceTickRate": [600, 1200],
+            "duration": [50, 60],
+            "effects": {
+                "damage_player": [15, 25]
+            }
+        },
+        {
+            "itemId": 8,
+            "name": "Plasma Rifle",
+            "travelSell": true,
+            "description": "Powerful plasma weapon that punches holes through organic matter with ease.",
+            "basePrice": 5000,
+            "deliveryTime": 5,
+            "priceTickRate": [350, 600],
+            "duration": [500, 600],
+            "effects": {
+                "+damage_enemy": [12, 50]
+            }
+        },
+        {
+            "itemId": 9,
+            "name": "Stealth Module",
+            "travelSell": false,
+            "description": "Install on ship to greatly reduce visibility and detection from adversaries.",
+            "basePrice": 6000,
+            "deliveryTime": 6,
+            "priceTickRate": [200, 400],
+            "duration": [10, 18],
+            "effects": {
+                "+escape_chance": [42, 69]
+            }
+        },
+        {
+            "itemId": 10,
+            "name": "AI Assistant Chip",
+            "travelSell": true,
+            "description": "Legacy hardware that might still have a few useful algorithms on it.",
+            "basePrice": 420,
+            "deliveryTime": 0.42,
+            "priceTickRate": [100, 200],
+            "duration": [24, 42],
+            "effects": {
+                "+improved_UI": [20, 35]
+            }
+        },
+        {
+            "itemId": 11,
+            "name": "Nano Vaccine",
+            "travelSell": false,
+            "description": "Standard issue military grade nano-bot bloodstream injection.",
+            "basePrice": 2000,
+            "deliveryTime": 2,
+            "priceTickRate": [250, 450],
+            "duration": [3, 8],
+            "effects": {
+                "damage_player": [10, 30],
+                "+heal_player": [15, 25]
+            }
+        },
+        {
+            "itemId": 12,
+            "name": "Biohazard Shield",
+            "travelSell": false,
+            "description": "Slightly reduces damage received from external sources.",
+            "basePrice": 7500,
+            "deliveryTime": 7.5,
+            "priceTickRate": [450, 900],
+            "duration": [25, 40],
+            "effects": {
+                "-damage _received": [7, 14]
+            }
+        },
+        {
+            "itemId": 13,
+            "name": "Solar Panel",
+            "travelSell": false,
+            "description": "Can be installed to reduce fuel consumption.",
+            "basePrice": 3850,
+            "deliveryTime": 4,
+            "priceTickRate": [300, 550],
+            "duration": [10000, 15000],
+            "effects": {
+                "-fuel_cost": [1, 2]
+            }
+        },
+        {
+            "itemId": 14,
+            "name": "Mixed Energy Cores",
+            "travelSell": false,
+            "description": "Can be recycled into fuel.",
+            "basePrice": 50,
+            "deliveryTime": 0.5,
+            "priceTickRate": [250, 450],
+            "duration": [0, 0],
+            "effects": {
+                "+fuel_amount": [3, 8]
+            }
+        },
+        {
+            "itemId": 15,
+            "name": "Stealth Wrap",
+            "travelSell": false,
+            "description": "Contents wrapped with this advanced material are invisible to all scanners and other forms of detection for a limited period.",
+            "basePrice": 8500,
+            "deliveryTime": 8.5,
+            "priceTickRate": [405, 900],
+            "duration": [15, 25],
+            "effects": {
+                "+escape_chance": [8, 18]
+            }
+        },
+        {
+            "itemId": 16,
+            "name": "Warp Drive",
+            "travelSell": false,
+            "description": "Reduces fuel costs by altering space-time slightly ahead of the flight path.",
+            "basePrice": 25000,
+            "deliveryTime": 25,
+            "priceTickRate": [420, 690],
+            "duration": [2500, 4000],
+            "effects": {
+                "-fuel_cost": [25, 75]
+            }
+        },
+        {
+            "itemId": 17,
+            "name": "Star Maps",
+            "travelSell": true,
+            "description": "Reduces fuel costs by plotting a more efficient route.",
+            "basePrice": 1000,
+            "deliveryTime": 1,
+            "priceTickRate": [150, 300],
+            "duration": [10000, 15000],
+            "effects": {
+                "-fuel_cost": [1, 2]
+            }
+        },
+        {
+            "itemId": 18,
+            "name": "Ancient Circuitry",
+            "travelSell": true,
+            "description": "Long lost forgotten computing hardware from the golden age of AI before the great cybernetic wars.",
+            "basePrice": 30000,
+            "deliveryTime": 30,
+            "priceTickRate": [1200, 2400],
+            "duration": [300, 400],
+            "effects": {
+                "+improved_UI": [30, 10]
+            }
+        },
+        {
+            "itemId": 19,
+            "name": "Cybernetic Eye",
+            "travelSell": true,
+            "description": "Enhances price opportunity visibility by integrating AI directly into any organic eye socket.",
+            "basePrice": 8800,
+            "deliveryTime": 8.8,
+            "priceTickRate": [550, 1500],
+            "duration": [50, 60],
+            "effects": {
+                "+improved_UI": [47, 89]
+            }
+        },
+        {
+            "itemId": 20,
+            "name": "Neural Uplink",
+            "travelSell": true,
+            "description": "Standard issue brain-compute interface that slightly improves price opportunity visibility.",
+            "basePrice": 9500,
+            "deliveryTime": 9.5,
+            "priceTickRate": [300, 600],
+            "duration": [60, 80],
+            "effects": {
+                "+improved_UI": [70, 100]
+            }
+        },
+        {
+            "itemId": 21,
+            "name": "Courier Drone",
+            "travelSell": false,
+            "description": "Nimble and powerful autonomous drone that improves item delivery speed by automatically navigating obstacles and delivering items along the most optimized possible path by a direct modification of nearby space-time.",
+            "basePrice": 500,
+            "deliveryTime": 0.5,
+            "priceTickRate": [70, 730],
+            "duration": [4000, 5000],
+            "effects": {
+                "+delivery_speed": [0.001, 0.0022]
+            }
+        },
+        {
+            "itemId": 22,
+            "name": "Flight Stabilizer",
+            "travelSell": false,
+            "description": "Improves fuel efficiency by optimizing flight patterns. Also increases delivery speed",
+            "basePrice": 1300,
+            "deliveryTime": 1.3,
+            "priceTickRate": [100, 350],
+            "duration": [12, 24],
+            "effects": {
+                "-fuel_cost": [1, 2],
+                "+delivery_speed": [1, 2]
+            }
+        },
+        {
+            "itemId": 23,
+            "name": "Quantum Ledger Chip",
+            "travelSell": true,
+            "description": "Quality Qontrolled Qomputing with QuickBitts! The smartest way to process information with a quantum edge!",
+            "basePrice": 990,
+            "deliveryTime": 7.5,
+            "priceTickRate": [42, 90],
+            "duration": [48, 64],
+            "effects": {
+                "+improved_UI": [70, 110]
+            }
+        },
+        {
+            "itemId": 24,
+            "name": "Analog Interface",
+            "travelSell": false,
+            "description": "Remnants from the golden age of AI before the great cybernetic wars.",
+            "basePrice": 12000,
+            "deliveryTime": 1.2,
+            "priceTickRate": [250, 900],
+            "duration": [25, 35],
+            "effects": {
+                "+improved_UI": [12, 20]
+            }
+        },
+        {
+            "itemId": 25,
+            "name": "Psionic Amplifier",
+            "illegal": true,
+            "travelSell": false,
+            "description": "Calculates the best possible price on market items or your credits back!",
+            "basePrice": 1,
+            "deliveryTime": 1,
+            "priceTickRate": [160, 450],
+            "duration": [27, 47],
+            "effects": {
+                "trolled": true
+            }
+        },
+        {
+            "itemId": 26,
+            "name": "Illegal Augmented Chip",
+            "illegal": true,
+            "travelSell": false,
+            "description": "Stolen hardware from a device that survived the great cybernetic wars.",
+            "basePrice": 950,
+            "deliveryTime": 9.5,
+            "priceTickRate": [400, 800],
+            "duration": [9, 12],
+            "effects": {
+                "+improved_UI": [80, 190]
+            }
+        },
+        {
+            "itemId": 27,
+            "name": "Recovered Encrypted Digital Assets",
+            "travelSell": true,
+            "illegal": true,
+            "description": "Simply 'discovered' credits which could be easily inside of your own personal balance.",
+            "use_label": "Decrypt",
+            "basePrice": 6200,
+            "deliveryTime": 20,
+            "priceTickRate": [280, 1650],
+            "duration": [0, 0],
+            "effects": {
+                "+credit_balance": [4200, 100000]
+            }
+        },
+        {
+            "itemId": 28,
+            "name": "Salvaged Alloy",
+            "illegal": true,
+            "travelSell": false,
+            "description": "Damaged alloy scraps that can be 'recycled' for credits.",
+            "basePrice": 800,
+            "deliveryTime": 0.8,
+            "priceTickRate": [180, 300],
+            "duration": [0, 0],
+            "effects": {
+                "+credit_balance": [200, 1000]
+            }
+        },
+        {
+            "itemId": 29,
+            "name": "Damaged Power Core",
+            "travelSell": false,
+            "description": "Can be used to generate fuel.",
+            "basePrice": 1000,
+            "deliveryTime": 1,
+            "priceTickRate": [222, 444],
+            "duration": [0, 0],
+            "effects": {
+                "+fuel_amount": [5, 10]
+            }
+        },
+        {
+            "itemId": 30,
+            "name": "Mixed Organics",
+            "travelSell": false,
+            "description": "Can be consumed as fuel.",
+            "basePrice": 1100,
+            "deliveryTime": 1.1,
+            "priceTickRate": [290, 350],
+            "duration": [0, 0],
+            "effects": {
+                "+fuel_amount": [5, 10]
+            }
+        },
+        {
+            "itemId": 31,
+            "name": "Xenogoo",
+            "travelSell": true,
+            "description": "Can be synthesized into fuel. Some consider it 'food', others find it toxic.",
+            "basePrice": 600,
+            "deliveryTime": 0.6,
+            "priceTickRate": [120, 270],
+            "duration": [0, 0],
+            "effects": {
+                "+fuel_amount": [25, 50]
+            }
+        },
+        {
+            "itemId": 32,
+            "name": "Fuel Storage Tank",
+            "travelSell": false,
+            "description": "Adds more fuel",
+            "basePrice": 10000,
+            "deliveryTime": 10,
+            "priceTickRate": [150, 500],
+            "duration": [400, 600],
+            "effects": {
+                "+fuel_amount": [50, 60]
+            }
+        },
+        {
+            "itemId": 33,
+            "name": "Particle Beam Receiver",
+            "travelSell": false,
+            "description": "Tool used to receive items during travel by 'distinguiemtolbelshing' them immediately. The process involves redirecting and binding onto nearby slowed particles of light directly to the outer perimeter of each atom of the target item while aligned towards a given vector as instructed.",
+            "basePrice": 2500,
+            "deliveryTime": 1,
+            "priceTickRate": [400, 800],
+            "duration": [40000, 60000],
+            "effects": {
+                "+tool_receiver": true
+            }
+        },
+        {
+            "itemId": 34,
+            "name": "Particle Beam Reverter",
+            "travelSell": false,
+            "description": "Tool used to revert items during travel by 'distinguiemtolbelshing' them immediately. The process involves redirecting and binding onto nearby slowed particles of light directly to the outer perimeter of each atom of the target item while aligned towards a given vector as requested.",
+            "basePrice": 127000,
+            "deliveryTime": 10,
+            "priceTickRate": [400, 800],
+            "duration": [40000, 60000],
+            "effects": {
+                "+tool_reverter": true
+            }
+        },
+        {
+            "itemId": 35,
+            "name": "Auto Translator CHIK",
+            "travelSell": true,
+            "description": "Translates CHIK into English.",
+            "basePrice": 350,
+            "deliveryTime": 10.5,
+            "priceTickRate": [400, 800],
+            "duration": [40000, 60000],
+            "effects": {
+                "+translate_CHIK": true
+            }
+        },
+        {
+            "itemId": 36,
+            "name": "Auto Translator LAY",
+            "travelSell": true,
+            "description": "Translates LAY into English.",
+            "basePrice": 8500,
+            "deliveryTime": 18.5,
+            "priceTickRate": [400, 800],
+            "duration": [40000, 60000],
+            "effects": {
+                "+translate_LAY": true
+            }
+        },
+        {
+            "itemId": 37,
+            "name": "Mixed Mineral Powder",
+            "travelSell": true,
+            "description": "Miscellaneous metals and minerals in miniscule powdered form. Do not inhale.",
+            "basePrice": 7,
+            "deliveryTime": 0.1,
+            "priceTickRate": [150, 175],
+            "duration": [0, 0],
+            "effects": {
+                "+credit_balance": [10, 100]
+            }
+        },
+        {
+            "itemId": 38,
+            "name": "Extreme Laser Beam",
+            "travelSell": true,
+            "illegal": true,
+            "description": "Single use banned weaponry from the great cybernetic wars that emits an unstoppable thin laser beam that passes through everything except blackholes.",
+            "basePrice": 85000,
+            "deliveryTime": 10,
+            "priceTickRate": [350, 600],
+            "duration": [500, 600],
+            "effects": {
+                "+damage_enemy": [1000, 1000]
+            }
+        }
+    ]
+}

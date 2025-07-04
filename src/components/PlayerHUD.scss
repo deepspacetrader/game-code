@@ -1,0 +1,205 @@
+// Import breakpoints from App.scss
+@import '../App.scss';
+
+.spaceship-hud {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    padding: 8px;
+    background: var(--hud-bg);
+    border: 2px solid var(--hud-border);
+    border-radius: 8px;
+    box-shadow: 0 0 10px var(--cell-hover-shadow);
+    overflow: visible;
+
+    @include mobile {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 6px;
+    }
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 8px;
+    }
+
+    @include desktop {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+// Container for the sticky header
+.sticky-hud {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    background: var(--hud-bg);
+    padding: 5px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    box-sizing: border-box;
+    display: block;
+    contain: content;
+    overflow: visible;
+
+    @include mobile {
+        padding: 3px 0;
+    }
+}
+
+.spaceship-hud__galaxy {
+    grid-column: 1 / -1;
+    font-size: 1.1rem;
+    color: var(--hud-text);
+    text-align: center;
+    margin: 0 0 5px 0;
+    padding: 0.3rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include mobile {
+        font-size: 1rem;
+        padding: 0.2rem 0;
+    }
+
+    @include tablet {
+        font-size: 1.1rem;
+    }
+
+    @include desktop {
+        font-size: 1.2rem;
+    }
+}
+
+.hud-item {
+    background: var(--cell-bg);
+    padding: 6px 4px;
+    border: 1px solid var(--cell-border);
+    border-radius: 4px;
+    text-align: center;
+    transition: background 0.3s, box-shadow 0.3s;
+    position: relative;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 50px;
+
+    @include mobile {
+        padding: 4px 2px;
+        font-size: 0.8em;
+        min-height: 45px;
+    }
+
+    @include tablet {
+        padding: 6px 4px;
+    }
+
+    @include desktop {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+}
+
+.hud-item:hover {
+    box-shadow: 0 0 8px var(--cell-hover-shadow);
+}
+
+.hud-item--credit {
+    color: var(--accent);
+}
+
+.hud-item--health {
+    color: var(--info);
+}
+
+.hud-item--fuel {
+    color: var(--error);
+}
+
+.hud-item--avg {
+    color: var(--accent);
+}
+
+.hud-item--speed {
+    color: var(--info);
+}
+
+.hud-item--stealth {
+    color: var(--info);
+}
+
+.hud-item--shield {
+    color: var(--accent);
+}
+
+.cheater {
+    background: var(--cheater-bg) !important;
+}
+
+/* Ship Installed Modules UI */
+.ship-inventory {
+    margin-top: 12px;
+    border-top: 1px solid var(--cell-border);
+    padding-top: 6px;
+
+    @include mobile {
+        margin-top: 8px;
+        padding-top: 4px;
+    }
+
+    @include tablet {
+        margin-top: 12px;
+        padding-top: 6px;
+    }
+}
+
+.module-item {
+    margin: 4px 0;
+}
+
+.module-timer-bar-container {
+    background: var(--cell-border);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.module-timer-bar {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.1s linear;
+}
+
+.floating-message {
+    z-index: 1000;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 2px #fff;
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    animation: hudFloatUpFade 1.5s ease-out forwards;
+}
+
+@keyframes hudFloatUpFade {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    70% {
+        opacity: 1;
+        transform: translateY(-30px) scale(1.08);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(1.12);
+    }
+}

@@ -1,0 +1,55 @@
+{
+    "enemies": [
+        {
+            "enemyId": 0,
+            "rank": "D",
+            "name": "Scavenger",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "health": 50,
+            "weapons": [],
+            "shield": false,
+            "stealth": false
+        },
+        {
+            "enemyId": 1,
+            "rank": "C",
+            "name": "Market Police",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "health": 150,
+            "shield": false,
+            "stealth": false
+        },
+        {
+            "enemyId": 2,
+            "rank": "B",
+            "name": "Thief",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "health": 100,
+            "shield": false,
+            "stealth": true
+        },
+        {
+            "enemyId": 3,
+            "rank": "A",
+            "name": "Thug",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "health": 250,
+            "shield": true,
+            "stealth": false
+        },
+        {
+            "enemyId": 4,
+            "rank": "S",
+            "name": "Military",
+            "languageRange": ["EN"],
+            "homeGalaxy": "Vrellian Sprawl",
+            "health": 110,
+            "shield": true,
+            "stealth": false
+        }
+    ]
+}

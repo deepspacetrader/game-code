@@ -1,0 +1,45 @@
+{
+    "versions": [
+        {
+            "number": "1.0.3",
+            "date": "2025-07-03",
+            "title": "New Additions and Bug Fixes",
+            "changes": [
+                "Added tutorial",
+                "Added enemy encounters"
+            ]
+        },
+        {
+            "number": "1.0.2",
+            "date": "2025-05-30",
+            "title": "New Features",
+            "changes": [
+                "Added new items to the market",
+                "Implemented save/load functionality",
+                "Improved event system",
+                "Expanded Admin Debug system"
+            ]
+        },
+        {
+            "number": "1.0.1",
+            "date": "2025-05-28",
+            "title": "Bug Fixes",
+            "changes": [
+                "Fixed inventory display issues",
+                "Improved market price calculations",
+                "Minor UI tweaks and optimizations"
+            ]
+        },
+        {
+            "number": "1.0.0",
+            "date": "2025-05-27",
+            "title": "Initial Release",
+            "description": "",
+            "changes": [
+                "Initial game launch",
+                "Core trading mechanics implemented",
+                "Basic UI with dark theme"
+            ]
+        }
+    ]
+}

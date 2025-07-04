@@ -1,0 +1,138 @@
+// Portal target styles
+#portal-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.signal-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: eyelid 0.1337s ease-in-out forwards;
+
+    &.rotating-clockwise {
+        animation: rotateClockwise 42s linear infinite;
+    }
+
+    &.rotating-counter-clockwise {
+        animation: rotateCounterClockwise 69s linear infinite;
+    }
+}
+
+@keyframes rotateClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateCounterClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes eyelid {
+    0% {
+        transform: scaleY(0.2);
+        opacity: 0.2;
+    }
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.signal-canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signal-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+    object-fit: cover;
+}
+
+.signal-animation {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 11;
+}
+
+.travel-signal {
+    position: relative;
+    color: #fff;
+    border-radius: 50%;
+    border: inset 0.13374269rem gold;
+    width: 60vmin;
+    height: 60vmin;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+.travel-signal .signal-image {
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // width: 100%;
+    // height: 100%;
+    // object-fit: cover;
+}
+
+.travel-signal .travel-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 1rem;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+@keyframes toggle-signal {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

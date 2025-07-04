@@ -1,0 +1,228 @@
+.ascii-wave-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    max-height: 420px;
+    background: rgba(0, 20, 0, 0.3);
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+
+    /* Custom scrollbar styling */
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #00ff00;
+        border-radius: 2px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 255, 0, 0.1);
+        border-radius: 2px;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .ascii-wave-container {
+        padding: 10px;
+
+        &::selection {
+            color: none;
+            background: none;
+        }
+
+        .ascii-art {
+            font-size: 6px;
+            padding: 8px;
+            &::selection {
+                color: none;
+                background: none;
+            }
+        }
+        pre {
+            &::selection {
+                color: none;
+                background: none;
+            }
+        }
+    }
+}
+
+/* Ensure the component doesn't affect the page layout */
+.ascii-wave-animator {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    border: 2px solid red;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    line-height: 1;
+    white-space: pre;
+    user-select: none;
+    cursor: default;
+
+    .ascii-content {
+        position: relative;
+        z-index: 2;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    .scan-point {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background-color: rgba(0, 255, 0, 0.7);
+        border: 2px solid #0f0;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: auto;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+
+        &:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            background-color: rgba(0, 255, 0, 0.9);
+        }
+    }
+
+    .scan-instructions {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #0f0;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 14px;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .scan-failed,
+    .scan-success {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px 30px;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        z-index: 20;
+        text-shadow: 0 0 5px currentColor;
+        animation: fadeInOut 2s ease-in-out infinite;
+        backdrop-filter: blur(2px);
+    }
+
+    .scan-failed {
+        background-color: rgba(255, 0, 0, 0.2);
+        color: #ff4d4d;
+        border: 1px solid #ff4d4d;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    }
+
+    .scan-success {
+        background-color: rgba(0, 255, 0, 0.1);
+        color: #4cff4c;
+        border: 1px solid #4cff4c;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+
+    @keyframes fadeInOut {
+        0%,
+        100% {
+            opacity: 0.7;
+        }
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .loading-placeholder {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #0f0;
+        font-family: 'Courier New', monospace;
+        white-space: nowrap;
+    }
+
+    /* Particle effects */
+    #tsparticles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* Success particle effect */
+    #success-particles {
+        .particle {
+            background: radial-gradient(circle, #4fc3f7 0%, #29b6f6 50%, #0288d1 100%);
+            box-shadow: 0 0 10px #4fc3f7, 0 0 20px #4fc3f7;
+        }
+    }
+
+    /* Failure particle effect */
+    #failed-particles {
+        .particle {
+            background: radial-gradient(circle, #8b4513 0%, #a0522d 50%, #5d4037 100%);
+            box-shadow: 0 0 5px #8b4513;
+        }
+    }
+
+    /* Glow effect for success */
+    @keyframes successGlow {
+        0%,
+        100% {
+            box-shadow: 0 0 5px #4fc3f7, 0 0 10px #4fc3f7;
+        }
+        50% {
+            box-shadow: 0 0 15px #4fc3f7, 0 0 30px #4fc3f7;
+        }
+    }
+
+    /* Shake effect for failure */
+    @keyframes shake {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-5px);
+        }
+        75% {
+            transform: translateX(5px);
+        }
+    }
+
+    .shake {
+        animation: shake 0.2s ease-in-out infinite;
+    }
+}

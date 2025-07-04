@@ -1,0 +1,195 @@
+.inventory {
+    border: 2px solid #444;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.25);
+
+    &:hover {
+        border: 2px dashed #444;
+    }
+}
+
+.inventory-title {
+    position: relative;
+    z-index: 1;
+}
+
+.inventory {
+    min-height: 10rem;
+    position: relative;
+    &.grid{
+        border: 2px solid #444;
+        &:hover {
+            border: 2px dashed #444;
+        }
+    }  
+
+    .inv-list {
+        border: 2px solid #444;
+        height: auto;
+        gap: 1rem;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
+
+        p {
+            margin: 0;
+        }
+
+        button {
+            margin: 0 0.25rem 0 0;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+
+    .info-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .cell .inv-item {
+        border: 1px solid dashed var(--cell-border);
+        padding: 4px;
+        margin: 4px;
+        margin: 0;
+        border: none;
+        border-radius: 6px;
+        box-shadow: none;
+        padding: 0;
+        background: none;
+
+        &:hover {
+            cursor: default;
+        }
+    }
+}
+
+.item-tooltip {
+    .tooltip-inner {
+        color: #fff;
+        border: 1px solid gold;
+        font-weight: bold;
+        position: relative;
+    }
+}
+
+.use-buttons {
+    margin: 0.25rem 0;
+}
+
+.sell-all-btn {
+    border: 2px solid transparent;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sell-all-btn.profit {
+    background-color: rgba(0, 128, 0, 0.15);
+    border-color: green;
+    color: white;
+}
+
+.sell-all-btn.loss {
+    background-color: rgba(255, 0, 0, 0.15);
+    border-color: red;
+    color: white;
+}
+
+/* Profit tier effects */
+.sell-all-btn.profit.ui-tier-low {
+    opacity: 0.8;
+}
+
+.sell-all-btn.profit.ui-tier-medium {
+    box-shadow: 0 0 6px rgba(0, 128, 0, 0.6);
+}
+
+.sell-all-btn.profit.ui-tier-high {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.sell-all-btn.profit.ui-tier-ultra {
+    animation: pulse 1.5s ease-in-out infinite;
+    transform: scale(1.05);
+}
+
+.sell-all-btn.profit.ui-tier-elite {
+    animation: pulse 1s ease-in-out infinite, wiggle 0.5s ease-in-out infinite;
+    transform: scale(1.1);
+}
+
+/* Loss tier effects */
+.sell-all-btn.loss.ui-tier-medium {
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+}
+
+.sell-all-btn.loss.ui-tier-high {
+    transform: scale(0.8);
+}
+
+.sell-all-btn.loss.ui-tier-ultra {
+    transform: scale(0.75);
+}
+
+.sell-all-btn.loss.ui-tier-elite {
+    animation: wiggleElite 0.25s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes wiggle {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(2deg);
+    }
+
+    75% {
+        transform: rotate(-2deg);
+    }
+}
+
+@keyframes wiggleElite {
+    0%,
+    100% {
+        transform: translateX(0) scale(0.3);
+    }
+
+    25% {
+        transform: translateX(-1px) scale(0.3);
+    }
+
+    75% {
+        transform: translateX(1px) scale(0.3);
+    }
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}

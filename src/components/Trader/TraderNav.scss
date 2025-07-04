@@ -1,0 +1,2164 @@
+/* Mixins for UI Tiers */
+@import '../../App.scss';
+
+// Mixins for responsive design
+@mixin mobile {
+    @media (max-width: #{$breakpoint-mobile - 1px}) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: $breakpoint-mobile) and (max-width: #{$breakpoint-desktop - 1px}) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: $breakpoint-desktop) {
+        @content;
+    }
+}
+
+// Base button styles (level 0-49)
+@mixin button-base-styles {
+    width: 100%;
+    margin: 0.15rem 0;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    background: rgba(20, 20, 20, 0.2);
+    color: rgba(140, 140, 140, 0.6);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include mobile {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+        margin: 0.1rem 0;
+    }
+
+    @include tablet {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.6rem;
+    }
+
+    @include desktop {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    /* No hover effects until level 50 */
+    &:hover {
+        background: rgba(20, 20, 20, 0.2);
+    }
+}
+
+// Ultra button styles (level 75-99)
+@mixin button-ultra-styles {
+    @include button-base-styles;
+    color: rgba(180, 180, 180, 0.9);
+    background: rgba(30, 30, 30, 0.4);
+    border: 1px solid rgba(100, 100, 100, 0.6);
+
+    /* Only add transitions and animations at level 50+ */
+    .ui-tier-50 &,
+    .ui-tier-51 &,
+    [class^='ui-tier-'][class$='-50'],
+    [class^='ui-tier-'][class$='-51'] {
+        transition: all 0.2s ease;
+    }
+
+    /* Add hover effects starting at level 50 */
+    &:hover {
+        background: rgba(40, 40, 40, 0.5);
+        color: rgba(200, 200, 200, 0.95);
+
+        /* Only add transform on hover for level 50+ */
+        .ui-tier-50 &,
+        .ui-tier-51 &,
+        [class^='ui-tier-'][class$='-50'],
+        [class^='ui-tier-'][class$='-51'] {
+            transform: translateY(-1px);
+        }
+    }
+}
+
+// Explorer button styles (level 100-199)
+@mixin button-explorer-styles {
+    @include button-ultra-styles;
+    color: rgba(200, 200, 200, 0.95);
+    background: rgba(35, 35, 35, 0.5);
+    border: 1px solid rgba(120, 120, 120, 0.7);
+
+    /* Slightly more pronounced hover effect */
+    &:hover {
+        background: rgba(45, 45, 45, 0.6);
+        transform: translateY(-1px);
+    }
+}
+
+// Master button styles (level 200+)
+@mixin button-master-styles {
+    @include button-explorer-styles;
+    background: linear-gradient(
+        to right,
+        rgba(40, 40, 40, 0.6),
+        rgba(50, 50, 50, 0.6),
+        rgba(40, 40, 40, 0.6)
+    );
+    border: 1px solid rgba(140, 140, 140, 0.8);
+
+    /* More pronounced hover effect for master level */
+    &:hover {
+        background: linear-gradient(
+            to right,
+            rgba(50, 50, 50, 0.7),
+            rgba(60, 60, 60, 0.7),
+            rgba(50, 50, 50, 0.7)
+        );
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// Base info styles (level 0-49)
+@mixin info-base-styles {
+    padding: 0.4rem 0.6rem;
+    margin: 0.4rem 0;
+    font-size: 0.8rem;
+    text-align: center;
+    cursor: default;
+    user-select: text;
+    border-radius: 1px;
+    color: rgba(100, 100, 100, 0.7);
+    background: rgba(10, 10, 10, 0.1);
+    border: 1px solid rgba(50, 50, 50, 0.2);
+}
+
+// Ultra info styles (level 75-99)
+@mixin info-ultra-styles {
+    @include info-base-styles;
+    color: rgba(140, 140, 140, 0.8);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+
+    /* Only add animation at level 50+ */
+    .ui-tier-50 &,
+    .ui-tier-51 &,
+    [class^='ui-tier-'][class$='-50'],
+    [class^='ui-tier-'][class$='-51'] {
+        animation: subtle-pulse 4s ease-in-out infinite;
+    }
+}
+
+// Explorer info styles (level 100-199)
+@mixin info-explorer-styles {
+    @include info-ultra-styles;
+    color: rgba(180, 180, 180, 0.9);
+    background: rgba(20, 20, 20, 0.4);
+    border: 1px solid rgba(100, 100, 100, 0.6);
+    animation: soft-glow 5s ease-in-out infinite;
+}
+
+// Master info styles (level 200+)
+@mixin info-master-styles {
+    @include info-explorer-styles;
+    color: rgba(200, 200, 200, 0.95);
+    background: linear-gradient(
+        to right,
+        rgba(30, 30, 30, 0.5),
+        rgba(40, 40, 40, 0.5),
+        rgba(30, 30, 30, 0.5)
+    );
+    border: 1px solid rgba(140, 140, 140, 0.8);
+    animation: enhanced-glow 4s ease-in-out infinite;
+}
+
+// Endgame info styles (level 500+)
+@mixin info-endgame-styles {
+    @include info-master-styles;
+    color: rgba(220, 220, 220, 0.95);
+    background: linear-gradient(
+        to right,
+        rgba(40, 40, 40, 0.6),
+        rgba(60, 60, 60, 0.6),
+        rgba(40, 40, 40, 0.6)
+    );
+    border: 1px solid rgba(180, 180, 180, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    animation: enhanced-glow 3s ease-in-out infinite;
+}
+
+/* TraderNav layout */
+.trader-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    @media (max-width: #{$breakpoint-mobile - 1px}) {
+        gap: 0;
+    }
+}
+
+// Container for the sticky header
+.main-trader {
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(05, 0, 0, 0.5);
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    contain: content;
+    max-height: 60vh;
+
+    @include mobile {
+        padding: 3px 0;
+        max-height: 30vh;
+    }
+
+    .trader-nav {
+        transition: opacity 0.3s ease-out;
+        transform-origin: top center;
+    }
+
+    .trader-actions {
+        transition: opacity 0.3s ease-out 0.1s;
+        transform-origin: top center;
+        overflow: hidden;
+    }
+
+
+}
+
+.trader-buttons {
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.btn--travel {
+    background: $accent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+
+    p {
+        margin: 0;
+        text-align: center;
+    }
+
+    .fuel-cost {
+        font-size: 0.85rem;
+        @include mobile {
+            font-size: 0.65rem;
+        }
+    }
+}
+
+.btn--travel__prev,
+.btn--travel__next {
+    max-width: 10rem;
+    text-align: center;
+    margin: 0.5rem 0;
+    display: block;
+
+    @include mobile {
+        padding: 0.25rem 0.4rem;
+        margin: 0 0.25rem;
+        font-size: 0.6rem;
+    }
+
+    @include tablet {
+        max-width: 9rem;
+    }
+
+    @include desktop {
+        max-width: 10rem;
+    }
+}
+
+.btn--travel__next {
+    @include mobile {
+        padding: 0.25rem 0.4rem;
+        margin: 0 -0.25rem;
+        font-size: 0.6rem;
+    }
+}
+
+.button-container {
+    p {
+        margin: 0;
+        font-size: 0.75rem;
+    }
+    &.next-trader {
+        float: left;
+    }
+    &.prev-trader {
+        float: right;
+    }
+}
+
+.trader-actions {
+    gap: 1rem;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+
+    p {
+        margin: 0 auto;
+        text-align: center;
+    }
+}
+
+.action-fuel,
+.action-galaxy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    max-width: 20rem;
+    margin: 0 0 1rem 0;
+    position: relative;
+    transition: all 0.3s ease;
+
+    .info {
+        margin: 0 0 0.5rem 0;
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid transparent;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    button {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border: 1px solid #444;
+        background: #333;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        &:hover::before {
+            left: 100%;
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+}
+
+// UI Tier Styling - Using improvedUILevel (numeric) for granular control
+// and ui-tier-{name} for named tiers
+
+// Mixins for reusable styles
+@mixin info-base-styles {
+    transition: all 0.3s ease;
+}
+
+@mixin button-base-styles {
+    transition: all 0.3s ease;
+}
+
+@mixin info-ultra-styles {
+    background: linear-gradient(to right, rgba(30, 30, 30, 0.9), rgba(50, 50, 50, 0.9));
+    border: 1px solid #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 215, 0, 0.05),
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 215, 0, 0.05)
+        );
+        z-index: -1;
+    }
+}
+
+@mixin button-base-styles {
+    transition: all 0.2s ease;
+    width: 100%;
+    margin: 0.2rem 0;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(60, 60, 60, 0.3);
+    border-radius: 1px;
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    background: rgba(20, 20, 20, 0.2);
+    color: rgba(160, 160, 160, 0.5);
+
+    &:hover {
+        background: rgba(30, 30, 30, 0.3);
+    }
+}
+
+@mixin info-ultra-styles {
+    @include info-base-styles;
+    color: rgba(140, 140, 140, 0.8);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+}
+
+@mixin button-master-styles {
+    @include button-base-styles;
+    background: linear-gradient(45deg, #222, #333, #222);
+    border: 1px solid rgba(200, 200, 200, 0.95);
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+        background: linear-gradient(45deg, #2a2a2a, #3a3a3a, #2a2a2a);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            rgba(220, 220, 220, 0.1),
+            rgba(255, 255, 255, 0.05),
+            transparent
+        );
+        transform: rotate(45deg);
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    &:hover::after {
+        opacity: 0.5;
+    }
+}
+
+@mixin button-endgame-styles {
+    @include button-master-styles;
+    background: linear-gradient(45deg, #333, #222, #333);
+    border: 2px solid #ffd700;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 215, 0, 0.3),
+            rgba(255, 255, 255, 0.1),
+            transparent
+        );
+        transform: rotate(45deg);
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.6s;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+
+        &::before {
+            opacity: 0.7;
+            animation: shine 1.5s infinite;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Base styles for all levels
+.action-fuel,
+.action-galaxy {
+    .info {
+        @include info-base-styles;
+    }
+
+    button {
+        @include button-base-styles;
+    }
+}
+
+// Level 0 - Zero
+.ui-tier-zero {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: none;
+            border: 0px none;
+        }
+
+        button {
+            background: #222;
+            border: 1px solid #333;
+            color: #555;
+        }
+    }
+}
+
+// Levels 0-4: Worthless
+.ui-tier-worthless {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: rgba(0, 0, 0, 0.7);
+            border: 0px none;
+        }
+
+        button {
+            background: #333;
+            border: 1px solid #666;
+            color: #aaa;
+        }
+    }
+}
+
+// Levels 5-9: Awful
+.ui-tier-awful {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: rgba(0, 0, 0, 0.7);
+            border: 0px none;
+        }
+
+        button {
+            background: #3a3a3a;
+            border: 1px solid #777;
+            color: #bbb;
+        }
+    }
+}
+
+// Levels 10-14: Bad
+.ui-tier-bad {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: rgba(20, 20, 20, 0.75);
+            border: 0px none;
+        }
+
+        button {
+            background: #444;
+            border: 1px solid #999;
+            color: #ccc;
+        }
+    }
+}
+
+// Levels 15-19: Very Low
+.ui-tier-verylow {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #aaa;
+        }
+
+        button {
+            background: #555;
+            border: 1px solid #aaa;
+            color: #ddd;
+        }
+    }
+}
+
+// Levels 20-24: Low
+.ui-tier-low {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: rgba(20, 20, 20, 0.85);
+            border: 1px solid #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        button {
+            background: linear-gradient(to bottom, #444, #333);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            text-shadow: 0 0 3px rgba(255, 215, 0, 0.5);
+        }
+    }
+}
+
+// Levels 25-49: Medium
+.ui-tier-medium {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: linear-gradient(to right, rgba(30, 30, 30, 0.85), rgba(40, 40, 40, 0.85));
+            border: 1px solid #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        button {
+            background: linear-gradient(45deg, #333, #222, #333);
+            border: 1px solid #ffd700;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
+        }
+    }
+}
+
+// Levels 50-74: High
+.ui-tier-high {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            background: linear-gradient(to right, rgba(30, 30, 30, 0.9), rgba(50, 50, 50, 0.9));
+            border: 1px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        button {
+            @include button-ultra-styles;
+        }
+    }
+}
+
+// Levels 75-99: Ultra
+.ui-tier-ultra {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-ultra-styles;
+        }
+
+        button {
+            @include button-ultra-styles;
+        }
+    }
+}
+
+// Levels 100-149: Newbie
+.ui-tier-newbie {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-ultra-styles;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        button {
+            @include button-ultra-styles;
+        }
+    }
+}
+
+// Levels 150-199: Apprentice
+.ui-tier-apprentice {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-ultra-styles;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(
+                    45deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    rgba(255, 215, 0, 0.2),
+                    rgba(255, 255, 255, 0.1),
+                    transparent
+                );
+                transform: rotate(45deg);
+                animation: shine 6s infinite;
+                z-index: -1;
+            }
+        }
+
+        button {
+            @include button-ultra-styles;
+            position: relative;
+            overflow: hidden;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent
+                );
+                transition: 0.5s;
+            }
+
+            &:hover::before {
+                left: 100%;
+            }
+        }
+    }
+}
+
+// Levels 200-249: Journeyman
+.ui-tier-journeyman {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-ultra-styles;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+            animation: pulse 4s infinite;
+        }
+
+        button {
+            @include button-ultra-styles;
+            animation: pulse 3s infinite;
+
+            &:hover {
+                animation: pulse 1.5s infinite;
+            }
+        }
+    }
+}
+
+// Levels 250-299: Adventurer
+.ui-tier-adventurer {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-base-styles; // Use base styles instead of ultra for adventurer tier
+            background: linear-gradient(
+                45deg,
+                rgba(40, 35, 10, 0.9),
+                rgba(60, 50, 20, 0.9),
+                rgba(40, 35, 10, 0.9)
+            );
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            animation: pulse 3s infinite, glow 4s infinite alternate;
+
+            &::before {
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 215, 0, 0.1),
+                    rgba(255, 255, 255, 0.2),
+                    rgba(255, 215, 0, 0.1)
+                );
+            }
+        }
+
+        button {
+            background: linear-gradient(45deg, #222, #111, #222);
+            border: 2px solid #ffd700;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: pulse 2s infinite, glow 3s infinite alternate;
+
+            &::before {
+                animation: shine 3s infinite;
+            }
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 20px rgba(255, 215, 0, 0.7);
+                animation: pulse 1s infinite, glow 2s infinite alternate;
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+        }
+    }
+}
+
+// Levels 300-499: Explorer
+.ui-tier-explorer {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-explorer-styles;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+        }
+
+        button {
+            @include button-explorer-styles;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+    }
+}
+
+// Levels 500-999: Professional
+.ui-tier-professional {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-master-styles;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+        }
+
+        button {
+            @include button-master-styles;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+        }
+    }
+}
+
+// Levels 1000-1499: Skilled
+.ui-tier-skilled {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-master-styles;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+            animation: pulse 3s infinite, glow 3s infinite alternate;
+        }
+
+        button {
+            @include button-master-styles;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            animation: pulse 3s infinite, glow 3s infinite alternate;
+
+            &:hover {
+                animation: pulse 1s infinite, glow 2s infinite alternate;
+            }
+        }
+    }
+}
+
+// Levels 1500-1999: Knowledgeable
+.ui-tier-knowledgeable {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 45px rgba(255, 215, 0, 1);
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.9);
+        }
+    }
+}
+
+// Levels 2000-2499: Smart
+.ui-tier-smart {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+            animation: pulse 2s infinite, glow 2s infinite alternate;
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+            animation: pulse 2s infinite, glow 2s infinite alternate;
+
+            &:hover {
+                animation: pulse 1s infinite, glow 1s infinite alternate;
+            }
+        }
+    }
+}
+
+// Levels 2500-4999: Expert
+.ui-tier-expert {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 1);
+            animation: pulse 1.5s infinite, glow 1.5s infinite alternate;
+
+            &::before {
+                animation: shine 3s infinite;
+            }
+
+            &::after {
+                animation: shine 1.5s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+            animation: pulse 1.5s infinite, glow 1.5s infinite alternate;
+
+            &::before {
+                animation: shine 3s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.75s infinite, glow 0.75s infinite alternate;
+            }
+        }
+    }
+}
+
+// Levels 5000-9999: Master
+.ui-tier-master {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 70px rgba(255, 215, 0, 1);
+            animation: pulse 1s infinite, glow 1s infinite alternate;
+
+            &::before {
+                animation: shine 2s infinite;
+            }
+
+            &::after {
+                animation: shine 1s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 1);
+            animation: pulse 1s infinite, glow 1s infinite alternate;
+
+            &::before {
+                animation: shine 2s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.5s infinite, glow 0.5s infinite alternate;
+                transform: translateY(-5px) scale(1.02);
+            }
+        }
+    }
+}
+
+// Levels 10000-14999: Grandmaster
+.ui-tier-grandmaster {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 80px rgba(255, 215, 0, 1);
+            animation: pulse 0.8s infinite, glow 0.8s infinite alternate;
+
+            &::before {
+                animation: shine 1.5s infinite;
+            }
+
+            &::after {
+                animation: shine 0.8s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 70px rgba(255, 215, 0, 1);
+            animation: pulse 0.8s infinite, glow 0.8s infinite alternate;
+
+            &::before {
+                animation: shine 1.5s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.4s infinite, glow 0.4s infinite alternate;
+                transform: translateY(-5px) scale(1.03);
+            }
+        }
+    }
+}
+
+// Levels 15000-24999: Elite
+.ui-tier-elite {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 90px rgba(255, 215, 0, 1);
+            animation: pulse 0.6s infinite, glow 0.6s infinite alternate;
+
+            &::before {
+                animation: shine 1.2s infinite;
+            }
+
+            &::after {
+                animation: shine 0.6s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 80px rgba(255, 215, 0, 1);
+            animation: pulse 0.6s infinite, glow 0.6s infinite alternate;
+
+            &::before {
+                animation: shine 1.2s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.3s infinite, glow 0.3s infinite alternate;
+                transform: translateY(-5px) scale(1.04);
+            }
+        }
+    }
+}
+
+// Levels 25000-49999: Legendary
+.ui-tier-legendary {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+            animation: pulse 0.4s infinite, glow 0.4s infinite alternate;
+
+            &::before {
+                animation: shine 1s infinite;
+            }
+
+            &::after {
+                animation: shine 0.4s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 90px rgba(255, 215, 0, 1);
+            animation: pulse 0.4s infinite, glow 0.4s infinite alternate;
+
+            &::before {
+                animation: shine 1s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.2s infinite, glow 0.2s infinite alternate;
+                transform: translateY(-5px) scale(1.05);
+            }
+        }
+    }
+}
+
+// Levels 50000-99999: Potential
+.ui-tier-potential {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 120px rgba(255, 215, 0, 1);
+            animation: pulse 0.2s infinite, glow 0.2s infinite alternate;
+
+            &::before {
+                animation: shine 0.8s infinite;
+            }
+
+            &::after {
+                animation: shine 0.2s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 100px rgba(255, 215, 0, 1);
+            animation: pulse 0.2s infinite, glow 0.2s infinite alternate;
+
+            &::before {
+                animation: shine 0.8s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.1s infinite, glow 0.1s infinite alternate;
+                transform: translateY(-5px) scale(1.06);
+            }
+        }
+    }
+}
+
+// Level 100000+: Endgame
+.ui-tier-endgame {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+            box-shadow: 0 0 150px rgba(255, 215, 0, 1);
+            animation: pulse 0.1s infinite, glow 0.1s infinite alternate;
+
+            &::before {
+                animation: shine 0.6s infinite;
+            }
+
+            &::after {
+                animation: shine 0.1s infinite;
+            }
+        }
+
+        button {
+            @include button-endgame-styles;
+            box-shadow: 0 0 120px rgba(255, 215, 0, 1);
+            animation: pulse 0.1s infinite, glow 0.1s infinite alternate;
+
+            &::before {
+                animation: shine 0.6s infinite;
+            }
+
+            &:hover {
+                animation: pulse 0.05s infinite, glow 0.05s infinite alternate;
+                transform: translateY(-5px) scale(1.07);
+            }
+        }
+    }
+}
+
+// Mixin for explorer level info styles
+@mixin info-explorer-styles {
+    @include info-ultra-styles;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+
+        z-index: -1;
+    }
+}
+
+// Mixin for explorer level button styles
+@mixin button-explorer-styles {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    &:hover::before {
+        left: 100%;
+    }
+}
+
+// Levels 500-2499: Explorer to Knowledgeable
+.ui-tier-explorer,
+.ui-tier-professional,
+.ui-tier-skilled,
+.ui-tier-knowledgeable {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-explorer-styles;
+        }
+
+        button {
+            @include button-explorer-styles;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+        }
+    }
+}
+
+// Mixin for master level styles
+@mixin info-master-styles {
+    @include info-explorer-styles;
+    animation: pulse 2s infinite;
+
+    &::before {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 215, 0, 0.2),
+            rgba(255, 255, 255, 0.1)
+        );
+        animation: shine 8s infinite;
+    }
+}
+
+@mixin button-master-styles {
+    @include button-explorer-styles;
+    background: linear-gradient(45deg, #222, #111, #222);
+    border: 1px solid #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+
+    &::before {
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 25px rgba(255, 215, 0, 0.8);
+    }
+}
+
+// Levels 2500-9999: Smart to Master
+.ui-level-20,
+.ui-level-21,
+.ui-level-22,
+.ui-level-23,
+.ui-level-24,
+.ui-tier-smart,
+.ui-tier-expert,
+.ui-tier-master {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-master-styles;
+        }
+
+        button {
+            @include button-master-styles;
+        }
+    }
+}
+
+// Levels 10000+: Grandmaster to Endgame
+.ui-level-25,
+.ui-level-26,
+.ui-level-27,
+.ui-level-28,
+.ui-level-29,
+.ui-tier-grandmaster,
+.ui-tier-elite,
+.ui-tier-legendary,
+.ui-tier-potential,
+.ui-tier-endgame {
+    .action-fuel,
+    .action-galaxy {
+        .info {
+            @include info-endgame-styles;
+        }
+
+        button {
+            @include button-endgame-styles;
+        }
+    }
+}
+
+// Animation keyframes
+@keyframes shine {
+    from {
+        transform: translateX(-100%) rotate(-45deg);
+        width: 1%;
+    }
+    to {
+        transform: translateX(100%) rotate(45deg);
+        width: 100%;
+    }
+}
+
+/* Subtle pulse animation for levels 50-99 */
+@keyframes subtle-pulse {
+    0%,
+    100% {
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Glow animation for levels 100-199 */
+@keyframes soft-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Enhanced glow for levels 200+ */
+@keyframes enhanced-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+}
+
+.current-galaxy {
+    background: #242424;
+    border: 1px solid #444;
+    padding: 0.2rem;
+    font-size: 0.6rem;
+    color: gold;
+    position: relative;
+    top: -5.5rem;
+    left: 50%;
+}
+
+.current-galaxy__low {
+    border: 1px solid gold;
+}
+
+.current-galaxy__mid {
+    border: 1px solid gold;
+}
+
+.current-galaxy__high {
+    border: 1px solid gold;
+}
+
+.trader-count {
+    font-size: 60%;
+}
+
+/* TraderNav status toggles */
+.status-card {
+    width: 100%;
+    text-align: center;
+}
+
+.trader-message {
+    bottom: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    background: rgb(69, 69, 69);
+    border: 1px inset gold;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: white;
+    min-width: 20rem;
+    padding: 0.25rem 1rem;
+
+    text-align: center;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.greeting {
+        animation: fadeInOut 4s forwards;
+    }
+
+    &.goodbye {
+        opacity: 1;
+        position: relative;
+        animation: fadeOut 3s forwards;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.language-indicator {
+    font-size: 0.7em;
+    color: #666;
+    margin-left: 8px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.7;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+@keyframes trader-image-eyelid {
+    0% {
+        transform: scaleY(0.2);
+        opacity: 0.2;
+    }
+
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+.trading-area {
+    min-height: 10rem;
+    padding: 1rem;
+
+    .market-container {
+        padding: 0.25rem;
+        background: var(--hud-bg);
+        border: 2px solid #333;
+        &:hover {
+            border: 2px dashed #444;
+        }
+    }
+    .market-summary-container {
+    }
+
+    .galaxy-summary-info {
+        text-align: center;
+        width: 100%;
+
+        p {
+            margin: 0;
+            text-shadow: 1px 1px 3px #000;
+        }
+    }
+
+    .grid {
+        padding: 4rem 2rem 2rem 2rem;
+        min-height: 10rem;
+    }
+}
+
+.buy {
+    color: rgb(0, 255, 0);
+    font-weight: bold;
+}
+
+.sell {
+    color: rgb(255, 0, 0);
+    font-weight: bold;
+}
+
+.grid {
+    background: var(--hud-bg);
+    padding: 10px;
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 8px;
+
+    /* Make sure grid items don't overflow */
+    > .cell {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Tablet: 2 columns */
+    @media (min-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Desktop+: 4 columns */
+    @media (min-width: $breakpoint-desktop) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.cell {
+    background: rgba(0, 0, 0, 0.4269);
+    border: 1px solid var(--cell-border);
+    border-radius: 6px;
+    padding: 1rem;
+    color: var(--hud-text);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+
+    &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 6px var(--cell-hover-shadow);
+    }
+
+    p {
+        margin: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+    .owned {
+        background: var(--cell-bg);
+
+        .sell {
+            background: var(--accent);
+        }
+    }
+
+    .item-detail-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 16px;
+        z-index: 1000;
+        background: #444;
+        color: black;
+        border: 0.25rem outset gold;
+    }
+}
+
+.item-image-wrapper {
+    position: relative;
+    margin: 0 auto 0.5rem auto;
+    align-items: center;
+    justify-content: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 8;
+    display: flex;
+    min-height: 6rem;
+
+    .item-image-name {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-weight: bold;
+        font-size: 1rem;
+        text-shadow: 0 2px 8px #000, 0 0 2px #000;
+        pointer-events: none;
+        z-index: 2;
+        width: 90%;
+        text-align: center;
+        line-height: 1.1;
+        padding: 0 2px;
+    }
+
+    .item-image-bg {
+        width: 100%;
+        min-width: 7rem;
+        min-height: 7rem;
+        height: 100%;
+        border-radius: 8px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
+    }
+}
+
+.inventory-content   .item-image-bg {
+    &:hover{
+        cursor: default;
+    }
+}
+
+.avg-history {
+    margin: 2px 0;
+
+    &.up {
+        color: var(--accent);
+    }
+
+    &.down {
+        color: var(--error);
+    }
+}
+
+.cell--up {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+}
+
+.cell--down {
+    border-color: var(--error);
+    box-shadow: 0 0 6px var(--error);
+}
+
+.cell--soldout {
+    opacity: 0.5;
+}
+
+.cell--cheap::before,
+.cell--deal::before,
+.cell--normal::before,
+.cell--expensive::before,
+.cell--avoid::before {
+    position: absolute;
+    top: -0.1337rem;
+    right: 0.5rem;
+    background: var(--cell-bg);
+    color: var(--hud-text);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.cell--cheap::before {
+    content: 'cheap';
+}
+
+.cell--deal::before {
+    content: 'deal';
+}
+
+.cell--normal::before {
+    content: 'normal';
+}
+
+.cell--expensive::before {
+    content: 'expensive';
+}
+
+.cell--avoid::before {
+    content: 'avoid';
+}
+
+.ui-labels-visible {
+    .cell--cheap::before,
+    .cell--deal::before,
+    .cell--normal::before,
+    .cell--expensive::before,
+    .cell--avoid::before {
+        display: block;
+    }
+}
+
+.sold-out {
+    color: var(--error);
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0.4px 0.5px #000;
+}
+
+.cell--cheap {
+    background-color: $cheap;
+}
+
+.cell--deal {
+    background-color: $deal;
+}
+
+.cell--normal {
+    background-color: $normal;
+}
+
+.cell--expensive {
+    background-color: $expensive;
+}
+
+.cell--avoid {
+    background-color: $avoid;
+}
+
+/* UI tier granular overrides */
+/* lowest: hide all color details (0-5) */
+.ui-tier-low5 {
+    .cell {
+        &--deal-cheap,
+        &--deal-deal,
+        &--deal-normal,
+        &--deal-expensive,
+        &--avoid {
+            background-color: transparent;
+        }
+    }
+
+    .cell--up,
+    .cell--down {
+        border-color: var(--cell-border);
+        box-shadow: none;
+    }
+
+    .avg-history.up,
+    .avg-history.down,
+    .sold-out {
+        color: var(--text);
+    }
+}
+
+/* low1 (5-10): show border color only */
+.ui-tier-low10 {
+    .cell--cheap,
+    .cell--deal,
+    .cell--normal,
+    .cell--expensive,
+    .cell--avoid {
+        border-color: transparent;
+    }
+
+    .cell--up {
+        border-color: var(--accent);
+    }
+
+    .cell--down {
+        border-color: var(--error);
+    }
+
+    .cell--up,
+    .cell--down {
+        box-shadow: none;
+    }
+
+    .avg-history.up,
+    .avg-history.down,
+    .sold-out {
+        color: var(--text);
+    }
+
+    /* Price text coloring at UI tier low10 and above */
+    .price-text.price-high {
+        color: var(--error);
+    }
+
+    .price-text.price-low {
+        color: var(--accent);
+    }
+}
+
+/* Price trend borders at UI tier low15 and above */
+.ui-tier-low15 {
+    .cell--price-high {
+        border: 2px solid var(--error);
+    }
+
+    .cell--price-low {
+        border: 2px solid var(--accent);
+    }
+
+    /* Price text coloring at UI tier low15 and above (so text colors persist through border tier) */
+    .price-text.price-high {
+        color: var(--error);
+    }
+
+    .price-text.price-low {
+        color: var(--accent);
+    }
+}
+
+.cell--up {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+}
+
+.cell--down {
+    border-color: var(--error);
+    box-shadow: 0 0 6px var(--error);
+}
+
+.avg-history.up {
+    color: var(--accent);
+}
+
+.avg-history.down {
+    color: var(--error);
+}
+
+.illegal-item {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #ff4500;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    font-size: 0.65em;
+    &::after {
+        padding: 0 1.7rem;
+        border-radius: 0 0 0.21rem 0.21rem;
+        background: #ffd700;
+        content: 'WARNING⚠️ILLEGAL';
+        opacity: 1;
+    }
+}
+
+.sold-out {
+    color: var(--error);
+}
+
+.cell--unknown {
+    background-color: rgba(0, 0, 0, 0.4269);
+}
+
+/* Deal tier labels for UI levels 5-49 */
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.deal-tier-label {
+    position: absolute;
+    top: -8.5rem;
+    right: 0;
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    font-size: 0.7em;
+}
+
+/* Specific styles for each deal tier */
+.deal-tier-cheap .deal-tier-label {
+    color: #4caf50; // Green
+}
+
+.deal-tier-deal .deal-tier-label {
+    color: #8bc34a; // Light green
+}
+
+.deal-tier-normal .deal-tier-label {
+    color: #2196f3; // Blue
+}
+
+.deal-tier-expensive .deal-tier-label {
+    color: #ff9800; // Orange
+}
+
+.deal-tier-avoid .deal-tier-label {
+    color: #f44336; // Red
+}
+
+/* Save Game Component */
+.save-game-container {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+    position: relative;
+}
+
+.save-button {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+        color: var(--accent);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.save-level-display {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px 5px 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+    }
+
+    &.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* low25 (15-25): show deal & all color cues */
+.ui-tier-low25 {
+    /* Price text revert to white at UI tier low25 */
+    .price-text {
+        color: white;
+    }
+
+    .cell--cheap {
+        background-color: $cheap;
+    }
+
+    .cell--deal {
+        background-color: $deal;
+    }
+
+    .cell--normal {
+        background-color: $normal;
+    }
+
+    .cell--expensive {
+        background-color: $expensive;
+    }
+
+    .cell--avoid {
+        background-color: $avoid;
+    }
+
+    .cell--up {
+        border-color: var(--accent);
+        box-shadow: 0 0 6px var(--accent);
+    }
+
+    .cell--down {
+        border-color: var(--error);
+        box-shadow: 0 0 6px var(--error);
+    }
+
+    .avg-history.up {
+        color: var(--accent);
+    }
+
+    .avg-history.down {
+        color: var(--error);
+    }
+
+    .sold-out {
+        color: var(--error);
+    }
+}
+
+.status-card button {
+    background: var(--hud-bg);
+    border: 1px solid var(--cell-border);
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--hud-text);
+    cursor: pointer;
+}
+
+.shield-button.active {
+    background: rgba(0, 0, 255, 0.2);
+}
+
+.stealth-button.active {
+    background: rgba(128, 0, 128, 0.2);
+}
+
+/* Fuel meter styling */
+.fuel-level {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid var(--cell-border);
+    border-radius: 4px;
+    color: var(--hud-text);
+    /* default no gradient fill */
+}
+
+/* delivery timer bars under grid cells */
+.cell-delivery-bar-container {
+    width: 100%;
+    height: 4px;
+    background: var(--cell-border);
+    margin-top: 2px;
+    overflow: hidden;
+}
+
+.cell-delivery-bar {
+    height: 100%;
+    background: var(--accent);
+    transform-origin: right;
+    transition: width 0.1s linear;
+}
+
+/* Traveling Message Styles */
+.traveling-message {
+    position: relative;
+    top: 5vh;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+
+    .trader-message {
+        margin: 0 auto 1rem;
+        max-width: 90%;
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(100, 100, 100, 0.5);
+        border-radius: 4px;
+        padding: 0.75rem 1rem;
+        color: #fff;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 0.7;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0.7;
+        }
+    }
+}
+
+
+
+.pl-positive {
+    color: var(--accent);
+    margin-left: 4px;
+}
+
+.pl-negative {
+    color: var(--error);
+    margin-left: 4px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* Language Indicator Styles */
+.language-indicator {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+    display: block;
+    text-align: center;
+    opacity: 0.8;
+}
+

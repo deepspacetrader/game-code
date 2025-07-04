@@ -1,0 +1,451 @@
+/* Mixins for UI Tiers */
+@import '../../App.scss';
+
+// Base styles
+.trader-card {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    @media (max-width: #{$breakpoint-mobile - 1px}) {
+        gap: 0;
+    }
+}
+
+.trader-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.trader-info-trigger {
+    position: absolute;
+    top: 0.25rem;
+    z-index: 10;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.69);
+
+    &:hover {
+        transform: scale(1.5);
+        background: rgba(0, 0, 0, 0.8);
+
+        .info-icon {
+            fill: $gold;
+            filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.7));
+        }
+    }
+
+    .info-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        fill: rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+    }
+}
+
+.trader-image {
+    margin: 0 auto;
+    animation: trader-image-eyelid 0.5s ease-in-out forwards;
+    background-size: cover;
+    border-radius: 50%;
+    border: inset 0.13374269rem $gold;
+    min-width: 20rem;
+    min-height: 20rem;
+    max-height: 25rem;
+    max-width: 25rem;
+    display: block;
+    position: relative;
+
+    @media (max-width: $breakpoint-desktop) {
+        max-height: 10rem;
+        max-width: 10rem;
+        min-height: 10rem;
+        min-width: 10rem;
+    }
+}
+
+.trader-name {
+    position: absolute;
+    background: rgba(79, 46, 0, 1);
+    bottom: 0;
+    border-radius: 0px 0px 2.5rem 2.5rem;
+    border: 1px solid $gold;
+    box-shadow: 2px 5px 10px rgba(37, 22, 0, 0.6942);
+    left: 50%;
+    min-width: 7rem;
+    padding: 0.1rem 0.1rem 0.4rem 0.1rem;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 50%;
+}
+
+.trader-info-container {
+    position: absolute;
+    top: 5vh;
+    margin-top: 0.5rem;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid $gold;
+    border-radius: 4px;
+    padding: 1rem;
+    min-width: 280px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    transform-origin: top;
+    animation: fadeIn 0.2s ease-out;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -0.5rem;
+        left: 50%;
+        width: 1rem;
+        height: 1rem;
+        background: rgba(0, 0, 0, 0.95);
+        border-top: 1px solid $gold;
+        border-left: 1px solid $gold;
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.trader-info-container {
+    .trader-info {
+        padding: 1.25rem;
+        background-color: rgba(20, 20, 30, 0.8);
+        border-radius: 0 0 0.24rem 0.24rem;
+        border: 1px solid #334455;
+        overflow: hidden;
+        color: #b0b0b0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    &.active {
+        top: 0;
+    }
+
+    // UI Level 50+ - Enhanced visual effects
+    &.enhanced {
+        background: linear-gradient(135deg, rgba(20, 20, 30, 0.9) 0%, rgba(30, 30, 50, 0.9) 100%);
+        border: 1px solid rgba(74, 144, 226, 0.3);
+        backdrop-filter: blur(5px);
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at 50% 0%,
+                rgba(74, 144, 226, calc(0.1 * var(--glow-intensity, 0))),
+                transparent 70%
+            );
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+    }
+
+    // UI Level 150+ - Premium effects
+    &.premium {
+        background: linear-gradient(135deg, rgba(30, 20, 40, 0.9) 0%, rgba(40, 30, 60, 0.9) 100%);
+        border: 1px solid rgba(148, 0, 211, 0.5);
+        box-shadow: 0 0 30px rgba(148, 0, 211, 0.2);
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                45deg,
+                transparent 45%,
+                rgba(75, 0, 130, 0.1) 48%,
+                rgba(75, 0, 130, 0.2) 52%,
+                transparent 55%
+            );
+            transform: rotate(45deg);
+            animation: shine 4s infinite;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    }
+
+    // Header section
+    .trader-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        .trader-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            gap: 1rem;
+
+            .trader-info-name {
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+
+                .trader-id {
+                    font-size: 0.7rem;
+                    background: rgba(0, 0, 0, 0.3);
+                    padding: 0.2rem 0.6rem;
+                    border-radius: 10px;
+                    color: #8e9cb5;
+                    font-weight: normal;
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+
+    .trader-name {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0 0 0.25rem;
+        color: #4a90e2;
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+
+        .enhanced & {
+            text-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+        }
+
+        .premium & {
+            color: #b19cd9;
+            text-shadow: 0 0 10px rgba(177, 156, 217, 0.7);
+        }
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .trader-level {
+        font-size: 0.7rem;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 0.2rem 0.6rem;
+        border-radius: 10px;
+        color: #4a90e2;
+        font-weight: bold;
+
+        .premium & {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+    }
+
+    .trader-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: #8e9cb5;
+
+        .meta-divider {
+            opacity: 0.5;
+        }
+
+        .premium & {
+            color: #b19cd9;
+        }
+    }
+
+    // Content section
+    .trader-content {
+        margin: 1rem 0 0.5rem;
+    }
+
+    .trader-description {
+        margin: 0 0 1rem;
+        color: #d0d0d0;
+        line-height: 1.6;
+
+        .premium & {
+            color: #e0e0e0;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    .secret-info {
+        display: inline-block;
+        margin-top: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(255, 215, 0, 0.1);
+        border-left: 2px solid #ffd700;
+        color: #ffd700;
+        font-style: italic;
+        border-radius: 0 4px 4px 0;
+    }
+
+    // Stats section
+    .trader-stats {
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        .stat {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 0.75rem;
+            align-items: center;
+
+            .stat-label {
+                font-size: 0.85rem;
+                opacity: 0.8;
+            }
+
+            .stat-value {
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+        }
+
+        .stat-label {
+            color: #8e9cb5;
+            font-size: 0.9rem;
+            font-weight: 500;
+
+            .premium & {
+                color: #b19cd9;
+            }
+        }
+
+        .stat-value {
+            color: #e0e0e0;
+            font-weight: 500;
+
+            .premium & {
+                color: #ffffff;
+            }
+        }
+    }
+
+    // Badges
+    .premium-badge,
+    .endgame-badge {
+        span {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: linear-gradient(90deg, #4a90e2, #8e44ad);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+    }
+
+    .endgame-badge {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 1rem;
+        span {
+            padding: 1rem;
+        }
+    }
+
+    .record-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+
+        span {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: linear-gradient(90deg, #ffd700, #ffa500);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 12px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+    }
+}
+
+// Animations
+@keyframes shine {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    40% {
+        opacity: 0.5;
+    }
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .trader-info {
+        padding: 1rem;
+
+        .trader-name {
+            font-size: 1.1rem;
+        }
+
+        .trader-stats {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+
+            .stat {
+                grid-template-columns: 70px 1fr;
+            }
+        }
+    }
+}

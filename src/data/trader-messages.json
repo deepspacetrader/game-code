@@ -1,0 +1,612 @@
+{
+    "traderMessages": [
+        {
+            "traderId": 0,
+            "name": "-",
+            "greetings": {
+                "EN": ["test hi"],
+                "CHIK": ["Chi ho! Ta chochu!"],
+                "LAY": ["Leelew la lewla!"]
+            },
+            "goodbyes": {
+                "EN": ["test goodbye"],
+                "CHIK": ["Chi ka ra chu!"],
+                "LAY": ["Worr vo vin."]
+            }
+        },
+        {
+            "traderId": 1,
+            "name": "Jax Orion",
+            "greetings": {
+                "EN": [
+                    "Looking to trade?",
+                    "Ah, a new face! What brings you here?",
+                    "Let's trade!",
+                    "Welcome to my stall, traveler. Let's see what deals we can make.",
+                    "Fresh goods just in! Care to take a look?"
+                ],
+                "CHIK": [
+                    "Chi ho! Ta chochu?",
+                    "Chu ja ti tu ra chi?",
+                    "Ta chochu!",
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chi ka ra chi ja tu ra chi!"
+                ],
+                "LAY": [
+                    "Leelew la lewla?",
+                    "Laay, lee la la! Wor la lee looo lowol?",
+                    "Leew la lewla!",
+                    "Lowol lewla la lewla lewla rey la lewla.",
+                    "Leelew la lewla lewla rey la lewla."
+                ]
+            },
+            "goodbyes": {
+                "EN": [
+                    "Safe travels!",
+                    "May your cargo hold be ever full.",
+                    "Until next time!",
+                    "Keep your thrusters hot and your credits ready.",
+                    "Farewell, and may fortune favor your journeys."
+                ],
+                "CHIK": [
+                    "Chi ka ra chu!",
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu!",
+                    "Chik chik! Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!"
+                ],
+                "LAY": [
+                    "Worr vo vin.",
+                    "Vin lee woor looo la lay!",
+                    "Laylaa woor vaa vin looo la lay!",
+                    "Vaylaa vin lee woor looo la lay!",
+                    "Woor vaa vin lee looo la lay!"
+                ]
+            }
+        },
+        {
+            "traderId": 2,
+            "name": "Kyrnin Nova",
+            "greetings": {
+                "EN": [
+                    "What you have?",
+                    "Quick! You trade now!",
+                    "What you need?",
+                    "Show goods! We trade fast!",
+                    "No time! Trade now!"
+                ],
+                "CHIK": [
+                    "Cho chu ra ta?",
+                    "Karta kik chitchi chochu jo jaja ti ti tatu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Kik kik! Cho chu ra ta tu!",
+                    "Chik chik! Tra ta tu!"
+                ]
+            },
+            "goodbyes": {
+                "EN": [
+                    "Safe travels!",
+                    "May your cargo hold be ever full.",
+                    "Until next time!",
+                    "Go quick! Trade later!",
+                    "Fly fast! Return soon!"
+                ],
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!",
+                    "Chik ka ra chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!"
+                ]
+            }
+        },
+        {
+            "traderId": 3,
+            "name": "Thrixie Swoke",
+            "greetings": {
+                "LAY": [
+                    "Woor vaa vin wee loower? lavin wellor!",
+                    "Layla vayla lewla lavin wellor!",
+                    "Vayla vaa vin wee loower lavin wellor?",
+                    "Vaylaa loo vin wee loower lavin wellor!",
+                    "Laylaa vaylaa lewlaa lavin wellor!"
+                ],
+                "EN": [
+                    "Hey there, how are you? Let's trade!",
+                    "Good to see you, friend. Let's trade!",
+                    "What do you need? I have lots of items to trade.",
+                    "Welcome, traveler. My wares await your perusal.",
+                    "Ah, a discerning customer! Let's make a deal."
+                ]
+            },
+            "goodbyes": {
+                "LAY": [
+                    "Worr vo vin.",
+                    "Vin lee woor looo la lay!",
+                    "Vaylaa vin lee woor looo la lay!",
+                    "Woor vaa vin lee looo la lay!",
+                    "Laylaa woor vaa vin looo la lay!"
+                ],
+                "EN": [
+                    "Safe travels!",
+                    "May your cargo hold be ever full.",
+                    "Until next time!",
+                    "Farewell, and may the stars guide you.",
+                    "Goodbye, and may your path be clear."
+                ]
+            }
+        },
+        {
+            "traderId": 4,
+            "name": "Vuw Tahl",
+            "greetings": {
+                "EN": [
+                    "Greetings, I'm Vuw Tahl.",
+                    "Welcome to my market stand.",
+                    "What can I do for you?",
+                    "Step into my shop, traveler. Let's see what you need.",
+                    "Ah, a new customer! Let's find something for you."
+                ],
+                "CHIK": [
+                    "Chi ho! Chu ra ta tu chu!",
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ho! Kara ta chu chi chochu joja ti ta tu!",
+                    "Kik kik! Chu ra ta tu ti tu chu?"
+                ],
+                "LAY": [
+                    "Woor vaa vin wee loower lavin wellor!",
+                    "Layla vayla lewla la lewla la lewla la lewla!",
+                    "Vayla vaa vin wee loower lavin wellor?",
+                    "Laylaa vaylaa lewlaa lavin wellor!",
+                    "Vaylaa loo vin wee loower lavin wellor!"
+                ]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!",
+                    "Chik chik! Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!"
+                ],
+                "LAY": [
+                    "Worr vo vin.",
+                    "Vin lee woor looo la lay!",
+                    "Laylaa vin lee woor looo la lay!",
+                    "Woor vaa vin lee looo la lay!",
+                    "Vaylaa woor vaa vin looo la lay!"
+                ],
+                "EN": [
+                    "Safe travels!",
+                    "May your cargo hold be ever full.",
+                    "Until next time!",
+                    "Farewell, and may your journey be prosperous.",
+                    "Goodbye, and may the stars shine upon you."
+                ]
+            }
+        },
+        {
+            "traderId": 5,
+            "name": "Nir Lhat Etol",
+            "greetings": {
+                "EN": [
+                    "Welcome to my shop.",
+                    "What do you need to buy?",
+                    "How can I help you?",
+                    "Step right in, traveler. Let's see what catches your eye.",
+                    "Ah, a new face! Let's find something special for you."
+                ],
+                "CHIK": [
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chi ja tu ra chi?",
+                    "Chi ho! Kara ta chu chi chochu joja ti ta tu!",
+                    "Kik kik! Chu ra ta tu ti tu chu?"
+                ],
+                "LAY": [
+                    "Woor vaa vin wee loower lavin wellor!",
+                    "Layla vayla lewla la lewla la lewla la lewla la lewla la lewla!",
+                    "Vayla vaa vin wee loower lavin wellor?",
+                    "Laylaa vaylaa lewlaa lavin wellor!",
+                    "Vaylaa loo vin wee loower lavin wellor!"
+                ]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!",
+                    "Chik chik! Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!"
+                ],
+                "LAY": [
+                    "Worr vo vin.",
+                    "Vin lee woor looo la lay!",
+                    "Laylaa vin lee woor looo la lay!",
+                    "Woor vaa vin lee looo la lay!",
+                    "Vaylaa woor vaa vin looo la lay!"
+                ],
+                "EN": [
+                    "Safe travels!",
+                    "May your cargo hold be ever full.",
+                    "Until next time!",
+                    "Farewell, and may your journey be prosperous.",
+                    "Goodbye, and may the stars shine upon you."
+                ]
+            }
+        },
+        {
+            "traderId": 6,
+            "name": "Twohpoe Oon Septillien",
+            "greetings": {
+                "EN": [
+                    "Greetings, I'm Etol Twohpoe.",
+                    "Welcome to my humble abode.",
+                    "What can I do for you?",
+                    "Step into my domain, traveler. Let's see what you seek.",
+                    "Ah, a visitor! Let's find something to your liking."
+                ],
+                "CHIK": [
+                    "Chi ho! Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chi ja tu ra chi?",
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chi ho! Ta chochu joja ti ta tu!"
+                ],
+                "LAY": [
+                    "Leelew la lewla! Lowol lewla la lewla!",
+                    "Laay, lee la la! Wor la lee looo lowol?",
+                    "Vayla vaa vin wee loower lavin wellor?",
+                    "Lowol lewla la lewla lewla rey la lewla.",
+                    "Laylaa vaylaa lewlaa lavin wellor!"
+                ]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!",
+                    "Chik chik! Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!"
+                ],
+                "LAY": [
+                    "Worr vo vin.",
+                    "Vin lee woor looo la lay!",
+                    "Laylaa vin lee woor looo la lay!",
+                    "Woor vaa vin lee looo la lay!",
+                    "Vaylaa woor vaa vin looo la lay!"
+                ],
+                "EN": [
+                    "Safe travels!",
+                    "May your cargo hold be ever full.",
+                    "Until next time!",
+                    "Farewell, and may your journey be prosperous.",
+                    "Goodbye, and may the stars shine upon you."
+                ]
+            }
+        },
+        {
+            "traderId": 7,
+            "name": "Wututa Zlornks",
+            "greetings": {
+                "EN": [
+                    "Greetings, I'm Wututa Zlornks.",
+                    "Welcome to my market stand.",
+                    "What can I do for you?"
+                ],
+                "CHIK": [
+                    "Chi ho! Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chi ja tu ra chi?"
+                ],
+                "LAY": [
+                    "Leelew la lewla! Lowol lewla la lewla!",
+                    "Laay, lee la la! Wor la lee looo lowol?",
+                    "Vayla vaa vin wee loower lavin wellor?"
+                ]
+            },
+            "goodbyes": {
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"],
+                "CHIK": [
+                    "Chu-ra ta-tu ti-tu chu!",
+                    "Chi-ka ra chu-ra ta-tu ti-tu chu!",
+                    "Chu-ra ta-tu ti-tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"]
+            }
+        },
+        {
+            "traderId": 8,
+            "name": "Sarix Drayven",
+            "greetings": {
+                "EN": ["Welcome to my ship.", "What do you need to buy?", "How can I help you?"],
+                "CHIK": [
+                    "Chi ho! Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chi ja tu ra chi?"
+                ],
+                "LAY": [
+                    "Leelew la lewla! Lowol lewla la lewla!",
+                    "Laay, lee la la! Wor la lee looo lowol?",
+                    "Vayla vaa vin wee loower lavin wellor?"
+                ]
+            },
+            "goodbyes": {
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"],
+                "CHIK": [
+                    "Chu-ra ta-tu ti-tu chu!",
+                    "Chi-ka ra chu-ra ta-tu ti-tu chu!",
+                    "Chu-ra ta-tu ti-tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"]
+            }
+        },
+        {
+            "traderId": 9,
+            "name": "Kora Valen",
+            "greetings": {
+                "EN": [
+                    "Welcome to my market.",
+                    "Goods for sale, fresh and rare.",
+                    "Let’s trade something worthwhile.",
+                    "Step in. Let’s make this worth your time.",
+                    "New arrivals just in—care to take a look?"
+                ],
+                "CHIK": [
+                    "Chi ho! Tra ta chu chochu?",
+                    "Kik! Chi ra ta joja ta tu!",
+                    "Chu ra ti cho? We trade!",
+                    "Chik ka chochu, trade ta ta!",
+                    "Cho chu ra ta ti tu chu—kik kik kik!"
+                ],
+                "LAY": [
+                    "Laylaa woor vin lewla lavin wellor!",
+                    "Woor vaa vin lewla lavin wellor looo!",
+                    "Vaylaa lewla loower lavin wellor?",
+                    "Lavin wellor! Laylaa vaylaa vin vin vin!",
+                    "Lewlaa looo lavin wellor—shoppa loo!"
+                ]
+            },
+            "goodbyes": {
+                "EN": [
+                    "Safe travels!",
+                    "Until we meet again, friend.",
+                    "Trade winds guide you.",
+                    "Farewell, and watch your six.",
+                    "Clear skies and full holds to you."
+                ],
+                "CHIK": [
+                    "Ti tu chu ka ra chi!",
+                    "Chu chu ra ta tu ti tu chu!",
+                    "Chik ra ti ta—fly fast!",
+                    "Chi ka chu tu—return quick!",
+                    "Karta chi chu ra ta tu ti tu chu!"
+                ],
+                "LAY": [
+                    "Vaylaa vin loo lay vin.",
+                    "Woor vaa vin looo la lay!",
+                    "Lewla vin looo la lay!",
+                    "Woor vin lee lavin lay!",
+                    "Layla woor vaa vin vin vin."
+                ]
+            }
+        },
+        {
+            "traderId": 10,
+            "name": "Rinloo Vega",
+            "greetings": {
+                "EN": [
+                    "You look like someone who appreciates quality.",
+                    "Come closer, I have rare items you won’t find elsewhere.",
+                    "Care for something... unconventional?",
+                    "I deal in the strange, the rare, and the priceless.",
+                    "Step into the shadows... and let's make a trade."
+                ],
+                "CHIK": [
+                    "Cho ra ti tu ta tu chu chu chi?",
+                    "Kik kik! Chu chi rara joja ti tu tu!",
+                    "Tu chi ti tu? Strange wares, yes?",
+                    "Chi ho—ra tu ta chi joja rara.",
+                    "Chu chu! Kik ta rara rara rara tu!"
+                ],
+                "LAY": [
+                    "Lavin wellor... looo looo lavin wellor.",
+                    "Vaylaa looo lavin rare vin!",
+                    "Laylaa shoppa looo lavin lay?",
+                    "Woor vin loo lavin darka lavin.",
+                    "Woor vaa vin lewlaa shadow shoppa!"
+                ]
+            },
+            "goodbyes": {
+                "EN": [
+                    "Take care in the void.",
+                    "Our paths will cross again.",
+                    "May the rare find you.",
+                    "Depart in silence and fortune.",
+                    "Until next time, seeker."
+                ],
+                "CHIK": [
+                    "Chu ti ra ta chu chu!",
+                    "Ka ra chi—return soon.",
+                    "Rara wares await you.",
+                    "Ti tu chu, shadow friend!",
+                    "Tu tu chu—strange paths ahead!"
+                ],
+                "LAY": [
+                    "Lewlaa shadow vin vo vin.",
+                    "Vaylaa rare lewlaa lavin lay.",
+                    "Laylaa vin looo vo vin shadow shoppa!",
+                    "Woor vaa vin lewlaa mystery.",
+                    "Shadow shoppa farewell lavin!"
+                ]
+            }
+        },
+        {
+            "traderId": 11,
+            "name": "Brix Oscuron",
+            "greetings": {
+                "EN": [
+                    "Greetings, I'm Brix Oscuron.",
+                    "Welcome to my humble abode.",
+                    "What can I do for you?"
+                ],
+                "CHIK": [
+                    "Chi ho! Chu ra ta tu chu!",
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?"
+                ],
+                "LAY": [
+                    "Leelew la lewla! Lowol lewla la lewla!",
+                    "Laay, lee la la! Wor la lee looo lowol?",
+                    "Vayla vaa vin wee loower lavin wellor?"
+                ]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        },
+        {
+            "traderId": 12,
+            "name": "Lyra Zenith",
+            "greetings": {
+                "EN": ["Welcome to my ship.", "What do you need to buy?", "How can I help you?"],
+                "CHIK": [
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chu ra ta tu ra chi?"
+                ],
+                "LAY": ["Layla la lewla!", "Layla la lewla la lewla?", "Layla la lewla la lewla?"]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        },
+        {
+            "traderId": 13,
+            "name": "Tandros Upstonsinate",
+            "greetings": {
+                "CHIK": [
+                    "Chi ho! Chu ra ta tu chu!",
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?"
+                ],
+                "LAY": ["Layla la lewla!", "Layla la lewla la lewla!", "Layla la lewla la lewla?"]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        },
+        {
+            "traderId": 14,
+            "name": "Ula Maris",
+            "greetings": {
+                "EN": ["Welcome to my ship.", "What do you need to buy?", "How can I help you?"],
+                "CHIK": [
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chu ra ta tu ra chi?"
+                ],
+                "LAY": ["Layla la lewla!", "Layla la lewla la lewla?", "Layla la lewla la lewla?"]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        },
+        {
+            "traderId": 15,
+            "name": "Commander Zethron",
+            "greetings": {
+                "EN": [
+                    "Greetings, I'm Commander Zethron.",
+                    "Welcome to my ship.",
+                    "What can I do for you?"
+                ],
+                "LAY": ["Layla la lewla!", "Layla la lewla la lewla!", "Layla la lewla la lewla?"]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        },
+        {
+            "traderId": 16,
+            "name": "Fiera Quel",
+            "greetings": {
+                "EN": [
+                    "Welcome to my humble abode.",
+                    "What do you need to buy?",
+                    "How can I help you?"
+                ],
+                "CHIK": [
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?",
+                    "Chi ka ra chu ra ta tu ra chi?"
+                ]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        },
+        {
+            "traderId": 17,
+            "name": "Vorian Lox",
+            "greetings": {
+                "EN": [
+                    "Greetings, I'm Vorian Lox.",
+                    "Welcome to my market stand.",
+                    "What can I do for you?"
+                ],
+                "CHIK": [
+                    "Chi ho! Chu ra ta tu chu!",
+                    "Kara ta chu chi chochu joja ti ta tu!",
+                    "Chu ra ta tu ti tu chu?"
+                ]
+            },
+            "goodbyes": {
+                "CHIK": [
+                    "Chu ra ta tu ti tu chu!",
+                    "Chi ka ra chu ra ta tu ti tu chu!",
+                    "Chu ra ta tu ti tu chu!"
+                ],
+                "LAY": ["Worr vo vin.", "Vin lee woor looo la lay!"],
+                "EN": ["Safe travels!", "May your cargo hold be ever full.", "Until next time!"]
+            }
+        }
+    ]
+}
