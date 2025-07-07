@@ -7,7 +7,9 @@
             "changes": [
                 "Added more danger messages",
                 "Increased fuel limit to 1000",
-                "Adjusted trader galaxy appearances"
+                "Adjusted trader galaxy appearances",
+                "Fixed visual layout bug with StarMaps",
+                "Improved onboarding steps"
             ]
         },
         {
