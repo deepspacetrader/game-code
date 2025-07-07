@@ -4,23 +4,34 @@ import './Danger.scss';
 const SUCCESS_TITLES = ['SAFE!', 'MADE IT!', 'CLOSE ONE!', 'NARROW ESCAPE!', 'GOT AWAY!', 'CLEAR!'];
 
 const DANGER_TYPES = {
-    INDIRECT_FIRE: {
-        title: 'INDIRECT FIRE!',
-        message: 'A fight breaks out nearby and lasers are being fired! Take cover!',
+    FIGHTING: {
+        title: 'FIGHTING!',
+        dangerMessages: [
+            'A fight breaks out nearby and lasers are being fired! Take cover!',
+            'Combat erupts in the area! Find shelter quickly!',
+            'Weapons fire suddenly breaks out in the area! Move to safety!',
+            'A skirmish has broken out! Get out of the line of fire!',
+        ],
         damageRange: [25, 50],
-        duration: [3000, 4000], // Duration in milliseconds (3-4 seconds)
+        duration: [3500, 3800],
         successMessages: [
             'You dove out of the way just in time.',
             'You found some cover.',
             'You barely avoided the incoming fire.',
         ],
-        failureMessage: 'You were struck by random weapon fire and took {damage} damage!',
+        failureMessage:
+            'You were struck by random weapon fire during the chaos and took {damage} damage!',
     },
     EXPLOSION: {
         title: 'EXPLOSION!',
-        message: 'A nearby explosion rocks the area! Choose a side to take cover!',
+        dangerMessages: [
+            'A nearby explosion rocks the area! Choose a side to take cover!',
+            'An explosion shakes the ground! Find cover immediately!',
+            'Blast waves ripple through the area! Take shelter!',
+            'An explosion erupts nearby! Move to safety!',
+        ],
         damageRange: [30, 60],
-        duration: [3500, 4500], // Duration in milliseconds (3.5-4.5 seconds)
+        duration: [2500, 3000],
         successMessages: [
             'You found cover just in time!',
             'The explosion rocks the area but you remain unharmed!',
@@ -30,9 +41,14 @@ const DANGER_TYPES = {
     },
     COLLAPSE: {
         title: 'COLLAPSE!',
-        message: 'The structure is collapsing! Move to safety!',
+        dangerMessages: [
+            'The structure is collapsing! Move to safety!',
+            'The building is coming down! Get out of here!',
+            'Structural failure detected! Evacuate immediately!',
+            'The ceiling is giving way! Find an exit!',
+        ],
         damageRange: [20, 40],
-        duration: [2500, 3500], // Duration in milliseconds (2.5-3.5 seconds)
+        duration: [2500, 3500],
         successMessages: [
             'You barely made it to safety!',
             'The structure crumbles behind you as you escape!',
@@ -42,7 +58,12 @@ const DANGER_TYPES = {
     },
     // AMBUSH: {
     //     title: 'AMBUSH!',
-    //     message: "You've been ambushed! Quick, choose a direction!",
+    //     messages: [
+    //         "You've been ambushed! Quick, choose a direction!",
+    //         'Attackers have surrounded you! Pick a path!',
+    //         'You\'re under attack! Choose your escape route!',
+    //         'Hostiles have appeared! Find a way out!',
+    //     ],
     //     damageRange: [15, 35],
     //     duration: [3000, 4000], // Duration in milliseconds (3-4 seconds)
     //     successMessages: [
@@ -64,6 +85,7 @@ const Danger = ({ type = 'INDIRECT_FIRE', onChoice, onClose, onDamage, autoClose
     const [maxTime, setMaxTime] = React.useState(0);
     const [isAutoChoosing, setIsAutoChoosing] = React.useState(false);
     const [successTitle, setSuccessTitle] = React.useState('');
+    const [selectedMessage, setSelectedMessage] = React.useState('');
     const animationFrameRef = React.useRef(null);
     const endTimeRef = React.useRef(0);
     const timerActiveRef = React.useRef(false);
@@ -105,6 +127,13 @@ const Danger = ({ type = 'INDIRECT_FIRE', onChoice, onClose, onDamage, autoClose
         },
         [dangerType, onDamage, onClose]
     );
+
+    // Select random message on mount
+    useEffect(() => {
+        const randomMessage =
+            dangerType.dangerMessages[Math.floor(Math.random() * dangerType.dangerMessages.length)];
+        setSelectedMessage(randomMessage);
+    }, [dangerType]);
 
     // Timer effect
     useEffect(() => {
@@ -177,7 +206,7 @@ const Danger = ({ type = 'INDIRECT_FIRE', onChoice, onClose, onDamage, autoClose
                 {!showChoices ? (
                     <div className="danger-message">{message}</div>
                 ) : (
-                    <div className="danger-message">{dangerType.message}</div>
+                    <div className="danger-message">{selectedMessage}</div>
                 )}
                 {showChoices && (
                     <div className="danger-timer">

@@ -261,8 +261,11 @@ button {
     &:before {
         content: 'WARNING: INVALID CREDITS CHEATER ALERT ⚠️';
         position: absolute;
-        top: -2rem;
-        left: 0;
+        top: 2rem;
+        transform: translateX(-50%);
+        text-align: center;
+        left: 50%;
+        width: 8rem;
         background: rgba(255, 0, 0, 0.5);
         color: white;
         padding: 0.2469rem 0.4201337rem;
