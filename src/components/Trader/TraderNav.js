@@ -2,16 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
 import galaxiesData from '../../data/galaxies.json';
-import StarMapMid from '../Travel/StarMaps/StarMapMid';
-import StarMapHigh from '../Travel/StarMaps/StarMapHigh';
-// import StarMapLow from '../Travel/StarMaps/StarMapLow';
 import SignalAnimation from '../Travel/SignalAnimation';
 import TraderInfo from './TraderInfo';
 import './TraderNav.scss';
 import TraderMessage from './TraderMessage';
 import tradersData from '../../data/traders.json';
 import FloatingMessage from '../Reusable/FloatingMessage';
-import TravelOverlay from '../Travel/TravelOverlay';
 import { zzfx } from 'zzfx';
 
 const traderImages = require.context('../../images', false, /\.\/trader\d+\.webp$/);
@@ -47,6 +43,8 @@ const TraderNav = () => {
         totalFuelCostReduction,
         volumeRef,
         addFloatingMessage,
+        showStarMap,
+        setShowStarMap,
     } = useMarketplace();
 
     // console.log(addFloatingMessage);
@@ -74,12 +72,11 @@ const TraderNav = () => {
     const traderData = tradersData.traders.find((t) => t.traderId === currentTrader);
     const key = traderData?.traderId ? `./trader${traderData?.traderId}.webp` : null;
     const imgSrc = key && traderImages.keys().includes(key) ? traderImages(key) : null;
-    const [showMap, setShowMap] = useState(false);
     const [showTraderInfo, setShowTraderInfo] = useState(false);
 
     const handleSelect = (name) => {
         travelToGalaxy(name);
-        setShowMap(false);
+        setShowStarMap(false);
     };
 
     const handleInsufficientFuel = () => {
@@ -109,27 +106,28 @@ const TraderNav = () => {
     };
 
     const handleNextGalaxyClick = () => {
-        // Get all possible indices
-        const availableIndices = [...Array(tradersData.traders.length).keys()];
+        // For AI levels below 50, use random travel
+        if (improvedAILevel < 50) {
+            // Get all possible indices
+            const availableIndices = [...Array(tradersData.traders.length).keys()];
 
-        // Select a random index that's not in the current galaxy
-        let nextIdx;
-        do {
-            nextIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-        } while (
-            galaxyName === tradersData.traders[nextIdx].homeGalaxy &&
-            availableIndices.length > 1
-        );
+            // Select a random index that's not in the current galaxy
+            let nextIdx;
+            do {
+                nextIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            } while (
+                galaxyName === tradersData.traders[nextIdx].homeGalaxy &&
+                availableIndices.length > 1
+            );
 
-        const cost = fuelPrices[nextIdx] || 0;
-        if (fuel < cost) {
-            handleInsufficientFuel();
-            console.log('cant travel now');
-            return;
-        }
+            const cost = fuelPrices[nextIdx] || 0;
+            if (fuel < cost) {
+                handleInsufficientFuel();
+                console.log('cant travel now');
+                return;
+            }
 
-        // NEXT GALAXY SOUND
-        if (improvedAILevel <= 50) {
+            // NEXT GALAXY SOUND for random travel
             zzfx(
                 volumeRef.current, //Volume
                 0,
@@ -148,161 +146,147 @@ const TraderNav = () => {
                 0.09, //Pitch Jump Time
                 0.17 //Repeat Time
             );
-        } else if (improvedAILevel <= 100) {
-            zzfx(
-                0.5,
-                0.05,
-                496,
-                0.02,
-                0.16,
-                0.15,
-                0,
-                1.1,
-                0,
-                0,
-                -165,
-                0.07,
-                0.01,
-                0,
-                0,
-                0,
-                0,
-                0.65,
-                0.23,
-                0.23,
-                216
-            );
-        } else if (improvedAILevel <= 200) {
-            zzfx(
-                2.4,
-                0.05,
-                13,
-                0.03,
-                0.02,
-                0.13,
-                2,
-                0.8,
-                -0.1,
-                0,
-                -100,
-                0,
-                0.02,
-                0,
-                1,
-                0.1,
-                0.01,
-                0.5,
-                0,
-                0.24,
-                0
-            ); // Random 63 - Mutation 13
-        } else if (improvedAILevel <= 300) {
-            zzfx(
-                0.5,
-                0.05,
-                167,
-                0.24,
-                0.02,
-                0.13,
-                2,
-                3.3,
-                0,
-                -8,
-                0,
-                0,
-                0.12,
-                0,
-                0,
-                0,
-                0,
-                0.81,
-                0.24,
-                0.01,
-                160
-            );
-            // Random 64
-        } else if (improvedAILevel <= 400) {
-            zzfx(
-                0.5,
-                0.05,
-                166,
-                0.22,
-                0.03,
-                0.11,
-                4,
-                3.3,
-                0,
-                -7.9,
-                -50,
-                0.02,
-                0.14,
-                -0.2,
-                3,
-                -0.1,
-                0.01,
-                1.21,
-                0.21,
-                0.01,
-                163
-            );
-            // Random 64 - Mutation 24
-        } else if (improvedAILevel <= 500) {
-            zzfx(
-                0.5,
-                0.05,
-                166,
-                0.23,
-                0.03,
-                0.12,
-                0,
-                3.3,
-                0,
-                -7.9,
-                -150,
-                0.02,
-                0.12,
-                -0.1,
-                0,
-                -0.2,
-                0.01,
-                1.21,
-                0.22,
-                0.01,
-                163
-            );
-            // Random 64 - Mutation 15
-        }
 
-        // Powerup 61 - Mutation 1
-        // zzfx(
-        //     volumeRef.current,
-        //     925,
-        //     0.04,
-        //     0.3,
-        //     0.6,
-        //     1,
-        //     0.3,
-        //     0,
-        //     6.27,
-        //     -184,
-        //     0.09,
-        //     0.17,
-        //     0,
-        //     0,
-        //     0,
-        //     0,
-        //     0,
-        //     0,
-        //     0,
-        //     0
-        // );
+            // Travel to the selected galaxy
+            travelToGalaxy(tradersData.traders[nextIdx].homeGalaxy);
+        } else {
+            // For AI levels 50+, show the appropriate star map
+            // Check fuel cost for any travel
+            const cost = fuelPrices[0] || 0;
+            if (fuel < cost) {
+                handleInsufficientFuel();
+                console.log('cant travel now');
+                return;
+            }
 
-        // Always travel to the selected galaxy
-        travelToGalaxy(tradersData.traders[nextIdx].homeGalaxy);
+            // NEXT GALAXY SOUND for star map travel
+            if (improvedAILevel <= 100) {
+                zzfx(
+                    0.5,
+                    0.05,
+                    496,
+                    0.02,
+                    0.16,
+                    0.15,
+                    0,
+                    1.1,
+                    0,
+                    0,
+                    -165,
+                    0.07,
+                    0.01,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.65,
+                    0.23,
+                    0.23,
+                    216
+                );
+            } else if (improvedAILevel <= 200) {
+                zzfx(
+                    2.4,
+                    0.05,
+                    13,
+                    0.03,
+                    0.02,
+                    0.13,
+                    2,
+                    0.8,
+                    -0.1,
+                    0,
+                    -100,
+                    0,
+                    0.02,
+                    0,
+                    1,
+                    0.1,
+                    0.01,
+                    0.5,
+                    0,
+                    0.24,
+                    0
+                ); // Random 63 - Mutation 13
+            } else if (improvedAILevel <= 300) {
+                zzfx(
+                    0.5,
+                    0.05,
+                    167,
+                    0.24,
+                    0.02,
+                    0.13,
+                    2,
+                    3.3,
+                    0,
+                    -8,
+                    0,
+                    0,
+                    0.12,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0.81,
+                    0.24,
+                    0.01,
+                    160
+                );
+                // Random 64
+            } else if (improvedAILevel <= 400) {
+                zzfx(
+                    0.5,
+                    0.05,
+                    166,
+                    0.22,
+                    0.03,
+                    0.11,
+                    4,
+                    3.3,
+                    0,
+                    -7.9,
+                    -50,
+                    0.02,
+                    0.14,
+                    -0.2,
+                    3,
+                    -0.1,
+                    0.01,
+                    1.21,
+                    0.21,
+                    0.01,
+                    163
+                );
+                // Random 64 - Mutation 24
+            } else if (improvedAILevel <= 500) {
+                zzfx(
+                    0.5,
+                    0.05,
+                    166,
+                    0.23,
+                    0.03,
+                    0.12,
+                    0,
+                    3.3,
+                    0,
+                    -7.9,
+                    -150,
+                    0.02,
+                    0.12,
+                    -0.1,
+                    0,
+                    -0.2,
+                    0.01,
+                    1.21,
+                    0.22,
+                    0.01,
+                    163
+                );
+                // Random 64 - Mutation 15
+            }
 
-        // Only show high-detail star map if AI level is 501 or higher
-        if (improvedAILevel >= 501) {
-            setShowMap(true);
+            // Show the appropriate star map
+            setShowStarMap(true);
         }
     };
 
@@ -356,7 +340,7 @@ const TraderNav = () => {
                             <div className="signal-animation">
                                 <SignalAnimation
                                     duration={travelTimeLeft}
-                                    onClose={() => setShowMap(false)}
+                                    onClose={() => setShowStarMap(false)}
                                 />
                             </div>
                             <div className="traveling-message">
@@ -680,28 +664,6 @@ const TraderNav = () => {
                     </>
                 )}
             </div>
-
-            {showMap && (
-                <div className="star-map-container">
-                    {improvedAILevel < 50 ? (
-                        <TravelOverlay />
-                    ) : improvedAILevel < 100 ? (
-                        <StarMapMid
-                            galaxies={galaxiesData.galaxies}
-                            currentGalaxyId={galaxyName}
-                            onSelect={handleSelect}
-                            improvedAILevel={improvedAILevel}
-                        />
-                    ) : improvedAILevel > 100 ? (
-                        <StarMapHigh
-                            galaxies={galaxiesData.galaxies}
-                            currentGalaxyId={galaxyName}
-                            onSelect={handleSelect}
-                            improvedAILevel={improvedAILevel}
-                        />
-                    ) : null}
-                </div>
-            )}
         </div>
     );
 };

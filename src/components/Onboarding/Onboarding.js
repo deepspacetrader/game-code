@@ -10,10 +10,10 @@ const Onboarding = () => {
     const [step, setStep] = useState(0);
     const [completedActions, setCompletedActions] = useState({
         buyFirstQBit: false,
-        useFirstQBit: false,
+        sellFirstQBit: false,
         buySecondQBit: false,
-        sellSecondQBit: false,
-        explainedaiLevel: false,
+        useFirstQBit: false,
+        explainedAILevel: false,
         explainedTraderTravel: false,
         explainedGalaxyTravel: false,
     });
@@ -40,16 +40,15 @@ const Onboarding = () => {
             },
         },
         {
-            // STEP 2 - Use First QBit
-            target: '.inv-item[data-item-id="1"] .use-buttons',
-            title: 'Using Items',
-            content:
-                'Each item can be used to activate its effects or sold on the market for a profit.',
-            arrow: 'left',
+            // STEP 2 - Sell First QBit
+            target: '.market-item[data-item-id="1"]',
+            title: 'Selling Items',
+            content: 'Right-click on the item in the market to sell it back for a profit or loss.',
+            arrow: 'right',
             validate: () =>
-                completedActions.buyFirstQBit && useCount >= 1 && !completedActions.useFirstQBit,
+                completedActions.buyFirstQBit && sellCount >= 1 && !completedActions.sellFirstQBit,
             onAction: () => {
-                setCompletedActions((prev) => ({ ...prev, useFirstQBit: true }));
+                setCompletedActions((prev) => ({ ...prev, sellFirstQBit: true }));
             },
         },
         {
@@ -60,7 +59,7 @@ const Onboarding = () => {
             arrow: 'right',
             validate: () =>
                 completedActions.buyFirstQBit &&
-                completedActions.useFirstQBit &&
+                completedActions.sellFirstQBit &&
                 buyCount >= 2 &&
                 !completedActions.buySecondQBit,
             onAction: () => {
@@ -68,24 +67,24 @@ const Onboarding = () => {
             },
         },
         {
-            // Step 4 - Sell Second QBit
-            target: '.market-item[data-item-id="1"]',
-            title: 'Selling Items',
-            content: 'Right-click on the item in the market to sell it back for a profit or loss.',
-            arrow: 'right',
+            // STEP 4 - Use QBit
+            target: '.inv-item[data-item-id="1"] .use-buttons',
+            title: 'Using Items',
+            content:
+                'Each item can be used to activate its effects or sold on the market for a profit.',
+            arrow: 'left',
             validate: () =>
                 completedActions.buyFirstQBit &&
-                completedActions.useFirstQBit &&
+                completedActions.sellFirstQBit &&
                 completedActions.buySecondQBit &&
-                buyCount >= 2 &&
-                sellCount >= 1 &&
-                !completedActions.sellSecondQBit,
+                useCount >= 1 &&
+                !completedActions.useFirstQBit,
             onAction: () => {
-                setCompletedActions((prev) => ({ ...prev, sellSecondQBit: true }));
+                setCompletedActions((prev) => ({ ...prev, useFirstQBit: true }));
             },
         },
         {
-            // Step 5 - AI Level Decayasdsa
+            // Step 5 - AI Level Decay
             target: '.hud-item--ai-level',
             title: 'AI Level Decay',
             content:
@@ -93,14 +92,12 @@ const Onboarding = () => {
             arrow: 'right',
             validate: () =>
                 completedActions.buyFirstQBit &&
-                completedActions.useFirstQBit &&
+                completedActions.sellFirstQBit &&
                 completedActions.buySecondQBit &&
-                buyCount >= 2 &&
-                sellCount >= 1 &&
-                completedActions.sellSecondQBit &&
-                !completedActions.explainedaiLevel,
+                completedActions.useFirstQBit &&
+                !completedActions.explainedAILevel,
             onAction: () => {
-                setCompletedActions((prev) => ({ ...prev, explainedaiLevel: true }));
+                setCompletedActions((prev) => ({ ...prev, explainedAILevel: true }));
             },
         },
         {
@@ -112,12 +109,10 @@ const Onboarding = () => {
             arrow: 'right',
             validate: () =>
                 completedActions.buyFirstQBit &&
-                completedActions.useFirstQBit &&
+                completedActions.sellFirstQBit &&
                 completedActions.buySecondQBit &&
-                buyCount >= 2 &&
-                sellCount >= 1 &&
-                completedActions.sellSecondQBit &&
-                completedActions.explainedaiLevel &&
+                completedActions.useFirstQBit &&
+                completedActions.explainedAILevel &&
                 !completedActions.explainedTraderTravel,
             onAction: () => {
                 setCompletedActions((prev) => ({ ...prev, explainedTraderTravel: true }));
@@ -132,12 +127,10 @@ const Onboarding = () => {
             arrow: 'right',
             validate: () =>
                 completedActions.buyFirstQBit &&
-                completedActions.useFirstQBit &&
+                completedActions.sellFirstQBit &&
                 completedActions.buySecondQBit &&
-                buyCount >= 2 &&
-                sellCount >= 1 &&
-                completedActions.sellSecondQBit &&
-                completedActions.explainedaiLevel &&
+                completedActions.useFirstQBit &&
+                completedActions.explainedAILevel &&
                 completedActions.explainedTraderTravel &&
                 !completedActions.explainedGalaxyTravel,
             onAction: () => {
@@ -156,10 +149,10 @@ const Onboarding = () => {
 
     // Onboarding event handlers for use/sell actions
     const handleOnboardingUseQBit = () => {
-        if (step === 1 && !completedActions.useFirstQBit) {
+        if (step === 3 && !completedActions.useFirstQBit) {
             setUseCount((prev) => prev + 1);
             setCompletedActions((prev) => ({ ...prev, useFirstQBit: true }));
-            setTimeout(() => setStep(2), 0); // advance to step 3
+            setTimeout(() => setStep(4), 0); // advance to step 5
         }
     };
     const handleOnboardingSellQBit = () => {
@@ -169,10 +162,10 @@ const Onboarding = () => {
             setCompletedActions((prev) => ({
                 ...prev,
                 buyFirstQBit: false,
-                useFirstQBit: false,
+                sellFirstQBit: false,
             }));
             setBuyCount(0);
-            setUseCount(0);
+            setSellCount(0);
         }
     };
 
@@ -181,7 +174,7 @@ const Onboarding = () => {
     onboardingSellQBit = handleOnboardingSellQBit;
 
     useEffect(() => {
-        // Track buy/use/sell counts for QBit (itemId 1)
+        // Track buy/sell counts for QBit (itemId 1)
         const item = inventory.find((i) => i.itemId === 1);
         const currentQty = item ? item.quantity : 0;
         const prevQty = prevQBitQty.current;
@@ -190,25 +183,10 @@ const Onboarding = () => {
         if (currentQty > prevQty) {
             setBuyCount((prev) => prev + (currentQty - prevQty));
         }
-        // For other steps, keep previous logic
-        if (currentQty < prevQty) {
-            // If on step 2 and quantity decreased, do not allow useCount or completedActions.useFirstQBit to be set here
-            if (step !== 1) {
-                // If item is still present after decrease, treat as use
-                if (currentQty > 0) {
-                    if (
-                        completedActions.buyFirstQBit &&
-                        !completedActions.useFirstQBit &&
-                        !completedActions.buySecondQBit
-                    ) {
-                        setUseCount((prev) => prev + (prevQty - currentQty));
-                    }
-                } else if (currentQty === 0) {
-                    // If item is gone after decrease, treat as sell
-                    if (completedActions.buySecondQBit && !completedActions.sellSecondQBit) {
-                        setSellCount((prev) => prev + (prevQty - currentQty));
-                    }
-                }
+        // Track sells - only when item quantity goes to 0 (complete sell)
+        if (currentQty < prevQty && currentQty === 0) {
+            if (completedActions.buyFirstQBit && !completedActions.sellFirstQBit) {
+                setSellCount((prev) => prev + (prevQty - currentQty));
             }
         }
         prevQBitQty.current = currentQty;
@@ -278,9 +256,9 @@ const Onboarding = () => {
         return null;
     }
 
-    // Hide onboarding overlay if on step 2 and player has zero Basic QBiT Inverters
+    // Hide onboarding overlay if on step 3 (use step) and player has zero Basic QBiT Inverters
     if (
-        step === 1 &&
+        step === 3 &&
         (!inventory.find((i) => i.itemId === 1) ||
             inventory.find((i) => i.itemId === 1).quantity === 0)
     ) {
@@ -313,14 +291,14 @@ const Onboarding = () => {
                 left = targetRect.left - boxWidth - padding;
                 top = targetRect.top;
             } else if (step === 1) {
-                left = targetRect.left + boxWidth / 2 - padding;
-                top = targetRect.top - targetRect.height - padding * 3;
+                left = targetRect.left - boxWidth - padding;
+                top = targetRect.top;
             } else if (step === 2) {
                 left = targetRect.left - boxWidth - padding;
                 top = targetRect.top;
             } else if (step === 3) {
-                left = targetRect.left - boxWidth - padding;
-                top = targetRect.top;
+                left = targetRect.left + boxWidth / 2 - padding;
+                top = targetRect.top - targetRect.height - padding * 3;
             } else if (step === 4) {
                 // Position above and to the right of the AI Level HUD element
                 left = targetRect.left - boxWidth + 30;

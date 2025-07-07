@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import galaxiesData from '../../data/galaxies.json';
+import galaxiesData from '../../../data/galaxies.json';
 import './StarMap.scss';
 
 // SVG-based starmap for low AI, modeled after TravelOverlay
@@ -7,6 +7,7 @@ const StarMapLow = ({ currentGalaxyId, onTravel }) => {
     const [selectedGalaxyId, setSelectedGalaxyId] = useState(null);
     const [showMap, setShowMap] = useState(true);
     const [isTraveling, setIsTraveling] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const current = galaxiesData.galaxies.find((g) => g.galaxyId === currentGalaxyId);
     console.log(current);
@@ -26,21 +27,34 @@ const StarMapLow = ({ currentGalaxyId, onTravel }) => {
         if (showMap && selectedGalaxyId && !isTraveling) {
             console.log('Travel effect triggered:', { showMap, selectedGalaxyId });
             setIsTraveling(true);
+            setProgress(0);
 
-            // Create new timer
-            setTimeout(() => {
-                console.log('Timer completed, attempting travel');
-                const selectedGalaxy = galaxiesData.galaxies.find(
-                    (g) => g.galaxyId === selectedGalaxyId
-                );
-                console.log('Found galaxy:', selectedGalaxy);
-                if (selectedGalaxy) {
-                    console.log('Calling onTravel with:', selectedGalaxy.name);
-                    onTravel(selectedGalaxy.name);
-                    setShowMap(false);
+            // Start progress animation immediately
+            const startTime = Date.now();
+            const duration = 2000; // 2 seconds
+
+            const progressInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const newProgress = Math.min(100, (elapsed / duration) * 100);
+                setProgress(newProgress);
+
+                if (newProgress >= 100) {
+                    clearInterval(progressInterval);
+                    console.log('Timer completed, attempting travel');
+                    const selectedGalaxy = galaxiesData.galaxies.find(
+                        (g) => g.galaxyId === selectedGalaxyId
+                    );
+                    console.log('Found galaxy:', selectedGalaxy);
+                    if (selectedGalaxy) {
+                        console.log('Calling onTravel with:', selectedGalaxy.name);
+                        onTravel(selectedGalaxy.name);
+                        setShowMap(false);
+                    }
+                    setIsTraveling(false);
                 }
-                setIsTraveling(false);
-            }, 2000);
+            }, 50); // Update every 50ms for smooth animation
+
+            return () => clearInterval(progressInterval);
         }
     }, [showMap, selectedGalaxyId, onTravel]);
 
@@ -66,6 +80,10 @@ const StarMapLow = ({ currentGalaxyId, onTravel }) => {
 
     return (
         <div className="star-map-low-container">
+            <div className="starmap-departing-text">Departing...</div>
+            <div className="starmap-progress-container">
+                <div className="starmap-progress-bar" style={{ width: `${progress}%` }} />
+            </div>
             <svg
                 width={width}
                 height={height}
@@ -95,11 +113,9 @@ const StarMapLow = ({ currentGalaxyId, onTravel }) => {
                     );
                 })}
             </svg>
-            <div
-                style={{ display: 'flex', justifyContent: 'center', gap: '2em', marginTop: '1em' }}
-            >
-                <span style={{ color: 'green' }}>● Current {current.name}</span>
-                <span style={{ color: 'blue' }}>● Next {selectedGalaxy?.name}</span>
+            <div className="starmap-legend">
+                <span className="starmap-legend-current">● Current {current.name}</span>
+                <span className="starmap-legend-next">● Next {selectedGalaxy?.name}</span>
             </div>
         </div>
     );

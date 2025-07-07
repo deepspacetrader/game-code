@@ -23,16 +23,7 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
     const viewSpanX = spanX + padX * 2;
     const viewSpanY = spanY + padY * 2;
 
-    // Close on click outside
-    useEffect(() => {
-        function handleClick(e) {
-            if (containerRef.current && !containerRef.current.contains(e.target)) {
-                onClose && onClose();
-            }
-        }
-        document.addEventListener('mousedown', handleClick);
-        return () => document.removeEventListener('mousedown', handleClick);
-    }, [onClose]);
+    // Note: Click outside handling is now done by the parent overlay
 
     const contentRef = useRef();
     const onUpdate = useCallback(({ x, y, scale }) => {
@@ -44,22 +35,7 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className="star-map-mid-overlay"
-            style={{
-                position: 'fixed',
-                left: 0,
-                top: 0,
-                width: '100vw',
-                height: '100vh',
-                zIndex: 1000,
-                background: 'rgba(0,0,0,0.6)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
+        <div ref={containerRef} className="star-map-mid-container">
             <QuickPinchZoom onUpdate={onUpdate}>
                 <div
                     ref={contentRef}

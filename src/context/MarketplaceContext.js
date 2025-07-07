@@ -99,6 +99,9 @@ export const MarketplaceProvider = ({ children }) => {
     const [travelTimeLeft, setTravelTimeLeft] = useState(0);
     const [travelTotalTime, setTravelTotalTime] = useState(0);
 
+    // Star map state
+    const [showStarMap, setShowStarMap] = useState(false);
+
     // Galaxy State
     const [galaxyName, setGalaxyName] = useState('');
     const [gameCompleted, setGameCompleted] = useState(false);
@@ -2816,6 +2819,10 @@ export const MarketplaceProvider = ({ children }) => {
             jumpFromCoord,
             jumpToCoord,
 
+            // Star map state
+            showStarMap,
+            setShowStarMap,
+
             // Galaxy state
             galaxyName,
             nextGalaxyName: nextGalaxyName || '',
@@ -3071,6 +3078,10 @@ export const MarketplaceProvider = ({ children }) => {
             volumeRef,
             quantumPower,
             showOnboarding,
+
+            // Star map state
+            showStarMap,
+            setShowStarMap,
             // State setters
             setInventory,
             setCredits,
@@ -3209,6 +3220,8 @@ export const MarketplaceProvider = ({ children }) => {
             travelToGalaxy,
             showOnboarding,
             setShowOnboarding,
+            showStarMap,
+            setShowStarMap,
             canQuantumBuy,
             canQuantumSell,
         ]

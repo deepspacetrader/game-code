@@ -13,6 +13,7 @@ import TradingArea from './components/Trading/TradingArea';
 import InventoryPane from './components/Inventory/InventoryPane';
 import AdminDebug from './components/Admin/AdminDebug';
 import TravelOverlay from './components/Travel/TravelOverlay';
+import StarMapOverlay from './components/Travel/StarMapOverlay';
 import GameOverScreen from './components/Game/GameOverScreen';
 import FastestTimes from './components/FastestTimes';
 import TradeHistory from './components/Trader/TradeHistory';
@@ -72,6 +73,8 @@ const Game = () => {
             <GameMenu />
             {/* overlay during galaxy jump */}
             <TravelOverlay />
+            {/* star map overlay */}
+            <StarMapOverlay />
             {/* floating messages manager */}
             <FloatingMessagesManager />
             {/* Enemy Spawner - Handles random enemy encounters */}
