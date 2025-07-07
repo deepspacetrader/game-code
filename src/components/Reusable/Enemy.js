@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './Enemy.scss';
 import GameOver from '../Game/GameOver';
 import { zzfx } from 'zzfx';
@@ -27,7 +27,7 @@ export const ENEMY_TYPES = {
 const ENCOUNTER_REASONS = {
     RANDOM: 'random_encounter',
     QUANTUM_LIMIT: 'quantum_processor_limit',
-    ILLEGAL_UI: 'illegal_ui_increase',
+    ILLEGAL_AI: 'ILLEGAL_AI_increase',
     INSPECTION: 'random_inspection',
     AGGRO: 'player_aggression',
 };
@@ -85,7 +85,7 @@ const Enemy = ({
     playerStats = { damage: 20, defense: 10 },
 }) => {
     const { health, setHealth, credits, setCredits, inventory, volumeRef } = useMarketplace() || {};
-    const { uiTier } = useUI() || {};
+    const { aiTier } = useAILevel() || {};
     const [isGameOver, setIsGameOver] = useState(false);
     const [encounterActive, setEncounterActive] = useState(true);
     const [playerTurn, setPlayerTurn] = useState(true);
@@ -96,8 +96,8 @@ const Enemy = ({
     const faces = useMemo(() => [faceImage1, faceImage2, faceImage3, faceImage4, faceImage5], []);
     const [currentFace, setCurrentFace] = useState(() => faces[3]);
 
-    // Calculate UI scaling based on UI level (simplified for performance)
-    const uiScaling = useMemo(
+    // Calculate AI scaling based on AI level (simplified for performance)
+    const aiScaling = useMemo(
         () => ({
             scale: 1, // Base scale
             opacity: 1, // Base opacity
@@ -275,16 +275,16 @@ const Enemy = ({
 
     const checkEncounterConditions = useCallback(() => {
         const quantumProcessors = inventory.filter((item) => item.name === 'Quantum Processor');
-        const hasIllegalUI =
-            uiTier > 1000 &&
+        const hasIllegalAI =
+            aiTier > 1000 &&
             inventory.some((item) => item.isIllegal && item.name !== 'Quantum Processor');
 
         if (quantumProcessors.length >= 5) return 'quantum_processor_limit';
-        if (hasIllegalUI) return 'illegal_ui_increase';
+        if (hasIllegalAI) return 'ILLEGAL_AI_increase';
         if (Math.random() < 0.05 && quantumProcessors.length > 0) return 'random_inspection';
 
         return null;
-    }, [inventory, uiTier]);
+    }, [inventory, aiTier]);
 
     // Trigger market police encounter
     const triggerMarketPoliceEncounter = useCallback(
@@ -318,7 +318,7 @@ const Enemy = ({
                     };
                     break;
 
-                case 'illegal_ui_increase':
+                case 'ILLEGAL_AI_increase':
                     marketPolice = {
                         ...marketPolice,
                         name: `Compliance Officer (${enemy.rank}-Rank)`,
@@ -568,12 +568,12 @@ const Enemy = ({
         return null;
     }
 
-    // Apply UI scaling to the container
+    // Apply AI scaling to the container
     const containerStyle = {
-        transform: `scale(${uiScaling.scale})`,
-        opacity: uiScaling.opacity,
+        transform: `scale(${aiScaling.scale})`,
+        opacity: aiScaling.opacity,
         transformOrigin: 'center',
-        transition: `all ${0.3 / uiScaling.animationSpeed}s ease`,
+        transition: `all ${0.3 / aiScaling.animationSpeed}s ease`,
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -582,14 +582,14 @@ const Enemy = ({
     };
 
     const textStyle = {
-        fontSize: `${uiScaling.fontSize}em`,
-        transition: `all ${0.3 / uiScaling.animationSpeed}s ease`,
+        fontSize: `${aiScaling.fontSize}em`,
+        transition: `all ${0.3 / aiScaling.animationSpeed}s ease`,
     };
 
     return (
         enemy && (
             <div className={`enemy-encounter-overlay fade-out-${fadeOut}`} style={containerStyle}>
-                <div className={`enemy-encounter-container ui-tier-${uiTier}`} style={textStyle}>
+                <div className={`enemy-encounter-container ai-tier-${aiTier}`} style={textStyle}>
                     <div className="enemy-info">
                         <div className="enemy-header">
                             {currentFace && (
@@ -614,7 +614,7 @@ const Enemy = ({
                                 <strong>Charge:</strong> Exceeded legal limit of Quantum Processors{' '}
                             </p>
                         )}
-                        {enemy.reason === 'illegal_ui_increase' && (
+                        {enemy.reason === 'ILLEGAL_AI_increase' && (
                             <p className="encounter-reason">
                                 <strong>Charge:</strong> Unauthorized neural interface modification
                             </p>

@@ -98,42 +98,42 @@
 }
 
 /* Profit tier effects */
-.sell-all-btn.profit.ui-tier-low {
+.sell-all-btn.profit.ai-tier-low {
     opacity: 0.8;
 }
 
-.sell-all-btn.profit.ui-tier-medium {
+.sell-all-btn.profit.ai-tier-medium {
     box-shadow: 0 0 6px rgba(0, 128, 0, 0.6);
 }
 
-.sell-all-btn.profit.ui-tier-high {
+.sell-all-btn.profit.ai-tier-high {
     animation: pulse 2s ease-in-out infinite;
 }
 
-.sell-all-btn.profit.ui-tier-ultra {
+.sell-all-btn.profit.ai-tier-ultra {
     animation: pulse 1.5s ease-in-out infinite;
     transform: scale(1.05);
 }
 
-.sell-all-btn.profit.ui-tier-elite {
+.sell-all-btn.profit.ai-tier-elite {
     animation: pulse 1s ease-in-out infinite, wiggle 0.5s ease-in-out infinite;
     transform: scale(1.1);
 }
 
 /* Loss tier effects */
-.sell-all-btn.loss.ui-tier-medium {
+.sell-all-btn.loss.ai-tier-medium {
     box-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
 }
 
-.sell-all-btn.loss.ui-tier-high {
+.sell-all-btn.loss.ai-tier-high {
     transform: scale(0.8);
 }
 
-.sell-all-btn.loss.ui-tier-ultra {
+.sell-all-btn.loss.ai-tier-ultra {
     transform: scale(0.75);
 }
 
-.sell-all-btn.loss.ui-tier-elite {
+.sell-all-btn.loss.ai-tier-elite {
     animation: wiggleElite 0.25s ease-in-out infinite;
 }
 

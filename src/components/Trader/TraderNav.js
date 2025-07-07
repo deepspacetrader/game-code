@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import galaxiesData from '../../data/galaxies.json';
 import StarMapMid from '../Travel/StarMaps/StarMapMid';
 import StarMapHigh from '../Travel/StarMaps/StarMapHigh';
@@ -51,23 +51,23 @@ const TraderNav = () => {
 
     // console.log(addFloatingMessage);
 
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
 
-    // Determine UI tier class based on improvedUILevel
-    const getUITierClass = () => {
+    // Determine AI tier class based on improvedAILevel
+    const getaiTierClass = () => {
         // For levels 50+, we'll use a specific class to enable animations
-        if (improvedUILevel >= 50) return `ui-tier-50`;
+        if (improvedAILevel >= 50) return `ai-tier-50`;
 
         // For levels below 50, we'll use a class that indicates no animations
-        return 'ui-tier-basic';
+        return 'ai-tier-basic';
     };
 
-    const uiTierClass = getUITierClass();
+    const aiTierClass = getaiTierClass();
     // Add default value for currentGalaxy
     // only enable toggles if item exists in inventory
     const hasShield = inventory.some((item) => item.name === 'Shield' && item.quantity > 0);
     const hasStealth = inventory.some((item) => item.name === 'Stealth' && item.quantity > 0);
-    const showPreview = improvedUILevel >= 75;
+    const showPreview = improvedAILevel >= 75;
     const warnWar = showPreview && nextGalaxyWar;
 
     // resolve trader data
@@ -129,7 +129,7 @@ const TraderNav = () => {
         }
 
         // NEXT GALAXY SOUND
-        if (improvedUILevel <= 50) {
+        if (improvedAILevel <= 50) {
             zzfx(
                 volumeRef.current, //Volume
                 0,
@@ -148,7 +148,7 @@ const TraderNav = () => {
                 0.09, //Pitch Jump Time
                 0.17 //Repeat Time
             );
-        } else if (improvedUILevel <= 100) {
+        } else if (improvedAILevel <= 100) {
             zzfx(
                 0.5,
                 0.05,
@@ -172,7 +172,7 @@ const TraderNav = () => {
                 0.23,
                 216
             );
-        } else if (improvedUILevel <= 200) {
+        } else if (improvedAILevel <= 200) {
             zzfx(
                 2.4,
                 0.05,
@@ -196,7 +196,7 @@ const TraderNav = () => {
                 0.24,
                 0
             ); // Random 63 - Mutation 13
-        } else if (improvedUILevel <= 300) {
+        } else if (improvedAILevel <= 300) {
             zzfx(
                 0.5,
                 0.05,
@@ -221,7 +221,7 @@ const TraderNav = () => {
                 160
             );
             // Random 64
-        } else if (improvedUILevel <= 400) {
+        } else if (improvedAILevel <= 400) {
             zzfx(
                 0.5,
                 0.05,
@@ -246,7 +246,7 @@ const TraderNav = () => {
                 163
             );
             // Random 64 - Mutation 24
-        } else if (improvedUILevel <= 500) {
+        } else if (improvedAILevel <= 500) {
             zzfx(
                 0.5,
                 0.05,
@@ -300,8 +300,8 @@ const TraderNav = () => {
         // Always travel to the selected galaxy
         travelToGalaxy(tradersData.traders[nextIdx].homeGalaxy);
 
-        // Only show high-detail star map if UI level is 501 or higher
-        if (improvedUILevel >= 501) {
+        // Only show high-detail star map if AI level is 501 or higher
+        if (improvedAILevel >= 501) {
             setShowMap(true);
         }
     };
@@ -314,7 +314,7 @@ const TraderNav = () => {
     const fuelCostReduction = statusEffects.fuel_cost?.value || 0;
 
     return (
-        <div ref={traderNavRef} className={`main-trader ${uiTierClass} `}>
+        <div ref={traderNavRef} className={`main-trader ${aiTierClass} `}>
             <div className="trader-nav">
                 <div className="trader-buttons">
                     {!inTravel && traderCount > 1 && (
@@ -343,7 +343,7 @@ const TraderNav = () => {
                                 )}
                             </button>
 
-                            {improvedUILevel >= 25 && prevIndex >= 0 && (
+                            {improvedAILevel >= 25 && prevIndex >= 0 && (
                                 <p className="center">{` ${traderNames[prevIndex]}`}</p>
                             )}
                         </div>
@@ -366,7 +366,7 @@ const TraderNav = () => {
                                     traderMessages={traderMessages}
                                     lastTrader={currentTrader} // This is a goodbye message
                                     statusEffects={statusEffects}
-                                    improvedUILevel={improvedUILevel}
+                                    improvedAILevel={improvedAILevel}
                                 />
                             </div>
                         </>
@@ -383,7 +383,7 @@ const TraderNav = () => {
                                         traderMessages={traderMessages}
                                         currentTrader={currentTrader} // This is a greeting message
                                         statusEffects={statusEffects}
-                                        improvedUILevel={improvedUILevel}
+                                        improvedAILevel={improvedAILevel}
                                     />
                                 </div>
                             </div>
@@ -404,12 +404,12 @@ const TraderNav = () => {
 
                     <div className="trader-count">
                         Trader {traderIndex + 1} of {traderCount}
-                        {improvedUILevel >= 25 && ` - ${traderData?.name}`}
+                        {improvedAILevel >= 25 && ` - ${traderData?.name}`}
                     </div>
 
                     {showTraderInfo && traderData && (
                         <div className="trader-info-container">
-                            <TraderInfo trader={traderData} improvedUILevel={improvedUILevel} />
+                            <TraderInfo trader={traderData} improvedAILevel={improvedAILevel} />
                         </div>
                     )}
                     <div className="status-card">
@@ -551,7 +551,7 @@ const TraderNav = () => {
                                     ''
                                 )}
                             </button>
-                            {improvedUILevel >= 25 && nextIndex >= 0 && (
+                            {improvedAILevel >= 25 && nextIndex >= 0 && (
                                 <p className="center">{`${traderNames[nextIndex]}`}</p>
                             )}
                         </div>
@@ -593,7 +593,7 @@ const TraderNav = () => {
                                 return (
                                     <div className="fuel-button" style={{ position: 'relative' }}>
                                         <p className="fuel-cost-info info">
-                                            {improvedUILevel >= 25
+                                            {improvedAILevel >= 25
                                                 ? `(5 units @ ${effectivePrice.toFixed(
                                                       2
                                                   )} each = ${(effectivePrice * 5).toFixed(
@@ -672,7 +672,7 @@ const TraderNav = () => {
                                 >
                                     <p>
                                         {showPreview ? `Next: ${nextGalaxyName}` : 'Next Galaxy'}{' '}
-                                        {improvedUILevel < 50 ? `(Random)` : `(StarMap)`}
+                                        {improvedAILevel < 50 ? `(Random)` : `(StarMap)`}
                                     </p>
                                 </button>
                             </div>
@@ -683,21 +683,21 @@ const TraderNav = () => {
 
             {showMap && (
                 <div className="star-map-container">
-                    {improvedUILevel < 50 ? (
+                    {improvedAILevel < 50 ? (
                         <TravelOverlay />
-                    ) : improvedUILevel < 100 ? (
+                    ) : improvedAILevel < 100 ? (
                         <StarMapMid
                             galaxies={galaxiesData.galaxies}
                             currentGalaxyId={galaxyName}
                             onSelect={handleSelect}
-                            improvedUILevel={improvedUILevel}
+                            improvedAILevel={improvedAILevel}
                         />
-                    ) : improvedUILevel > 100 ? (
+                    ) : improvedAILevel > 100 ? (
                         <StarMapHigh
                             galaxies={galaxiesData.galaxies}
                             currentGalaxyId={galaxyName}
                             onSelect={handleSelect}
-                            improvedUILevel={improvedUILevel}
+                            improvedAILevel={improvedAILevel}
                         />
                     ) : null}
                 </div>

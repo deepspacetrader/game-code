@@ -13,9 +13,9 @@ import tradersData from '../data/traders.json';
 import galaxiesData from '../data/galaxies.json';
 import traderMessagesData from '../data/trader-messages.json';
 import { randomInt, shuffle, randomFloatRange } from '../utils/helpers';
-import { useUI } from './UIContext';
+import { useAILevel } from './AILevelContext';
 import { zzfx } from 'zzfx';
-
+import { MAX_FUEL, MIN_QUANTUM_TRADE_DELAY } from '../utils/constants';
 const MarketplaceContext = createContext();
 
 // Helper: Check for illegal items in inventory
@@ -33,16 +33,12 @@ function getTotalQuantumProcessors(inventory, quantumSlotsUsed) {
 
 export const MarketplaceProvider = ({ children }) => {
     // Hooks and context
-    const { setImprovedUILevel, courierDrones, setCourierDrones, sortMode, sortAsc, handleSort } =
-        useUI();
+    const { setimprovedAILevel, courierDrones, setCourierDrones, sortMode, sortAsc, handleSort } =
+        useAILevel();
 
     const [showOnboarding, setShowOnboarding] = useState(false);
 
-    // Game constants
-    const defaultCredits = 10000;
-    const defaultHealth = 100;
     const defaultFuel = 100;
-    const MIN_QUANTUM_TRADE_DELAY = 1000; // Minimum milliseconds between quantum trades
 
     // Load game data - these are static imports, so we don't need dependency arrays
     const traderConfigs = useMemo(() => tradersData?.traders || [], []);
@@ -52,8 +48,8 @@ export const MarketplaceProvider = ({ children }) => {
     // Core game state
     const [inventory, setInventory] = useState([]);
 
-    const [credits, setCredits] = useState(defaultCredits);
-    const [health, setHealth] = useState(defaultHealth);
+    const [credits, setCredits] = useState(10000);
+    const [health, setHealth] = useState(100);
     const [fuel, setFuel] = useState(defaultFuel);
     const [isCheater, setIsCheater] = useState(false);
 
@@ -262,7 +258,7 @@ export const MarketplaceProvider = ({ children }) => {
                 applyAdditionalEffects(event);
             }
         },
-        [addFloatingMessage, setCourierDrones, setImprovedUILevel]
+        [addFloatingMessage, setCourierDrones, setimprovedAILevel]
     );
 
     // Apply any additional effects from the event
@@ -281,16 +277,18 @@ export const MarketplaceProvider = ({ children }) => {
                         addFloatingMessage(`-${val} Damage`, 'damage');
                         break;
                     case 'fuel_amount':
-                        setFuel((f) => Math.max(0, parseFloat(f) + parseFloat(val)).toFixed(2));
+                        setFuel((f) =>
+                            Math.max(0, Math.min(MAX_FUEL, parseFloat(f) + parseFloat(val)))
+                        );
                         addFloatingMessage(`${val > 0 ? '+' : ''}${val} Fuel`, 'fuel');
                         break;
                     case 'credit_balance':
                         setCredits((c) => c + val);
                         addFloatingMessage(`${val > 0 ? '+' : ''}${val} Credits`, 'credits');
                         break;
-                    case 'improved_UI':
-                        setImprovedUILevel((l) => l + Math.ceil(val));
-                        addFloatingMessage(`UI Update! (+${Math.ceil(val)})`, 'global');
+                    case 'improved_AI':
+                        setimprovedAILevel((l) => l + Math.ceil(val));
+                        addFloatingMessage(`AI Update! (+${Math.ceil(val)})`, 'global');
                         break;
                     case 'escape_chance':
                         setStealthActive(true);
@@ -313,7 +311,7 @@ export const MarketplaceProvider = ({ children }) => {
                 addFloatingMessage(`${event.name}: ${event.description}`, 'event');
             }
         },
-        [addFloatingMessage, setCourierDrones, setImprovedUILevel]
+        [addFloatingMessage, setCourierDrones, setimprovedAILevel]
     );
 
     // Trigger a random event
@@ -664,7 +662,7 @@ export const MarketplaceProvider = ({ children }) => {
             }
 
             // Deduct fuel
-            setFuel((prev) => prev - fuelCost);
+            setFuel((prev) => Math.max(0, Math.min(MAX_FUEL, prev - fuelCost)));
 
             // Set up travel coordinates for animation
             setJumpFromCoord(currentGalaxyObj.coordinates || { x: 0, y: 0, z: 0 });
@@ -721,7 +719,7 @@ export const MarketplaceProvider = ({ children }) => {
                         }
                         return 0;
                     }
-                    setFuel((f) => Math.max(f - drainRate, 0).toFixed(2));
+                    setFuel((f) => Math.max(0, Math.min(MAX_FUEL, f - drainRate)));
                     return t - 100;
                 });
             }, 100);
@@ -738,7 +736,8 @@ export const MarketplaceProvider = ({ children }) => {
             try {
                 // Set basic state with validation
                 if (savedState.health !== undefined) setHealth(Number(savedState.health));
-                if (savedState.fuel !== undefined) setFuel(Number(savedState.fuel));
+                if (savedState.fuel !== undefined)
+                    setFuel(Math.max(0, Math.min(MAX_FUEL, Number(savedState.fuel))));
                 if (savedState.credits !== undefined) setCredits(Number(savedState.credits));
 
                 // Set cheater status from saved state
@@ -785,8 +784,8 @@ export const MarketplaceProvider = ({ children }) => {
 
                 if (savedState.quantumProcessors !== undefined)
                     setQuantumProcessors(Number(savedState.quantumProcessors));
-                if (savedState.uiLevel !== undefined)
-                    setImprovedUILevel(Number(savedState.uiLevel));
+                if (savedState.aiLevel !== undefined)
+                    setimprovedAILevel(Number(savedState.aiLevel));
                 // if (savedState.deliverySpeed !== undefined) setCourierDrones(Number(savedState.deliverySpeed));
 
                 // Travel to the saved galaxy if specified
@@ -816,7 +815,7 @@ export const MarketplaceProvider = ({ children }) => {
             setStealthActive,
             setInventory,
             setQuantumProcessors,
-            setImprovedUILevel,
+            setimprovedAILevel,
             travelToGalaxy,
         ]
     );
@@ -838,10 +837,10 @@ export const MarketplaceProvider = ({ children }) => {
 
     useEffect(() => {
         const decayInterval = setInterval(() => {
-            setImprovedUILevel((level) => (level > 0 ? level - 1 : 0));
+            setimprovedAILevel((level) => (level > 0 ? level - 1 : 0));
         }, 4000);
         return () => clearInterval(decayInterval);
-    }, [setImprovedUILevel]);
+    }, [setimprovedAILevel]);
 
     // Helper to map reliableItems (itemId) to item indices
     function getReliableIndices(reliableItemIds, items) {
@@ -940,7 +939,7 @@ export const MarketplaceProvider = ({ children }) => {
         setStealthActive,
         setInventory,
         setQuantumProcessors,
-        setImprovedUILevel,
+        setimprovedAILevel,
         travelToGalaxy,
     ]);
 
@@ -1162,7 +1161,7 @@ export const MarketplaceProvider = ({ children }) => {
             setTravelTimeLeft((t) => {
                 if (t <= 100) {
                     clearInterval(iv);
-                    setFuel((f) => Math.max(f - drainRate, 0).toFixed(2));
+                    setFuel((f) => Math.max(0, Math.min(MAX_FUEL, f - drainRate)));
                     setCurrentTrader(nextTraderId);
                     setPendingTrader(null);
                     setTravelTotalTime(0);
@@ -1174,7 +1173,7 @@ export const MarketplaceProvider = ({ children }) => {
                     if (Math.random() < rate) triggerEnemyEncounter();
                     return 0;
                 }
-                setFuel((f) => Math.max(f - drainRate, 0).toFixed(2));
+                setFuel((f) => Math.max(0, Math.min(MAX_FUEL, f - drainRate)));
                 return t - 100;
             });
         }, 100);
@@ -1227,7 +1226,7 @@ export const MarketplaceProvider = ({ children }) => {
             setTravelTimeLeft((t) => {
                 if (t <= 100) {
                     clearInterval(iv);
-                    setFuel((f) => Math.max(f - drainRate, 0).toFixed(2));
+                    setFuel((f) => Math.max(0, Math.min(MAX_FUEL, f - drainRate)));
                     setCurrentTrader(prevTraderId);
                     setPendingTrader(null);
                     setTravelTotalTime(0);
@@ -1239,7 +1238,7 @@ export const MarketplaceProvider = ({ children }) => {
                     if (Math.random() < rate) triggerEnemyEncounter();
                     return 0;
                 }
-                setFuel((f) => Math.max(f - drainRate, 0).toFixed(2));
+                setFuel((f) => Math.max(0, Math.min(MAX_FUEL, f - drainRate)));
                 return t - 100;
             });
         }, 100);
@@ -1351,7 +1350,7 @@ export const MarketplaceProvider = ({ children }) => {
             // If we just bought the last item, update the display
             if (cell.stock === 1) {
                 addFloatingMessage('Last one sold out!', 'global');
-                // Force a re-render to update the UI immediately
+                // Force a re-render to update the AI immediately
                 setTraders((prevTraders) => [...prevTraders]);
             }
             // reset fail counter on successful buy
@@ -1877,7 +1876,7 @@ export const MarketplaceProvider = ({ children }) => {
                     case 'fuel_amount':
                         setFuel((f) => {
                             const newFuel = isAdd ? parseFloat(f) + value : parseFloat(f) - value;
-                            return Math.max(0, Math.min(100, newFuel));
+                            return Math.max(0, Math.min(MAX_FUEL, newFuel));
                         });
                         isAdd &&
                             zzfx(
@@ -1996,8 +1995,8 @@ export const MarketplaceProvider = ({ children }) => {
                         ); // Pickup 51 // Pickup 51
                         break;
 
-                    case 'improved_UI':
-                        setImprovedUILevel((prevLevel) => {
+                    case 'improved_AI':
+                        setimprovedAILevel((prevLevel) => {
                             const safePrev =
                                 typeof prevLevel === 'number' && !isNaN(prevLevel) ? prevLevel : 0;
                             const safeValue =
@@ -2023,9 +2022,9 @@ export const MarketplaceProvider = ({ children }) => {
                             0,
                             0,
                             0.04
-                        ); // UI Level up
+                        ); // AI Level up
                         addFloatingMessage(
-                            `UI Update! (+${Math.ceil(value)})`,
+                            `AI Update! (+${Math.ceil(value)})`,
                             'global',
                             'quantum-processor'
                         );
@@ -2160,10 +2159,10 @@ export const MarketplaceProvider = ({ children }) => {
                         ); // Random 16
                         break;
                     }
-                    case '+improved_UI':
+                    case '+improved_AI':
                         const def = items.find((i) => i.name === name);
                         if (def && def.illegal) {
-                            setImprovedUILevel((prevLevel) => {
+                            setimprovedAILevel((prevLevel) => {
                                 const safePrev =
                                     typeof prevLevel === 'number' && !isNaN(prevLevel)
                                         ? prevLevel
@@ -2176,7 +2175,7 @@ export const MarketplaceProvider = ({ children }) => {
                                 const newLevel = safePrev + safeValue;
                                 if (safePrev <= 1000 && newLevel > 1000) {
                                     setCurrentEnemy({
-                                        name: 'Market Police (Illegal UI)',
+                                        name: 'Market Police (Illegal AI)',
                                         type: 'market_police',
                                         rank: 'A',
                                         health: 250,
@@ -2184,7 +2183,7 @@ export const MarketplaceProvider = ({ children }) => {
                                         statusEffects: ['Lawful Presence', 'System Scan'],
                                         isHostile: true,
                                         isMarketPolice: true,
-                                        reason: 'illegal_ui_increase',
+                                        reason: 'ILLEGAL_AI_increase',
                                     });
                                 }
                                 return newLevel;
@@ -2201,12 +2200,12 @@ export const MarketplaceProvider = ({ children }) => {
             inventory,
             items,
             setCourierDrones,
-            setImprovedUILevel,
+            setimprovedAILevel,
             setCurrentEnemy,
         ]
     );
 
-    // ----- Toggle Shield -----
+    // ----- TOGGLE SHIELD -----
     const toggleShield = useCallback(() => {
         setShieldActive((s) => {
             const newS = !s;
@@ -2215,7 +2214,7 @@ export const MarketplaceProvider = ({ children }) => {
         });
     }, [addFloatingMessage]);
 
-    // ----- Toggle Stealth -----
+    // ----- TOGGLE STEALTH -----
     const toggleStealth = useCallback(() => {
         setStealthActive((s) => {
             const newS = !s;
@@ -2341,7 +2340,7 @@ export const MarketplaceProvider = ({ children }) => {
                 enemyData.statusEffects = ['Quantum Dampening', 'Reinforced Armor'];
                 enemyData.isMarketPolice = true;
                 break;
-            case 'illegal_ui_increase':
+            case 'ILLEGAL_AI_increase':
                 enemyData.name = 'Compliance Officer';
                 enemyData.rank = 'A';
                 enemyData.health = 250;
@@ -2386,7 +2385,7 @@ export const MarketplaceProvider = ({ children }) => {
         const prefix =
             {
                 quantum_processor_limit: 'Quantum Regulation Unit: ',
-                illegal_ui_increase: 'Compliance Officer: ',
+                ILLEGAL_AI_increase: 'Compliance Officer: ',
                 random_inspection: 'Market Inspector: ',
                 trader_combat: 'Hostile Trader: ',
                 bounty_hunter: 'Bounty Hunter: ',
@@ -2514,12 +2513,12 @@ export const MarketplaceProvider = ({ children }) => {
             }
 
             setCredits((c) => Number(c) - Number(totalCost));
-            setFuel((f) => Number(f) + Number(amount));
+            setFuel((f) => Math.max(0, Math.min(MAX_FUEL, Number(f) + Number(amount))));
         },
         [credits, traderIds, currentTrader, fuelPrices, inventory, items]
     );
 
-    // Sync delivery speed with courierDrones from UIContext
+    // Sync delivery speed with courierDrones from AILevelContext
     // useEffect(() => {
     //     setCourierDrones(courierDrones || 0);
     // }, [courierDrones, setCourierDrones]);
@@ -2776,6 +2775,7 @@ export const MarketplaceProvider = ({ children }) => {
             inventory,
             health,
             fuel,
+            MAX_FUEL,
 
             // Game state
             currentEnemy,
@@ -2791,7 +2791,7 @@ export const MarketplaceProvider = ({ children }) => {
             currentTrader,
             TRADER_COUNT: traderIds?.length || 0,
 
-            // UI state
+            // AI state
             sortMode,
             sortAsc,
             displayCells: displayCells || [],
@@ -2884,9 +2884,10 @@ export const MarketplaceProvider = ({ children }) => {
 
                 // Set basic game state
                 if (savedState.health !== undefined) setHealth(savedState.health);
-                if (savedState.fuel !== undefined) setFuel(savedState.fuel);
+                if (savedState.fuel !== undefined)
+                    setFuel(Math.max(0, Math.min(MAX_FUEL, savedState.fuel)));
                 if (savedState.credits !== undefined) setCredits(savedState.credits);
-                // Delivery speed is handled by courierDrones in the UI
+                // Delivery speed is handled by courierDrones in the AI
                 if (savedState.shieldActive !== undefined) setShieldActive(savedState.shieldActive);
                 if (savedState.stealthActive !== undefined)
                     setStealthActive(savedState.stealthActive);
@@ -2908,9 +2909,9 @@ export const MarketplaceProvider = ({ children }) => {
                     setInventory(savedState.inventory);
                 }
 
-                // Update UI level if specified
-                if (savedState.uiLevel !== undefined) {
-                    setImprovedUILevel(savedState.uiLevel);
+                // Update AI level if specified
+                if (savedState.aiLevel !== undefined) {
+                    setimprovedAILevel(savedState.aiLevel);
                 }
 
                 // Mark as initialized
@@ -2980,7 +2981,7 @@ export const MarketplaceProvider = ({ children }) => {
         quantumInventory,
         quantumPower,
         quantumProcessors,
-        setImprovedUILevel,
+        setimprovedAILevel,
         setQuantumProcessors,
         updateQuantumProcessors,
         setQuantumInventory,

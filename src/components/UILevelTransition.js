@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './UILevelTransition.css';
+import './aiLevelTransition.css';
 
 /**
- * UILevelTransition
- * Reusable wrapper for UI-level-dependent visibility and tier transitions.
+ * aiLevelTransition
+ * Reusable wrapper for ai-level-dependent visibility and tier transitions.
  * - Instantly pops in when visible becomes true.
  * - Gracefully collapses and fades out when visible becomes false.
  * - Animates color/tier transitions via className.
@@ -14,37 +14,44 @@ import './UILevelTransition.css';
  * @param {boolean} instantPop - If true, disables transition on pop-in (default: true).
  * @param {React.ReactNode} children - Content to render.
  */
-export default function UILevelTransition({ visible, children, className = '', style = {}, instantPop = true }) {
-  const [show, setShow] = useState(visible);
-  const [animatingOut, setAnimatingOut] = useState(false);
-  const prevVisible = useRef(visible);
+export default function aiLevelTransition({
+    visible,
+    children,
+    className = '',
+    style = {},
+    instantPop = true,
+}) {
+    const [show, setShow] = useState(visible);
+    const [animatingOut, setAnimatingOut] = useState(false);
+    const prevVisible = useRef(visible);
 
-  useEffect(() => {
-    if (visible) {
-      setShow(true); // Instantly show
-      setAnimatingOut(false);
-    }
-    else if (prevVisible.current && !visible) {
-      setAnimatingOut(true);
-      // Wait for animation to finish before hiding
-      const timeout = setTimeout(() => {
-        setShow(false);
-        setAnimatingOut(false);
-      }, 350000); // Match CSS duration
-      return () => clearTimeout(timeout);
-    }
-    prevVisible.current = visible;
-  }, [visible]);
+    useEffect(() => {
+        if (visible) {
+            setShow(true); // Instantly show
+            setAnimatingOut(false);
+        } else if (prevVisible.current && !visible) {
+            setAnimatingOut(true);
+            // Wait for animation to finish before hiding
+            const timeout = setTimeout(() => {
+                setShow(false);
+                setAnimatingOut(false);
+            }, 350000); // Match CSS duration
+            return () => clearTimeout(timeout);
+        }
+        prevVisible.current = visible;
+    }, [visible]);
 
-  // If not shown, render nothing
-  if (!show && !animatingOut) return null;
+    // If not shown, render nothing
+    if (!show && !animatingOut) return null;
 
-  return (
-    <div
-      className={`ui-level-transition${show && !animatingOut && instantPop ? ' pop-in' : ''}${animatingOut ? ' fade-collapse-out' : ''}${className ? ' ' + className : ''}`}
-      style={style}
-    >
-      {children}
-    </div>
-  );
+    return (
+        <div
+            className={`ai-level-transition${show && !animatingOut && instantPop ? ' pop-in' : ''}${
+                animatingOut ? ' fade-collapse-out' : ''
+            }${className ? ' ' + className : ''}`}
+            style={style}
+        >
+            {children}
+        </div>
+    );
 }

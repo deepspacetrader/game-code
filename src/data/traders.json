@@ -3,7 +3,7 @@
         {
             "traderId": 1,
             "name": "Jax Orion",
-            "description": "A cheerful and fair-dealing trader known for smooth negotiations and good stories from across the Vrellian Sprawl.",
+            "description": "A cheerful and fair-dealing veteran trader known for smooth negotiations and legendary stories from across the Vrellian Sprawl.",
             "languageRange": ["EN"],
             "recordTime": 135.96,
             "homeGalaxy": "Vrellian Sprawl",
@@ -86,8 +86,8 @@
         },
         {
             "traderId": 7,
-            "name": "Wututa Zlornks",
-            "description": "The most unpredictable trader known for surprising discounts and confusing catchphrases in all three major languages.",
+            "name": "Wututa Zornks",
+            "description": "One of most friendly and peaceful traders known for fair prices professionalism. Speaks all three major languages.",
             "languageRange": ["EN", "CHIK", "LAY"],
             "recordTime": 135.83,
             "homeGalaxy": "Oon Cascade",

@@ -7,24 +7,24 @@ const TraderMessage = ({
     traderMessages = [],
     currentTrader,
     statusEffects = {},
-    improvedUILevel = 0,
+    improvedAILevel = 0,
 }) => {
     const [currentMessage, setCurrentMessage] = useState('');
     const [visible, setVisible] = useState(false);
     const [tierClass, setTierClass] = useState('tier-low');
 
-    // Update tier class based on UI level
+    // Update tier class based on AI level
     useEffect(() => {
-        if (improvedUILevel >= 100) {
+        if (improvedAILevel >= 100) {
             setTierClass('tier-elite');
-        } else if (improvedUILevel >= 75) {
+        } else if (improvedAILevel >= 75) {
             setTierClass('tier-ultra');
-        } else if (improvedUILevel >= 25) {
+        } else if (improvedAILevel >= 25) {
             setTierClass('tier-medium');
         } else {
             setTierClass('tier-low');
         }
-    }, [improvedUILevel]);
+    }, [improvedAILevel]);
 
     // Update message when dependencies change
     useEffect(() => {

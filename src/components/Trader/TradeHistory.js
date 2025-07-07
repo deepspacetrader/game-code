@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './TradeHistory.scss';
 
 const TradeHistory = () => {
     const { tradeHistory } = useMarketplace();
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
     const historyArr = useMemo(() => {
         if (!Array.isArray(tradeHistory)) return [];
 
@@ -61,7 +61,7 @@ const TradeHistory = () => {
                 if (!isScrolling) return;
                 setIsScrolling(false);
                 if (container) {
-                    if (improvedUILevel < 100) {
+                    if (improvedAILevel < 100) {
                         container.scrollLeft = container.scrollWidth;
                     } else {
                         container.scrollTop = container.scrollHeight;
@@ -77,17 +77,17 @@ const TradeHistory = () => {
             container.removeEventListener('scroll', handleScroll);
             container.removeEventListener('mouseleave', handleMouseLeave);
         };
-    }, [scrollRef, isScrolling, improvedUILevel]);
+    }, [scrollRef, isScrolling, improvedAILevel]);
 
     // Auto-scroll when new items are added, unless manually scrolling
     useEffect(() => {
-        if (improvedUILevel >= 50 && scrollRef.current && !isScrolling) {
-            if (improvedUILevel < 100) {
+        if (improvedAILevel >= 50 && scrollRef.current && !isScrolling) {
+            if (improvedAILevel < 100) {
                 // For history-scroll (level 50-100)
                 scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
             } else {
                 // For history-detail (level 100+)
-                if (improvedUILevel >= 500) {
+                if (improvedAILevel >= 500) {
                     // Smooth scroll for level 500+
                     scrollRef.current.scrollTo({
                         top: scrollRef.current.scrollHeight,
@@ -99,11 +99,11 @@ const TradeHistory = () => {
                 }
             }
         }
-    }, [historyArr, improvedUILevel, isScrolling]);
+    }, [historyArr, improvedAILevel, isScrolling]);
 
     // Smooth scroll animation for level 500+
     useEffect(() => {
-        if (improvedUILevel < 500) return;
+        if (improvedAILevel < 500) return;
 
         const container = scrollRef.current;
         if (!container) return;
@@ -127,13 +127,13 @@ const TradeHistory = () => {
         return () => {
             container.removeEventListener('mouseleave', handleMouseLeave);
         };
-    }, [scrollRef, isScrolling, improvedUILevel]);
+    }, [scrollRef, isScrolling, improvedAILevel]);
 
-    if (improvedUILevel < 25) return null;
+    if (improvedAILevel < 25) return null;
 
     return (
         <div className="trade-history">
-            {improvedUILevel < 50 && (
+            {improvedAILevel < 50 && (
                 <ul className="history-list">
                     {historyArr.map((t, i) => (
                         <li key={i}>
@@ -151,7 +151,7 @@ const TradeHistory = () => {
                     ))}
                 </ul>
             )}
-            {improvedUILevel >= 50 && improvedUILevel < 100 && (
+            {improvedAILevel >= 50 && improvedAILevel < 100 && (
                 <div className="history-scroll" ref={scrollRef}>
                     {historyArr.map((t, i) => (
                         <span key={i} className="history-item">
@@ -169,7 +169,7 @@ const TradeHistory = () => {
                     ))}
                 </div>
             )}
-            {improvedUILevel >= 100 && (
+            {improvedAILevel >= 100 && (
                 <>
                     <div className="history-chart">
                         <Sparklines data={cumData}>

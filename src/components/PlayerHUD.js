@@ -3,9 +3,9 @@ import { useMarketplace } from '../context/MarketplaceContext';
 import { useStatusEffects } from '../context/StatusEffectsContext';
 import './PlayerHUD.scss';
 import FloatingMessage from './Reusable/FloatingMessage';
-import { useUI } from '../context/UIContext';
+import { useAILevel } from '../context/AILevelContext';
 import { decryptData } from '../utils/encryption';
-
+import { MAX_FUEL } from '../utils/constants';
 const PlayerHUD = () => {
     const {
         credits,
@@ -15,18 +15,19 @@ const PlayerHUD = () => {
         shieldActive,
         isCheater: contextIsCheater,
     } = useMarketplace();
-    const { uiTier, improvedUILevel, courierDrones } = useUI();
+    const { aiTier, improvedAILevel, courierDrones } = useAILevel();
 
     const { statEffects, addStatEffect } = useStatusEffects();
     const prevCredits = React.useRef(credits);
     const prevHealth = React.useRef(health);
     const prevFuel = React.useRef(fuel);
-    const prevUI = React.useRef(improvedUILevel);
+    const prevAI = React.useRef(improvedAILevel);
     const prevDeliverySpeed = React.useRef(courierDrones);
-
-    // compute fuel meter percent and visibility
-    const fillPercent = Math.min(100, (fuel / 1000) * 100);
-    const showFuelMeter = improvedUILevel >= 25;
+    const fillPercent =
+        MAX_FUEL && MAX_FUEL > 0 && fuel !== undefined && fuel !== null
+            ? Math.min(100, Math.max(0, (Number(fuel) / MAX_FUEL) * 100))
+            : 0;
+    const showFuelMeter = improvedAILevel >= 25;
     const [isCheater, setIsCheater] = useState(false);
 
     // Check for cheater status in both localStorage and context
@@ -73,12 +74,12 @@ const PlayerHUD = () => {
     }, [fuel, addStatEffect]);
 
     React.useEffect(() => {
-        const delta = improvedUILevel - prevUI.current;
+        const delta = improvedAILevel - prevAI.current;
         if (delta !== 0) {
-            addStatEffect('ui', delta);
+            addStatEffect('ai', delta);
         }
-        prevUI.current = improvedUILevel;
-    }, [improvedUILevel, addStatEffect]);
+        prevAI.current = improvedAILevel;
+    }, [improvedAILevel, addStatEffect]);
 
     React.useEffect(() => {
         const delta = courierDrones - prevDeliverySpeed.current;
@@ -156,7 +157,7 @@ const PlayerHUD = () => {
                                 : {}
                         }
                     >
-                        Fuel: {fuel}
+                        Fuel: {Number(fuel).toFixed(1)}
                     </span>
                 </div>
 
@@ -184,12 +185,12 @@ const PlayerHUD = () => {
                     Credits: {credits}
                 </div>
 
-                <div className="hud-item hud-item--ui-level">
+                <div className="hud-item hud-item--ai-level">
                     {statEffects
-                        .filter((e) => e.name === 'ui')
+                        .filter((e) => e.name === 'ai')
                         .map((e) => (
                             <FloatingMessage
-                                key={`ui-${e.id}`}
+                                key={`ai-${e.id}`}
                                 text={e.delta > 0 ? `+${e.delta}` : `${e.delta}`}
                                 color={e.delta > 0 ? 'white' : 'red'}
                                 animation={
@@ -205,8 +206,8 @@ const PlayerHUD = () => {
                                 }}
                             />
                         ))}
-                    UI Level: {improvedUILevel}
-                    {improvedUILevel >= 100 && <div className="ui-tier-label">Tier: {uiTier}</div>}
+                    AI Level: {improvedAILevel}
+                    {improvedAILevel >= 100 && <div className="ai-tier-label">Tier: {aiTier}</div>}
                 </div>
                 <div className="hud-item hud-item--speed">
                     {statEffects &&
@@ -215,7 +216,7 @@ const PlayerHUD = () => {
                             .map((e) => (
                                 <>
                                     <FloatingMessage
-                                        key={`ui-${e.id}`}
+                                        key={`ai-${e.id}`}
                                         text={
                                             e.delta > 0
                                                 ? `+${(e.delta * 100).toFixed(1)}`

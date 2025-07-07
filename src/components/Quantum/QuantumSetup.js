@@ -316,7 +316,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
         // console.log('Active slots updated:', activeSlots);
     }, [slots, setQuantumSlotsUsed]);
 
-    // Use local state to track the power state for immediate UI updates
+    // Use local state to track the power state for immediate AI updates
     const [localQuantumPower, setLocalQuantumPower] = useState(quantumPower);
 
     // Sync local state with context state
@@ -325,8 +325,8 @@ const QuantumSetup = ({ setStatusEffects }) => {
         setLocalQuantumPower(quantumPower);
     }, [quantumPower]);
 
-    // UI tier is always at least 'medium' for Quantum Setup to be visible
-    const uiTier = 'medium';
+    // AI tier is always at least 'medium' for Quantum Setup to be visible
+    const aiTier = 'medium';
 
     // Refs for tracking button hold state
     const isMouseDownRef = useRef(false);
@@ -433,7 +433,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
 
     return (
         <div
-            className={`quantum-setup ${uiTier} ${
+            className={`quantum-setup ${aiTier} ${
                 localQuantumPower ? 'quantum-power-enabled' : ''
             }`}
         >

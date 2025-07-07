@@ -110,7 +110,7 @@ export const EventProvider = ({ children }) => {
                 // Alias for compatibility
                 activeEvent,
                 clearCurrentEvent: clearEvent,
-                // Show a new event (alias for triggerRandomEvent for consistency with UIContext)
+                // Show a new event (alias for triggerRandomEvent for consistency with AILevelContext)
                 showEvent: triggerRandomEvent,
             }}
         >

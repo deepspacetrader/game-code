@@ -4,13 +4,13 @@
             "itemId": 1,
             "name": "Basic QBiT Inverter",
             "travelSell": true,
-            "description": "Temporarily improves UI Level by consuming nearly expired ultra cheap quantum compute resources.",
+            "description": "Temporarily improves AI Level by consuming nearly expired ultra cheap quantum compute resources.",
             "basePrice": 10,
             "deliveryTime": 0.1,
             "priceTickRate": [150, 175],
             "duration": [0, 1],
             "effects": {
-                "+improved_UI": [1, 5]
+                "+improved_AI": [3, 7]
             }
         },
         {
@@ -63,7 +63,7 @@
             "priceTickRate": [150, 300],
             "duration": [400, 500],
             "effects": {
-                "+improved_UI": [999, 1337],
+                "+improved_AI": [999, 1337],
                 "-fuel_cost": [42, 99]
             }
         },
@@ -90,7 +90,7 @@
             "priceTickRate": [600, 1200],
             "duration": [50, 60],
             "effects": {
-                "damage_player": [15, 25]
+                "shield_active": true
             }
         },
         {
@@ -129,7 +129,7 @@
             "priceTickRate": [100, 200],
             "duration": [24, 42],
             "effects": {
-                "+improved_UI": [20, 35]
+                "+improved_AI": [20, 35]
             }
         },
         {
@@ -234,7 +234,7 @@
             "priceTickRate": [1200, 2400],
             "duration": [300, 400],
             "effects": {
-                "+improved_UI": [30, 10]
+                "+improved_AI": [30, 10]
             }
         },
         {
@@ -247,7 +247,7 @@
             "priceTickRate": [550, 1500],
             "duration": [50, 60],
             "effects": {
-                "+improved_UI": [47, 89]
+                "+improved_AI": [47, 89]
             }
         },
         {
@@ -260,7 +260,7 @@
             "priceTickRate": [300, 600],
             "duration": [60, 80],
             "effects": {
-                "+improved_UI": [70, 100]
+                "+improved_AI": [70, 100]
             }
         },
         {
@@ -300,7 +300,7 @@
             "priceTickRate": [42, 90],
             "duration": [48, 64],
             "effects": {
-                "+improved_UI": [70, 110]
+                "+improved_AI": [70, 110]
             }
         },
         {
@@ -313,7 +313,7 @@
             "priceTickRate": [250, 900],
             "duration": [25, 35],
             "effects": {
-                "+improved_UI": [12, 20]
+                "+improved_AI": [12, 20]
             }
         },
         {
@@ -341,7 +341,7 @@
             "priceTickRate": [400, 800],
             "duration": [9, 12],
             "effects": {
-                "+improved_UI": [80, 190]
+                "+improved_AI": [80, 190]
             }
         },
         {
@@ -364,7 +364,7 @@
             "name": "Salvaged Alloy",
             "illegal": true,
             "travelSell": false,
-            "description": "Damaged alloy scraps that can be 'recycled' for credits.",
+            "description": "Damaged alloy scraps that were 'found' and can be 'recycled' for credits.",
             "basePrice": 800,
             "deliveryTime": 0.8,
             "priceTickRate": [180, 300],
@@ -375,15 +375,15 @@
         },
         {
             "itemId": 29,
-            "name": "Damaged Power Core",
+            "name": "Used Power Core",
             "travelSell": false,
-            "description": "Can be used to generate fuel.",
+            "description": "Can be used as fuel.",
             "basePrice": 1000,
             "deliveryTime": 1,
             "priceTickRate": [222, 444],
             "duration": [0, 0],
             "effects": {
-                "+fuel_amount": [5, 10]
+                "+fuel_amount": [40, 70]
             }
         },
         {
@@ -396,7 +396,7 @@
             "priceTickRate": [290, 350],
             "duration": [0, 0],
             "effects": {
-                "+fuel_amount": [5, 10]
+                "+fuel_amount": [30, 80]
             }
         },
         {
@@ -416,13 +416,13 @@
             "itemId": 32,
             "name": "Fuel Storage Tank",
             "travelSell": false,
-            "description": "Adds more fuel",
+            "description": "It might be empty it might be full, you'll never know unless you open it.",
             "basePrice": 10000,
             "deliveryTime": 10,
             "priceTickRate": [150, 500],
             "duration": [400, 600],
             "effects": {
-                "+fuel_amount": [50, 60]
+                "+fuel_amount": [10, 100]
             }
         },
         {
@@ -479,19 +479,6 @@
         },
         {
             "itemId": 37,
-            "name": "Mixed Mineral Powder",
-            "travelSell": true,
-            "description": "Miscellaneous metals and minerals in miniscule powdered form. Do not inhale.",
-            "basePrice": 7,
-            "deliveryTime": 0.1,
-            "priceTickRate": [150, 175],
-            "duration": [0, 0],
-            "effects": {
-                "+credit_balance": [10, 100]
-            }
-        },
-        {
-            "itemId": 38,
             "name": "Extreme Laser Beam",
             "travelSell": true,
             "illegal": true,

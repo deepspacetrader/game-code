@@ -4,7 +4,7 @@ import Game from './Game';
 import './StarBackground.scss';
 import { StatusEffectsProvider } from './context/StatusEffectsContext';
 import { MarketplaceProvider } from './context/MarketplaceContext';
-import { UIProvider } from './context/UIContext';
+import { AILevelProvider } from './context/AILevelContext';
 import { EventProvider } from './context/EventContext';
 
 // Generate random star positions on each refresh
@@ -34,13 +34,13 @@ root.render(
             ))}
         </div>
         <StatusEffectsProvider>
-            <UIProvider>
+            <AILevelProvider>
                 <MarketplaceProvider>
                     <EventProvider>
                         <Game />
                     </EventProvider>
                 </MarketplaceProvider>
-            </UIProvider>
+            </AILevelProvider>
         </StatusEffectsProvider>
     </div>
 );

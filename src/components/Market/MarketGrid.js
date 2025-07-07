@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { Sparklines, SparklinesLine, SparklinesReferenceLine } from 'react-sparklines';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import TieredMenu from './../Trading/TieredMenu';
 import DeliveryBar from './../Reusable/DeliveryBar';
 import galaxiesData from '../../data/galaxies.json';
@@ -23,18 +23,18 @@ const MarketGrid = forwardRef((props, ref) => {
         handleSellClick = () => {},
     } = props || {};
     const { credits, galaxyName, inTravel } = useMarketplace();
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
 
     const [noticeMap, setNoticeMap] = useState({});
     const [bgImage, setBgImage] = useState(null);
 
     const showNotice = (idx, type, message) => {
         const level =
-            improvedUILevel < 50
+            improvedAILevel < 50
                 ? 'none'
-                : improvedUILevel < 75
+                : improvedAILevel < 75
                 ? 'medium'
-                : improvedUILevel < 100
+                : improvedAILevel < 100
                 ? 'high'
                 : 'elite';
         if (level === 'none') return;
@@ -81,9 +81,9 @@ const MarketGrid = forwardRef((props, ref) => {
                     const history = priceHistory[`${currentTrader}-${idx}`] || [];
                     const recommended = cell.basePrice > cell.price ? 'buy' : 'sell';
                     const showStrategy =
-                        improvedUILevel >= 500 &&
+                        improvedAILevel >= 500 &&
                         !(recommended === 'buy' && credits < cell.price) &&
-                        !(recommended === 'sell' && improvedUILevel >= 1000 && ownedQty === 0);
+                        !(recommended === 'sell' && improvedAILevel >= 1000 && ownedQty === 0);
 
                     const quantumClass =
                         statusEffects['Quantum Processor'] &&
@@ -98,7 +98,7 @@ const MarketGrid = forwardRef((props, ref) => {
                         .map((h) => (typeof h.p === 'number' && !isNaN(h.p) ? h.p : null))
                         .filter((p) => p !== null);
                     const trendClass =
-                        prices.length > 1 && improvedUILevel >= 5
+                        prices.length > 1 && improvedAILevel >= 5
                             ? prices[prices.length - 1] >= prices[0]
                                 ? 'cell--up'
                                 : 'cell--down'
@@ -122,16 +122,16 @@ const MarketGrid = forwardRef((props, ref) => {
                         dealTier = 'avoid'; // more than 15% above base
                     }
 
-                    // For UI levels below 5, show unknown
-                    if (improvedUILevel < 5) {
+                    // For AI levels below 5, show unknown
+                    if (improvedAILevel < 5) {
                         dealTier = 'unknown';
                     }
 
-                    // For UI levels 5-49, show deal tier label without color
+                    // For AI levels 5-49, show deal tier label without color
                     // For level 50+, add the cell-- prefix for colored backgrounds
                     const dealClass =
-                        improvedUILevel >= 5
-                            ? improvedUILevel >= 50
+                        improvedAILevel >= 5
+                            ? improvedAILevel >= 50
                                 ? `cell--${dealTier}`
                                 : `deal-tier-${dealTier}`
                             : '';
@@ -151,7 +151,7 @@ const MarketGrid = forwardRef((props, ref) => {
                         <div
                             key={idx}
                             className={`cell market-item ${cellPriceClass} ${quantumClass} ${trendClass} ${soldOutClass} ${dealClass} ${
-                                improvedUILevel >= 5 && improvedUILevel < 50
+                                improvedAILevel >= 5 && improvedAILevel < 50
                                     ? `deal-tier-${dealTier}`
                                     : ''
                             }`}
@@ -206,9 +206,9 @@ const MarketGrid = forwardRef((props, ref) => {
                             <div className="price-row">
                                 <p className={priceTextClass}>
                                     Price: {displayPrice}
-                                    {improvedUILevel >= 75 && avgCost ? ` (Avg: ${avgCost})` : ''}
+                                    {improvedAILevel >= 75 && avgCost ? ` (Avg: ${avgCost})` : ''}
                                 </p>
-                                {improvedUILevel >= 5 && improvedUILevel < 50 && (
+                                {improvedAILevel >= 5 && improvedAILevel < 50 && (
                                     <span className="deal-tier-label">{dealTier}</span>
                                 )}
                             </div>
@@ -227,8 +227,8 @@ const MarketGrid = forwardRef((props, ref) => {
                                 </>
                             )}
 
-                            {/* inline price history sparkline, only if advanced UI and valid price data */}
-                            {improvedUILevel > 50 && prices.length > 1 && (
+                            {/* inline price history sparkline, only if advanced AI and valid price data */}
+                            {improvedAILevel > 50 && prices.length > 1 && (
                                 <div className="price-sparkline">
                                     <Sparklines
                                         data={prices}
@@ -241,7 +241,7 @@ const MarketGrid = forwardRef((props, ref) => {
                                             color="cyan"
                                             style={{ fill: 'none', strokeWidth: 1 }}
                                         />
-                                        {improvedUILevel >= 75 && (
+                                        {improvedAILevel >= 75 && (
                                             <SparklinesReferenceLine
                                                 type="avg"
                                                 style={{

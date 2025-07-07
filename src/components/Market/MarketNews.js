@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import { formatDistanceToNow } from 'date-fns';
 import './MarketNews.scss';
 
@@ -83,7 +83,7 @@ const seededRandom = (seed) => {
 
 const MarketNews = () => {
     const { currentGameEvent, currentCycle, galaxyName } = useMarketplace();
-    const { theme } = useUI();
+    const { theme } = useAILevel();
     const [tickerItems, setTickerItems] = useState([]);
     const [breakingNews, setBreakingNews] = useState(null);
     const [tickerState, setTickerState] = useState('playing');

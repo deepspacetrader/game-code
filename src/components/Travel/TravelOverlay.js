@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import galaxiesData from '../../data/galaxies.json';
 
 const TravelOverlay = () => {
     const { isJumping, jumpTimeLeft, jumpDuration, jumpFromCoord, jumpToCoord } = useMarketplace();
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
     // compute animation values
     const elapsed = jumpDuration - jumpTimeLeft;
     const showDeparture = elapsed < 2000;
@@ -102,7 +102,7 @@ const TravelOverlay = () => {
                             r={isFrom || isTo ? 5 : 2}
                             fill={isTo ? 'blue' : isFrom ? 'green' : 'white'}
                         >
-                            {improvedUILevel > 50 && (
+                            {improvedAILevel > 50 && (
                                 <text
                                     x={x}
                                     y={y + 15}

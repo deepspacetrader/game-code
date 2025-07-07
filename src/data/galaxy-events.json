@@ -21,17 +21,17 @@
         {
             "galaxyEventId": 3,
             "name": "INTELLIGENT NANO PARTICLES",
-            "description": "Your ship glides near the remains of an intelligent nano particles swarm, boosting your UI modules.",
+            "description": "Your ship glides near the remains of an intelligent nano particles swarm, boosting your AI modules.",
             "eventResult": {
-                "addUI": 250
+                "addAI": 250
             }
         },
         {
             "galaxyEventId": 4,
             "name": "CYBERWARE VIRUS",
-            "description": "A malicious cyber-virus infects your ship, corrupting UI protocols.",
+            "description": "A malicious cyber-virus infects your ship, corrupting AI protocols.",
             "effect": {
-                "removeUI": 1000,
+                "removeAI": 1000,
                 "removeCredits": 15000,
                 "damagePlayer": 60,
                 "shield": false,
@@ -57,9 +57,9 @@
         {
             "galaxyEventId": 7,
             "name": "ALLIANCE SUPPORT",
-            "description": "Omniscient species upgrade your UI with advanced tech.",
+            "description": "Omniscient species upgrade your AI with advanced tech.",
             "effect": {
-                "adUI": 1000
+                "addAI": 1000
             }
         },
         {

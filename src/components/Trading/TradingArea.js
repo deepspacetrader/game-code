@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import MarketGrid from '../Market/MarketGrid';
 import MarketSummary from '../Market/MarketSummary';
 import QuantumHover from '../Quantum/QuantumHover';
@@ -30,56 +30,56 @@ const TradingArea = () => {
         setStatusEffects,
     } = useMarketplace();
 
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
 
-    // derive UI tier
-    const uiTier =
-        improvedUILevel < 5
+    // derive AI tier
+    const aiTier =
+        improvedAILevel < 5
             ? 'low low5'
-            : improvedUILevel < 10
+            : improvedAILevel < 10
             ? 'low low10'
-            : improvedUILevel < 15
+            : improvedAILevel < 15
             ? 'low low15'
-            : improvedUILevel < 25
+            : improvedAILevel < 25
             ? 'low low25'
-            : improvedUILevel < 50
+            : improvedAILevel < 50
             ? 'medium'
-            : improvedUILevel < 75
+            : improvedAILevel < 75
             ? 'high'
-            : improvedUILevel < 100
+            : improvedAILevel < 100
             ? 'ultra'
-            : improvedUILevel < 150
+            : improvedAILevel < 150
             ? 'newbie'
-            : improvedUILevel < 200
+            : improvedAILevel < 200
             ? 'apprentice'
-            : improvedUILevel < 300
+            : improvedAILevel < 300
             ? 'adventurer'
-            : improvedUILevel < 500
+            : improvedAILevel < 500
             ? 'explorer'
-            : improvedUILevel < 1000
+            : improvedAILevel < 1000
             ? 'professional'
-            : improvedUILevel < 1500
+            : improvedAILevel < 1500
             ? 'skilled'
-            : improvedUILevel < 2000
+            : improvedAILevel < 2000
             ? 'knowledgeable'
-            : improvedUILevel < 2500
+            : improvedAILevel < 2500
             ? 'smart'
-            : improvedUILevel < 5000
+            : improvedAILevel < 5000
             ? 'expert'
-            : improvedUILevel < 10000
+            : improvedAILevel < 10000
             ? 'master'
-            : improvedUILevel < 15000
+            : improvedAILevel < 15000
             ? 'grandmaster'
-            : improvedUILevel < 25000
+            : improvedAILevel < 25000
             ? 'elite'
-            : improvedUILevel < 50000
+            : improvedAILevel < 50000
             ? 'legendary'
-            : improvedUILevel < 100000
+            : improvedAILevel < 100000
             ? 'potential'
             : 'endgame';
 
     return (
-        <div className={`trading-area ui-tier-${uiTier}`}>
+        <div className={`trading-area ai-tier-${aiTier}`}>
             {/* delivery progress bars */}
             {deliveryQueue && deliveryQueue.length > 0 && (
                 <div className="delivery-bars">
@@ -96,10 +96,10 @@ const TradingArea = () => {
             <div className="market-container">
                 <MarketSummary handleSellAll={handleSellAll} />
 
-                {improvedUILevel > 100 && <MarketNews />}
+                {improvedAILevel > 100 && <MarketNews />}
 
                 <Event />
-                {/* {improvedUILevel >= 25 && } */}
+                {/* {improvedAILevel >= 25 && } */}
 
                 <div className="market-grid-container" style={{ position: 'relative' }}>
                     {/* Show MarketGrid by default */}

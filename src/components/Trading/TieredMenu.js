@@ -1,18 +1,18 @@
 import React from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './TieredMenu.scss';
 import { zzfx } from 'zzfx';
 
 const TieredMenu = () => {
     // initialize menu open state for all renders
     const { volumeRef } = useMarketplace();
-    const { improvedUILevel, sortMode, sortAsc, handleSort } = useUI();
+    const { improvedAILevel, sortMode, sortAsc, handleSort } = useAILevel();
 
     // determine tier style
     let tierClass = 'tier-medium';
-    if (improvedUILevel >= 75) tierClass = 'tier-high';
-    if (improvedUILevel >= 100) tierClass = 'tier-ultra';
+    if (improvedAILevel >= 75) tierClass = 'tier-high';
+    if (improvedAILevel >= 100) tierClass = 'tier-ultra';
 
     return (
         <div className={`tiered-menu ${tierClass}`}>

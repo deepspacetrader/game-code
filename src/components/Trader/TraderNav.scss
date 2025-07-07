@@ -1,4 +1,4 @@
-/* Mixins for UI Tiers */
+/* Mixins for AI Tiers */
 @import '../../App.scss';
 
 // Mixins for responsive design
@@ -69,10 +69,10 @@
     border: 1px solid rgba(100, 100, 100, 0.6);
 
     /* Only add transitions and animations at level 50+ */
-    .ui-tier-50 &,
-    .ui-tier-51 &,
-    [class^='ui-tier-'][class$='-50'],
-    [class^='ui-tier-'][class$='-51'] {
+    .ai-tier-50 &,
+    .ai-tier-51 &,
+    [class^='ai-tier-'][class$='-50'],
+    [class^='ai-tier-'][class$='-51'] {
         transition: all 0.2s ease;
     }
 
@@ -82,10 +82,10 @@
         color: rgba(200, 200, 200, 0.95);
 
         /* Only add transform on hover for level 50+ */
-        .ui-tier-50 &,
-        .ui-tier-51 &,
-        [class^='ui-tier-'][class$='-50'],
-        [class^='ui-tier-'][class$='-51'] {
+        .ai-tier-50 &,
+        .ai-tier-51 &,
+        [class^='ai-tier-'][class$='-50'],
+        [class^='ai-tier-'][class$='-51'] {
             transform: translateY(-1px);
         }
     }
@@ -150,10 +150,10 @@
     border: 1px solid rgba(80, 80, 80, 0.4);
 
     /* Only add animation at level 50+ */
-    .ui-tier-50 &,
-    .ui-tier-51 &,
-    [class^='ui-tier-'][class$='-50'],
-    [class^='ui-tier-'][class$='-51'] {
+    .ai-tier-50 &,
+    .ai-tier-51 &,
+    [class^='ai-tier-'][class$='-50'],
+    [class^='ai-tier-'][class$='-51'] {
         animation: subtle-pulse 4s ease-in-out infinite;
     }
 }
@@ -385,8 +385,8 @@
     }
 }
 
-// UI Tier Styling - Using improvedUILevel (numeric) for granular control
-// and ui-tier-{name} for named tiers
+// AI Tier Styling - Using improvedAILevel (numeric) for granular control
+// and ai-tier-{name} for named tiers
 
 // Mixins for reusable styles
 @mixin info-base-styles {
@@ -551,7 +551,7 @@
 }
 
 // Level 0 - Zero
-.ui-tier-zero {
+.ai-tier-zero {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -568,7 +568,7 @@
 }
 
 // Levels 0-4: Worthless
-.ui-tier-worthless {
+.ai-tier-worthless {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -585,7 +585,7 @@
 }
 
 // Levels 5-9: Awful
-.ui-tier-awful {
+.ai-tier-awful {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -602,7 +602,7 @@
 }
 
 // Levels 10-14: Bad
-.ui-tier-bad {
+.ai-tier-bad {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -619,7 +619,7 @@
 }
 
 // Levels 15-19: Very Low
-.ui-tier-verylow {
+.ai-tier-verylow {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -636,7 +636,7 @@
 }
 
 // Levels 20-24: Low
-.ui-tier-low {
+.ai-tier-low {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -655,7 +655,7 @@
 }
 
 // Levels 25-49: Medium
-.ui-tier-medium {
+.ai-tier-medium {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -674,7 +674,7 @@
 }
 
 // Levels 50-74: High
-.ui-tier-high {
+.ai-tier-high {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -690,7 +690,7 @@
 }
 
 // Levels 75-99: Ultra
-.ui-tier-ultra {
+.ai-tier-ultra {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -704,7 +704,7 @@
 }
 
 // Levels 100-149: Newbie
-.ui-tier-newbie {
+.ai-tier-newbie {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -719,7 +719,7 @@
 }
 
 // Levels 150-199: Apprentice
-.ui-tier-apprentice {
+.ai-tier-apprentice {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -778,7 +778,7 @@
 }
 
 // Levels 200-249: Journeyman
-.ui-tier-journeyman {
+.ai-tier-journeyman {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -799,7 +799,7 @@
 }
 
 // Levels 250-299: Adventurer
-.ui-tier-adventurer {
+.ai-tier-adventurer {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -851,7 +851,7 @@
 }
 
 // Levels 300-499: Explorer
-.ui-tier-explorer {
+.ai-tier-explorer {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -869,7 +869,7 @@
 }
 
 // Levels 500-999: Professional
-.ui-tier-professional {
+.ai-tier-professional {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -887,7 +887,7 @@
 }
 
 // Levels 1000-1499: Skilled
-.ui-tier-skilled {
+.ai-tier-skilled {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -911,7 +911,7 @@
 }
 
 // Levels 1500-1999: Knowledgeable
-.ui-tier-knowledgeable {
+.ai-tier-knowledgeable {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -927,7 +927,7 @@
 }
 
 // Levels 2000-2499: Smart
-.ui-tier-smart {
+.ai-tier-smart {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -949,7 +949,7 @@
 }
 
 // Levels 2500-4999: Expert
-.ui-tier-expert {
+.ai-tier-expert {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -983,7 +983,7 @@
 }
 
 // Levels 5000-9999: Master
-.ui-tier-master {
+.ai-tier-master {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1018,7 +1018,7 @@
 }
 
 // Levels 10000-14999: Grandmaster
-.ui-tier-grandmaster {
+.ai-tier-grandmaster {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1053,7 +1053,7 @@
 }
 
 // Levels 15000-24999: Elite
-.ui-tier-elite {
+.ai-tier-elite {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1088,7 +1088,7 @@
 }
 
 // Levels 25000-49999: Legendary
-.ui-tier-legendary {
+.ai-tier-legendary {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1123,7 +1123,7 @@
 }
 
 // Levels 50000-99999: Potential
-.ui-tier-potential {
+.ai-tier-potential {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1158,7 +1158,7 @@
 }
 
 // Level 100000+: Endgame
-.ui-tier-endgame {
+.ai-tier-endgame {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1231,10 +1231,10 @@
 }
 
 // Levels 500-2499: Explorer to Knowledgeable
-.ui-tier-explorer,
-.ui-tier-professional,
-.ui-tier-skilled,
-.ui-tier-knowledgeable {
+.ai-tier-explorer,
+.ai-tier-professional,
+.ai-tier-skilled,
+.ai-tier-knowledgeable {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1289,14 +1289,14 @@
 }
 
 // Levels 2500-9999: Smart to Master
-.ui-level-20,
-.ui-level-21,
-.ui-level-22,
-.ui-level-23,
-.ui-level-24,
-.ui-tier-smart,
-.ui-tier-expert,
-.ui-tier-master {
+.ai-level-20,
+.ai-level-21,
+.ai-level-22,
+.ai-level-23,
+.ai-level-24,
+.ai-tier-smart,
+.ai-tier-expert,
+.ai-tier-master {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1310,16 +1310,16 @@
 }
 
 // Levels 10000+: Grandmaster to Endgame
-.ui-level-25,
-.ui-level-26,
-.ui-level-27,
-.ui-level-28,
-.ui-level-29,
-.ui-tier-grandmaster,
-.ui-tier-elite,
-.ui-tier-legendary,
-.ui-tier-potential,
-.ui-tier-endgame {
+.ai-level-25,
+.ai-level-26,
+.ai-level-27,
+.ai-level-28,
+.ai-level-29,
+.ai-tier-grandmaster,
+.ai-tier-elite,
+.ai-tier-legendary,
+.ai-tier-potential,
+.ai-tier-endgame {
     .action-fuel,
     .action-galaxy {
         .info {
@@ -1764,9 +1764,9 @@
     background-color: $avoid;
 }
 
-/* UI tier granular overrides */
+/* AI tier granular overrides */
 /* lowest: hide all color details (0-5) */
-.ui-tier-low5 {
+.ai-tier-low5 {
     .cell {
         &--deal-cheap,
         &--deal-deal,
@@ -1791,7 +1791,7 @@
 }
 
 /* low1 (5-10): show border color only */
-.ui-tier-low10 {
+.ai-tier-low10 {
     .cell--cheap,
     .cell--deal,
     .cell--normal,
@@ -1819,7 +1819,7 @@
         color: var(--text);
     }
 
-    /* Price text coloring at UI tier low10 and above */
+    /* Price text coloring at AI tier low10 and above */
     .price-text.price-high {
         color: var(--error);
     }
@@ -1829,8 +1829,8 @@
     }
 }
 
-/* Price trend borders at UI tier low15 and above */
-.ui-tier-low15 {
+/* Price trend borders at AI tier low15 and above */
+.ai-tier-low15 {
     .cell--price-high {
         border: 2px solid var(--error);
     }
@@ -1839,7 +1839,7 @@
         border: 2px solid var(--accent);
     }
 
-    /* Price text coloring at UI tier low15 and above (so text colors persist through border tier) */
+    /* Price text coloring at AI tier low15 and above (so text colors persist through border tier) */
     .price-text.price-high {
         color: var(--error);
     }
@@ -1899,7 +1899,7 @@
     background-color: rgba(0, 0, 0, 0.4269);
 }
 
-/* Deal tier labels for UI levels 5-49 */
+/* Deal tier labels for AI levels 5-49 */
 .price-row {
     display: flex;
     justify-content: space-between;
@@ -2005,8 +2005,8 @@
 }
 
 /* low25 (15-25): show deal & all color cues */
-.ui-tier-low25 {
-    /* Price text revert to white at UI tier low25 */
+.ai-tier-low25 {
+    /* Price text revert to white at AI tier low25 */
     .price-text {
         color: white;
     }

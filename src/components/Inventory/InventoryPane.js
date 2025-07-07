@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import InventoryList from './InventoryList';
 import QuantumSetup from '../Quantum/QuantumSetup';
 
@@ -27,7 +27,7 @@ const InventoryPane = () => {
         setStatusEffects,
         subtractQuantumProcessor,
     } = useMarketplace();
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
 
     // Group installed modules (all status effects)
     const installedModulesGrouped = groupStatusEffectsByName(statusEffects, () => true);
@@ -54,7 +54,7 @@ const InventoryPane = () => {
                 <InventoryList />
                 {Object.keys(installedModulesGrouped).length > 0 && (
                     <div className="ship-inventory">
-                        {improvedUILevel >= 10 && (
+                        {improvedAILevel >= 10 && (
                             <div>
                                 <h3>Installed Modules</h3>
                                 {Object.entries(installedModulesGrouped).map(([name, group]) => {

@@ -5,7 +5,7 @@ import './Main.scss';
 import { Modal, Button } from 'react-bootstrap';
 import { MarketplaceProvider, useMarketplace } from './context/MarketplaceContext';
 import { StatusEffectsProvider } from './context/StatusEffectsContext';
-import { UIProvider, useUI } from './context/UIContext';
+import { AILevelProvider, useAILevel } from './context/AILevelContext';
 
 import TraderNav from './components/Trader/TraderNav';
 import PlayerHUD from './components/PlayerHUD';
@@ -38,7 +38,7 @@ const Game = () => {
         currentEnemy,
         setCurrentEnemy,
     } = useMarketplace();
-    const { uiTier, improvedUILevel } = useUI();
+    const { aiTier, improvedAILevel } = useAILevel();
 
     // Handle the end of an enemy encounter
     const handleEncounterEnd = useCallback(() => {
@@ -46,7 +46,7 @@ const Game = () => {
     }, [setCurrentEnemy]);
 
     return (
-        <div className={`main-container ui-tier-${uiTier} ui-level-${improvedUILevel}`}>
+        <div className={`main-container ai-tier-${aiTier} ai-level-${improvedAILevel}`}>
             {/* Top right controls */}
             <div
                 style={{
@@ -80,12 +80,12 @@ const Game = () => {
             <Enemy enemyData={currentEnemy} onEncounterEnd={handleEncounterEnd} />
 
             {/* Onboarding overlay */}
-            {/* <Onboarding /> */}
+            <Onboarding />
 
             <TraderNav />
             <PlayerHUD />
-            {improvedUILevel >= 1000 && (
-                <ChatBox statusEffects={statusEffects} uiLevel={improvedUILevel} />
+            {improvedAILevel >= 1000 && (
+                <ChatBox statusEffects={statusEffects} aiLevel={improvedAILevel} />
             )}
             <TradeHistory />
             <div className="main-area">
@@ -118,13 +118,13 @@ const Game = () => {
 
 const GameOutput = () => {
     return (
-        <UIProvider>
+        <AILevelProvider>
             <MarketplaceProvider>
                 <StatusEffectsProvider>
                     <GameOutput />
                 </StatusEffectsProvider>
             </MarketplaceProvider>
-        </UIProvider>
+        </AILevelProvider>
     );
 };
 

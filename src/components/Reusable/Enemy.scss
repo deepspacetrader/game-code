@@ -1,6 +1,6 @@
 @import '../../App.scss';
 
-// Animation keyframes for UI elements
+// Animation keyframes for AI elements
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -72,9 +72,9 @@
     }
 
     // Tier-based background effects
-    &.ui-tier-master,
-    &.ui-tier-grandmaster,
-    &.ui-tier-elite {
+    &.ai-tier-master,
+    &.ai-tier-grandmaster,
+    &.ai-tier-elite {
         background: radial-gradient(
             ellipse at center,
             rgba(0, 0, 0, 0.9) 0%,
@@ -84,9 +84,9 @@
     }
 
     // Higher tiers get more visual feedback
-    &.ui-tier-expert,
-    &.ui-tier-master,
-    &.ui-tier-grandmaster {
+    &.ai-tier-expert,
+    &.ai-tier-master,
+    &.ai-tier-grandmaster {
         &:before {
             content: '';
             position: absolute;
@@ -126,21 +126,21 @@
         position: relative;
 
         // Tier-based container enhancements
-        &.ui-tier-master,
-        &.ui-tier-grandmaster {
+        &.ai-tier-master,
+        &.ai-tier-grandmaster {
             border: 2px solid #8a2be2;
             box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
             animation: glow 4s infinite;
         }
 
-        &.ui-tier-expert {
+        &.ai-tier-expert {
             border: 2px solid #4a90e2;
             box-shadow: 0 0 25px rgba(74, 144, 226, 0.5);
         }
 
         // Add a subtle grid overlay for higher tiers
-        &.ui-tier-master,
-        &.ui-tier-grandmaster {
+        &.ai-tier-master,
+        &.ai-tier-grandmaster {
             &:after {
                 content: '';
                 position: absolute;
@@ -169,8 +169,8 @@
                 font-size: 1.5em;
                 text-shadow: 0 0 10px rgba(74, 144, 226, 0.7);
 
-                .ui-tier-master &,
-                .ui-tier-grandmaster & {
+                .ai-tier-master &,
+                .ai-tier-grandmaster & {
                     color: #8a2be2;
                     text-shadow: 0 0 15px rgba(138, 43, 226, 0.9);
                 }
@@ -347,8 +347,8 @@
             line-height: 1.4;
         }
 
-        .ui-tier-master &,
-        .ui-tier-grandmaster & {
+        .ai-tier-master &,
+        .ai-tier-grandmaster & {
             background: rgba(255, 152, 0, 0.15);
             box-shadow: 0 0 10px rgba(255, 152, 0, 0.2);
         }
@@ -365,8 +365,8 @@
         transition: all 0.3s ease;
 
         // Enhanced scrollbar for higher tiers
-        .ui-tier-master &,
-        .ui-tier-grandmaster & {
+        .ai-tier-master &,
+        .ai-tier-grandmaster & {
             &::-webkit-scrollbar {
                 width: 8px;
             }

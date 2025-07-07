@@ -3,13 +3,16 @@ import QuickPinchZoom, { make3dTransformValue } from 'react-quick-pinch-zoom';
 import './StarMap.scss';
 
 // Mid-range interactive map: static dots with labels
-const StarMapMid = ({ galaxies, onSelect, improvedUILevel, onClose, currentGalaxyName }) => {
+const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalaxyName }) => {
     const containerRef = useRef();
-    const width = improvedUILevel >= 75 ? 600 : 400, height = improvedUILevel >= 75 ? 600 : 400;
-    const xs = galaxies.map(g => g.coordinates.x);
-    const ys = galaxies.map(g => g.coordinates.y);
-    const minX = Math.min(...xs), maxX = Math.max(...xs);
-    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const width = improvedAILevel >= 75 ? 600 : 400,
+        height = improvedAILevel >= 75 ? 600 : 400;
+    const xs = galaxies.map((g) => g.coordinates.x);
+    const ys = galaxies.map((g) => g.coordinates.y);
+    const minX = Math.min(...xs),
+        maxX = Math.max(...xs);
+    const minY = Math.min(...ys),
+        maxY = Math.max(...ys);
     const spanX = maxX - minX || 1;
     const spanY = maxY - minY || 1;
     // Add padding for scrollable background
@@ -41,9 +44,28 @@ const StarMapMid = ({ galaxies, onSelect, improvedUILevel, onClose, currentGalax
     }, []);
 
     return (
-        <div ref={containerRef} className="star-map-mid-overlay" style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh', zIndex: 1000, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div
+            ref={containerRef}
+            className="star-map-mid-overlay"
+            style={{
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 1000,
+                background: 'rgba(0,0,0,0.6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
             <QuickPinchZoom onUpdate={onUpdate}>
-                <div ref={contentRef} className="star-map-mid" style={{ width, height, position: 'relative', touchAction: 'none' }}>
+                <div
+                    ref={contentRef}
+                    className="star-map-mid"
+                    style={{ width, height, position: 'relative', touchAction: 'none' }}
+                >
                     <svg
                         className="star-map-mid-svg"
                         viewBox={`${viewMinX} ${viewMinY} ${viewSpanX} ${viewSpanY}`}
@@ -51,8 +73,14 @@ const StarMapMid = ({ galaxies, onSelect, improvedUILevel, onClose, currentGalax
                         height="100%"
                         style={{ position: 'absolute', left: 0, top: 0, zIndex: 1 }}
                     >
-                        <rect x={viewMinX} y={viewMinY} width={viewSpanX} height={viewSpanY} fill="#070a13" />
-                        {galaxies.map(g => {
+                        <rect
+                            x={viewMinX}
+                            y={viewMinY}
+                            width={viewSpanX}
+                            height={viewSpanY}
+                            fill="#070a13"
+                        />
+                        {galaxies.map((g) => {
                             // Color logic
                             let fill = '#fff';
                             if (g.name === currentGalaxyName) fill = 'green';
@@ -63,7 +91,7 @@ const StarMapMid = ({ galaxies, onSelect, improvedUILevel, onClose, currentGalax
                                     key={g.galaxyId}
                                     cx={g.coordinates.x}
                                     cy={g.coordinates.y}
-                                    r={improvedUILevel >= 75 ? 7 : 4}
+                                    r={improvedAILevel >= 75 ? 7 : 4}
                                     fill={fill}
                                     stroke="#333"
                                     strokeWidth={g.name === currentGalaxyName ? 2 : 1}
@@ -73,14 +101,27 @@ const StarMapMid = ({ galaxies, onSelect, improvedUILevel, onClose, currentGalax
                         })}
                     </svg>
                     {/* Overlay dots for pointer events and accessibility */}
-                    {galaxies.map(g => {
+                    {galaxies.map((g) => {
                         const x = ((g.coordinates.x - viewMinX) / viewSpanX) * width;
                         const y = ((g.coordinates.y - viewMinY) / viewSpanY) * height;
                         return (
                             <div
                                 key={g.galaxyId}
                                 className="star-dot mid"
-                                style={{ left: `${x}px`, top: `${y}px`, background: g.war ? 'red' : g.danger ? 'orange' : g.name === currentGalaxyName ? 'green' : 'var(--accent)', width: improvedUILevel >= 75 ? 14 : 8, height: improvedUILevel >= 75 ? 14 : 8, zIndex: 2 }}
+                                style={{
+                                    left: `${x}px`,
+                                    top: `${y}px`,
+                                    background: g.war
+                                        ? 'red'
+                                        : g.danger
+                                        ? 'orange'
+                                        : g.name === currentGalaxyName
+                                        ? 'green'
+                                        : 'var(--accent)',
+                                    width: improvedAILevel >= 75 ? 14 : 8,
+                                    height: improvedAILevel >= 75 ? 14 : 8,
+                                    zIndex: 2,
+                                }}
                                 onClick={() => onSelect && onSelect(g.galaxyId)}
                             />
                         );

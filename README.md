@@ -6,13 +6,13 @@
 
 **_Now with sound effects 🔊_**
 
-A web based sci-fi trading game where you play as an intergalactic market trader navigating complex trade relationships between warring factions. Built with React and featuring a rich, interactive UI with dynamic market mechanics.
+A web based sci-fi trading game where you play as an intergalactic market trader navigating complex trade relationships between warring factions. Built with React and featuring a rich, interactive AI with dynamic market mechanics.
 
 ## 🌌 Features
 
 -   **Dynamic Market System**: Real-time market fluctuations based on in-game events and player actions
 -   **Inventory Management**: Collect and trade exotic goods across the galaxy
--   **Interactive UI**: Sleek, responsive interface with animated elements that scales with progression
+-   **Interactive AI**: Sleek, responsive interface with animated elements that scales with progression
 -   **Trading Mechanics**: Buy low, sell high, and navigate market crashes
 -   **Procedural Events**: Random events that can make or break your trading
 
@@ -59,7 +59,7 @@ A web based sci-fi trading game where you play as an intergalactic market trader
 ## 🛠 Built With
 
 -   [React](https://reactjs.org/) - Frontend library
--   [React Bootstrap](https://react-bootstrap.github.io/) - UI components
+-   [React Bootstrap](https://react-bootstrap.github.io/) - AI components
 -   [Sass](https://sass-lang.com/) - CSS preprocessor
 -   [ZZFX](https://github.com/KilledByAPixel/ZZFX) - Sound effects
 
@@ -67,7 +67,7 @@ A web based sci-fi trading game where you play as an intergalactic market trader
 
 ```
 src/
-├── components/    # Reusable UI components
+├── components/    # Reusable AI components
 ├── context/       # React context providers
 ├── data/          # Game data and configurations
 ├── images/        # Image assets

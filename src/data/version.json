@@ -27,7 +27,7 @@
             "changes": [
                 "Fixed inventory display issues",
                 "Improved market price calculations",
-                "Minor UI tweaks and optimizations"
+                "Minor AI tweaks and optimizations"
             ]
         },
         {
@@ -38,7 +38,7 @@
             "changes": [
                 "Initial game launch",
                 "Core trading mechanics implemented",
-                "Basic UI with dark theme"
+                "Basic AI with dark theme"
             ]
         }
     ]

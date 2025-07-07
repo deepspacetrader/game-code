@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './Quantum/QuantumHover.scss';
 
 const calculateVolatility = (prices) => {
@@ -72,7 +72,7 @@ const QuantumHoverOld = ({ market }) => {
         handleSellClick,
         handleSellAll,
     } = useMarketplace();
-    const { quantumInventory = [] } = useUI();
+    const { quantumInventory = [] } = useAILevel();
 
     const containerRef = useRef(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

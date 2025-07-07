@@ -13,7 +13,7 @@ const Onboarding = () => {
         useFirstQBit: false,
         buySecondQBit: false,
         sellSecondQBit: false,
-        explainedUILevel: false,
+        explainedaiLevel: false,
         explainedTraderTravel: false,
         explainedGalaxyTravel: false,
     });
@@ -85,11 +85,11 @@ const Onboarding = () => {
             },
         },
         {
-            // Step 5 - UI Level Decay
-            target: '.hud-item--ui-level',
-            title: 'UI Level Decay',
+            // Step 5 - AI Level Decayasdsa
+            target: '.hud-item--ai-level',
+            title: 'AI Level Decay',
             content:
-                'Other traders have powerful Quantum processors and cause prices to change rapidly. UI Level decays over time as your hardware quickly becomes outdated. To see trade opportunities more easily you need to keep increasing the UI Level by buying and using whichever technology you can.',
+                "Other traders in the galaxy have powerful Quantum Processors with self-improving AI trading algorithms. This is the main reason why market prices change so frequently and unpredictably. As a result your AI Level decays over time because the old hardware just can't keep up. To see trade opportunities more easily you'll want to increase and maintain your AI Level by buying and using as much tech as you can afford.",
             arrow: 'right',
             validate: () =>
                 completedActions.buyFirstQBit &&
@@ -98,9 +98,9 @@ const Onboarding = () => {
                 buyCount >= 2 &&
                 sellCount >= 1 &&
                 completedActions.sellSecondQBit &&
-                !completedActions.explainedUILevel,
+                !completedActions.explainedaiLevel,
             onAction: () => {
-                setCompletedActions((prev) => ({ ...prev, explainedUILevel: true }));
+                setCompletedActions((prev) => ({ ...prev, explainedaiLevel: true }));
             },
         },
         {
@@ -117,7 +117,7 @@ const Onboarding = () => {
                 buyCount >= 2 &&
                 sellCount >= 1 &&
                 completedActions.sellSecondQBit &&
-                completedActions.explainedUILevel &&
+                completedActions.explainedaiLevel &&
                 !completedActions.explainedTraderTravel,
             onAction: () => {
                 setCompletedActions((prev) => ({ ...prev, explainedTraderTravel: true }));
@@ -126,7 +126,7 @@ const Onboarding = () => {
         {
             // Step 7 - Travel Between Galaxies
             target: '.next-galaxy-button',
-            title: 'Travel To Another Galaxy',
+            title: 'Visit Another Galaxy',
             content:
                 'Explore other galaxies to encounter more traders but be warned not everyone is friendly.',
             arrow: 'right',
@@ -137,7 +137,7 @@ const Onboarding = () => {
                 buyCount >= 2 &&
                 sellCount >= 1 &&
                 completedActions.sellSecondQBit &&
-                completedActions.explainedUILevel &&
+                completedActions.explainedaiLevel &&
                 completedActions.explainedTraderTravel &&
                 !completedActions.explainedGalaxyTravel,
             onAction: () => {
@@ -322,17 +322,17 @@ const Onboarding = () => {
                 left = targetRect.left - boxWidth - padding;
                 top = targetRect.top;
             } else if (step === 4) {
-                // Position above and to the right of the UI Level HUD element
-                left = targetRect.left - boxWidth;
-                top = targetRect.top - boxWidth / 2.75;
+                // Position above and to the right of the AI Level HUD element
+                left = targetRect.left - boxWidth + 30;
+                top = targetRect.top - boxWidth / 2;
             } else if (step === 5) {
-                // Position above and to the right of the UI Level HUD element
-                left = targetRect.left - boxWidth;
-                top = targetRect.top - boxWidth / 2.75;
+                // Position above and to the right of the AI Level HUD element
+                left = targetRect.left - boxWidth - 20;
+                top = targetRect.top - boxWidth / 5;
             } else if (step === 6) {
-                // Position above and to the right of the UI Level HUD element
-                left = targetRect.left - boxWidth;
-                top = targetRect.top - boxWidth / 2.75;
+                // Position above and to the right of the AI Level HUD element
+                left = targetRect.left - boxWidth - 20;
+                top = targetRect.top - boxWidth / 4;
             }
 
             // Remove viewport constraints since we're using relative positioning

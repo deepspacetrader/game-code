@@ -7,7 +7,7 @@
             "name": "Xylen Verge",
             "description": "Mysterious and highly isolated galaxy known for its ancient starfields and unpredictable magnetic anomalies. Traders here are resilient and resourceful.",
             "war": false,
-            "traders": [2, 8, 9],
+            "traders": [3, 8, 9, 10],
             "coordinates": {
                 "x": 432,
                 "y": 1180,
@@ -21,7 +21,7 @@
             "name": "Cindros Bloom",
             "description": "First utopian galaxy still shining bright to this very moment. A symbol of peace, balance, and successful interstellar diplomacy.",
             "war": false,
-            "traders": [2, 3, 5, 6, 8, 9],
+            "traders": [2, 6, 17],
             "coordinates": {
                 "x": 540,
                 "y": 1345,
@@ -63,7 +63,7 @@
             "name": "Galactic Rift",
             "description": "A dense, gravity-torn stretch of space filled with mineral wealth and ancient relics. Despite its instability, it's a popular location for resource mining.",
             "war": false,
-            "traders": [8, 7],
+            "traders": [8, 7, 10, 16],
             "coordinates": {
                 "x": 1225,
                 "y": 480,
@@ -77,7 +77,7 @@
             "name": "Marrowth Deltas",
             "description": "Turbulent galaxy fractured by black hole tributaries and violent plasma storms. Trade is lucrative but extremely high-risk.",
             "war": false,
-            "traders": [11, 12, 9],
+            "traders": [9, 11, 12],
             "coordinates": {
                 "x": -1280,
                 "y": -850,
@@ -119,7 +119,7 @@
             "name": "Krothu-9",
             "description": "A quiet mid-range galaxy known for its stable solar systems and rare crystal formations. Often used as a relay point by long-haul traders.",
             "war": false,
-            "traders": [5, 12],
+            "traders": [5, 12, 7],
             "coordinates": {
                 "x": -215,
                 "y": 987,
@@ -175,7 +175,7 @@
             "name": "Astral Plateaus",
             "description": "Conflict zone where multiple factions are fighting over their pure hatred for one another. An endless demand of resources makes for a popular and dangerous market. Expect extreme volatility. Battles erupt without warning across the plateaus of starlight and smoke.",
             "war": true,
-            "traders": [15, 6, 8, 4, 2],
+            "traders": [15, 6, 8, 4, 11],
             "coordinates": {
                 "x": 400,
                 "y": 1680,

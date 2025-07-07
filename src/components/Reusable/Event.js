@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import { randomFloatRange } from '../../utils/helpers';
 import itemsData from '../../data/items.json';
 import './Event.scss';
@@ -32,7 +32,7 @@ const Sparkline = ({ data, width = 50, height = 20, color = '#00ff00' }) => {
     );
 };
 
-// Simple encryption/obfuscation for low UI levels
+// Simple encryption/obfuscation for low AI levels
 const obfuscateText = (text, level) => {
     if (level >= 25) return text;
 
@@ -55,7 +55,7 @@ const Event = () => {
         priceHistory = {},
     } = useMarketplace();
 
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
 
     const [showEvent, setShowEvent] = useState(false);
     const [displayEvent, setDisplayEvent] = useState(null);
@@ -128,7 +128,7 @@ const Event = () => {
     // Get price trend data for sparklines
     const getPriceTrendData = useCallback(
         (itemId) => {
-            if (improvedUILevel < 2) return [];
+            if (improvedAILevel < 2) return [];
 
             const history = priceHistory?.[itemId] || [];
             if (history.length < 2) return [];
@@ -137,7 +137,7 @@ const Event = () => {
             const prices = history.map((entry) => entry?.price).filter(Boolean);
             return prices.length > 1 ? prices.slice(-10) : []; // Last 10 data points if available
         },
-        [improvedUILevel, priceHistory]
+        [improvedAILevel, priceHistory]
     );
 
     // Get top 5 affected items by impact
@@ -177,7 +177,7 @@ const Event = () => {
             .slice(0, 5); // Top 5 most impacted items
     }, [displayEvent, trendData]);
 
-    // Get the most impacted item for low UI levels
+    // Get the most impacted item for low AI levels
     const getMostImpactedItem = useCallback(() => {
         if (!topAffectedItems?.length) return null;
         return topAffectedItems[0]; // Already sorted by impact
@@ -241,17 +241,17 @@ const Event = () => {
         const change = (multiplier - 1) * 100;
         const prefix = change >= 0 ? '+' : '';
 
-        // UI Level-based information disclosure
-        if (improvedUILevel >= 500) {
-            // Maximum detail for high UI levels
+        // AI Level-based information disclosure
+        if (improvedAILevel >= 500) {
+            // Maximum detail for high AI levels
             return `${prefix}${change.toFixed(2)}%`;
-        } else if (improvedUILevel >= 100) {
+        } else if (improvedAILevel >= 100) {
             // Show one decimal place for mid-high levels
             return `${prefix}${change.toFixed(1)}%`;
-        } else if (improvedUILevel >= 50) {
+        } else if (improvedAILevel >= 50) {
             // Show rounded percentages for mid levels
             return `${prefix}${Math.round(change)}%`;
-        } else if (improvedUILevel >= 25) {
+        } else if (improvedAILevel >= 25) {
             // Just show direction and relative strength for low levels
             const strength = Math.min(5, Math.ceil(Math.abs(change) / 20));
             const arrow = change >= 0 ? '▲' : '▼';
@@ -262,10 +262,10 @@ const Event = () => {
         }
     };
 
-    // Render content based on UI level
+    // Render content based on AI level
     const renderContent = () => {
         // Level 0-24: Just show event title
-        if (improvedUILevel < 25) {
+        if (improvedAILevel < 25) {
             return (
                 <div style={{ padding: '10px' }}>
                     <div
@@ -277,7 +277,7 @@ const Event = () => {
                             marginBottom: '10px',
                         }}
                     >
-                        {obfuscateText(displayEvent.name || 'UNKNOWN EVENT', improvedUILevel)}
+                        {obfuscateText(displayEvent.name || 'UNKNOWN EVENT', improvedAILevel)}
                     </div>
                     <div
                         style={{
@@ -287,14 +287,14 @@ const Event = () => {
                             fontStyle: 'italic',
                         }}
                     >
-                        [UPGRADE UI LEVEL FOR MORE INFO]
+                        [UPGRADE AI LEVEL FOR MORE INFO]
                     </div>
                 </div>
             );
         }
 
         // Level 25-49: Show title, description, and most impacted item
-        if (improvedUILevel < 50) {
+        if (improvedAILevel < 50) {
             const item = getMostImpactedItem();
             return (
                 <div style={{ padding: '10px' }}>
@@ -334,7 +334,7 @@ const Event = () => {
                                 {item.name} {formatMultiplier(item.priceMultiplier)}
                             </div>
                             <div style={{ fontSize: '0.8em', color: '#888' }}>
-                                [UPGRADE UI LEVEL FOR MORE ITEMS]
+                                [UPGRADE AI LEVEL FOR MORE ITEMS]
                             </div>
                         </div>
                     )}
@@ -343,7 +343,7 @@ const Event = () => {
         }
 
         // Level 50-99: Show all affected items with basic info
-        if (improvedUILevel < 100) {
+        if (improvedAILevel < 100) {
             return (
                 <div style={{ padding: '10px' }}>
                     <div
@@ -526,7 +526,7 @@ const Event = () => {
                         );
                     })}
 
-                    {improvedUILevel >= 500 && (
+                    {improvedAILevel >= 500 && (
                         <div
                             style={{
                                 marginTop: '15px',
@@ -540,7 +540,7 @@ const Event = () => {
                             }}
                         >
                             {/* TODO: Implement with quantum setup to allow for auto trading */}
-                            Quantum trading analysis available at UI Level 1000+
+                            Quantum trading analysis available at AI Level 1000+
                         </div>
                     )}
                 </div>

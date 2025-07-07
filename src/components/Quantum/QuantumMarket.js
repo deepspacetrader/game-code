@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './QuantumMarket.scss';
 
 const QuantumMarket = () => {
@@ -14,7 +14,7 @@ const QuantumMarket = () => {
         quantumInventory = [],
     } = useMarketplace();
 
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
 
     // Check if QuantumMarket is unlocked
     const isUnlocked = quantumInventory.includes('QuantumMarket');
@@ -134,7 +134,7 @@ const QuantumMarket = () => {
         };
     }, [autoTradeInterval]);
 
-    if (!isUnlocked || improvedUILevel < 100) return null;
+    if (!isUnlocked || improvedAILevel < 100) return null;
 
     return (
         <div className="quantum-market">

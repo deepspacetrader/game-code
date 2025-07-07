@@ -17,11 +17,11 @@ export const createMockMarketplaceContext = (overrides = {}) => ({
 });
 
 /**
- * Creates a mock UI context value for testing
+ * Creates a mock AI context value for testing
  * @param {Object} overrides - Values to override the default mock
- * @returns {Object} Mocked UI context
+ * @returns {Object} Mocked AI context
  */
-export const createMockUIContext = (overrides = {}) => ({
+export const createMockAILevelContext = (overrides = {}) => ({
     showNotification: jest.fn(),
     hideNotification: jest.fn(),
     ...overrides,

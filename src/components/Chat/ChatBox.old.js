@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useUI } from '../context/UIContext';
+import { useAILevel } from '../context/AILevelContext';
 import ChatMessage from './ChatMessage';
 import tradersData from '../data/traders.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -45,7 +45,7 @@ const DEFAULT_MESSAGES = [
     }
 ];
 
-const UIBadge = ({ tier }) => {
+const AIBadge = ({ tier }) => {
     const getTierColor = () => {
         const colors = {
             zero: '#888',
@@ -107,13 +107,13 @@ const UIBadge = ({ tier }) => {
     if (!tier) return null;
 
     return (
-        <span className="ui-badge" style={getTierStyle()}>
+        <span className="ai-badge" style={getTierStyle()}>
             {getTierName(tier)}
         </span>
     );
 };
 
-UIBadge.propTypes = {
+AIBadge.propTypes = {
     tier: PropTypes.string,
 };
         const animation = {
@@ -180,7 +180,7 @@ UIBadge.propTypes = {
     };
 
     return (
-        <span className="ui-tier-badge" style={getTierStyle()}>
+        <span className="ai-tier-badge" style={getTierStyle()}>
             {getTierName(tier)}
         </span>
     );
@@ -188,7 +188,7 @@ UIBadge.propTypes = {
 
 const ChatBox = ({ 
     statusEffects = {},
-    uiTier = 1,
+    aiTier = 1,
     onSendMessage,
     messages: externalMessages,
     activeTraders = [],
@@ -212,8 +212,8 @@ const ChatBox = ({
     const [isAtBottom, setIsAtBottom] = useState(true);
     const [unreadCount, setUnreadCount] = useState(0);
     
-    // Get UI context
-    const { theme, toggleTheme } = useUI();
+    // Get AI context
+    const { theme, toggleTheme } = useAILevel();
     
     // State for tier filtering
     const [activeTier, setActiveTier] = useState('all');
@@ -381,7 +381,7 @@ const ChatBox = ({
                     timestamp={msg.timestamp}
                     status={msg.status}
                     type={messageType}
-                    uiTier={uiTier}
+                    aiTier={aiTier}
                     data-index={index}
                     style={{
                         '--animation-delay': `${index * 50}ms`
@@ -389,7 +389,7 @@ const ChatBox = ({
                 />
             );
         });
-    }, [messages, statusEffects, uiTier]);
+    }, [messages, statusEffects, aiTier]);
     
     // Render trader list
     const renderTradersMenu = useCallback(() => {
@@ -499,7 +499,7 @@ const ChatBox = ({
             return (
                 <span className="connection-status connected" title="Connected">
                     <FontAwesomeIcon icon={faCheck} />
-                    {uiTier >= 2 && <span>Connected</span>}
+                    {aiTier >= 2 && <span>Connected</span>}
                 </span>
             );
         }
@@ -507,10 +507,10 @@ const ChatBox = ({
         return (
             <span className="connection-status disconnected" title="Disconnected">
                 <FontAwesomeIcon icon={faExclamationTriangle} />
-                {uiTier >= 2 && <span>Disconnected</span>}
+                {aiTier >= 2 && <span>Disconnected</span>}
             </span>
         );
-    }, [isConnected, uiTier]);
+    }, [isConnected, aiTier]);
     
     // Render typing indicator
     const renderTypingIndicator = useCallback(() => {
@@ -521,10 +521,10 @@ const ChatBox = ({
                 <span className="dot"></span>
                 <span className="dot"></span>
                 <span className="dot"></span>
-                {uiTier >= 2 && <span className="text">typing...</span>}
+                {aiTier >= 2 && <span className="text">typing...</span>}
             </div>
         );
-    }, [isTyping, uiTier]);
+    }, [isTyping, aiTier]);
     
     // Render unread badge
     const renderUnreadBadge = useCallback(() => {
@@ -539,7 +539,7 @@ const ChatBox = ({
     const [activeTier, setActiveTier] = useState('all');
     const [showTierSelector, setShowTierSelector] = useState(false);
     const [casualMessages, setCasualMessages] = useState([]);
-    const { uiTier, uiLevel } = useUI();
+    const { aiTier, aiLevel } = useAILevel();
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     // Active traders state removed as it wasn't being used
@@ -549,10 +549,10 @@ const ChatBox = ({
     const containerRef = useRef(null);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    // Initialize chat visibility based on UI level
+    // Initialize chat visibility based on AI level
     useEffect(() => {
-        setIsOpen(uiLevel >= 1000);
-    }, [uiLevel]);
+        setIsOpen(aiLevel >= 1000);
+    }, [aiLevel]);
 
     // Add casual chatter at regular intervals
     useEffect(() => {
@@ -572,10 +572,10 @@ const ChatBox = ({
                 const randomMessage =
                     randomTrader.casual[Math.floor(Math.random() * randomTrader.casual.length)];
 
-                // Get available tiers based on UI level
+                // Get available tiers based on AI level
                 const availableTiers = ['low', 'medium', 'high'].slice(
                     0,
-                    ['low', 'medium', 'high'].indexOf(uiTier) + 1
+                    ['low', 'medium', 'high'].indexOf(aiTier) + 1
                 );
 
                 setCasualMessages((prev) => [
@@ -594,7 +594,7 @@ const ChatBox = ({
 
         const interval = setInterval(addCasualMessage, 10000); // Add new message every 10 seconds
         return () => clearInterval(interval);
-    }, [uiTier, isInitialized]);
+    }, [aiTier, isInitialized]);
 
     // Initialize component
     useEffect(() => {
@@ -626,7 +626,7 @@ const ChatBox = ({
                     {['low', 'medium', 'high'].map((tier) => {
                         if (
                             ['low', 'medium', 'high'].indexOf(tier) >
-                            ['low', 'medium', 'high'].indexOf(uiTier)
+                            ['low', 'medium', 'high'].indexOf(aiTier)
                         ) {
                             return null;
                         }
@@ -670,7 +670,7 @@ const ChatBox = ({
             message: { EN: inputMessage },
             sender: 'You',
             isPlayer: true,
-            tier: uiTier,
+            tier: aiTier,
             timestamp: Date.now()
         };
 
@@ -954,7 +954,7 @@ const ChatBox = ({
                             >
                                 <div className="message-header">
                                     <span className="message-sender">{msg.sender}</span>
-                                    {msg.senderTier && <UIBadge tier={msg.senderTier} />}
+                                    {msg.senderTier && <AIBadge tier={msg.senderTier} />}
                                     <span className="message-timestamp">
                                         {new Date(msg.timestamp).toLocaleTimeString()}
                                     </span>
@@ -996,8 +996,8 @@ const ChatBox = ({
 
     return (
         <div 
-            className={`chat-container ${className} ui-tier-${uiTier} ${isOpen ? 'open' : 'closed'}`}
-            data-ui-tier={uiTier}
+            className={`chat-container ${className} ai-tier-${aiTier} ${isOpen ? 'open' : 'closed'}`}
+            data-ai-tier={aiTier}
         >
             {/* Chat Header */}
             <div 
@@ -1029,7 +1029,7 @@ const ChatBox = ({
                             title="Active traders"
                         >
                             <FontAwesomeIcon icon={faUserAstronaut} />
-                            {uiTier >= 2 && (
+                            {aiTier >= 2 && (
                                 <span className="traders-count">
                                     {activeTraders.length}
                                 </span>
@@ -1099,12 +1099,12 @@ const ChatBox = ({
                         disabled={!inputValue.trim() || !isConnected}
                         aria-label="Send message"
                     >
-                        {uiTier >= 2 ? 'Send' : ''}
+                        {aiTier >= 2 ? 'Send' : ''}
                         <FontAwesomeIcon icon={faPaperPlane} />
                     </button>
                 </div>
                 
-                {uiTier >= 2 && (
+                {aiTier >= 2 && (
                     <div className="input-actions">
                         <span className="character-count">
                             {inputValue.length}/500
@@ -1123,8 +1123,8 @@ const ChatBox = ({
 };
 
 ChatBox.propTypes = {
-    /** The current UI tier (1-3) that determines visual enhancements */
-    uiTier: PropTypes.oneOf([1, 2, 3]),
+    /** The current AI tier (1-3) that determines visual enhancements */
+    aiTier: PropTypes.oneOf([1, 2, 3]),
     /** Callback when a message is sent */
     onSendMessage: PropTypes.func,
     /** Array of message objects to display */
@@ -1176,7 +1176,7 @@ ChatBox.propTypes = {
 };
 
 ChatBox.defaultProps = {
-    uiTier: 1,
+    aiTier: 1,
     messages: [],
     activeTraders: [],
     isConnected: true,

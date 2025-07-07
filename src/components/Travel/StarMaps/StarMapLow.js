@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import galaxiesData from '../../data/galaxies.json';
 import './StarMap.scss';
 
-// SVG-based starmap for low UI, modeled after TravelOverlay
+// SVG-based starmap for low AI, modeled after TravelOverlay
 const StarMapLow = ({ currentGalaxyId, onTravel }) => {
     const [selectedGalaxyId, setSelectedGalaxyId] = useState(null);
     const [showMap, setShowMap] = useState(true);

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './Help.scss';
 import { Button, Offcanvas } from 'react-bootstrap';
 import { zzfx } from 'zzfx';
 
 const Help = () => {
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
     const [show, setShow] = useState(false);
     const handleClose = () => {
         zzfx(...[0, 0, 925, 0.04, 0.3, 0.6, 1, 0.3, 0, 6.27, -184, 0.09, 0.17]);
@@ -28,10 +28,10 @@ const Help = () => {
                 backdrop
             >
                 <Offcanvas.Header closeButton>
-                    {improvedUILevel < 5 ? null : <Offcanvas.Title>Help</Offcanvas.Title>}
+                    {improvedAILevel < 5 ? null : <Offcanvas.Title>Help</Offcanvas.Title>}
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    {improvedUILevel < 5 ? (
+                    {improvedAILevel < 5 ? (
                         <>
                             <pre>BEGIN TRANSMISSION</pre>
                             <h2 className="text-warning">
@@ -45,7 +45,7 @@ const Help = () => {
                             <h2 className="text-warning">..</h2>
                             <h2 className="text-warning">.</h2>
                             <pre>RESTABLISHING CONNECTION...</pre>
-                            <p>**~~--____...upgrade...**~~--____...UI...**~~--____...required...</p>
+                            <p>**~~--____...upgrade...**~~--____...AI...**~~--____...required...</p>
                             <pre>
                                 <p>...*````~~~____.L..click...__---~~--___buy...</p>
                                 <p>...*``~~~--___..R..click...**~~--____...sell...</p>
@@ -60,7 +60,7 @@ const Help = () => {
                                 Nobody knows what year it is anymore they stopped counting long ago.
                                 Markets have been controlled by the same small group of traders who
                                 dominate each nearby galaxy. Trade with them, acquire credits,
-                                improve your UI level and stay alive long enough to buy and activate
+                                improve your AI level and stay alive long enough to buy and activate
                                 5 Quantum Processors at once.
                                 {/* However unbeknownst to the player at the beginning of the game, all traders are part of the secretive trading hall of legends who have already acquired the quantum trading supremacy a long time ago. In fact, they routinely speed run their way from a base starting level of 10,000 credits and 0 quantum processing power to the point of being able to generate a seemingly infinite number of credits using quantum processing power. They do this over and over again, recording the time it takes for them to reach this end game goal. */}
                             </p>
@@ -69,7 +69,7 @@ const Help = () => {
                                 to run into a gang of pirates or even worse a war zone, especially
                                 without a shield or stealth module. Oh and there might be some
                                 random events which affect the markets and sometimes the player's
-                                health, fuel, UI level, shield, or stealth.
+                                health, fuel, AI level, shield, or stealth.
                             </p>
                             <p>
                                 Whenever an item is purchased using it is automatically transported

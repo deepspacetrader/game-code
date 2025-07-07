@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import itemsData from '../../data/items.json';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import './InventoryList.scss';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -17,16 +17,16 @@ const InventoryList = () => {
         statusEffects,
         inTravel,
     } = useMarketplace();
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
     const defs = itemsData.items;
-    const uiTier =
-        improvedUILevel < 25
+    const aiTier =
+        improvedAILevel < 25
             ? 'low'
-            : improvedUILevel < 50
+            : improvedAILevel < 50
             ? 'medium'
-            : improvedUILevel < 75
+            : improvedAILevel < 75
             ? 'high'
-            : improvedUILevel < 100
+            : improvedAILevel < 100
             ? 'ultra'
             : 'elite';
     const itemImages = require.context('../../images', false, /^\.\/item\d+\.webp$/);
@@ -49,10 +49,10 @@ const InventoryList = () => {
                     const def = defs.find((d) => d.name === item.name);
                     // determine if trader trades this item
                     const isTraded = displayCells.some((c) => c.name === item.name);
-                    // disable or hide sell all based on UI level and trade availability
+                    // disable or hide sell all based on AI level and trade availability
                     const disableSellAll =
-                        !isTraded && improvedUILevel >= 50 && improvedUILevel < 75;
-                    const hideSellAll = !isTraded && improvedUILevel >= 75;
+                        !isTraded && improvedAILevel >= 50 && improvedAILevel < 75;
+                    const hideSellAll = !isTraded && improvedAILevel >= 75;
                     // get itemId for image
                     const itemId = def?.itemId;
 
@@ -87,8 +87,8 @@ const InventoryList = () => {
                             </OverlayTrigger>
 
                             <p>Owned: {item.quantity}</p>
-                            {improvedUILevel >= 75 && avg !== null && ` (Avg: ${avg})`}
-                            {improvedUILevel >= 5 && pl !== null && (
+                            {improvedAILevel >= 75 && avg !== null && ` (Avg: ${avg})`}
+                            {improvedAILevel >= 5 && pl !== null && (
                                 <div
                                     className={parseFloat(pl) >= 0 ? 'pl-positive' : 'pl-negative'}
                                 >
@@ -131,17 +131,17 @@ const InventoryList = () => {
                                 </button>
                             </div>
 
-                            {improvedUILevel >= 10 && !hideSellAll && (
+                            {improvedAILevel >= 10 && !hideSellAll && (
                                 <button
                                     className={[
                                         'sell-all-btn',
                                         disableSellAll ? 'disabled' : '',
-                                        improvedUILevel >= 25 && pl !== null
+                                        improvedAILevel >= 25 && pl !== null
                                             ? parseFloat(pl) >= 0
                                                 ? 'profit'
                                                 : 'loss'
                                             : '',
-                                        `ui-tier-${uiTier}`,
+                                        `ai-tier-${aiTier}`,
                                     ]
                                         .join(' ')
                                         .trim()}
@@ -166,7 +166,7 @@ const InventoryList = () => {
                                     disabled={disableSellAll}
                                 >
                                     Sell All
-                                    {improvedUILevel >= 100 && pl !== null
+                                    {improvedAILevel >= 100 && pl !== null
                                         ? ` (${parseFloat(pl) >= 0 ? 'Profit' : 'Loss'})`
                                         : ''}
                                 </button>

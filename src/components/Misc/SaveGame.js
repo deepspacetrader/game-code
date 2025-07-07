@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import { encryptData } from '../../utils/encryption';
 import { MdSave } from 'react-icons/md';
 import './SaveGame.scss';
 
 const SaveGame = () => {
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
     const [showLevel, setShowLevel] = useState(false);
     const {
         health,
@@ -23,7 +23,7 @@ const SaveGame = () => {
 
     const saveGame = () => {
         const gameState = {
-            uiLevel: improvedUILevel,
+            aiLevel: improvedAILevel,
             health,
             fuel,
             credits,
@@ -58,7 +58,7 @@ const SaveGame = () => {
     return (
         <div className="save-game-container">
             <div className={`save-level-display ${showLevel ? 'visible' : ''}`}>
-                Saved! UI Level: {improvedUILevel}
+                Saved! AI Level: {improvedAILevel}
             </div>
             <button className="save-button" onClick={saveGame} title="Save Game">
                 <MdSave />

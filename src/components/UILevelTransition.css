@@ -1,4 +1,4 @@
-.ui-level-transition {
+.ai-level-transition {
     transition:
       opacity 0.35s cubic-bezier(0.4,0,0.2,1),
       max-height 0.35s cubic-bezier(0.4,0,0.2,1),
@@ -11,30 +11,30 @@
   }
   
   /* Pop-in: instantly visible, no animation */
-  .ui-level-transition.pop-in {
+  .ai-level-transition.pop-in {
     opacity: 1;
     max-height: 1000px;
     transition: none;
   }
   
   /* Fade/collapse out */
-  .ui-level-transition.fade-collapse-out {
+  .ai-level-transition.fade-collapse-out {
     opacity: 0;
     max-height: 0;
     pointer-events: none;
   }
   
   /* Example: animate color/tier transitions */
-  .ui-level-transition.tier-medium {
+  .ai-level-transition.tier-medium {
     background: #444;
     color: #fff;
     transition: background 0.25s, color 0.25s;
   }
-  .ui-level-transition.tier-high {
+  .ai-level-transition.tier-high {
     background: #2a2a6a;
     color: #ffd700;
   }
-  .ui-level-transition.tier-ultra {
+  .ai-level-transition.tier-ultra {
     background: #111;
     color: #0ff;
   }

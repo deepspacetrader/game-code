@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import { useEventContext } from '../../context/EventContext';
 import { useStatusEffects } from '../../context/StatusEffectsContext';
 import { zzfx } from 'zzfx';
@@ -11,7 +11,7 @@ import './AdminDebug.scss';
 
 const AdminDebug = () => {
     const [showCheats, setShowCheats] = useState(false);
-    const { improvedUILevel, setImprovedUILevel, setCourierDrones, courierDrones } = useUI();
+    const { improvedAILevel, setimprovedAILevel, setCourierDrones, courierDrones } = useAILevel();
     const {
         health,
         healthRef,
@@ -121,7 +121,7 @@ const AdminDebug = () => {
                 // Create a new game state with cheats enabled
                 const gameState = {
                     isCheater: true,
-                    uiLevel: 10,
+                    aiLevel: 10,
                     credits: 10000,
                     quantumProcessors: 0,
                     inventory: [],
@@ -141,8 +141,8 @@ const AdminDebug = () => {
                     setIsCheater(true);
                 }
 
-                // Update the UI to reflect the new state
-                setImprovedUILevel(10);
+                // Update the AI to reflect the new state
+                setimprovedAILevel(10);
                 setCredits(10000);
                 quantumProcessorHandlers.reset();
                 setShowCheats(true);
@@ -168,7 +168,7 @@ const AdminDebug = () => {
         }
 
         // Reset game state to default values
-        setImprovedUILevel(10);
+        setimprovedAILevel(10);
         setCredits(10000);
         quantumProcessorHandlers.reset();
         setShowCheats(false);
@@ -228,11 +228,11 @@ const AdminDebug = () => {
             {showCheats && (
                 <div className="cheats-container">
                     <div className="form-group">
-                        <label>Improved UI Level</label>
+                        <label>Improved AI Level</label>
                         <input
                             type="number"
-                            value={improvedUILevel}
-                            onChange={(e) => setImprovedUILevel(Number(e.target.value))}
+                            value={improvedAILevel}
+                            onChange={(e) => setimprovedAILevel(Number(e.target.value))}
                             min={0}
                             max={100000}
                         />

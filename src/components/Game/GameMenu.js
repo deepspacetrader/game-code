@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import { decryptData } from '../../utils/encryption';
 import './GameMenu.scss';
 import Version from '../Misc/Version';
@@ -9,7 +9,7 @@ const GameMenu = () => {
     const [showMainMenu, setShowMainMenu] = useState(true);
     const [hasSavedGame, setHasSavedGame] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [savedUILevel, setSavedUILevel] = useState(0);
+    const [savedaiLevel, setSavedaiLevel] = useState(0);
     const {
         setHealth,
         setFuel,
@@ -24,7 +24,7 @@ const GameMenu = () => {
         setIsCheater,
         setShowOnboarding,
     } = useMarketplace();
-    const { setImprovedUILevel } = useUI();
+    const { setimprovedAILevel } = useAILevel();
 
     useEffect(() => {
         // Check for saved game on component mount
@@ -37,7 +37,7 @@ const GameMenu = () => {
                     if (decrypted.isCheater) {
                         console.warn('Loading a save file with cheats enabled');
                     }
-                    setSavedUILevel(decrypted.uiLevel || 0);
+                    setSavedaiLevel(decrypted.aiLevel || 0);
                     setHasSavedGame(true);
                 } else {
                     console.error('Failed to decrypt saved game');
@@ -80,7 +80,7 @@ const GameMenu = () => {
                         stealthActive: gameState.stealthActive,
                         inventory: gameState.inventory || [],
                         quantumProcessors: gameState.quantumProcessors || 0,
-                        uiLevel: gameState.uiLevel || 0,
+                        aiLevel: gameState.aiLevel || 0,
                         galaxyName: gameState.galaxyName,
                         isCheater: gameState.isCheater || false,
                     });
@@ -121,8 +121,8 @@ const GameMenu = () => {
 
                     if (gameState.quantumProcessors !== undefined)
                         setQuantumProcessors(Number(gameState.quantumProcessors) || 0);
-                    if (gameState.uiLevel !== undefined)
-                        setImprovedUILevel(Number(gameState.uiLevel) || 0);
+                    if (gameState.aiLevel !== undefined)
+                        setimprovedAILevel(Number(gameState.aiLevel) || 0);
 
                     // Small delay to ensure state is updated before traveling
                     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -177,7 +177,7 @@ const GameMenu = () => {
                             ) : (
                                 <>
                                     Continue Game
-                                    <span className="ui-level">UI Level: {savedUILevel}</span>
+                                    <span className="ai-level">AI Level: {savedaiLevel}</span>
                                 </>
                             )}
                         </button>
@@ -231,14 +231,14 @@ const GameMenu = () => {
                                     travel around to seek out the best deals
                                 </li>
                                 <li>
-                                    Use items to upgrade your <b>UI Level</b> for visual
+                                    Use items to upgrade your <b>AI Level</b> for visual
                                     enhancements to help make better trading decisions
                                 </li>
                                 <li>
                                     Be careful out there, some areas are dangerous and you may
                                     encounter some not so friendly individuals or groups
                                 </li>
-                                <li>Maintain, health, fuel and UI levels</li>
+                                <li>Maintain, health, fuel and AI levels</li>
                             </ul>
                         </div>
                     </div>

@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 
 const DebugStatus = () => {
     const { currentGameEvent, currentEnemy } = useMarketplace();
-    const { showCheats } = useUI();
+    const { showCheats } = useAILevel();
 
     if (!showCheats) return null;
 

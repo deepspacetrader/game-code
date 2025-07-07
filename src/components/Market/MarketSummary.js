@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { useUI } from '../../context/UIContext';
+import { useAILevel } from '../../context/AILevelContext';
 import galaxiesData from '../../data/galaxies.json';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 import AlertBanner from '../Reusable/AlertBanner';
@@ -10,7 +10,7 @@ const galaxyImages = require.context('../../images', false, /^\.\/galaxy\d+(-war
 
 const MarketSummary = () => {
     const { displayCells, galaxyName, onBuyAll, credits } = useMarketplace();
-    const { improvedUILevel } = useUI();
+    const { improvedAILevel } = useAILevel();
     const [history, setHistory] = useState([]);
     const [alertMsg, setAlertMsg] = useState('');
     const [alertType, setAlertType] = useState('info');
@@ -52,9 +52,9 @@ const MarketSummary = () => {
         setBgImage(imgSrc);
     }, [galaxyName]);
 
-    // determine enhanced view for higher UI
-    const enhanced = improvedUILevel >= 75;
-    // compute dynamic width percent based on total and UI
+    // determine enhanced view for higher AI
+    const enhanced = improvedAILevel >= 75;
+    // compute dynamic width percent based on total and AI
     const widthPercent = enhanced
         ? Math.min(40, Math.max(15, total / 8000))
         : Math.min(30, Math.max(10, total / 10000));
@@ -92,7 +92,7 @@ const MarketSummary = () => {
 
     return (
         <>
-            <AlertBanner message={alertMsg} type={alertType} uiLevel={improvedUILevel} />
+            <AlertBanner message={alertMsg} type={alertType} aiLevel={improvedAILevel} />
             <div className="market-summary-container">
                 <h3>Market</h3>
 

@@ -42,7 +42,7 @@ $breakpoint-large: 1200px;
 body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe AI', 'Roboto', 'Oxygen', 'Ubuntu',
         'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -208,14 +208,14 @@ button {
     color: #fff;
 }
 
-/* Medium UI: static text */
+/* Medium AI: static text */
 .cell-notice--medium {
     opacity: 1 !important;
     transform: none !important;
     font-size: 0.8rem;
 }
 
-/* High UI: fade away */
+/* High AI: fade away */
 .cell-notice--high {
     font-size: 0.9rem;
     animation-name: notice-fade;
@@ -224,7 +224,7 @@ button {
     animation-fill-mode: forwards;
 }
 
-/* Elite UI: larger fade up and away */
+/* Elite AI: larger fade up and away */
 .cell-notice--elite {
     font-size: 1.2rem;
     animation-name: notice-move-up;
@@ -272,13 +272,13 @@ button {
     }
 }
 
-/* UI Tier Styles */
+/* AI Tier Styles */
 
-.ui-tier-zero,
-.ui-tier-worthless,
-.ui-tier-awful,
-.ui-tier-bad,
-.ui-tier-verylow {
+.ai-tier-zero,
+.ai-tier-worthless,
+.ai-tier-awful,
+.ai-tier-bad,
+.ai-tier-verylow {
     --hud-bg: #000;
     // --hud-border: #222;
     --hud-text: #fff;
@@ -289,7 +289,7 @@ button {
     // --info: #aff;
 }
 
-.ui-tier-low {
+.ai-tier-low {
     --hud-bg: #0a0e14;
     --hud-border: #222;
     --hud-text: #fff;
@@ -300,7 +300,7 @@ button {
     --info: #aff;
 }
 
-.ui-tier-medium {
+.ai-tier-medium {
     --hud-bg: #121824;
     --hud-border: #445;
     --hud-text: #fff;
@@ -311,7 +311,7 @@ button {
     --info: #aff;
 }
 
-.ui-tier-high {
+.ai-tier-high {
     --hud-bg: #20304e;
     --hud-border: #667;
     --hud-text: #fff;
@@ -322,7 +322,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-explorer {
+.ai-tier-explorer {
     --hud-bg: rgb(27, 66, 111);
     --hud-border: #667;
     --hud-text: #fff;
@@ -333,7 +333,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-professional {
+.ai-tier-professional {
     --hud-bg: rgb(29, 88, 155);
     --hud-border: #667;
     --hud-text: #fff;
@@ -344,7 +344,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-skilled {
+.ai-tier-skilled {
     --hud-bg: rgb(18, 44, 172);
     --hud-border: #667;
     --hud-text: #fff;
@@ -355,7 +355,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-knowledgeable {
+.ai-tier-knowledgeable {
     --hud-bg: rgb(16, 47, 202);
     --hud-border: #667;
     --hud-text: #fff;
@@ -366,7 +366,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-smart {
+.ai-tier-smart {
     --hud-bg: rgb(9, 47, 235);
     --hud-border: #667;
     --hud-text: #fff;
@@ -377,7 +377,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-expert {
+.ai-tier-expert {
     --hud-bg: rgb(0, 59, 11);
     --hud-border: #667;
     --hud-text: #fff;
@@ -388,7 +388,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-master {
+.ai-tier-master {
     --hud-bg: rgb(52, 85, 0);
     --hud-border: #667;
     --hud-text: #fff;
@@ -399,7 +399,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-grandmaster {
+.ai-tier-grandmaster {
     --hud-bg: rgb(118, 150, 65);
     --hud-border: #667;
     --hud-text: #fff;
@@ -410,7 +410,7 @@ button {
     --info: #bef;
 }
 
-.ui-tier-elite {
+.ai-tier-elite {
     --hud-bg: #33003e;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -422,7 +422,7 @@ button {
     --info: #cef;
 }
 
-.ui-tier-legendary {
+.ai-tier-legendary {
     --hud-bg: #d97700;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -433,7 +433,7 @@ button {
     --error: #f11;
     --info: #cef;
 }
-.ui-tier-potential {
+.ai-tier-potential {
     --hud-bg: #580000;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -444,7 +444,7 @@ button {
     --error: #f11;
     --info: #cef;
 }
-.ui-tier-endgame {
+.ai-tier-endgame {
     --hud-bg: #ff0000;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -456,15 +456,15 @@ button {
     --info: #000;
 }
 
-.ui-tier-elite .cell--up {
+.ai-tier-elite .cell--up {
     --cell-bg: darkgreen;
 }
 
-.ui-tier-elite .cell--down {
+.ai-tier-elite .cell--down {
     --cell-bg: darkred;
 }
 
-.ui-tier-ultra {
+.ai-tier-ultra {
     --hud-bg: #000000;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -475,7 +475,7 @@ button {
     --info: #cef;
 }
 
-.ui-tier-newbie {
+.ai-tier-newbie {
     --hud-bg: #111;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -486,7 +486,7 @@ button {
     --info: #cef;
 }
 
-.ui-tier-apprentice {
+.ai-tier-apprentice {
     --hud-bg: #222;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -497,7 +497,7 @@ button {
     --info: #cef;
 }
 
-.ui-tier-journeyman {
+.ai-tier-journeyman {
     --hud-bg: #333;
     --hud-border: #889;
     --hud-text: #ffffff;
@@ -508,7 +508,7 @@ button {
     --info: #cef;
 }
 
-.ui-tier-adventurer {
+.ai-tier-adventurer {
     /* mirror elite tier styling until new theming is defined */
     --hud-bg: #444;
     --hud-border: #889;

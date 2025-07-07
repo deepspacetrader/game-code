@@ -58,28 +58,28 @@ const getRarityColor = (value, max = 1.5) => {
     return `hsl(${hue}, 70%, 60%)`;
 };
 
-const TraderInfo = ({ trader, improvedUILevel = 0, itemsData = tradersData.items || [] }) => {
+const TraderInfo = ({ trader, improvedAILevel = 0, itemsData = tradersData.items || [] }) => {
     const [glowIntensity, setGlowIntensity] = useState(0);
 
     // Subtle pulsing effect for premium levels
     useEffect(() => {
-        if (improvedUILevel >= 75) {
+        if (improvedAILevel >= 75) {
             const interval = setInterval(() => {
                 setGlowIntensity(0.5 + Math.random() * 0.5);
             }, 2000 + Math.random() * 3000);
             return () => clearInterval(interval);
         }
-    }, [improvedUILevel]);
+    }, [improvedAILevel]);
 
     if (!trader) return null;
 
-    // UI Level thresholds for different features
-    const showBasicInfo = improvedUILevel > 0; // Always show basic info
-    const showStats = improvedUILevel >= 50; // Show basic stats at level 25
-    const showEnhanced = improvedUILevel >= 10; // Enhanced visuals at level 50
-    const showAdvanced = improvedUILevel >= 500; // Advanced info at level 100
-    const showPremium = improvedUILevel >= 1500; // Premium effects at level 150
-    const showEndGame = improvedUILevel >= 100000; // Shows the record time
+    // AI Level thresholds for different features
+    const showBasicInfo = improvedAILevel > 0; // Always show basic info
+    const showStats = improvedAILevel >= 50; // Show basic stats at level 25
+    const showEnhanced = improvedAILevel >= 10; // Enhanced visuals at level 50
+    const showAdvanced = improvedAILevel >= 500; // Advanced info at level 100
+    const showPremium = improvedAILevel >= 1500; // Premium effects at level 150
+    const showEndGame = improvedAILevel >= 100000; // Shows the record time
 
     const containerClass = ['trader-info', showEnhanced && 'enhanced', showPremium && 'premium']
         .filter(Boolean)
@@ -90,7 +90,7 @@ const TraderInfo = ({ trader, improvedUILevel = 0, itemsData = tradersData.items
             className={containerClass}
             style={{
                 '--glow-intensity': glowIntensity,
-                '--ui-level': Math.min(improvedUILevel / 100, 1),
+                '--ai-level': Math.min(improvedAILevel / 100, 1),
             }}
         >
             <div className="trader-header">
