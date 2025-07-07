@@ -1616,6 +1616,12 @@
     }
 }
 
+.inventory.grid .cell{
+    &:hover{
+        cursor: default;
+    }
+}
+
 .item-image-wrapper {
     position: relative;
     margin: 0 auto 0.5rem auto;
@@ -1658,9 +1664,9 @@
     }
 }
 
-.inventory-content   .item-image-bg {
+.inventory-content .item-image-bg {
     &:hover{
-        cursor: default;
+        cursor: help;
     }
 }
 

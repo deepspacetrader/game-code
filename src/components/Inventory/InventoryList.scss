@@ -167,15 +167,15 @@
 @keyframes wiggleElite {
     0%,
     100% {
-        transform: translateX(0) scale(0.3);
+        transform: translateX(0) scale(0.5);
     }
 
     25% {
-        transform: translateX(-1px) scale(0.3);
+        transform: translateX(-1px) scale(0.5);
     }
 
     75% {
-        transform: translateX(1px) scale(0.3);
+        transform: translateX(1px) scale(0.5);
     }
 }
 

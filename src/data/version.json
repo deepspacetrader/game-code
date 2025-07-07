@@ -1,6 +1,16 @@
 {
     "versions": [
         {
+            "number": "1.0.4",
+            "date": "2025-07-07",
+            "title": "Minor Updates",
+            "changes": [
+                "Added more danger messages",
+                "Increased fuel limit to 1000",
+                "Adjusted trader galaxy appearances"
+            ]
+        },
+        {
             "number": "1.0.3",
             "date": "2025-07-03",
             "title": "New Additions and Bug Fixes",

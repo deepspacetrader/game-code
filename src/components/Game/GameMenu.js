@@ -202,17 +202,17 @@ const GameMenu = () => {
                             <ul>
                                 <li>Left click items in the market to buy</li>
                                 <li>Right click items in the market to sell</li>
-                                <li>Items can be used or traded</li>
+                                <li>Items can be used or sold</li>
                                 <li>
                                     Click <b>Next Galaxy</b> button to travel to a new galaxy
                                 </li>
                                 <li>
-                                    Click <b>Previous</b> or <b>Next</b> trader buttons to travel
+                                    Click <b>Previous Trader</b> or <b>Next Trader</b> to travel
                                     within the current galaxy <em>(consumes fuel)</em>
                                 </li>
                             </ul>
 
-                            <h4>Goal</h4>
+                            <h4>Goals</h4>
                             <ul>
                                 <li>
                                     Starting with a small amount of credits <b>your goal</b> is to
@@ -223,6 +223,10 @@ const GameMenu = () => {
                                     Obtain and activate <b>6 Quantum Processors</b> to dominate the
                                     markets with ultra high speed quantum trading capabilities
                                 </li>
+                                <li>
+                                    Don't run out of fuel, credits, and inventory at the same time
+                                </li>
+                                <li>Stay Alive</li>
                             </ul>
                             <h4>Tips</h4>
                             <ul>
@@ -239,6 +243,7 @@ const GameMenu = () => {
                                     encounter some not so friendly individuals or groups
                                 </li>
                                 <li>Maintain, health, fuel and AI levels</li>
+                                <li>Travelling with illegal cargo is always risky</li>
                             </ul>
                         </div>
                     </div>

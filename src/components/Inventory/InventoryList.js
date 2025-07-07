@@ -87,15 +87,6 @@ const InventoryList = () => {
                             </OverlayTrigger>
 
                             <p>Owned: {item.quantity}</p>
-                            {improvedAILevel >= 75 && avg !== null && ` (Avg: ${avg})`}
-                            {improvedAILevel >= 5 && pl !== null && (
-                                <div
-                                    className={parseFloat(pl) >= 0 ? 'pl-positive' : 'pl-negative'}
-                                >
-                                    <p>{pl}</p>
-                                    <p>{value && `Value: ${value}`}</p>
-                                </div>
-                            )}
 
                             <div className="button-row use-buttons">
                                 <button
@@ -130,6 +121,16 @@ const InventoryList = () => {
                                     Use All
                                 </button>
                             </div>
+
+                            {improvedAILevel >= 75 && avg !== null && ` (Avg: ${avg})`}
+                            {improvedAILevel >= 5 && pl !== null && (
+                                <div
+                                    className={parseFloat(pl) >= 0 ? 'pl-positive' : 'pl-negative'}
+                                >
+                                    <p>{parseFloat(pl) >= 0 ? `+${pl}` : pl}</p>
+                                    <p>{value && `Value: ${value}`}</p>
+                                </div>
+                            )}
 
                             {improvedAILevel >= 10 && !hideSellAll && (
                                 <button
