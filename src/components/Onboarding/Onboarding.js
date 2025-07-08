@@ -88,7 +88,7 @@ const Onboarding = () => {
             target: '.hud-item--ai-level',
             title: 'AI Level Decay',
             content:
-                "Other traders in the galaxy have powerful Quantum Processors with self-improving AI trading algorithms. This is the main reason why market prices change so frequently and unpredictably. As a result your AI Level decays over time because the old hardware just can't keep up. To see trade opportunities more easily you'll want to increase and maintain your AI Level by buying and using as much tech as you can afford.",
+                "<p>Other traders in the galaxy have powerful <strong>Quantum Processors</strong> with self-improving AI trading algorithms which increase market volatility.</p> <p>This results in <strong>AI Level</strong> decay over time because older hardware simply can't keep up.</p> <p>To see trade opportunities more easily you'll want to increase and maintain your <strong>AI Level</strong> by buying and using as much tech as you can afford.</p>",
             arrow: 'right',
             validate: () =>
                 completedActions.buyFirstQBit &&
@@ -328,7 +328,7 @@ const Onboarding = () => {
                 />
                 <div className="onboarding-content">
                     <h4>{currentStepData.title}</h4>
-                    <p>{currentStepData.content}</p>
+                    <p dangerouslySetInnerHTML={{ __html: currentStepData.content }} />
                 </div>
                 <div className="onboarding-footer">
                     <span>{`${step + 1} / ${onboardingSteps.length}`}</span>

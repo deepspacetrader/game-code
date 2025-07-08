@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import traders from '../../data/traders.json';
 
 const TraderMessage = ({
@@ -12,6 +12,7 @@ const TraderMessage = ({
     const [currentMessage, setCurrentMessage] = useState('');
     const [visible, setVisible] = useState(false);
     const [tierClass, setTierClass] = useState('tier-low');
+    const lastMessageTraderRef = useRef(null);
 
     // Update tier class based on AI level
     useEffect(() => {
@@ -26,7 +27,7 @@ const TraderMessage = ({
         }
     }, [improvedAILevel]);
 
-    // Update message when dependencies change
+    // Update message when trader changes (not when status effects change)
     useEffect(() => {
         if (!traderMessages || traderMessages.length === 0) {
             setVisible(false);
@@ -37,6 +38,16 @@ const TraderMessage = ({
         const traderId = currentTrader || lastTrader;
         if (!traderId) {
             setVisible(false);
+            return;
+        }
+
+        // Reset the ref if we're visiting a different trader
+        if (lastMessageTraderRef.current !== null && lastMessageTraderRef.current !== traderId) {
+            lastMessageTraderRef.current = null;
+        }
+
+        // Only show message once per trader per visit
+        if (lastMessageTraderRef.current === traderId) {
             return;
         }
 
@@ -58,8 +69,12 @@ const TraderMessage = ({
         const goodbyes = traderMsg.goodbyes || {};
 
         // Check if player has any translators
-        const hasCHIK = statusEffects['Auto Translator CHIK']?.active || false;
-        const hasLAY = statusEffects['Auto Translator LAY']?.active || false;
+        const hasCHIK =
+            statusEffects['translate_CHIK'] ||
+            statusEffects['Auto Translator CHIK']?.active ||
+            false;
+        const hasLAY =
+            statusEffects['translate_LAY'] || statusEffects['Auto Translator LAY']?.active || false;
 
         // Determine if this is a goodbye message (lastTrader is set) or greeting (currentTrader is set)
         const isGoodbye = !!lastTrader && !currentTrader;
@@ -92,16 +107,34 @@ const TraderMessage = ({
 
             setCurrentMessage(messageToShow);
             setVisible(true);
+            lastMessageTraderRef.current = traderId;
             return;
         }
 
         // Otherwise, select a random message in the trader's language
         const messageKeys = Object.keys(messages);
         if (messageKeys.length > 0) {
-            const randomKey = messageKeys[Math.floor(Math.random() * messageKeys.length)];
-            let selectedMessages = messages[randomKey];
+            // First, try to find a message in a language the player can translate
+            let selectedLanguage = null;
+            let selectedMessages = null;
 
-            // If we have an array of messages, pick one randomly
+            // Check if player has translators and if there are messages in those languages
+            if (hasCHIK && messages['CHIK']) {
+                selectedLanguage = 'CHIK';
+                selectedMessages = messages['CHIK'];
+            } else if (hasLAY && messages['LAY']) {
+                selectedLanguage = 'LAY';
+                selectedMessages = messages['LAY'];
+            }
+
+            // If no translatable language found, pick a random language
+            if (!selectedLanguage) {
+                const randomKey = messageKeys[Math.floor(Math.random() * messageKeys.length)];
+                selectedLanguage = randomKey;
+                selectedMessages = messages[randomKey];
+            }
+
+            // Pick a random message from the selected language
             if (Array.isArray(selectedMessages) && selectedMessages.length > 0) {
                 selectedMessages =
                     selectedMessages[Math.floor(Math.random() * selectedMessages.length)];
@@ -109,7 +142,8 @@ const TraderMessage = ({
 
             // If player has a translator for this language, show the English version if available
             if (
-                ((randomKey === 'CHIK' && hasCHIK) || (randomKey === 'LAY' && hasLAY)) &&
+                ((selectedLanguage === 'CHIK' && hasCHIK) ||
+                    (selectedLanguage === 'LAY' && hasLAY)) &&
                 messages['EN']
             ) {
                 const enMessages = messages['EN'];
@@ -120,8 +154,9 @@ const TraderMessage = ({
 
             setCurrentMessage(selectedMessages);
             setVisible(true);
+            lastMessageTraderRef.current = traderId;
         }
-    }, [currentTrader, lastTrader, messageText, statusEffects, traderMessages]);
+    }, [currentTrader, lastTrader, messageText, traderMessages, statusEffects]);
 
     // Auto-hide after 5 seconds
     useEffect(() => {

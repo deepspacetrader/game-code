@@ -320,7 +320,7 @@
             "traderId": 8,
             "name": "Sarix Drayven",
             "greetings": {
-                "EN": ["Welcome to my ship.", "What do you need to buy?", "How can I help you?"],
+                "EN": ["Welcome. I know why you've come here.", "What do you need to buy?", "How can I help you?"],
                 "CHIK": [
                     "Chi ho! Kara ta chu chi chochu joja ti ta tu!",
                     "Chu ra ta tu ti tu chu?",

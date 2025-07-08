@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
 import galaxiesData from '../../data/galaxies.json';
-import SignalAnimation from '../Travel/SignalAnimation';
+import TravelAnimation from '../Travel/TravelAnimation';
 import TraderInfo from './TraderInfo';
 import './TraderNav.scss';
 import TraderMessage from './TraderMessage';
@@ -337,18 +337,18 @@ const TraderNav = () => {
                 <div className="trader-card">
                     {inTravel ? (
                         <>
-                            <div className="signal-animation">
-                                <SignalAnimation
+                            <div className="travel-animation">
+                                <TravelAnimation
                                     duration={travelTimeLeft}
                                     onClose={() => setShowStarMap(false)}
                                 />
                             </div>
                             <div className="traveling-message">
                                 <TraderMessage
-                                    key={`goodbye-${currentTrader}`} // Force re-render with new trader
+                                    key={`goodbye-${currentTrader}`}
                                     messageText={traderMessage}
                                     traderMessages={traderMessages}
-                                    lastTrader={currentTrader} // This is a goodbye message
+                                    lastTrader={currentTrader}
                                     statusEffects={statusEffects}
                                     improvedAILevel={improvedAILevel}
                                 />
@@ -365,7 +365,7 @@ const TraderNav = () => {
                                     <TraderMessage
                                         messageText={traderMessage}
                                         traderMessages={traderMessages}
-                                        currentTrader={currentTrader} // This is a greeting message
+                                        currentTrader={currentTrader}
                                         statusEffects={statusEffects}
                                         improvedAILevel={improvedAILevel}
                                     />
@@ -428,6 +428,7 @@ const TraderNav = () => {
                         >
                             {shieldActive ? 'Shield On' : 'Shield Off'}
                         </button>
+
                         <button
                             className={`stealth-button${stealthActive ? ' active' : ''}`}
                             onClick={() => {

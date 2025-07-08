@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useMarketplace } from '../../context/MarketplaceContext';
-import './SignalAnimation.scss';
+import './TravelAnimation.scss';
 
 import signal1 from '../../images/signal1.webp';
 import signal2 from '../../images/signal2.webp';
@@ -10,8 +9,7 @@ const SIGNAL_IMAGES = [signal1, signal2, signal3];
 const SIGNAL_IMAGE_SWITCH_MS = 420;
 const ROTATION_CHANGE_INTERVAL = 10000; // 10 seconds between rotation direction changes
 
-const SignalAnimation = ({ duration, onClose }) => {
-    const { travelTimeLeft } = useMarketplace();
+const TravelAnimation = ({ duration, onClose }) => {
     const [currentImage, setCurrentImage] = useState(
         SIGNAL_IMAGES[Math.floor(Math.random() * SIGNAL_IMAGES.length)]
     );
@@ -382,4 +380,4 @@ const SignalAnimation = ({ duration, onClose }) => {
     );
 };
 
-export default SignalAnimation;
+export default TravelAnimation;

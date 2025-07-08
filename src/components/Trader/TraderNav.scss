@@ -1404,11 +1404,6 @@
     font-size: 60%;
 }
 
-/* TraderNav status toggles */
-.status-card {
-    width: 100%;
-    text-align: center;
-}
 
 .trader-message {
     bottom: 0;
@@ -2059,15 +2054,19 @@
         color: var(--error);
     }
 }
-
-.status-card button {
-    background: var(--hud-bg);
-    border: 1px solid var(--cell-border);
-    padding: 4px 6px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: var(--hud-text);
-    cursor: pointer;
+/* TraderNav status toggles */
+.status-card {
+    width: 100%;
+    text-align: center;
+    button {
+        background: var(--hud-bg);
+        border: 1px solid var(--cell-border);
+        padding: 4px 6px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: var(--hud-text);
+        cursor: pointer;
+    }
 }
 
 .shield-button.active {
@@ -2107,10 +2106,12 @@
 /* Traveling Message Styles */
 .traveling-message {
     position: relative;
-    top: 5vh;
+    top: -2rem;
+    z-index: 12;
     width: 100%;
     text-align: center;
     margin-top: 1rem;
+    animation: fadeOutTraderMessage 4.2s;
 
     .trader-message {
         margin: 0 auto 1rem;
@@ -2125,15 +2126,12 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    @keyframes pulse {
+    @keyframes fadeOutTraderMessage {
         0% {
-            opacity: 0.7;
-        }
-        50% {
             opacity: 1;
         }
         100% {
-            opacity: 0.7;
+            opacity: 0;
         }
     }
 }

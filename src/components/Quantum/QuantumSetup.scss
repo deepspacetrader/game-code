@@ -83,39 +83,64 @@
     }
 
     .quantum-toggle {
-        padding: 4px 10px;
-        border: 1px solid #4a9;
-        background: #113344;
+        padding: 10px 16px;
+        border: 3px solid #113344;
+        background: linear-gradient(145deg, #225577, #113344);
         color: #8cf;
         cursor: pointer;
-        border-radius: 3px;
-        transition: all 0.2s ease;
+        border-radius: 8px;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         white-space: nowrap;
-        font-size: 0.85em;
+        font-size: 0.9em;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: bold;
-        text-shadow: 0 0 5px rgba(100, 200, 255, 0.5);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
         width: 50%;
+        position: relative;
+        box-shadow: 
+            0 6px 12px rgba(0, 0, 0, 0.4),
+            0 3px 6px rgba(0, 0, 0, 0.2),
+            inset 0 2px 0 rgba(255, 255, 255, 0.15);
+        transform: translateY(0);
+        min-height: 44px;
 
-        &:hover {
-            background: #225577;
-            color: #fff;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        &:active {
+            transform: translateY(4px) scale(0.98);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.4),
+                0 1px 2px rgba(0, 0, 0, 0.2),
+                inset 0 4px 8px rgba(0, 0, 0, 0.4);
+            // background: linear-gradient(145deg, #336688, #225577);
+            transition: transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19), 
+                        box-shadow 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+                        background 0.8s ease-in-out;
         }
 
         &.enabled {
-            background: #62ff00;
+            background: linear-gradient(145deg, #4f8, #2d7400);
             color: #fff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            border-color: #4f8;
-            box-shadow: 0 0 10px rgba(100, 255, 200, 0.7), 0 0 20px rgba(100, 255, 200, 0.3) inset;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            border-color: #6fa;
+            box-shadow: 
+                0 6px 12px rgba(0, 0, 0, 0.4),
+                0 3px 6px rgba(0, 0, 0, 0.2),
+                inset 0 2px 0 rgba(255, 255, 255, 0.25),
+                0 0 10px rgba(100, 255, 200, 0.5);
 
-            &:hover {
-                background: #2d7400;
-                box-shadow: 0 0 15px rgba(100, 255, 200, 0.9),
-                    0 0 25px rgba(100, 255, 200, 0.4) inset;
+
+
+            &:active {
+                background: linear-gradient(145deg, #6fa, #4f8);
+                transform: translateY(4px) scale(0.98);
+                box-shadow: 
+                    0 2px 4px rgba(0, 0, 0, 0.4),
+                    0 1px 2px rgba(0, 0, 0, 0.2),
+                    inset 0 4px 8px rgba(0, 0, 0, 0.4),
+                    0 0 8px rgba(100, 255, 200, 0.4);
+                transition: transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19), 
+                            box-shadow 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+                            background 0.8s ease-in-out;
             }
         }
 
