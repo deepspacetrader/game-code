@@ -74,7 +74,7 @@ const TraderInfo = ({ trader, improvedAILevel = 0, itemsData = tradersData.items
     if (!trader) return null;
 
     // AI Level thresholds for different features
-    const showBasicInfo = improvedAILevel > 0; // Always show basic info
+    const showBasicInfo = improvedAILevel >= 0; // Always show basic info
     const showStats = improvedAILevel >= 50; // Show basic stats at level 25
     const showEnhanced = improvedAILevel >= 10; // Enhanced visuals at level 50
     const showAdvanced = improvedAILevel >= 500; // Advanced info at level 100
