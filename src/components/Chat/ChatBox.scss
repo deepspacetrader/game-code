@@ -156,13 +156,13 @@
     flex-direction: column;
     background: transparent;
     width: 100%;
-    margin: 10px auto 0;
+    margin: 10px auto 10px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     background: #333;
     border: 1px solid #2d2d3d;
     grid-column: 1 / -1;
-    max-height: 500px;
+    max-height: 600px;
     max-width: 42rem;
 
     position: sticky;
@@ -176,83 +176,94 @@
     overflow: hidden;
 
     &.closed {
-        max-height: 2.5rem;
+        max-height: 3.5rem;
         overflow: hidden;
-        .messages-container,
-        .chat-input {
+        
+        .chat-messages {
             display: none;
         }
     }
 
-    .chat-header {
+    .tier-selector {
+        position: relative;
+        display: inline-block;
+        margin: 8px 8px 0 8px;
+        
+        .tier-toggle {
+            background-color: #3d3d4d;
+            color: #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            border: 1px solid #4d4d5d;
+            transition: background-color 0.2s;
+            
+            &:hover {
+                background-color: #4d4d5d;
+            }
+        }
+        
+        .tier-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #2d2d3d;
+            border: 1px solid #3d3d4d;
+            border-radius: 4px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            
+            .tier-option {
+                padding: 8px 12px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                color: #e0e0e0;
+                transition: background-color 0.2s;
+                
+                &:hover {
+                    background-color: #3d3d4d;
+                }
+                
+                &.active {
+                    background-color: #4a90e2;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px 15px;
         background-color: $hud-bg;
         color: #e0e0e0;
-        padding: 8px 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         border-bottom: 1px solid #3d3d4d;
-        cursor: pointer;
         user-select: none;
         transition: background-color 0.2s;
+        cursor: pointer;
 
         &:hover {
             background-color: rgba(255, 255, 255, 0.05);
         }
 
-        .header-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 15px;
-            background-color: $hud-bg;
-            color: #e0e0e0;
-            border-bottom: 1px solid #3d3d4d;
-            user-select: none;
-            transition: background-color 0.2s;
-
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.05);
-            }
-
-            h3 {
-                margin: 0;
-                font-size: 0.9rem;
-                font-weight: 500;
-            }
-
-            .toggle-icon {
-                transition: transform 0.3s ease-in-out;
-                font-size: 0.8rem;
-                opacity: 0.7;
-
-                &.open {
-                    transform: rotate(180deg);
-                }
-            }
-        }
-
-        .clickable {
-            cursor: pointer;
-        }
-
         h3 {
             margin: 0;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
         }
 
-        .active-traders {
-            display: flex;
-            gap: 5px;
+        .toggle-icon {
+            transition: transform 0.3s ease-in-out;
+            font-size: 0.8rem;
+            opacity: 0.7;
 
-            .trader-tag {
-                background-color: #3d3d4d;
-                color: #a0a0b0;
-                font-size: 0.7rem;
-                padding: 3px 8px;
-                border-radius: 10px;
-                white-space: nowrap;
+            &.open {
+                transform: rotate(180deg);
             }
         }
     }
@@ -264,11 +275,11 @@
         background: rgba(0, 0, 0, 0.4269);
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         overscroll-behavior: none; /* Prevent scroll chaining to parent */
         scroll-behavior: smooth;
         min-height: 0;
-        max-height: 400px;
+        max-height: 450px;
         -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         touch-action: pan-y; /* Better touch handling */
         overscroll-behavior-y: none; /* Prevent scroll chaining on y-axis */
@@ -283,6 +294,96 @@
             height: 100%;
             color: #707080;
             font-style: italic;
+        }
+
+        .message-wrapper {
+            display: flex;
+            width: 100%;
+            
+            &.player {
+                justify-content: flex-end;
+                
+                .message {
+                    max-width: 70%;
+                    background-color: #4a90e2;
+                    color: #fff;
+                    border-radius: 18px 18px 4px 18px;
+                    margin-left: auto;
+                    
+                    .message-header {
+                        justify-content: flex-end;
+                        text-align: right;
+                        flex-direction: row-reverse;
+                        
+                        .message-sender {
+                            display: none; /* Hide sender name for player messages */
+                        }
+                        
+                        .message-timestamp {
+                            font-size: 0.7rem;
+                            opacity: 0.7;
+                        }
+                        
+                        .ai-tier-badge {
+                            display: none; /* Hide tier badge for player messages */
+                        }
+                    }
+                }
+            }
+            
+            &.trader {
+                justify-content: flex-start;
+                
+                .message {
+                    max-width: 70%;
+                    background-color: rgba(90, 70, 5, 0.4269);
+                    color: $cheap;
+                    border-radius: 18px 18px 18px 4px;
+                    margin-right: auto;
+                    
+                    .message-header {
+                        justify-content: flex-start;
+                        text-align: left;
+                        
+                        .message-sender {
+                            font-weight: bold;
+                            font-size: 0.8rem;
+                            color: $gold;
+                            margin-right: 8px;
+                        }
+                        
+                        .message-timestamp {
+                            font-size: 0.7rem;
+                            opacity: 0.7;
+                            margin-left: auto;
+                        }
+                        
+                        .ai-tier-badge {
+                            margin-left: 6px;
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+            
+            .message {
+                padding: 8px 12px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                word-wrap: break-word;
+                line-height: 1.4;
+                font-size: 0.9rem;
+                
+                .message-header {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 4px;
+                    gap: 6px;
+                }
+                
+                .message-content {
+                    white-space: pre-wrap;
+                }
+            }
         }
 
         &::-webkit-scrollbar {
@@ -301,10 +402,12 @@
 
     .chat-input-container {
         display: flex;
-        padding: 0.5rem;
+        padding: 0.75rem;
         background-color: #2d2d3d;
         border-top: 1px solid #3d3d4d;
         z-index: 2;
+        min-height: 60px;
+        box-sizing: border-box;
 
         .chat-input {
             flex: 1;

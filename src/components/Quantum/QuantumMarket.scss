@@ -1,0 +1,163 @@
+// Quantum Market AI Level-based button styles
+
+// Base style
+.quantum-market button,
+.quantum-market .trade-button {
+  border: 1px solid #333;
+  background: #181818;
+  color: #fff;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 1em;
+  transition: all 0.2s;
+  box-shadow: none;
+}
+
+// Low AI
+.ai-tier-low .trade-button,
+.ai-tier-low button {
+  background: #222;
+  color: #bfbfbf;
+  border: 1px solid #333;
+}
+
+// Medium AI
+.ai-tier-medium .trade-button,
+.ai-tier-medium button {
+  background: linear-gradient(90deg, #222 60%, #2a2a44 100%);
+  color: #dfffdc;
+  border: 1px solid #445;
+  box-shadow: 0 1px 4px #222a;
+}
+
+// High AI
+.ai-tier-high .trade-button,
+.ai-tier-high button {
+  background: linear-gradient(90deg, #20304e 60%, #2a3a6a 100%);
+  color: #fff;
+  border: 1px solid #667;
+  box-shadow: 0 2px 8px #20304e88;
+  text-shadow: 0 0 4px #8cf;
+}
+
+// Ultra/Expert
+.quantum-market {
+    &.ai-tier-ultra .trade-button,
+    &.ai-tier-expert .trade-button,
+    &.ai-tier-ultra button,
+    &.ai-tier-expert button {
+    background: linear-gradient(90deg, #000 60%, #3a3a7a 100%);
+    color: #bfffbf;
+    border: 1px solid #acf;
+    box-shadow: 0 2px 12px #8cf8;
+    text-shadow: 0 0 6px #bff;
+    font-weight: bold;
+    }
+
+    // Elite/Legendary
+    &.ai-tier-elite .trade-button,
+    &.ai-tier-legendary .trade-button,
+    &.ai-tier-elite button,
+    &.ai-tier-legendary button {
+    background: linear-gradient(90deg, #33003e 60%, #d97700 100%);
+    color: gold;
+    border: 2px solid gold;
+    box-shadow: 0 0 16px gold, 0 0 8px #acf8;
+    text-shadow: 0 0 8px gold, 0 0 4px #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    }
+}
+
+// Range input styling for AI tiers
+.quantum-market input[type="range"] {
+  width: 120px;
+  margin: 0 8px;
+  accent-color: #888;
+}
+.ai-tier-medium input[type="range"] {
+  accent-color: #6af;
+}
+.ai-tier-high input[type="range"] {
+  accent-color: #8cf;
+}
+.ai-tier-ultra input[type="range"],
+.ai-tier-expert input[type="range"] {
+  accent-color: #bff;
+}
+.ai-tier-elite input[type="range"],
+.ai-tier-legendary input[type="range"] {
+  accent-color: gold;
+}
+
+// Stat and control layout
+.quantum-market .market-stats {
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+  margin-bottom: 1em;
+  flex-wrap: wrap;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .quantum-market .market-stats {
+    gap: 0.7em;
+  }
+  .quantum-market .stat {
+    padding: 0.4em 0.7em;
+    font-size: 0.95em;
+  }
+}
+.quantum-market .stat {
+  background: #181818;
+  border-radius: 6px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+.quantum-market .trading-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5em;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.quantum-market .control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.quantum-market .manual-controls {
+  display: flex;
+  gap: 0.7em;
+}
+
+.quantum-market .trading-log {
+  margin-top: 1.5em;
+  background: #111a;
+  border-radius: 6px;
+  padding: 0.7em 1.2em;
+  color: #bfbfbf;
+  font-size: 0.95em;
+}
+
+.quantum-market .log-entry.info {
+  color: #bff;
+  font-style: italic;
+}
+
+.quantum-btn.q-disabled {
+  background: #444 !important;
+  color: #888 !important;
+  border-color: #555 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+  pointer-events: none;
+}

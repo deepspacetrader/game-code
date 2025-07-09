@@ -1655,6 +1655,10 @@ export const MarketplaceProvider = ({ children }) => {
             // Disable bulk selling during travel if not allowed or no Particle Beam Reverter
             if (inTravel) {
                 const itemDef = items.find((i) => i.name === name);
+                if (!itemDef) {
+                    addFloatingMessage('Cannot sell: item definition not found', 'error');
+                    return false;
+                }
                 if (!itemDef.travelSell) {
                     console.log('no travel sell for this item allowed');
                     addFloatingMessage('Cannot sell during travel', 'global');

@@ -495,15 +495,15 @@ const ChatBox = ({ statusEffects }) => {
 
     return (
         <div className={`chat-box ${isOpen ? 'open' : 'closed'}`}>
-            {renderTierSelector()}
+            <div className="header-content clickable" onClick={() => setIsOpen(!isOpen)}>
+                <h3>Trader Network</h3>
+                <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`toggle-icon ${isOpen ? 'open' : ''}`}
+                />
+            </div>
+            {isOpen && renderTierSelector()}
             <div className="chat-messages" ref={messagesEndRef}>
-                <div className="header-content clickable" onClick={() => setIsOpen(!isOpen)}>
-                    <h3>Trader Network</h3>
-                    <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className={`toggle-icon ${isOpen ? 'open' : ''}`}
-                    />
-                </div>
                 {/* Active traders section removed as it wasn't being used */}
                 <div className="messages-container" onScroll={handleScroll} ref={containerRef}>
                     {messages.length === 0 ? (
@@ -514,25 +514,31 @@ const ChatBox = ({ statusEffects }) => {
                         filteredMessages.map((msg, index) => (
                             <div
                                 key={msg.id}
-                                className={`message ${msg.isPlayer ? 'player' : 'trader'}`}
+                                className={`message-wrapper ${msg.isPlayer ? 'player' : 'trader'}`}
                             >
-                                <div className="message-header">
-                                    <span className="message-sender">{msg.sender}</span>
-                                    {msg.senderTier && <AIBadge tier={msg.senderTier} />}
-                                    <span className="message-timestamp">
-                                        {new Date(msg.timestamp).toLocaleTimeString()}
-                                    </span>
-                                </div>
-                                <div className="message-content">
-                                    {typeof msg.message === 'string' ? (
-                                        msg.message
-                                    ) : (
-                                        <ChatMessage
-                                            message={msg.message}
-                                            isPlayer={msg.isPlayer}
-                                            statusEffects={statusEffects}
-                                        />
-                                    )}
+                                <div className="message">
+                                    <div className="message-header">
+                                        {!msg.isPlayer && (
+                                            <>
+                                                <span className="message-sender">{msg.sender}</span>
+                                                {msg.tier && <AIBadge tier={msg.tier} />}
+                                            </>
+                                        )}
+                                        <span className="message-timestamp">
+                                            {new Date(msg.timestamp).toLocaleTimeString()}
+                                        </span>
+                                    </div>
+                                    <div className="message-content">
+                                        {typeof msg.message === 'string' ? (
+                                            msg.message
+                                        ) : (
+                                            <ChatMessage
+                                                message={msg.message}
+                                                isPlayer={msg.isPlayer}
+                                                statusEffects={statusEffects}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))

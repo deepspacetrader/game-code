@@ -32,9 +32,6 @@ const QuantumSetup = ({ setStatusEffects }) => {
     const slotsCount = 6;
     const [activeAbility, setActiveAbility] = useState(null);
 
-    // Debug: Force first slot to always be Quantum Hover if true
-    const DEBUG_FORCE_FIRST_HOVER = true; // Set to true for debugging
-
     // Set first ability as active by default if available
     useEffect(() => {
         if (quantumInventory.length > 0 && !activeAbility) {
@@ -42,9 +39,8 @@ const QuantumSetup = ({ setStatusEffects }) => {
         }
     }, [quantumInventory, activeAbility]);
 
-    // Initialize slots with random scan directions from standard abilities
+    // Initialize slots with random scan directions from standard abilities (QuantumMarket is never pre-assigned)
     const [slots, setSlots] = useState(() => {
-        // Standard abilities (5 unique abilities for 6 slots)
         const standardAbilities = [
             'QuantumScanLR',
             'QuantumScanTB',
@@ -52,7 +48,6 @@ const QuantumSetup = ({ setStatusEffects }) => {
             'QuantumScanBT',
             'QuantumHover',
         ];
-
         // Shuffle the standard abilities
         const shuffledAbilities = [...standardAbilities];
         for (let i = shuffledAbilities.length - 1; i > 0; i--) {
@@ -62,8 +57,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 shuffledAbilities[i],
             ];
         }
-
-        // Create slots with unique abilities (one ability will be used twice)
+        // Create slots with unique abilities (one ability will be used twice, but never QuantumMarket)
         const initialSlots = [];
         for (let i = 0; i < slotsCount; i++) {
             // For the 6th slot, use a random ability from the first 5
@@ -71,13 +65,13 @@ const QuantumSetup = ({ setStatusEffects }) => {
                 i < standardAbilities.length
                     ? i
                     : Math.floor(Math.random() * standardAbilities.length);
+            const ability = shuffledAbilities[abilityIndex];
             initialSlots.push({
                 active: false,
-                ability: shuffledAbilities[abilityIndex],
+                ability,
                 used: false,
             });
         }
-
         return initialSlots;
     });
 
@@ -228,14 +222,24 @@ const QuantumSetup = ({ setStatusEffects }) => {
 
                 // Determine the ability for the new slot
                 let selectedAbility;
-                // Debug: Force first slot to always be QuantumHover if enabled
-                if (DEBUG_FORCE_FIRST_HOVER && newActiveCount === 1 && index === 1) {
-                    selectedAbility = 'QuantumHover';
-                } else if (availableAbilities.length === 0) {
+                // If this is the last slot to be activated, assign QuantumMarket
+                if (newActiveCount === slotsCount) {
                     selectedAbility = 'QuantumMarket';
                 } else {
-                    const randomIndex = Math.floor(Math.random() * availableAbilities.length);
-                    selectedAbility = availableAbilities[randomIndex];
+                    // Exclude already used abilities for this activation
+                    const usedSlots = newSlots.filter((s) => s.active);
+                    const usedAbilities = new Set(usedSlots.map((s) => s.ability));
+                    const availableAbilities = standardAbilities.filter(
+                        (a) => !usedAbilities.has(a)
+                    );
+                    // If all standard abilities are used, allow duplicates (shouldn't happen with 6 slots and 5 abilities)
+                    if (availableAbilities.length === 0) {
+                        selectedAbility =
+                            standardAbilities[Math.floor(Math.random() * standardAbilities.length)];
+                    } else {
+                        const randomIndex = Math.floor(Math.random() * availableAbilities.length);
+                        selectedAbility = availableAbilities[randomIndex];
+                    }
                 }
 
                 // Add the ability to quantumInventory

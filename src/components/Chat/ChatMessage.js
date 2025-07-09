@@ -22,8 +22,7 @@ const ChatMessage = ({ message, sender, isPlayer, statusEffects }) => {
     };
 
     return (
-        <div className={`chat-message ${isPlayer ? 'player' : 'trader'}`}>
-            <div className="message-sender">{sender}</div>
+        <div className="chat-message">
             <div className="message-content">{getTranslatedMessage(message)}</div>
         </div>
     );

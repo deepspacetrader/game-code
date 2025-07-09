@@ -7,6 +7,7 @@ import QuantumHover from '../Quantum/QuantumHover';
 import QuantumScan from '../Quantum/QuantumScan';
 import Event from '../Reusable/Event';
 import MarketNews from '../Market/MarketNews';
+import QuantumMarket from '../Quantum/QuantumMarket';
 import '../PlayerHUD.scss';
 
 const TradingArea = () => {
@@ -95,6 +96,19 @@ const TradingArea = () => {
             )}
             <div className="market-container">
                 <MarketSummary handleSellAll={handleSellAll} />
+
+                <QuantumMarket
+                    credits={credits}
+                    displayCells={displayCells}
+                    inventory={inventory}
+                    purchaseHistory={purchaseHistory}
+                    handleBuyClick={handleBuyClick}
+                    handleSellAll={handleSellAll}
+                    quantumInventory={quantumInventory}
+                    improvedAILevel={improvedAILevel}
+                    quantumPower={quantumPower}
+                    statusEffects={statusEffects}
+                />
 
                 {improvedAILevel > 100 && <MarketNews />}
 
