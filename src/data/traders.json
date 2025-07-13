@@ -5,6 +5,7 @@
             "name": "Jax Orion",
             "description": "A cheerful and fair-dealing veteran trader known for smooth negotiations and legendary stories from across the Vrellian Sprawl.",
             "languageRange": ["EN"],
+            "illegalItems": false,
             "recordTime": 135.96,
             "homeGalaxy": "Vrellian Sprawl",
             "numberOfItems": [8, 10],
@@ -12,13 +13,17 @@
             "volatilityRange": [0.978, 1.0221],
             "stockRange": [7, 12],
             "rareItems": [2, 3],
-            "reliableItems": [1, 5, 21, 14, 29, 32, 33, 34, 35, 36]
+            "reliableItems": [1, 5, 21, 14, 29, 32, 33, 34, 35, 36],
+            "secretAddiction": 1,
+            "secretAddictionMultiplier": [2.5, 4.1],
+            "maxSecretRejections": 5
         },
         {
             "traderId": 2,
             "name": "Kyrnin Nova",
             "description": "Fast-talking and cutthroat, Kyrnin is infamous for exploiting market fluctuations and being one of the first to take full advantage of a trading opportunity.",
             "languageRange": ["EN", "CHIK"],
+            "illegalItems": false,
             "recordTime": 135.25,
             "homeGalaxy": "Xylen Verge",
             "numberOfItems": [15, 18],
@@ -26,13 +31,17 @@
             "volatilityRange": [1, 2],
             "stockRange": [4, 6],
             "rareItems": [2, 5],
-            "reliableItems": [11, 14, 22, 33]
+            "reliableItems": [11, 14, 22, 33],
+            "secretAddiction": 2,
+            "secretAddictionMultiplier": [2.8, 4.5],
+            "maxSecretRejections": 4
         },
         {
             "traderId": 3,
             "name": "Thrixie Swoke",
             "description": "A serene and enigmatic entity with vast knowledge. Trading with Thrixie often feels more like prophecy than commerce.",
             "languageRange": ["LAY"],
+            "illegalItems": false,
             "recordTime": 135.26,
             "homeGalaxy": "Xylen Verge",
             "numberOfItems": [14, 19],
@@ -40,13 +49,17 @@
             "volatilityRange": [1, 1.52],
             "stockRange": [3, 5],
             "rareItems": [1, 4],
-            "reliableItems": [1, 7, 23, 32]
+            "reliableItems": [1, 7, 23, 32],
+            "secretAddiction": 3,
+            "secretAddictionMultiplier": [2.0, 3.5],
+            "maxSecretRejections": 2
         },
         {
             "traderId": 4,
             "name": "Vuw Tahl",
             "description": "Cybernetic warlord and power broker within the Vrellian Sprawl. Engages in trade as a way to extend influence—especially over rivals like Nir Lhat Etol.",
             "languageRange": ["CHIK"],
+            "illegalItems": true,
             "recordTime": 135.28,
             "homeGalaxy": "Vrellian Sprawl",
             "numberOfItems": [26, 28],
@@ -54,13 +67,17 @@
             "volatilityRange": [1, 1.32],
             "stockRange": [6, 8],
             "rareItems": [4, 8],
-            "reliableItems": [21, 17, 30]
+            "reliableItems": [21, 17, 30],
+            "secretAddiction": 4,
+            "secretAddictionMultiplier": [2.5, 4.0],
+            "maxSecretRejections": 5
         },
         {
             "traderId": 5,
             "name": "Nir Lhat Etol",
             "description": "Rival to Vuw Tahl, Nir is a ruthless faction leader who uses trade as a strategic weapon in an ongoing turf war.",
             "languageRange": ["CHIK"],
+            "illegalItems": true,
             "recordTime": 135.42,
             "homeGalaxy": "Vrellian Sprawl",
             "numberOfItems": [13, 15],
@@ -68,13 +85,17 @@
             "volatilityRange": [1, 1.32],
             "stockRange": [4, 6],
             "rareItems": [4, 8],
-            "reliableItems": [14, 19, 29]
+            "reliableItems": [14, 19, 29],
+            "secretAddiction": 5,
+            "secretAddictionMultiplier": [3.0, 4.8],
+            "maxSecretRejections": 10
         },
         {
             "traderId": 6,
             "name": "Twohpoe Oon Septillien",
             "description": "A quirky and eccentric trader from the Oon Cascade, often speaks in riddles but delivers rare goods with impeccable timing.",
             "languageRange": ["EN", "CHIK", "LAY"],
+            "illegalItems": false,
             "recordTime": 135.56,
             "homeGalaxy": "Oon Cascade",
             "numberOfItems": [6, 32],
@@ -82,13 +103,17 @@
             "volatilityRange": [1, 1.22],
             "stockRange": [3, 5],
             "rareItems": [6, 10],
-            "reliableItems": [8, 27, 25, 28]
+            "reliableItems": [8, 27, 25, 28],
+            "secretAddiction": 6,
+            "secretAddictionMultiplier": [2.5, 3.8],
+            "maxSecretRejections": 4
         },
         {
             "traderId": 7,
             "name": "Wututa Zornks",
             "description": "One of most friendly and peaceful traders known for fair prices professionalism. Speaks all three major languages.",
             "languageRange": ["EN", "CHIK", "LAY"],
+            "illegalItems": false,
             "recordTime": 135.83,
             "homeGalaxy": "Oon Cascade",
             "numberOfItems": [6, 9],
@@ -96,13 +121,17 @@
             "volatilityRange": [1.8, 1.9],
             "stockRange": [5, 7],
             "rareItems": [6, 10],
-            "reliableItems": [8, 18, 26, 24]
+            "reliableItems": [8, 18, 26, 24],
+            "secretAddiction": 7,
+            "secretAddictionMultiplier": [3.0, 4.2],
+            "maxSecretRejections": 3
         },
         {
             "traderId": 8,
             "name": "Sarix Drayven",
             "description": "A mysterious and calculated trader who always seems to know what you're about to ask for—before you say a word.",
             "languageRange": ["EN", "LAY"],
+            "illegalItems": true,
             "recordTime": 135.93,
             "homeGalaxy": "Driftspire Helix",
             "numberOfItems": [18, 22],
@@ -110,13 +139,17 @@
             "volatilityRange": [1.24, 1.92],
             "stockRange": [11, 18],
             "rareItems": [26, 27, 32],
-            "reliableItems": [1, 15, 16, 20]
+            "reliableItems": [1, 15, 16, 20],
+            "secretAddiction": 8,
+            "secretAddictionMultiplier": [3.0, 4.5],
+            "maxSecretRejections": 8
         },
         {
             "traderId": 9,
             "name": "Kora Valen",
             "description": "A resourceful merchant who thrives under pressure, often found navigating the most volatile markets with ease.",
             "languageRange": ["EN", "LAY"],
+            "illegalItems": false,
             "recordTime": 141.35,
             "homeGalaxy": "Driftspire Helix",
             "numberOfItems": [10, 12],
@@ -124,13 +157,17 @@
             "volatilityRange": [1, 1.02],
             "stockRange": [9, 12],
             "rareItems": [8, 12],
-            "reliableItems": [1, 8, 10, 12, 17]
+            "reliableItems": [1, 8, 10, 12, 17],
+            "secretAddiction": 9,
+            "secretAddictionMultiplier": [2.0, 3.5],
+            "maxSecretRejections": 10
         },
         {
             "traderId": 10,
             "name": "Rinloo Vega",
             "description": "An agile and diplomatic trader from Krothu-9 who maintains a neutral stance in galactic politics—at least publicly.",
             "languageRange": ["EN", "LAY"],
+            "illegalItems": false,
             "recordTime": 135.26,
             "homeGalaxy": "Krothu-9",
             "numberOfItems": [16, 18],
@@ -138,13 +175,17 @@
             "volatilityRange": [1, 1.42],
             "stockRange": [6, 9],
             "rareItems": [2, 6],
-            "reliableItems": [8, 9, 13, 14, 30, 31]
+            "reliableItems": [8, 9, 13, 14, 30, 31],
+            "secretAddiction": 10,
+            "secretAddictionMultiplier": [2.5, 3.8],
+            "maxSecretRejections": 5
         },
         {
             "traderId": 11,
             "name": "Brix Oscuron",
             "description": "Gruff but trustworthy, Brix deals in high-quality goods and honors old-fashioned trade codes from forgotten times.",
             "languageRange": ["EN", "CHIK", "LAY"],
+            "illegalItems": true,
             "recordTime": 141.73,
             "homeGalaxy": "Marrowth Deltas",
             "numberOfItems": [9, 12],
@@ -152,13 +193,17 @@
             "volatilityRange": [1, 1.12],
             "stockRange": [6, 8],
             "rareItems": [10, 14],
-            "reliableItems": [1, 2, 5]
+            "reliableItems": [1, 2, 5],
+            "secretAddiction": 11,
+            "secretAddictionMultiplier": [3.5, 4.5],
+            "maxSecretRejections": 10
         },
         {
             "traderId": 12,
             "name": "Lyra Zenith",
             "description": "Elegant and aloof, Lyra specializes in rare artifacts and is whispered to have access to pre-collapse technologies.",
             "languageRange": ["CHIK", "LAY"],
+            "illegalItems": false,
             "recordTime": 141.74,
             "homeGalaxy": "Marrowth Deltas",
             "numberOfItems": [3, 36],
@@ -166,13 +211,17 @@
             "volatilityRange": [1, 1.22],
             "stockRange": [4, 6],
             "rareItems": [10, 14],
-            "reliableItems": [29, 11, 19, 36, 37]
+            "reliableItems": [29, 11, 19, 36, 37],
+            "secretAddiction": 12,
+            "secretAddictionMultiplier": [2.0, 3.0],
+            "maxSecretRejections": 4
         },
         {
             "traderId": 13,
             "name": "Tandros Upstonsinate",
             "description": "A data-obsessed collector who trades only after performing intricate algorithms on market behavior.",
             "languageRange": ["CHIK", "LAY"],
+            "illegalItems": false,
             "recordTime": 141.75,
             "homeGalaxy": "Cryofern Wastes",
             "numberOfItems": [4, 16],
@@ -180,13 +229,17 @@
             "volatilityRange": [1, 1.32],
             "stockRange": [1, 5],
             "rareItems": [1, 15],
-            "reliableItems": [13, 14, 16, 17, 18, 19, 20, 23, 25, 36, 37]
+            "reliableItems": [13, 14, 16, 17, 18, 19, 20, 23, 25, 36, 37],
+            "secretAddiction": 13,
+            "secretAddictionMultiplier": [2.5, 3.8],
+            "maxSecretRejections": 6
         },
         {
             "traderId": 14,
             "name": "Ula Maris",
             "description": "A quiet wanderer who trades between the icy edges of the Cryofern Wastes. Known for her calm demeanor and perfectly preserved cargo.",
             "languageRange": ["EN", "LAY"],
+            "illegalItems": false,
             "recordTime": 141.78,
             "homeGalaxy": "Cryofern Wastes",
             "numberOfItems": [12, 26],
@@ -194,13 +247,17 @@
             "volatilityRange": [1, 1.42],
             "stockRange": [5, 7],
             "rareItems": [11, 15],
-            "reliableItems": [28, 27, 26]
+            "reliableItems": [28, 27, 26],
+            "secretAddiction": 14,
+            "secretAddictionMultiplier": [2.0, 3.5],
+            "maxSecretRejections": 4
         },
         {
             "traderId": 15,
             "name": "Cerptilcelio",
             "description": "A reclusive trader wrapped in techno-mysticism. No one's sure whether Cerptilcelio is individual, collective, or something in between.",
             "languageRange": ["LAY"],
+            "illegalItems": true,
             "recordTime": 145.26,
             "homeGalaxy": "Nex Vault",
             "numberOfItems": [7, 9],
@@ -208,13 +265,17 @@
             "volatilityRange": [1, 1.56],
             "stockRange": [6, 8],
             "rareItems": [12, 16],
-            "reliableItems": [13, 14, 16, 35, 37]
+            "reliableItems": [13, 14, 16, 35, 37],
+            "secretAddiction": 15,
+            "secretAddictionMultiplier": [2.5, 4.0],
+            "maxSecretRejections": 6
         },
         {
             "traderId": 16,
             "name": "Fiera Quel",
             "description": "A fierce and fast-rising merchant queen whose supply chains span six sectors. Known for price manipulation and poetic insults.",
             "languageRange": ["CHIK"],
+            "illegalItems": true,
             "recordTime": 185.21,
             "homeGalaxy": "Nex Vault",
             "numberOfItems": [6, 12],
@@ -222,13 +283,17 @@
             "volatilityRange": [1, 1.62],
             "stockRange": [8, 12],
             "rareItems": [12, 16],
-            "reliableItems": [5, 7, 9, 14, 30, 34, 35, 36]
+            "reliableItems": [5, 7, 9, 14, 30, 34, 35, 36],
+            "secretAddiction": 16,
+            "secretAddictionMultiplier": [2.5, 3.8],
+            "maxSecretRejections": 10
         },
         {
             "traderId": 17,
             "name": "Vorian Lox",
             "description": "A grizzled veteran of Cindros Bloom, Vorian trades with wisdom earned from decades of surviving wars, wormholes, and worse.",
             "languageRange": ["CHIK", "LAY"],
+            "illegalItems": false,
             "recordTime": 275.12,
             "homeGalaxy": "Cindros Bloom",
             "numberOfItems": [13, 16],
@@ -236,7 +301,10 @@
             "volatilityRange": [1, 1.82],
             "stockRange": [3, 5],
             "rareItems": [13, 17],
-            "reliableItems": [20, 21, 22]
+            "reliableItems": [20, 21, 22],
+            "secretAddiction": 17,
+            "secretAddictionMultiplier": [2.0, 3.5],
+            "maxSecretRejections": 10
         }
     ]
 }

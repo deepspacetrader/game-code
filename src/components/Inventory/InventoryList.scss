@@ -193,3 +193,48 @@
         transform: translateX(2px);
     }
 }
+
+.local-offer-message {
+  display: inline-block;
+  position: absolute;
+  left: 105%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  background: #222;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.95em;
+  z-index: 10;
+  box-shadow: 0 2px 8px #0003;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.98;
+  transition: opacity 0.2s;
+}
+.local-offer-message.success {
+  background: #2ecc40;
+  color: #fff;
+}
+.local-offer-message.warning {
+  background: #ffb700;
+  color: #222;
+}
+.local-offer-message.danger {
+  background: #e94560;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .local-offer-message {
+    left: 0;
+    top: 110%;
+    transform: none;
+    margin-left: 0;
+    margin-top: 6px;
+    font-size: 1em;
+    min-width: 120px;
+    text-align: center;
+  }
+}

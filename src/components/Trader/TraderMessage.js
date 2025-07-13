@@ -8,6 +8,7 @@ const TraderMessage = ({
     currentTrader,
     statusEffects = {},
     improvedAILevel = 0,
+    secretOfferResult,
 }) => {
     const [currentMessage, setCurrentMessage] = useState('');
     const [visible, setVisible] = useState(false);
@@ -156,7 +157,63 @@ const TraderMessage = ({
             setVisible(true);
             lastMessageTraderRef.current = traderId;
         }
-    }, [currentTrader, lastTrader, messageText, traderMessages, statusEffects]);
+
+        // Add prop: secretOfferResult: { type: 'accept' | 'reject', language?: string }
+        // In the effect, if secretOfferResult is set, pick a random message from traderMessages[traderId].secretAccepts or secretRejections, using the language (or EN if not available), and show it as the message.
+        // If player has translation status effect (from MarketplaceContext), use EN if available.
+        if (secretOfferResult) {
+            const { type, language } = secretOfferResult;
+            const secretMessages =
+                type === 'accept'
+                    ? traderMsg.secretAccepts || {}
+                    : traderMsg.secretRejections || {};
+            const secretMessageKeys = Object.keys(secretMessages);
+
+            if (secretMessageKeys.length > 0) {
+                let selectedSecretLanguage = null;
+                let selectedSecretMessages = null;
+
+                if (language) {
+                    if (hasCHIK && secretMessages['CHIK']) {
+                        selectedSecretLanguage = 'CHIK';
+                        selectedSecretMessages = secretMessages['CHIK'];
+                    } else if (hasLAY && secretMessages['LAY']) {
+                        selectedSecretLanguage = 'LAY';
+                        selectedSecretMessages = secretMessages['LAY'];
+                    }
+                }
+
+                if (!selectedSecretLanguage) {
+                    const randomKey =
+                        secretMessageKeys[Math.floor(Math.random() * secretMessageKeys.length)];
+                    selectedSecretLanguage = randomKey;
+                    selectedSecretMessages = secretMessages[randomKey];
+                }
+
+                if (Array.isArray(selectedSecretMessages) && selectedSecretMessages.length > 0) {
+                    selectedSecretMessages =
+                        selectedSecretMessages[
+                            Math.floor(Math.random() * selectedSecretMessages.length)
+                        ];
+                }
+
+                if (
+                    ((selectedSecretLanguage === 'CHIK' && hasCHIK) ||
+                        (selectedSecretLanguage === 'LAY' && hasLAY)) &&
+                    secretMessages['EN']
+                ) {
+                    const enSecretMessages = secretMessages['EN'];
+                    selectedSecretMessages = Array.isArray(enSecretMessages)
+                        ? enSecretMessages[Math.floor(Math.random() * enSecretMessages.length)]
+                        : enSecretMessages;
+                }
+
+                setCurrentMessage(selectedSecretMessages);
+                setVisible(true);
+                lastMessageTraderRef.current = traderId;
+            }
+        }
+    }, [currentTrader, lastTrader, messageText, traderMessages, statusEffects, secretOfferResult]);
 
     // Auto-hide after 5 seconds
     useEffect(() => {
