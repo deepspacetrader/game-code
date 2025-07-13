@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 import QuickPinchZoom, { make3dTransformValue } from 'react-quick-pinch-zoom';
 import './StarMap.scss';
 
 // Mid-range interactive map: static dots with labels
-const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalaxyName }) => {
+const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalaxyId }) => {
     const containerRef = useRef();
     const width = improvedAILevel >= 75 ? 600 : 400,
         height = improvedAILevel >= 75 ? 600 : 400;
@@ -59,7 +59,7 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
                         {galaxies.map((g) => {
                             // Color logic
                             let fill = '#fff';
-                            if (g.name === currentGalaxyName) fill = 'green';
+                            if (g.galaxyId === currentGalaxyId) fill = 'green';
                             else if (g.war) fill = 'red';
                             else if (g.danger) fill = 'orange';
                             return (
@@ -70,7 +70,7 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
                                     r={improvedAILevel >= 75 ? 7 : 4}
                                     fill={fill}
                                     stroke="#333"
-                                    strokeWidth={g.name === currentGalaxyName ? 2 : 1}
+                                    strokeWidth={g.galaxyId === currentGalaxyId ? 2 : 1}
                                     onClick={() => onSelect && onSelect(g.galaxyId)}
                                 />
                             );
@@ -91,7 +91,7 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
                                         ? 'red'
                                         : g.danger
                                         ? 'orange'
-                                        : g.name === currentGalaxyName
+                                        : g.galaxyId === currentGalaxyId
                                         ? 'green'
                                         : 'var(--accent)',
                                     width: improvedAILevel >= 75 ? 14 : 8,

@@ -151,7 +151,7 @@ const Enemy = ({
     const [dangerMessage, setDangerMessage] = useState('');
 
     // Calculate bribe amount for this encounter
-    const bribeAmount = enemy ? Math.ceil(enemy.credits * 0.5) : 0;
+    const bribeAmount = enemy ? Math.ceil((Number(enemy.credits) || 1000) * 0.5) : 0;
 
     // Set a random face when the component mounts or when enemy changes
     useEffect(() => {

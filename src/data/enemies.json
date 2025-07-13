@@ -2,53 +2,48 @@
     "enemies": [
         {
             "enemyId": 0,
-            "rank": "D",
-            "name": "Scavenger",
+            "rank": "S",
+            "name": "Military",
             "languageRange": ["EN"],
-            "homeGalaxy": "Vrellian Sprawl",
-            "health": 50,
-            "weapons": [],
-            "shield": false,
-            "stealth": false
-        },
-        {
-            "enemyId": 1,
-            "rank": "C",
-            "name": "Market Police",
-            "languageRange": ["EN"],
-            "homeGalaxy": "Vrellian Sprawl",
-            "health": 150,
-            "shield": false,
-            "stealth": false
-        },
-        {
-            "enemyId": 2,
-            "rank": "B",
-            "name": "Thief",
-            "languageRange": ["EN"],
-            "homeGalaxy": "Vrellian Sprawl",
-            "health": 100,
-            "shield": false,
+            "health": 500,
+            "shield": true,
             "stealth": true
         },
         {
-            "enemyId": 3,
+            "enemyId": 1,
             "rank": "A",
-            "name": "Thug",
+            "name": "Market Police",
             "languageRange": ["EN"],
-            "homeGalaxy": "Vrellian Sprawl",
             "health": 250,
             "shield": true,
             "stealth": false
         },
         {
-            "enemyId": 4,
-            "rank": "S",
-            "name": "Military",
+            "enemyId": 2,
+            "rank": "B",
+            "name": "Thug",
             "languageRange": ["EN"],
-            "homeGalaxy": "Vrellian Sprawl",
-            "health": 110,
-            "shield": true,
+            "health": 150,
+            "shield": false,
+            "stealth": false
+        },
+        {
+            "enemyId": 3,
+            "rank": "C",
+            "name": "Thief",
+            "languageRange": ["EN"],
+            "health": 100,
+            "shield": false,
+            "stealth": true
+        },
+        {
+            "enemyId": 4,
+            "rank": "D",
+            "name": "Scavenger",
+            "languageRange": ["EN"],
+            "health": 50,
+            "weapons": [],
+            "shield": false,
             "stealth": false
         }
     ]

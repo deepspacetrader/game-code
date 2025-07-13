@@ -1,11 +1,12 @@
 .floating-messages-portal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 0;
-  pointer-events: none;
-  overflow: visible;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh; // Full viewport height
+    pointer-events: none;
+    overflow: visible;
+    z-index: 104; // Make sure this is above your HUD
 }
 .floating-messages-portal > * {
   position: relative;
@@ -14,11 +15,10 @@
 
 .floating-messages {
     position: absolute;
-    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     pointer-events: none;
-    z-index: 103;
+    z-index: 105;
     margin: 4px 0;
     color: var(--info);
     text-shadow: 0 0 6px var(--info);

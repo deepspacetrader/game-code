@@ -106,10 +106,6 @@ const QuantumHover = (props) => {
         (item) => {
             // Check if quantum hover is active (quantum power + quantum inventory)
             if (!props.quantumPower || !props.quantumInventory?.includes('QuantumHover')) {
-                console.log('Quantum hover not active:', {
-                    quantumPower: props.quantumPower,
-                    hasQuantumHover: props.quantumInventory?.includes('QuantumHover'),
-                });
                 return null;
             }
 
@@ -214,59 +210,34 @@ const QuantumHover = (props) => {
     // Handle quantum trades with delay and proper state management
     const handleQuantumTrade = useCallback(
         (item, action, quantity = 1) => {
-            const { traders, traderIds, currentTrader, handleBuyClick, handleSellClick } =
-                marketplace;
+            const { handleBuyClick, handleSellClick } = marketplace;
 
             // Check if enough time has passed since last trade
             const now = Date.now();
             if (now - lastTradeTimeRef.current < tradeCooldown) {
-                console.log('Trade on cooldown, skipping');
                 return false;
             }
             // Check if we're allowed to trade via the game's trade delay system
             if (checkQuantumTradeDelay && !checkQuantumTradeDelay()) {
-                console.log('Trade delay active, skipping');
                 return false;
             }
             // Skip if we've already executed a trade this cycle
             if (tradeExecutedRef.current) {
-                console.log('Trade already executed this cycle');
                 return false;
             }
             let tradeExecuted = false;
-            console.log(`Attempting ${action} on ${item.name}`);
 
             switch (action) {
                 case 'buy':
-                    console.log(
-                        `Buy attempt for ${item.name}: credits=${credits}, price=${item.price}, quantity=${quantity}`
-                    );
                     if (credits >= item.price * quantity) {
                         // Find the item's index in the displayCells (processed trader items)
                         const itemIndex = displayCells.findIndex(
                             (cell) => cell?.itemId === item.itemId
                         );
 
-                        console.log(
-                            `Found item ${item.name} at index ${itemIndex} in displayCells`
-                        );
                         if (itemIndex !== -1) {
-                            console.log(`Buying ${item.name} at index ${itemIndex}`);
                             tradeExecuted = handleBuyClick(itemIndex);
-                            console.log('Buy attempt:', tradeExecuted ? 'success' : 'failed');
-                        } else {
-                            console.error('Item not found in displayCells:', item.name);
-                            console.log(
-                                'Available items in displayCells:',
-                                displayCells.map((c) => ({ name: c?.name, itemId: c?.itemId }))
-                            );
                         }
-                    } else {
-                        console.log(
-                            `Not enough credits to buy: need ${
-                                item.price * quantity
-                            }, have ${credits}`
-                        );
                     }
                     break;
 
@@ -275,9 +246,6 @@ const QuantumHover = (props) => {
                     const sellQty = Math.min(quantity, ownedItem?.quantity || 0);
                     if (sellQty > 0) {
                         tradeExecuted = handleSellClick(item, sellQty);
-                        console.log('Sell attempt:', tradeExecuted ? 'success' : 'failed');
-                    } else {
-                        console.log('No items to sell');
                     }
                     break;
 
@@ -285,9 +253,6 @@ const QuantumHover = (props) => {
                     if (inventory.some((i) => i.name === item.name)) {
                         handleSellAll(item.name);
                         tradeExecuted = true;
-                        console.log('Sell all executed');
-                    } else {
-                        console.log('No items to sell all');
                     }
                     break;
 
@@ -297,7 +262,6 @@ const QuantumHover = (props) => {
             }
 
             if (tradeExecuted) {
-                console.log(`Trade executed: ${action} ${item.name}`);
                 lastTradeTimeRef.current = now;
                 tradeExecutedRef.current = true;
                 updateLastQuantumTradeTime();

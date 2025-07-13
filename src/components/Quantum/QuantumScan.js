@@ -46,7 +46,6 @@ const QuantumScan = ({
         .map((q) => DIRECTION_MAP[q]);
 
     const marketplace = useMarketplace();
-    // console.log('[QuantumScan] marketplace context:', marketplace);
     const { canQuantumBuy, canQuantumSell, inTravel, isJumping, purchaseHistory, credits } =
         marketplace;
 
@@ -85,17 +84,7 @@ const QuantumScan = ({
                     : null;
             return { ...item, avgPurchase };
         });
-        // console.log('[QuantumScan] runScan', {
-        //     direction,
-        //     quantumPower,
-        //     canQuantumBuy,
-        //     canQuantumSell,
-        //     scanDirections,
-        //     credits: creditsRef.current,
-        //     inventory: inventoryWithAvg,
-        //     inTravel,
-        //     isJumping,
-        // });
+
         // 1. Animate scanline
         setActiveScans((prev) => [
             ...prev.filter((s) => s.direction !== direction),
@@ -245,7 +234,6 @@ const QuantumScan = ({
     const [gridContainer, setGridContainer] = useState(null);
     useEffect(() => {
         if (marketRef?.current) {
-            // console.log('marketRef.current:', marketRef.current);
             const rect = marketRef.current.getBoundingClientRect();
             setGridRect({
                 width: rect.width,
@@ -257,14 +245,6 @@ const QuantumScan = ({
 
     // Set up scan intervals for each direction (now depends on gridRect)
     useEffect(() => {
-        console.log('QuantumScan scan interval effect', {
-            quantumPower,
-            gridRect,
-            scanDirections,
-            displayCells,
-            inventory,
-        });
-
         // Cleanup all intervals/timeouts first
         Object.values(scanIntervals.current).forEach(clearInterval);
         Object.values(scanTimeouts.current).forEach(clearTimeout);
@@ -274,11 +254,6 @@ const QuantumScan = ({
         setActiveScans([]);
 
         if (!quantumPower || !gridRect || scanDirections.length === 0) {
-            console.log('QuantumScan scan interval effect: returning early', {
-                quantumPower,
-                gridRect,
-                scanDirections,
-            });
             return;
         }
 
@@ -310,7 +285,6 @@ const QuantumScan = ({
     }, [quantumPower, gridRect, scanDirections.join(), scanDataHash]);
 
     // Render scanline overlays
-    // console.log('Active scan overlays:', activeScans);
     const overlays = (
         <>
             {quantumPower &&

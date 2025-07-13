@@ -34,7 +34,7 @@ const InventoryPane = () => {
     // Group active effects (not fuel_cost)
     const activeEffectsGrouped = groupStatusEffectsByName(
         statusEffects,
-        (eff) => eff.type !== 'fuel_cost'
+        (eff) => eff.type !== 'fuel_cost' && eff.remainingTime && eff.remainingTime > 0
     );
     // Group fuel cost reductions
     const fuelCostGrouped = groupStatusEffectsByName(
@@ -90,6 +90,7 @@ const InventoryPane = () => {
                         )}
 
                         {/* Active Effects */}
+                        {/* {console.log(activeEffectsGrouped)} */}
                         {Object.keys(activeEffectsGrouped).length > 0 && (
                             <div className="active-effects">
                                 <h3>Active Effects</h3>

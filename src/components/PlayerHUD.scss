@@ -178,7 +178,10 @@
 }
 
 .floating-message {
-    z-index: 1000;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 105;
     font-size: 1.1em;
     font-weight: bold;
     text-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 2px #fff;

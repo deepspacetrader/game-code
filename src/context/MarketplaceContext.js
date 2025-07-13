@@ -404,31 +404,37 @@ export const MarketplaceProvider = ({ children }) => {
         setGlobalDangerLevel((prev) => Math.max(0, Math.min(10, newLevel || prev)));
     }, []);
 
-    const updateQuantumProcessors = useCallback((count) => {
-        // Don't do anything if count is negative
-        if (count < 0) return;
+    const updateQuantumProcessors = useCallback(
+        (count) => {
+            // Don't do anything if count is negative
+            if (count < 0) return;
 
-        setInventory((inv) => {
-            const existing = inv.find((i) => i.name === 'Quantum Processor');
+            setInventory((inv) => {
+                const existing = inv.find((i) => i.name === 'Quantum Processor');
+                const qpDef = items.find((i) => i.name === 'Quantum Processor');
+                if (!qpDef) return inv; // Defensive
 
-            // If count is 0, remove all quantum processors
-            if (count === 0) {
-                return inv.filter((i) => i.name !== 'Quantum Processor');
-            }
+                // If count is 0, remove all quantum processors
+                if (count === 0) {
+                    return inv.filter((i) => i.name !== 'Quantum Processor');
+                }
 
-            // For positive counts, update or add the processors
-            // Make sure we're not triggering any side effects by using a clean update
-            const updatedInv = existing
-                ? inv.map((i) => (i.name === 'Quantum Processor' ? { ...i, quantity: count } : i))
-                : [...inv, { name: 'Quantum Processor', quantity: count }];
+                // For positive counts, update or add the processors
+                // Always ensure the full definition is present
+                const updatedInv = existing
+                    ? inv.map((i) =>
+                          i.name === 'Quantum Processor' ? { ...qpDef, ...i, quantity: count } : i
+                      )
+                    : [...inv, { ...qpDef, quantity: count }];
 
-            // Ensure we're not triggering any side effects by returning a new array reference
-            return [...updatedInv];
-        });
+                return [...updatedInv];
+            });
 
-        // Explicitly set quantumProcessors state without triggering any side effects
-        setQuantumProcessors(count);
-    }, []);
+            // Explicitly set quantumProcessors state without triggering any side effects
+            setQuantumProcessors(count);
+        },
+        [items]
+    );
 
     // Remove a quantum ability from the inventory
     const removeQuantumAbility = useCallback((ability) => {
@@ -513,6 +519,11 @@ export const MarketplaceProvider = ({ children }) => {
 
                 // Defensive: filter out any invalid indices
                 picks = picks.filter((i) => typeof i === 'number' && i >= 0 && i < items.length);
+
+                // --- FILTER OUT ILLEGAL ITEMS IF TRADER IS NOT ALLOWED ---
+                if (!config.illegalItems) {
+                    picks = picks.filter((i) => !items[i].illegal);
+                }
 
                 // Convert indices to trader items
                 const traderItems = picks
@@ -2431,14 +2442,16 @@ export const MarketplaceProvider = ({ children }) => {
         setInventory((inv) => {
             const existing = inv.find((i) => i.name === 'Quantum Processor');
             const currentQty = existing ? existing.quantity || 0 : 0;
+            const qpDef = items.find((i) => i.name === 'Quantum Processor');
+            if (!qpDef) return inv; // Defensive
+
             const newInv = existing
                 ? inv.map((i) =>
-                      i.name === 'Quantum Processor' ? { ...i, quantity: currentQty + amount } : i
+                      i.name === 'Quantum Processor'
+                          ? { ...qpDef, ...i, quantity: currentQty + amount }
+                          : i
                   )
-                : [...inv, { name: 'Quantum Processor', quantity: amount }];
-
-            // Quantum abilities will be added when the player interacts with quantum slots
-            // Don't automatically add 'QuantumHover' here as it should be triggered by player action
+                : [...inv, { ...qpDef, quantity: amount }];
 
             return newInv;
         });

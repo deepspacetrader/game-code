@@ -171,12 +171,12 @@ const PlayerHUD = () => {
                                 color={e.delta > 0 ? 'green' : 'red'}
                                 animation={
                                     e.delta > 0
-                                        ? 'floatUp 1.5s ease-out forwards'
+                                        ? 'floatUp 2.5s ease-out forwards'
                                         : 'floatDown 1.5s ease-out forwards'
                                 }
                                 style={{
                                     position: 'absolute',
-                                    top: '-20px',
+                                    top: '6px',
                                     left: '50%',
                                     transform: 'translateX(-50%)',
                                 }}

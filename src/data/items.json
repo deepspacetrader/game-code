@@ -273,7 +273,7 @@
             "priceTickRate": [70, 730],
             "duration": [4000, 5000],
             "effects": {
-                "+delivery_speed": [0.001, 0.0022]
+                "+delivery_speed": [0.007, 0.01]
             }
         },
         {
@@ -287,7 +287,7 @@
             "duration": [12, 24],
             "effects": {
                 "-fuel_cost": [1, 2],
-                "+delivery_speed": [1, 2]
+                "+delivery_speed": [0.01, 0.02]
             }
         },
         {
@@ -403,7 +403,7 @@
             "itemId": 31,
             "name": "Xenogoo",
             "travelSell": true,
-            "description": "Can be synthesized into fuel. Some consider it 'food', others find it toxic.",
+            "description": "Can be synthesized into fuel. Some consider it food, others find it toxic.",
             "basePrice": 600,
             "deliveryTime": 0.6,
             "priceTickRate": [120, 270],
