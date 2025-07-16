@@ -29,6 +29,7 @@ import Enemy from './components/Reusable/Enemy';
 import EnemySpawner from './components/Reusable/EnemySpawner';
 import Onboarding from './components/Onboarding/Onboarding';
 import SecretOffer from './components/Reusable/SecretOffer';
+import ConsentAndAnalytics from './components/Reusable/ConsentAndAnalytics';
 // import Scanner from './components/Scanner';
 // import ScannerLite from './components/ScannerLite';
 
@@ -173,6 +174,8 @@ const GameUI = ({
             </Modal>
             {/* Secret Offer Popup */}
             <SecretOffer show={showSecretOffer} onResult={handleSecretOfferResult} />
+
+            <ConsentAndAnalytics />
         </div>
     );
 };
