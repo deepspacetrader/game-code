@@ -6,6 +6,8 @@ import { useStatusEffects } from '../../context/StatusEffectsContext';
 import { zzfx } from 'zzfx';
 import { Danger, DANGER_TYPES } from '../Reusable/Danger';
 import Event from '../Reusable/Event';
+import { ENEMY_TYPES } from '../Reusable/Enemy';
+import enemiesData from '../../data/enemies.json';
 import { encryptData, decryptData } from '../../utils/encryption';
 import './AdminDebug.scss';
 
@@ -25,19 +27,20 @@ const AdminDebug = () => {
         quantumInventory = [],
         isCheater: contextIsCheater,
         setIsCheater,
+        setCurrentEnemy,
     } = useMarketplace();
 
-    const { triggerRandomEvent } = useEventContext();
+    const { triggerRandomMajorEvent } = useEventContext();
     const { addStatEffect } = useStatusEffects();
 
     // Debug function to trigger a test event
     const triggerTestEvent = () => {
         try {
-            if (typeof triggerRandomEvent !== 'function') {
-                throw new Error('triggerRandomEvent is not a function');
+            if (typeof triggerRandomMajorEvent !== 'function') {
+                throw new Error('triggerRandomMajorEvent is not a function');
             }
             console.log('[Event] Manually triggering test event');
-            triggerRandomEvent();
+            triggerRandomMajorEvent();
             alert('Random event triggered successfully!');
         } catch (error) {
             console.error('Error triggering random event:', error);
@@ -51,6 +54,69 @@ const AdminDebug = () => {
     const [creditAmount, setCreditAmount] = useState(10000000);
     const [qpAmount, setQPAmount] = useState(1);
     const [deliverySpeedOverride, setDeliverySpeedOverride] = useState(courierDrones || 0);
+    const [selectedEnemyType, setSelectedEnemyType] = useState(ENEMY_TYPES.SCAVENGER);
+
+    // Handle triggering a random encounter
+    const triggerRandomEncounter = useCallback(() => {
+        try {
+            console.log('=== DEBUG: Starting triggerRandomEncounter ===');
+            console.log('Selected enemy type:', selectedEnemyType);
+
+            // Find the enemy configuration from enemies.json with case-insensitive match
+            const enemyConfig = enemiesData.enemies.find(
+                (e) => e.name.toLowerCase() === selectedEnemyType.toLowerCase()
+            );
+
+            if (!enemyConfig) {
+                const availableEnemies = enemiesData.enemies.map((e) => e.name).join(', ');
+                const errorMsg = `Enemy type "${selectedEnemyType}" not found. Available types: ${availableEnemies}`;
+                console.error(errorMsg);
+                alert(errorMsg);
+                throw new Error(errorMsg);
+            }
+
+            console.log('Found enemy config:', enemyConfig);
+
+            // Generate random health within the enemy's defined range
+            const health = Math.floor(Math.random() * (enemyConfig.health + 1));
+
+            // Create the enemy object with proper structure
+            const enemy = {
+                id: `enemy_${Date.now()}`,
+                enemyId: enemyConfig.enemyId,
+                type: enemyConfig.name,
+                name: enemyConfig.name,
+                health: health,
+                maxHealth: enemyConfig.health,
+                rank: enemyConfig.rank,
+                damage: Math.floor(health * 0.1),
+                credits: Math.floor(health * 5),
+                weapons: enemyConfig.weapons || [],
+                shield: enemyConfig.shield || false,
+                stealth: enemyConfig.stealth || false,
+                homeGalaxy: enemyConfig.homeGalaxy || 'Unknown',
+                language: enemyConfig.languageRange ? enemyConfig.languageRange[0] : 'Unknown',
+                statusEffects: [],
+                reason: enemyConfig.reason,
+            };
+
+            console.log('Created enemy object:', enemy);
+            console.log('Calling setCurrentEnemy...');
+
+            // Try to set the enemy and log the result
+            setCurrentEnemy(enemy);
+            console.log('setCurrentEnemy called with:', enemy);
+
+            // Add a small delay to allow state to update
+            setTimeout(() => {
+                console.log('=== DEBUG: Enemy state should be updated now ===');
+                console.log('Try interacting with the enemy in the UI.');
+            }, 100);
+        } catch (error) {
+            console.error('Error triggering random encounter:', error);
+            alert(`Failed to trigger random encounter: ${error.message}`);
+        }
+    }, [selectedEnemyType, setCurrentEnemy]);
 
     // Handle resetting quantum processors
     const handleResetQPs = useCallback(() => {
@@ -236,6 +302,31 @@ const AdminDebug = () => {
                             min={0}
                             max={100000}
                         />
+                    </div>
+
+                    <div className="admin-section">
+                        <h3>Random Encounter</h3>
+                        <div className="enemy-type-selector">
+                            {Object.values(ENEMY_TYPES).map((type) => (
+                                <label key={type} className="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="enemyType"
+                                        value={type}
+                                        checked={selectedEnemyType === type}
+                                        onChange={() => setSelectedEnemyType(type)}
+                                    />
+                                    {type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}
+                                </label>
+                            ))}
+                        </div>
+                        <button
+                            className="admin-button"
+                            onClick={triggerRandomEncounter}
+                            style={{ marginTop: '10px' }}
+                        >
+                            Trigger Random Encounter
+                        </button>
                     </div>
 
                     <div className="form-group">

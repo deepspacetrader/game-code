@@ -318,7 +318,7 @@ export const MarketplaceProvider = ({ children }) => {
     );
 
     // Trigger a random event
-    const triggerRandomEvent = useCallback(
+    const triggerRandomMajorEvent = useCallback(
         (force = false) => {
             const now = Date.now();
 
@@ -392,12 +392,12 @@ export const MarketplaceProvider = ({ children }) => {
         const eventInterval = setInterval(() => {
             // 30% chance to trigger a random event each interval
             if (Math.random() < 0.3) {
-                triggerRandomEvent();
+                triggerRandomMajorEvent();
             }
         }, 30000); // Check every 30 seconds
 
         return () => clearInterval(eventInterval);
-    }, [triggerRandomEvent]);
+    }, [triggerRandomMajorEvent]);
 
     // Update danger level based on game progress
     const updateDangerLevel = useCallback((newLevel) => {
@@ -3158,7 +3158,7 @@ export const MarketplaceProvider = ({ children }) => {
             toggleStealth,
             addFloatingMessage,
             applyEventEffects,
-            triggerRandomEvent,
+            triggerRandomMajorEvent,
             travelToGalaxy,
             toggleQuantumAbilities,
             toggleQuantumScan,
@@ -3233,7 +3233,7 @@ export const MarketplaceProvider = ({ children }) => {
             toggleStealth,
             addFloatingMessage,
             applyEventEffects,
-            triggerRandomEvent,
+            triggerRandomMajorEvent,
             travelToGalaxy,
             showOnboarding,
             setShowOnboarding,

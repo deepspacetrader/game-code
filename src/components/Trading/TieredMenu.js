@@ -51,7 +51,24 @@ const TieredMenu = () => {
                 </button>
                 <button
                     onClick={() => {
-                        zzfx(...[volumeRef.current, 0, 500, 0.01, 0, 0.15, 0, 1, 5, 0, 1, 0, 0, 5]);
+                        zzfx(
+                            ...[
+                                volumeRef.current,
+                                0,
+                                150,
+                                0.07,
+                                0.02,
+                                0.42,
+                                0,
+                                1,
+                                5,
+                                50,
+                                2,
+                                0,
+                                0.1337,
+                                -2,
+                            ]
+                        );
                         handleSort('price');
                     }}
                 >
@@ -60,7 +77,24 @@ const TieredMenu = () => {
 
                 <button
                     onClick={() => {
-                        zzfx(...[volumeRef.current, 0, 500, 0.01, 0, 0.15, 0, 0, 0, 0, 0, 0, 0, 5]);
+                        zzfx(
+                            ...[
+                                volumeRef.current,
+                                0.1337,
+                                249,
+                                0.01,
+                                0,
+                                0.15,
+                                0.69,
+                                0,
+                                -2,
+                                0,
+                                5,
+                                0,
+                                2,
+                                0.4269,
+                            ]
+                        );
                         handleSort('stock');
                     }}
                 >

@@ -7,7 +7,9 @@
             "languageRange": ["EN"],
             "health": 500,
             "shield": true,
-            "stealth": true
+            "stealth": true,
+            "hack_bounty": [10000, 40000],
+            "quantum_processors": 5
         },
         {
             "enemyId": 1,
@@ -16,7 +18,9 @@
             "languageRange": ["EN"],
             "health": 250,
             "shield": true,
-            "stealth": false
+            "stealth": false,
+            "hack_bounty": [5000, 7000],
+            "quantum_processors": 4
         },
         {
             "enemyId": 2,
@@ -25,7 +29,9 @@
             "languageRange": ["EN"],
             "health": 150,
             "shield": false,
-            "stealth": false
+            "stealth": false,
+            "hack_bounty": [500, 5000],
+            "quantum_processors": 2
         },
         {
             "enemyId": 3,
@@ -34,7 +40,9 @@
             "languageRange": ["EN"],
             "health": 100,
             "shield": false,
-            "stealth": true
+            "stealth": true,
+            "hack_bounty": [7000, 16000],
+            "quantum_processors": 1
         },
         {
             "enemyId": 4,
@@ -44,7 +52,9 @@
             "health": 50,
             "weapons": [],
             "shield": false,
-            "stealth": false
+            "stealth": false,
+            "hack_bounty": [1000, 3000],
+            "quantum_processors": 0
         }
     ]
 }

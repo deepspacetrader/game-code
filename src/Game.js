@@ -127,10 +127,20 @@ const GameUI = ({
             <StarMapOverlay />
             {/* floating messages manager */}
             <FloatingMessagesManager />
+            {/* Debug logging for currentEnemy state */}
+            {/* {console.log('=== GAME COMPONENT === currentEnemy:', currentEnemy)} */}
+
             {/* Enemy Spawner - Handles random enemy encounters */}
             <EnemySpawner />
+
             {/* Render Enemy component when there's an active encounter */}
-            <Enemy enemyData={currentEnemy} onEncounterEnd={handleEncounterEnd} />
+            {currentEnemy && (
+                <Enemy
+                    enemyData={currentEnemy}
+                    onEncounterEnd={handleEncounterEnd}
+                    key={`enemy-${currentEnemy.id}`} // Force re-render when enemy changes
+                />
+            )}
 
             {/* Onboarding overlay */}
             <Onboarding />

@@ -2,6 +2,61 @@
     background-color: #1a1a1a;
     padding: 0.25rem;
     color: #fff;
+    
+    .enemy-type-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #ccc;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            transition: all 0.2s ease;
+            
+            &:hover {
+                background-color: #3a3a3a;
+                border-color: #666;
+            }
+            
+            input[type="radio"] {
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #666;
+                border-radius: 50%;
+                background-color: #2d2d2d;
+                cursor: pointer;
+                position: relative;
+                transition: all 0.2s ease;
+                
+                &:checked {
+                    border-color: #4CAF50;
+                    background-color: #2d2d2d;
+                    
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background-color: #4CAF50;
+                    }
+                }
+            }
+        }
+    }
 
     .cheats-toggle {
         display: flex;

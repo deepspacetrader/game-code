@@ -41,7 +41,7 @@ export const EventProvider = ({ children }) => {
     );
 
     // Trigger a random event from the random events pool
-    const triggerRandomEvent = useCallback(() => {
+    const triggerRandomMajorEvent = useCallback(() => {
         if (randomEvents.length === 0) return null;
         const event = randomEvents[randomInt(0, randomEvents.length - 1)];
         const newEvent = {
@@ -102,7 +102,7 @@ export const EventProvider = ({ children }) => {
                 eventQueue,
                 // Event management functions
                 triggerGalaxyEvent,
-                triggerRandomEvent,
+                triggerRandomMajorEvent,
                 queueEvent,
                 processNextEvent,
                 clearEvent,
@@ -110,8 +110,8 @@ export const EventProvider = ({ children }) => {
                 // Alias for compatibility
                 activeEvent,
                 clearCurrentEvent: clearEvent,
-                // Show a new event (alias for triggerRandomEvent for consistency with AILevelContext)
-                showEvent: triggerRandomEvent,
+                // Show a new event (alias for triggerRandomMajorEvent for consistency with AILevelContext)
+                showEvent: triggerRandomMajorEvent,
             }}
         >
             {children}

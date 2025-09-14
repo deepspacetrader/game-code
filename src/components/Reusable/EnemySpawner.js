@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
-import { ENEMY_TYPES as ENEMY_TYPES_IMPORT } from './Enemy';
 import galaxiesData from '../../data/galaxies.json';
 import enemiesData from '../../data/enemies.json';
 
@@ -10,7 +9,7 @@ const DANGER_LEVEL_INTERVAL = 60000; // 1 minute between danger level checks
 const EnemySpawner = () => {
     const {
         setCurrentEnemy,
-        triggerRandomEvent,
+        triggerRandomMajorEvent,
         currentGalaxy: currentGalaxyId,
         currentEnemy,
         gameStarted,
@@ -23,10 +22,10 @@ const EnemySpawner = () => {
 
     // Function to get allowed enemy types based on galaxy
     const getAllowedEnemyTypes = (galaxy) => {
-        if (!galaxy) return ['Scavenger'];
+        if (!galaxy) return [];
         if (galaxy.war) return ['Scavenger', 'Thief', 'Thug', 'Military'];
         if (galaxy.danger) return ['Scavenger', 'Thief', 'Thug'];
-        return ['Scavenger'];
+        return []; // No enemies in safe galaxies
     };
 
     // Function to get a random enemy from enemies.json
@@ -50,19 +49,39 @@ const EnemySpawner = () => {
             weapons: base.weapons || [],
             shield: base.shield,
             stealth: base.stealth,
-            homeGalaxy: base.homeGalaxy,
-            language: base.languageRange[0],
+            homeGalaxy: currentGalaxy?.name || 'Unknown',
+            language: Array.isArray(base.languageRange) ? base.languageRange[0] : 'EN',
             statusEffects: [],
-            reason: 'random_encounter',
+            reason: base.reason || 'Random encounter',
         };
     }, [currentGalaxy]);
 
     // Function to handle enemy spawn attempt
     const attemptEnemySpawn = useCallback(() => {
-        if (!gameStarted) return;
-        if (!currentGalaxy) return;
-        if (currentEnemy) return;
-        if (Math.random() > 0.25) return;
+        if (!gameStarted) {
+            console.log('Game not started, not spawning enemy');
+            return;
+        }
+        if (!currentGalaxy) {
+            console.log('No current galaxy, not spawning enemy');
+            return;
+        }
+        if (currentEnemy) {
+            console.log('Enemy already exists, not spawning new one');
+            return;
+        }
+
+        // Only spawn in dangerous or war galaxies
+        if (!currentGalaxy.danger && !currentGalaxy.war) {
+            console.log('Not a dangerous or war galaxy, not spawning enemy');
+            return;
+        }
+
+        // 50% chance to spawn an enemy in dangerous/war zones
+        if (Math.random() > 0.5) {
+            console.log('Spawn chance failed');
+            return;
+        }
         const enemy = getRandomEnemy();
         if (enemy) {
             setCurrentEnemy(enemy);
@@ -72,15 +91,26 @@ const EnemySpawner = () => {
     // Set up timers for enemy spawning and danger level checks
     useEffect(() => {
         if (!gameStarted || !currentGalaxy) {
+            console.log('Game not started or no current galaxy');
             return;
         }
 
+        // Only set up spawner in dangerous or war galaxies
+        if (!currentGalaxy.danger && !currentGalaxy.war) {
+            console.log('Not a dangerous or war galaxy, disabling spawner');
+            return;
+        }
+
+        console.log('Setting up enemy spawner in', currentGalaxy.name);
+
         let spawnInterval = setInterval(() => {
+            console.log('Attempting to spawn enemy...');
             attemptEnemySpawn();
         }, ENEMY_SPAWN_INTERVAL);
 
         let dangerInterval = setInterval(() => {
             console.log('Checking danger level in', currentGalaxy.name);
+            // Increase spawn chance based on danger level
         }, DANGER_LEVEL_INTERVAL);
 
         return () => {
