@@ -154,7 +154,7 @@ const Enemy = ({
     const [currentBribeAmount, setCurrentBribeAmount] = useState(0);
     const [actionSuccess, setActionSuccess] = useState(null);
     const [escapeAttempts, setEscapeAttempts] = useState(0);
-    const [escapeSuccessful, setEscapeSuccessful] = useState(false);
+    const [enemyDefeated, setEnemyDefeated] = useState(false);
     const [showAutoEnemy, setShowAutoEnemy] = useState(false);
 
     // Enemy state with fallback
@@ -170,11 +170,12 @@ const Enemy = ({
     // Update bribe amount when enemy changes
     useEffect(() => {
         if (enemy) {
-            const enemyConfig = enemiesData.enemies.find(e => e.enemyId === enemy.enemyId);
+            const enemyConfig = enemiesData.enemies.find((e) => e.enemyId === enemy.enemyId);
             if (enemyConfig && enemyConfig.hack_bounty) {
                 // Use the hack_bounty range from enemy data and round up to nearest 500
                 const [minBounty, maxBounty] = enemyConfig.hack_bounty;
-                const randomBribe = Math.floor(Math.random() * (maxBounty - minBounty + 1)) + minBounty;
+                const randomBribe =
+                    Math.floor(Math.random() * (maxBounty - minBounty + 1)) + minBounty;
                 const roundedBribe = Math.max(500, Math.ceil(randomBribe / 500) * 500);
                 setCurrentBribeAmount(roundedBribe);
             } else {
@@ -253,8 +254,8 @@ const Enemy = ({
         if (isSuccessful) {
             setActionSuccess('escape');
             setFadeOut(true);
-            setEscapeSuccessful(true);
             addBattleLog(`You successfully escaped from ${enemy.name}!`);
+            setEnemyDefeated(true);
 
             setTimeout(() => {
                 setEncounterActive(false);
@@ -297,6 +298,7 @@ const Enemy = ({
             setFadeOut(true);
             addBattleLog(`Bribe successful! You paid ${bribeAmount} credits to avoid a fight.`);
             setCredits((prev) => prev - bribeAmount);
+            setEnemyDefeated(true);
 
             setTimeout(() => {
                 setEncounterActive(false);
@@ -309,7 +311,9 @@ const Enemy = ({
         } else {
             const newBribeAmount = bribeAmount * 2;
             setCurrentBribeAmount(newBribeAmount);
-            addBattleLog(`Bribe of ${bribeAmount} credits failed! The enemy wants at least ${newBribeAmount} credits.`);
+            addBattleLog(
+                `Bribe of ${bribeAmount} credits failed! The enemy wants at least ${newBribeAmount} credits.`
+            );
         }
     }, [
         playerTurn,
@@ -344,6 +348,7 @@ const Enemy = ({
             setFadeOut(true);
             setPlayerTurn(false);
             addBattleLog(`${enemy.name} has been defeated!`);
+            setEnemyDefeated(true);
 
             setTimeout(() => {
                 setEncounterActive(false);
@@ -581,7 +586,6 @@ const Enemy = ({
             const enemyConfig = enemiesData.enemies.find((e) => e.enemyId === enemy.enemyId);
             const [minBounty, maxBounty] = enemyConfig?.hack_bounty || [1000, 3000];
             const hackBounty = Math.floor(Math.random() * (maxBounty - minBounty + 1)) + minBounty;
-
             setCredits((prev) => prev + hackBounty);
             addFloatingMessage(`Hack successful! +${hackBounty} credits`, 'success');
 
@@ -593,6 +597,7 @@ const Enemy = ({
             setIsHacking(false);
             setIsHackButtonPressed(false);
             isHackButtonPressedRef.current = false;
+            setEnemyDefeated(true);
 
             // End the encounter after a short delay
             setTimeout(() => {
@@ -756,6 +761,7 @@ const Enemy = ({
                                     </div>
                                 </div>
                             </div>
+
                             <div className="action-buttons">
                                 {actionSuccess ? (
                                     <div className="action-success-message">
@@ -800,7 +806,7 @@ const Enemy = ({
                                 )}
                                 {enemyData && enemyData.enemyId !== undefined && (
                                     <React.Fragment>
-                                        <div
+                                        {/* <div
                                             style={{
                                                 position: 'fixed',
                                                 top: '10px',
@@ -819,30 +825,34 @@ const Enemy = ({
                                                 isHacking: {isHackButtonPressed ? 'true' : 'false'}
                                             </div>
                                             <div>Enemy QP: {enemy?.quantum_processors || 0}</div>
-                                        </div>
-                                        <button
-                                            className={`action-btn hack ${
-                                                !canHack ? 'disabled' : 'hack-available'
-                                            } ${isHackButtonPressed ? 'active' : ''}`}
-                                            onMouseDown={handleHackMouseDown}
-                                            onMouseUp={handleHackMouseUp}
-                                            onMouseLeave={handleHackMouseUp}
-                                            onTouchStart={handleHackMouseDown}
-                                            onTouchEnd={handleHackMouseUp}
-                                            onTouchCancel={handleHackMouseUp}
-                                            disabled={!canHack || actionSuccess}
-                                            style={{ position: 'relative', zIndex: 10 }}
-                                        >
-                                            <div
-                                                className="hack-progress"
-                                                style={{ width: `${hackProgress}%` }}
-                                            />
-                                            <span className="hack-text">
-                                                {hackProgress > 0
-                                                    ? `HACKING... (${Math.round(hackProgress)}%)`
-                                                    : 'HACK'}
-                                            </span>
-                                        </button>
+                                        </div> */}
+                                        {!enemyDefeated && (
+                                            <button
+                                                className={`action-btn hack ${
+                                                    !canHack ? 'disabled' : 'hack-available'
+                                                } ${isHackButtonPressed ? 'active' : ''}`}
+                                                onMouseDown={handleHackMouseDown}
+                                                onMouseUp={handleHackMouseUp}
+                                                onMouseLeave={handleHackMouseUp}
+                                                onTouchStart={handleHackMouseDown}
+                                                onTouchEnd={handleHackMouseUp}
+                                                onTouchCancel={handleHackMouseUp}
+                                                disabled={!canHack || actionSuccess}
+                                                style={{ position: 'relative', zIndex: 10 }}
+                                            >
+                                                <div
+                                                    className="hack-progress"
+                                                    style={{ width: `${hackProgress}%` }}
+                                                />
+                                                <span className="hack-text">
+                                                    {hackProgress > 0
+                                                        ? `HACKING... (${Math.round(
+                                                              hackProgress
+                                                          )}%)`
+                                                        : 'HACK'}
+                                                </span>
+                                            </button>
+                                        )}
                                     </React.Fragment>
                                 )}
                             </div>
