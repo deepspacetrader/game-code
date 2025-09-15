@@ -756,8 +756,7 @@
         }
         
         &.hack-available:not(:disabled) {
-            animation: pulse 2s infinite;
-            background-color: #2e7d32; // Ensure base color for pulse effect
+            background-color: #2e7d32; // Base color
             
             &:hover {
                 background-color: #388e3c;
@@ -771,9 +770,10 @@
             height: 100%;
             background: linear-gradient(90deg, #4caf50, #2e7d32);
             width: 0%;
-            transition: width 0.1s linear;
+            transition: width 0.1s linear, filter 0.1s linear;
             z-index: 1;
             opacity: 0.8;
+            filter: brightness(1);
         }
         
         .hack-text {
@@ -784,8 +784,9 @@
         &.active {
             .hack-progress {
                 width: 100%;
-                transition: width 4.2s linear;
+                transition: width 4.2s linear, filter 0.1s linear;
                 background: linear-gradient(90deg, #4caf50, #2e7d32);
+                filter: brightness(calc(1 + var(--hack-progress, 0) * 0.8));
             }
         }
     }

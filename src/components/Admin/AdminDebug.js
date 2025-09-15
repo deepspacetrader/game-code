@@ -102,17 +102,17 @@ const AdminDebug = () => {
                 quantum_processors: enemyConfig.quantum_processors,
             };
 
-            console.log('Created enemy object:', enemy);
-            console.log('Calling setCurrentEnemy...');
+            // console.log('Created enemy object:', enemy);
+            // console.log('Calling setCurrentEnemy...');
 
             // Try to set the enemy and log the result
             setCurrentEnemy(enemy);
-            console.log('setCurrentEnemy called with:', enemy);
+            // console.log('setCurrentEnemy called with:', enemy);
 
             // Add a small delay to allow state to update
             setTimeout(() => {
-                console.log('=== DEBUG: Enemy state should be updated now ===');
-                console.log('Try interacting with the enemy in the UI.');
+                // console.log('=== DEBUG: Enemy state should be updated now ===');
+                // console.log('Try interacting with the enemy in the UI.');
             }, 100);
         } catch (error) {
             console.error('Error triggering random encounter:', error);

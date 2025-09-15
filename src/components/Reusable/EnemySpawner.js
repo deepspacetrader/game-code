@@ -91,7 +91,7 @@ const EnemySpawner = () => {
     // Set up timers for enemy spawning and danger level checks
     useEffect(() => {
         if (!gameStarted || !currentGalaxy) {
-            console.log('Game not started or no current galaxy');
+            // console.log('Game not started or no current galaxy');
             return;
         }
 

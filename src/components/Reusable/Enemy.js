@@ -160,7 +160,7 @@ const Enemy = ({
     // Enemy state with fallback
     const [enemy, setEnemy] = useState(() => {
         const initialEnemy = enemyData || getBaseEnemy(ENEMY_TYPES.THUG);
-        console.log('Initializing enemy state:', initialEnemy);
+        // console.log('Initializing enemy state:', initialEnemy);
         return initialEnemy;
     });
 
@@ -741,72 +741,75 @@ const Enemy = ({
                         )}
 
                         {/* Enhanced Timer Display */}
-                        <div className="enemy-timer">
-                            <div className="timer-container">
-                                <div
-                                    className="timer-circle"
-                                    style={{
-                                        '--progress': `${(timeLeft / 30) * 100}%`,
-                                        '--color':
-                                            timeLeft > 15
-                                                ? '#4CAF50'
-                                                : timeLeft > 5
-                                                ? '#FFC107'
-                                                : '#F44336',
-                                    }}
-                                >
-                                    <div className="timer-content">
-                                        <span className="timer-text">{timeLeft}</span>
-                                        <span className="timer-label">SECONDS</span>
+                        {!enemyDefeated && (
+                            <div className="enemy-timer">
+                                <div className="timer-container">
+                                    <div
+                                        className="timer-circle"
+                                        style={{
+                                            '--progress': `${(timeLeft / 30) * 100}%`,
+                                            '--color':
+                                                timeLeft > 15
+                                                    ? '#4CAF50'
+                                                    : timeLeft > 5
+                                                    ? '#FFC107'
+                                                    : '#F44336',
+                                        }}
+                                    >
+                                        <div className="timer-content">
+                                            <span className="timer-text">{timeLeft}</span>
+                                            <span className="timer-label">SECONDS</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        )}
 
-                            <div className="action-buttons">
-                                {actionSuccess ? (
-                                    <div className="action-success-message">
-                                        {actionSuccess === 'bribe' &&
-                                            'Bribe successful! You paid the enemy. They are leaving...'}
-                                        {actionSuccess === 'attack' &&
-                                            'Enemy defeated! You won the battle!'}
-                                        {actionSuccess === 'escape' &&
-                                            'Escape successful! Getting away...'}
-                                        {actionSuccess === 'hack' &&
-                                            'Hack successful! Access granted. Standing down...'}
-                                    </div>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={handleAttack}
-                                            disabled={!playerTurn || isGameOver || actionSuccess}
-                                            className="action-btn attack"
-                                        >
-                                            ATTACK
-                                        </button>
-                                        <button
-                                            onClick={handleBribe}
-                                            disabled={!playerTurn || isGameOver || actionSuccess}
-                                            className="action-btn bribe"
-                                            title={`Bribe the enemy for ${currentBribeAmount} credits`}
-                                        >
-                                            BRIBE ({currentBribeAmount})
-                                        </button>
-                                        <button
-                                            onClick={handleEscape}
-                                            disabled={
-                                                !playerTurn || escapeAttempts >= 3 || actionSuccess
-                                            }
-                                            className="action-btn escape"
-                                        >
-                                            {escapeAttempts >= 3
-                                                ? "CAN'T ESCAPE"
-                                                : `ESCAPE (${3 - escapeAttempts})`}
-                                        </button>
-                                    </>
-                                )}
-                                {enemyData && enemyData.enemyId !== undefined && (
-                                    <React.Fragment>
-                                        {/* <div
+                        <div className="action-buttons">
+                            {actionSuccess ? (
+                                <div className="action-success-message">
+                                    {actionSuccess === 'bribe' &&
+                                        'Bribe successful! You paid the enemy. They are leaving...'}
+                                    {actionSuccess === 'attack' &&
+                                        'Enemy defeated! You won the battle!'}
+                                    {actionSuccess === 'escape' &&
+                                        'Escape successful! Getting away...'}
+                                    {actionSuccess === 'hack' &&
+                                        'Hack successful! Access granted. Standing down...'}
+                                </div>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={handleAttack}
+                                        disabled={!playerTurn || isGameOver || actionSuccess}
+                                        className="action-btn attack"
+                                    >
+                                        ATTACK
+                                    </button>
+                                    <button
+                                        onClick={handleBribe}
+                                        disabled={!playerTurn || isGameOver || actionSuccess}
+                                        className="action-btn bribe"
+                                        title={`Bribe the enemy for ${currentBribeAmount} credits`}
+                                    >
+                                        BRIBE ({currentBribeAmount})
+                                    </button>
+                                    <button
+                                        onClick={handleEscape}
+                                        disabled={
+                                            !playerTurn || escapeAttempts >= 3 || actionSuccess
+                                        }
+                                        className="action-btn escape"
+                                    >
+                                        {escapeAttempts >= 3
+                                            ? "CAN'T ESCAPE"
+                                            : `ESCAPE (${3 - escapeAttempts})`}
+                                    </button>
+                                </>
+                            )}
+                            {enemyData && enemyData.enemyId !== undefined && (
+                                <React.Fragment>
+                                    {/* <div
                                             style={{
                                                 position: 'fixed',
                                                 top: '10px',
@@ -826,36 +829,37 @@ const Enemy = ({
                                             </div>
                                             <div>Enemy QP: {enemy?.quantum_processors || 0}</div>
                                         </div> */}
-                                        {!enemyDefeated && (
-                                            <button
-                                                className={`action-btn hack ${
-                                                    !canHack ? 'disabled' : 'hack-available'
-                                                } ${isHackButtonPressed ? 'active' : ''}`}
-                                                onMouseDown={handleHackMouseDown}
-                                                onMouseUp={handleHackMouseUp}
-                                                onMouseLeave={handleHackMouseUp}
-                                                onTouchStart={handleHackMouseDown}
-                                                onTouchEnd={handleHackMouseUp}
-                                                onTouchCancel={handleHackMouseUp}
-                                                disabled={!canHack || actionSuccess}
-                                                style={{ position: 'relative', zIndex: 10 }}
-                                            >
-                                                <div
-                                                    className="hack-progress"
-                                                    style={{ width: `${hackProgress}%` }}
-                                                />
-                                                <span className="hack-text">
-                                                    {hackProgress > 0
-                                                        ? `HACKING... (${Math.round(
-                                                              hackProgress
-                                                          )}%)`
-                                                        : 'HACK'}
-                                                </span>
-                                            </button>
-                                        )}
-                                    </React.Fragment>
-                                )}
-                            </div>
+                                    {!enemyDefeated && (
+                                        <button
+                                            className={`action-btn hack ${
+                                                !canHack ? 'disabled' : 'hack-available'
+                                            } ${isHackButtonPressed ? 'active' : ''}`}
+                                            onMouseDown={handleHackMouseDown}
+                                            onMouseUp={handleHackMouseUp}
+                                            onMouseLeave={handleHackMouseUp}
+                                            onTouchStart={handleHackMouseDown}
+                                            onTouchEnd={handleHackMouseUp}
+                                            onTouchCancel={handleHackMouseUp}
+                                            disabled={!canHack || actionSuccess}
+                                            style={{
+                                                position: 'relative',
+                                                zIndex: 10,
+                                                '--hack-progress': hackProgress / 100
+                                            }}
+                                        >
+                                            <div
+                                                className="hack-progress"
+                                                style={{ width: `${hackProgress}%` }}
+                                            />
+                                            <span className="hack-text">
+                                                {hackProgress > 0
+                                                    ? `HACKING... (${Math.round(hackProgress)}%)`
+                                                    : 'HACK'}
+                                            </span>
+                                        </button>
+                                    )}
+                                </React.Fragment>
+                            )}
                         </div>
                     </div>
 
