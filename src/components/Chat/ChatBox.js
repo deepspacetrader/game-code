@@ -108,9 +108,9 @@ const AIBadge = ({ tier }) => {
 const ChatBox = ({ statusEffects }) => {
     const [activeTier, setActiveTier] = useState('all');
     const [showTierSelector, setShowTierSelector] = useState(false);
-    const [casualMessages, setCasualMessages] = useState([]);
     const { aiTier, aiLevel } = useAILevel();
     const [messages, setMessages] = useState([]);
+    const [casualMessages, setCasualMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     // Active traders state removed as it wasn't being used
     const [isOpen, setIsOpen] = useState(false);
@@ -148,17 +148,20 @@ const ChatBox = ({ statusEffects }) => {
                     ['low', 'medium', 'high'].indexOf(aiTier) + 1
                 );
 
-                setCasualMessages((prev) => [
-                    ...prev.slice(-50), // Keep only last 50 messages for performance
-                    {
-                        id: Date.now(),
-                        sender: randomTrader.name,
-                        message: randomMessage,
-                        isPlayer: false,
-                        tier: availableTiers[Math.floor(Math.random() * availableTiers.length)],
-                        timestamp: Date.now(),
-                    },
-                ]);
+                setCasualMessages((prev) => {
+                    const updated = [
+                        ...prev,
+                        {
+                            id: Date.now(),
+                            sender: randomTrader.name,
+                            message: randomMessage,
+                            isPlayer: false,
+                            tier: availableTiers[Math.floor(Math.random() * availableTiers.length)],
+                            timestamp: Date.now(),
+                        },
+                    ];
+                    return updated.slice(-100); // Keep only last 100 casual messages
+                });
             }
         };
 
@@ -219,7 +222,17 @@ const ChatBox = ({ statusEffects }) => {
     );
 
     const filteredMessages = useMemo(() => {
-        const allMessages = [...messages, ...casualMessages];
+        // Combine and sort all messages by timestamp
+        const allMessages = [...messages, ...casualMessages]
+            .sort((a, b) => a.timestamp - b.timestamp)
+            // Ensure we don't have duplicate messages
+            .filter((msg, index, self) => 
+                index === self.findIndex((m) => (
+                    m.id === msg.id || 
+                    (m.sender === msg.sender && m.message === msg.message && m.timestamp === msg.timestamp)
+                ))
+            );
+
         if (activeTier === 'all') return allMessages;
 
         return allMessages.filter((msg) => {
@@ -236,17 +249,24 @@ const ChatBox = ({ statusEffects }) => {
         const message = inputMessage.trim();
         if (!message) return;
 
-        // Add player's message to chat
+        // Create a timestamp for all related messages in this interaction
+        const interactionTimestamp = Date.now();
+        
+        // Add player's message to chat with the interaction timestamp
         const newMessage = {
-            id: Date.now(),
+            id: interactionTimestamp,
             message: { EN: message },
             sender: 'You',
             isPlayer: true,
             tier: aiTier,
-            timestamp: Date.now(),
+            timestamp: interactionTimestamp,
         };
 
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        // Update messages state with the new player message, keeping only the last 199 messages
+        setMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages, newMessage];
+            return updatedMessages.slice(-199); // Keep only the last 199 messages
+        });
         setInputMessage('');
 
         // Process the message and generate a response
@@ -269,16 +289,22 @@ const ChatBox = ({ statusEffects }) => {
             try {
                 const response = getRandomResponse(randomTrader.traderId, messageType);
                 if (response) {
-                    setMessages((prevMessages) => {
-                        const traderMessage = {
-                            id: Date.now(),
-                            message: response,
-                            sender: randomTrader.name || 'Unknown Trader',
-                            isPlayer: false,
-                            tier: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
-                            timestamp: Date.now(),
-                        };
-                        return [...prevMessages, traderMessage];
+                    // Use the same interaction timestamp for related messages
+                    const traderMessage = {
+                        id: interactionTimestamp + 1, // Ensure it comes after player's message
+                        message: response,
+                        sender: randomTrader.name || 'Unknown Trader',
+                        isPlayer: false,
+                        tier: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
+                        timestamp: interactionTimestamp + 1, // Slightly after player's message
+                    };
+                    
+                    setMessages(prevMessages => {
+                        // Filter out any existing message with the same ID to prevent duplicates
+                        // and keep only the last 199 messages
+                        const filtered = prevMessages.filter(m => m.id !== traderMessage.id);
+                        const updatedMessages = [...filtered, traderMessage];
+                        return updatedMessages.slice(-199);
                     });
                 }
             } catch (error) {

@@ -143,7 +143,7 @@ const GameUI = ({
             )}
 
             {/* Onboarding overlay */}
-            <Onboarding />
+            {/* <Onboarding /> */}
 
             <TraderNav />
             <PlayerHUD />

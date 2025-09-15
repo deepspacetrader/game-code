@@ -77,8 +77,8 @@ const AdminDebug = () => {
 
             console.log('Found enemy config:', enemyConfig);
 
-            // Generate random health within the enemy's defined range
-            const health = Math.floor(Math.random() * (enemyConfig.health + 1));
+            // Use exact health value from config
+            const health = typeof enemyConfig.health === 'number' ? enemyConfig.health : 100;
 
             // Create the enemy object with proper structure
             const enemy = {
@@ -98,6 +98,8 @@ const AdminDebug = () => {
                 language: enemyConfig.languageRange ? enemyConfig.languageRange[0] : 'Unknown',
                 statusEffects: [],
                 reason: enemyConfig.reason,
+                hack_bounty: enemyConfig.hack_bounty,
+                quantum_processors: enemyConfig.quantum_processors,
             };
 
             console.log('Created enemy object:', enemy);

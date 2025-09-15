@@ -43,6 +43,132 @@
     }
 }
 
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+.success-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    animation: fadeIn 0.5s ease-out;
+
+    .success-message {
+        font-size: 5rem;
+        font-weight: bold;
+        color: #4cff00;
+        text-shadow: 0 0 20px rgba(76, 255, 0, 0.8);
+        animation: zoomIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        opacity: 0;
+        transform: scale(0.8);
+        animation: zoomIn 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+}
+
+// Health Bar Styles
+.health-bar-container {
+    margin: 15px 0;
+    width: 100%;
+    max-width: 400px;
+
+    .health-bar-label {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+        color: #ddd;
+        font-weight: bold;
+    }
+
+    .health-bar {
+        width: 100%;
+        height: 24px;
+        background-color: #333;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #444;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+        .health-bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 0.3s ease-in-out;
+            position: relative;
+
+            .health-text {
+                color: white;
+                font-weight: bold;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+                font-size: 0.8rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0.3) 0%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(0, 0, 0, 0.1) 50%,
+                    rgba(0, 0, 0, 0.2) 100%
+                );
+                background-size: 200% 100%;
+                animation: healthGradient 2s ease infinite;
+            }
+
+            @keyframes healthGradient {
+                0% {
+                    background-position: 100% 0;
+                }
+                100% {
+                    background-position: -100% 0;
+                }
+            }
+        }
+
+        .enemy-health {
+            background: linear-gradient(to right, #ff4444, #ff6b6b);
+        }
+
+        .player-health {
+            background: linear-gradient(to right, #4caf50, #66bb6a);
+        }
+    }
+}
+
 // Radial Timer Styles
 .enemy-timer {
     margin: 20px 0;
@@ -138,7 +264,7 @@
 
     &.fade-out-true {
         animation-name: fadeOut;
-        animation-duration: 0.69s;
+        animation-duration: 3s;
         animation-timing-function: ease-out;
         animation-fill-mode: forwards;
     }
@@ -252,154 +378,164 @@
                     display: flex;
                     justify-content: space-around;
                     .enemy-face-image {
-                        max-width: 12rem;
-                        min-width: 12rem;
-                        @media (min-width: $breakpoint-tablet) {
-                            max-width: 20rem;
-                            min-width: 20rem;
-                        }
+                        max-width: 15rem;
+                        min-width: 15rem;
+                        // @media (min-width: $breakpoint-tablet) {
+                        //     max-width: 10rem;
+                        //     min-width: 20rem;
+                        // }
                     }
                 }
             }
-            .enemy-stats {
+            .combat-stats {
                 display: flex;
-                flex-wrap: wrap;
-                gap: 15px;
-                margin-top: 10px;
+                flex-direction: column;
+                gap: 20px;
+                margin: 15px 0;
 
-                .health-bar {
-                    flex: 1 1 100%;
-                    height: 24px;
-                    background: #1a1a2e;
-                    border-radius: 4px;
-                    overflow: hidden;
-                    position: relative;
-                    border: 1px solid #4a4a8f;
+                .stat-group {
+                    .stat-label {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 5px;
+                        color: #8e9ed4;
+                        font-size: 0.9em;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
 
-                    .health-fill {
-                        height: 100%;
-                        background: #4caf50;
-                        transition: width 0.3s ease, background-color 0.3s ease;
-                        position: relative;
-
-                        &.critical {
-                            background: #ff3e3e;
-                            animation: pulse 1.5s infinite;
+                        .stat-value {
+                            color: #fff;
+                            font-weight: bold;
                         }
+                    }
 
-                        span {
-                            position: absolute;
-                            right: 5px;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            color: white;
+                    .health-bar {
+                        height: 24px;
+                        background: rgba(0, 0, 0, 0.3);
+                        border-radius: 12px;
+                        overflow: hidden;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        position: relative;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+                        .health-fill {
+                            height: 100%;
+                            transition: width 0.3s ease, background-color 0.3s ease;
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            justify-content: flex-end;
+                            padding-right: 10px;
                             font-size: 12px;
                             font-weight: bold;
+                            color: white;
                             text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+
+                            &::after {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                bottom: 0;
+                                left: 0;
+                                background: linear-gradient(
+                                    to right,
+                                    rgba(255, 255, 255, 0) 0%,
+                                    rgba(255, 255, 255, 0.2) 50%,
+                                    rgba(255, 255, 255, 0) 100%
+                                );
+                                transform: translateX(-100%);
+                                animation: shine 2s infinite;
+                            }
+
+                            &.critical {
+                                animation: pulse 1.5s infinite;
+                            }
+                        }
+
+                        @keyframes shine {
+                            100% {
+                                transform: translateX(100%);
+                            }
                         }
                     }
                 }
 
-                p {
-                    margin: 5px 0;
-                    font-size: 0.9em;
-                    color: #aaa;
+                .enemy-health {
+                    .health-bar {
+                        .health-fill {
+                            background: linear-gradient(to right, #ff4d4d, #ff8080);
+                            box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
 
-                    strong {
-                        color: #fff;
+                            &.critical {
+                                background: linear-gradient(to right, #ff1a1a, #ff6666);
+                            }
+                        }
                     }
                 }
-            }
 
-            // Status effects
-            .status-effects {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 5px;
-                margin-top: 10px;
+                .player-health {
+                    .health-bar {
+                        .health-fill {
+                            background: linear-gradient(to right, #4caf50, #8bc34a);
+                            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
 
-                .status-effect {
-                    background: rgba(74, 74, 143, 0.3);
-                    border: 1px solid #4a4a8f;
-                    border-radius: 3px;
-                    padding: 2px 6px;
-                    font-size: 0.8em;
-                    color: #fff;
-
-                    &.positive {
-                        background: rgba(76, 175, 80, 0.2);
-                        border-color: #4caf50;
+                            &.critical {
+                                background: linear-gradient(to right, #f44336, #ff7961);
+                            }
+                        }
                     }
+                }
+                background: #ff3e3e;
+                animation: pulse 1.5s infinite;
 
-                    &.negative {
-                        background: rgba(255, 76, 48, 0.2);
-                        border-color: #ff4c30;
-                    }
+                span {
+                    position: absolute;
+                    right: 5px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: white;
+                    font-size: 12px;
+                    font-weight: bold;
+                    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
                 }
             }
         }
 
-        .enemy-info {
-            h2 {
-                margin: 0 0 10px 0;
-                color: #4af;
-                text-transform: uppercase;
-                letter-spacing: 1px;
+        p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #aaa;
+
+            strong {
+                color: #fff;
+            }
+        }
+    }
+
+    // Status effects
+    .status-effects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+
+        .status-effect {
+            background: rgba(74, 74, 143, 0.3);
+            border: 1px solid #4a4a8f;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            color: #fff;
+
+            &.positive {
+                background: rgba(76, 175, 80, 0.2);
+                border-color: #4caf50;
             }
 
-            .enemy-stats {
-                margin: 10px 0;
-
-                .stat-row {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 5px;
-
-                    .stat-label {
-                        color: #8af;
-                    }
-
-                    .stat-value {
-                        color: #fff;
-                        font-weight: bold;
-                    }
-                }
-            }
-
-            .health-bar-container {
-                margin: 15px 0;
-
-                .health-bar {
-                    height: 20px;
-                    background: #1a1a2e;
-                    border-radius: 10px;
-                    overflow: hidden;
-                    border: 1px solid #4a4a8f;
-
-                    .health-fill {
-                        height: 100%;
-                        background: #4caf50;
-                        transition: width 0.3s ease;
-                        position: relative;
-
-                        &.critical {
-                            background: #f44336;
-                        }
-
-                        .health-text {
-                            position: absolute;
-                            right: 5px;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            color: white;
-                            font-size: 12px;
-                            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-                        }
-                    }
-                }
-            }
-            .player-status {
-                width: 100%;
+            &.negative {
+                background: rgba(255, 76, 48, 0.2);
+                border-color: #ff4c30;
             }
         }
     }
@@ -526,18 +662,6 @@
         padding: 1rem;
     }
 
-    .action-btn {
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        font-family: 'Courier New', monospace;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
     .action-btn:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -560,9 +684,110 @@
         color: white;
     }
 
+    .battle-log {
+        margin-top: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid #4a4a8f;
+        border-radius: 4px;
+        padding: 10px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            margin: 0 0 10px 0;
+            color: #8e9ed4;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .log-entries {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+            
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            &::-webkit-scrollbar-track {
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 3px;
+            }
+            
+            &::-webkit-scrollbar-thumb {
+                background: #4a4a8f;
+                border-radius: 3px;
+                
+                &:hover {
+                    background: #5a5a9f;
+                }
+            }
+
+            .log-entry {
+                margin: 5px 0;
+                padding: 5px 10px;
+                background: rgba(0, 0, 0, 0.2);
+                border-left: 3px solid #4a4a8f;
+                font-size: 0.9em;
+                line-height: 1.4;
+                word-break: break-word;
+            }
+        }
+    }
+
     .hack {
-        background-color: #4a4;
+        background-color: #2e7d32; // Darker green base
         color: white;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover:not(:disabled) {
+            background-color: #388e3c; // Slightly lighter green on hover
+        }
+        
+        &:disabled {
+            background-color: #2e7d32; // Same as base but with opacity
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        &.hack-available:not(:disabled) {
+            animation: pulse 2s infinite;
+            background-color: #2e7d32; // Ensure base color for pulse effect
+            
+            &:hover {
+                background-color: #388e3c;
+            }
+        }
+        
+        .hack-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #2e7d32);
+            width: 0%;
+            transition: width 0.1s linear;
+            z-index: 1;
+            opacity: 0.8;
+        }
+        
+        .hack-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        &.active {
+            .hack-progress {
+                width: 100%;
+                transition: width 4.2s linear;
+                background: linear-gradient(90deg, #4caf50, #2e7d32);
+            }
+        }
     }
 
     .bribe {
@@ -732,5 +957,15 @@
         font-size: 0.8em;
         background-color: rgba(74, 144, 226, 0.2);
         border: 1px solid #4a90e2;
+
+        &.positive {
+            background-color: rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+
+        &.negative {
+            background-color: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+        }
     }
 }

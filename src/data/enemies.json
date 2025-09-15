@@ -30,7 +30,7 @@
             "health": 150,
             "shield": false,
             "stealth": false,
-            "hack_bounty": [500, 5000],
+            "hack_bounty": [1000, 5000],
             "quantum_processors": 2
         },
         {
@@ -53,7 +53,7 @@
             "weapons": [],
             "shield": false,
             "stealth": false,
-            "hack_bounty": [1000, 3000],
+            "hack_bounty": [500, 2500],
             "quantum_processors": 0
         }
     ]
