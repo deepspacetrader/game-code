@@ -6,6 +6,9 @@ import { StatusEffectsProvider } from './context/StatusEffectsContext';
 import { MarketplaceProvider } from './context/MarketplaceContext';
 import { AILevelProvider } from './context/AILevelContext';
 import { EventProvider } from './context/EventContext';
+import { QuantumProvider } from './context/QuantumContext';
+import { NewsProvider } from './context/NewsContext';
+import { CheatsProvider } from './context/CheatsContext';
 
 // Generate random star positions on each refresh
 const STAR_COUNT = 500;
@@ -35,11 +38,17 @@ root.render(
         </div>
         <StatusEffectsProvider>
             <AILevelProvider>
-                <MarketplaceProvider>
-                    <EventProvider>
-                        <Game />
-                    </EventProvider>
-                </MarketplaceProvider>
+                <QuantumProvider>
+                    <NewsProvider>
+                        <EventProvider>
+                            <MarketplaceProvider>
+                                <CheatsProvider>
+                                    <Game />
+                                </CheatsProvider>
+                            </MarketplaceProvider>
+                        </EventProvider>
+                    </NewsProvider>
+                </QuantumProvider>
             </AILevelProvider>
         </StatusEffectsProvider>
     </div>

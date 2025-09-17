@@ -9,6 +9,7 @@ export const EventProvider = ({ children }) => {
     const [eventHistory, setEventHistory] = useState([]);
     const [activeEvent, setActiveEvent] = useState(null);
     const [eventQueue, setEventQueue] = useState([]);
+    const [currentGameEvent, setCurrentGameEvent] = useState(null);
 
     const galaxyEvents = useMemo(() => galaxyEventsData.galaxyEvents || [], []);
     const breakingNews = useMemo(() => breakingNewsData.events || [], []);
@@ -40,14 +41,14 @@ export const EventProvider = ({ children }) => {
         [galaxyEvents]
     );
 
-    // Trigger a random event from the random events pool
+    // Trigger a random Breaking News event (market-only effects)
     const triggerRandomMajorEvent = useCallback(() => {
         if (breakingNews.length === 0) return null;
         const event = breakingNews[randomInt(0, breakingNews.length - 1)];
         const newEvent = {
             ...event,
             id: `event_${Date.now()}`,
-            type: 'random',
+            type: 'breaking_news',
             timestamp: Date.now(),
         };
 
@@ -96,13 +97,15 @@ export const EventProvider = ({ children }) => {
             value={{
                 // Current active event
                 currentEvent: activeEvent,
-                // Event history
+                eventsList: [...galaxyEvents, ...breakingNews],
                 eventHistory,
-                // Event queue
+                currentGameEvent,
                 eventQueue,
+                setCurrentGameEvent,
                 // Event management functions
                 triggerGalaxyEvent,
-                triggerRandomMajorEvent,
+                triggerRandomMajorEvent, // aka Breaking News
+                triggerBreakingNews: triggerRandomMajorEvent,
                 queueEvent,
                 processNextEvent,
                 clearEvent,

@@ -51,7 +51,8 @@ const obfuscateText = (text, level) => {
 };
 
 const Event = () => {
-    const { triggerRandomMarketEvent, marketData, priceHistory = {} } = useMarketplace();
+    const { triggerRandomMarketEvent, applyGalaxyEventEffects, marketData, priceHistory = {} } =
+        useMarketplace();
     const { activeEvent, clearCurrentEvent } = useEventContext();
 
     const { improvedAILevel } = useAILevel();
@@ -219,34 +220,28 @@ const Event = () => {
         return () => clearTimeout(timer);
     }, [showEvent, displayEvent, clearCurrentEvent]);
 
-    // Single effect to handle new events
+    // When we get a new event, update our display and apply appropriate effects
     useEffect(() => {
-        if (activeEvent && !displayEvent) {
-            // Only set displayEvent if it's not already set
-            setDisplayEvent(activeEvent);
-            setShowEvent(true);
+        if (!activeEvent) return;
 
-            // Apply the event effects to the market
-            if (triggerRandomMarketEvent) {
+        // Update UI state
+        setDisplayEvent(activeEvent);
+        setShowEvent(true);
+
+        // Route effects by event type
+        const type = activeEvent.type;
+        if (type === 'galaxy') {
+            // Player-only effects
+            if (typeof applyGalaxyEventEffects === 'function') {
+                applyGalaxyEventEffects(activeEvent);
+            }
+        } else if (type === 'breaking_news' || type === 'random') {
+            // Market-only effects
+            if (typeof triggerRandomMarketEvent === 'function') {
                 triggerRandomMarketEvent(activeEvent);
             }
         }
-    }, [activeEvent, displayEvent, triggerRandomMarketEvent]);
-
-    // When we get a new event, update our display and apply effects
-    useEffect(() => {
-        if (activeEvent) {
-            // console.log('[Event] New event detected:', activeEvent);
-
-            // Apply the event effects to the market
-            if (triggerRandomMarketEvent) {
-                triggerRandomMarketEvent(activeEvent);
-            }
-
-            setDisplayEvent(activeEvent);
-            setShowEvent(true);
-        }
-    }, [activeEvent, triggerRandomMarketEvent]);
+    }, [activeEvent, applyGalaxyEventEffects, triggerRandomMarketEvent]);
 
     if (!showEvent || !displayEvent) {
         return null;

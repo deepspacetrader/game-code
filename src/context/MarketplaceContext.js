@@ -8,14 +8,16 @@ import React, {
     useCallback,
 } from 'react';
 import itemsData from '../data/items.json';
-import breakingNews from '../data/breaking-news.json';
 import tradersData from '../data/traders.json';
 import galaxiesData from '../data/galaxies.json';
 import traderMessagesData from '../data/trader-messages.json';
 import { randomInt, shuffle, randomFloatRange } from '../utils/helpers';
 import { useAILevel } from './AILevelContext';
 import { zzfx } from 'zzfx';
-import { MAX_FUEL, MIN_QUANTUM_TRADE_DELAY } from '../utils/constants';
+import { MAX_FUEL } from '../utils/constants';
+import { useQuantum } from './QuantumContext';
+import { useNews } from './NewsContext';
+import { useEventContext } from './EventContext';
 const MarketplaceContext = createContext();
 
 // Helper: Check for illegal items in inventory
@@ -25,16 +27,21 @@ function hasIllegalItem(inventory, items) {
         return def && def.illegal;
     });
 }
-// Helper: Count Quantum Processors (inventory + quantumSlotsUsed)
-function getTotalQuantumProcessors(inventory, quantumSlotsUsed) {
-    const qp = inventory.find((i) => i.name === 'Quantum Processor');
-    return (qp ? qp.quantity : 0) + (quantumSlotsUsed || 0);
-}
 
 export const MarketplaceProvider = ({ children }) => {
     // Hooks and context
-    const { setimprovedAILevel, courierDrones, setCourierDrones, sortMode, sortAsc, handleSort } =
+    const { setImprovedAILevel, courierDrones, setCourierDrones, sortMode, sortAsc, handleSort } =
         useAILevel();
+    const {
+        updateQuantumProcessors,
+        getTotalQuantumProcessors,
+        checkQuantumTradeDelay,
+        updateLastQuantumTradeTime,
+        addQuantumProcessors,
+        subtractQuantumProcessor,
+    } = useQuantum();
+    const { addFloatingMessage } = useNews();
+    const { currentGameEvent, setCurrentGameEvent, eventsList } = useEventContext();
 
     const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -42,7 +49,6 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Load game data - these are static imports, so we don't need dependency arrays
     const traderConfigs = useMemo(() => tradersData?.traders || [], []);
-    const eventsList = useMemo(() => (breakingNews?.events || []).map((e) => e || {}), []);
     const items = useMemo(() => itemsData?.items || [], []);
 
     // Core game state
@@ -63,13 +69,11 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Event and enemy state
     const [currentEnemy, setCurrentEnemy] = useState(null);
-    const [currentGameEvent, setCurrentGameEvent] = useState(null);
     const [globalDangerLevel, setGlobalDangerLevel] = useState(0);
     const [lastEventTime, setLastEventTime] = useState(0);
     const [eventCooldown, setEventCooldown] = useState(300000); // 5 minutes base cooldown
     const [traders, setTraders] = useState([]);
     const [isInitialized, setIsInitialized] = useState(false);
-    const [floatingMessages, setFloatingMessages] = useState([]);
 
     // Game mechanics
     const [insufficientCreditFails, setInsufficientCreditFails] = useState(0);
@@ -109,6 +113,9 @@ export const MarketplaceProvider = ({ children }) => {
     // Volume State
     const [volume, setVolume] = useState(1);
     const volumeRef = useRef(volume);
+
+    // Refs for event effects to handle circular dependencies
+    const applyAdditionalEffectsRef = useRef();
 
     // Galaxy Travel State
     const [isJumping, setIsJumping] = useState(false);
@@ -176,45 +183,9 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Initialize game state from saved data - using the more complete implementation below
 
-    // Check if quantum trade can be performed
-    const checkQuantumTradeDelay = useCallback(() => {
-        const currentTime = Date.now();
-        const timeSinceLastTrade = currentTime - lastQuantumTradeTime;
-        return timeSinceLastTrade >= MIN_QUANTUM_TRADE_DELAY;
-    }, [lastQuantumTradeTime]);
+    // Quantum trade delay is now handled by QuantumContext
 
-    // Update last quantum trade time
-    const updateLastQuantumTradeTime = useCallback(() => {
-        setLastQuantumTradeTime(Date.now());
-    }, []);
-
-    // Helper function to show floating messages
-    const addFloatingMessage = useCallback((message, target = 'global', type = 'info') => {
-        // Generate unique ID for the message
-        const id = Date.now().toString() + Math.random().toString(36).substring(2);
-
-        // Set different durations based on message type
-        const duration = type === 'trolled' ? 3000 : 1500;
-
-        // Add message with a timeout to remove it after animation
-        setFloatingMessages((prev) => [
-            ...prev,
-            {
-                id,
-                text: message,
-                type,
-                target,
-                timestamp: Date.now(),
-            },
-        ]);
-
-        // Remove message after animation duration
-        setTimeout(() => {
-            setFloatingMessages((prev) => prev.filter((m) => m.id !== id));
-        }, duration);
-    }, []);
-
-    // Apply market effects from an event
+    // Define applyEventEffects first using a ref for applyAdditionalEffects
     const applyEventEffects = useCallback(
         (event) => {
             if (!event?.effect) return;
@@ -256,12 +227,12 @@ export const MarketplaceProvider = ({ children }) => {
                 );
             }
 
-            // Apply any additional effects from the event
-            if (event.effect.effects?.length) {
-                applyAdditionalEffects(event);
+            // Apply any additional effects from the event using the ref
+            if (event.effect.effects?.length && applyAdditionalEffectsRef.current) {
+                applyAdditionalEffectsRef.current(event);
             }
         },
-        [addFloatingMessage, setCourierDrones, setimprovedAILevel]
+        [] // No dependencies needed as we're using refs
     );
 
     // Apply any additional effects from the event
@@ -290,7 +261,7 @@ export const MarketplaceProvider = ({ children }) => {
                         addFloatingMessage(`${val > 0 ? '+' : ''}${val} Credits`, 'credits');
                         break;
                     case 'improved_AI':
-                        setimprovedAILevel((l) => l + Math.ceil(val));
+                        setImprovedAILevel((l) => l + Math.ceil(val));
                         addFloatingMessage(`AI Update! (+${Math.ceil(val)})`, 'global');
                         break;
                     case 'escape_chance':
@@ -308,14 +279,23 @@ export const MarketplaceProvider = ({ children }) => {
                         break;
                 }
             });
-
-            // Show a notification about the event
-            if (event.name && event.description) {
-                addFloatingMessage(`${event.name}: ${event.description}`, 'event');
-            }
         },
-        [addFloatingMessage, setCourierDrones, setimprovedAILevel]
+        [
+            addFloatingMessage,
+            setCourierDrones,
+            setImprovedAILevel,
+            setCredits,
+            setFuel,
+            setHealth,
+            setShieldActive,
+            setStealthActive,
+        ]
     );
+
+    // Update the ref whenever applyAdditionalEffects changes
+    useEffect(() => {
+        applyAdditionalEffectsRef.current = applyAdditionalEffects;
+    }, [applyAdditionalEffects]);
 
     // Trigger a random event
     const triggerRandomMajorEvent = useCallback(
@@ -384,6 +364,7 @@ export const MarketplaceProvider = ({ children }) => {
             globalDangerLevel,
             currentGalaxy,
             applyEventEffects,
+            setCurrentGameEvent,
         ]
     );
 
@@ -401,45 +382,15 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Update danger level based on game progress
     const updateDangerLevel = useCallback((newLevel) => {
-        setGlobalDangerLevel((prev) => Math.max(0, Math.min(10, newLevel || prev)));
+        setGlobalDangerLevel((prev) => Math.max(0, Math.min(10, newLevel)));
     }, []);
-
-    const updateQuantumProcessors = useCallback(
-        (count) => {
-            // Don't do anything if count is negative
-            if (count < 0) return;
-
-            setInventory((inv) => {
-                const existing = inv.find((i) => i.name === 'Quantum Processor');
-                const qpDef = items.find((i) => i.name === 'Quantum Processor');
-                if (!qpDef) return inv; // Defensive
-
-                // If count is 0, remove all quantum processors
-                if (count === 0) {
-                    return inv.filter((i) => i.name !== 'Quantum Processor');
-                }
-
-                // For positive counts, update or add the processors
-                // Always ensure the full definition is present
-                const updatedInv = existing
-                    ? inv.map((i) =>
-                          i.name === 'Quantum Processor' ? { ...qpDef, ...i, quantity: count } : i
-                      )
-                    : [...inv, { ...qpDef, quantity: count }];
-
-                return [...updatedInv];
-            });
-
-            // Explicitly set quantumProcessors state without triggering any side effects
-            setQuantumProcessors(count);
-        },
-        [items]
-    );
 
     // Remove a quantum ability from the inventory
     const removeQuantumAbility = useCallback((ability) => {
         setQuantumInventory((prev) => prev.filter((a) => a !== ability));
     }, []);
+
+    // prepareGalaxy function remains the same
 
     const prepareGalaxy = useCallback(
         (gName) => {
@@ -740,7 +691,16 @@ export const MarketplaceProvider = ({ children }) => {
 
             return true;
         },
-        [fuel, currentGalaxy, jumpToGalaxy, addFloatingMessage, inventory, quantumSlotsUsed, items]
+        [
+            jumpToGalaxy,
+            fuel,
+            currentGalaxy,
+            addFloatingMessage,
+            inventory,
+            getTotalQuantumProcessors,
+            quantumSlotsUsed,
+            items,
+        ]
     );
 
     // Function to initialize game state from saved data
@@ -799,7 +759,7 @@ export const MarketplaceProvider = ({ children }) => {
                 if (savedState.quantumProcessors !== undefined)
                     setQuantumProcessors(Number(savedState.quantumProcessors));
                 if (savedState.aiLevel !== undefined)
-                    setimprovedAILevel(Number(savedState.aiLevel));
+                    setImprovedAILevel(Number(savedState.aiLevel));
                 // if (savedState.deliverySpeed !== undefined) setCourierDrones(Number(savedState.deliverySpeed));
 
                 // Travel to the saved galaxy if specified
@@ -829,7 +789,7 @@ export const MarketplaceProvider = ({ children }) => {
             setStealthActive,
             setInventory,
             setQuantumProcessors,
-            setimprovedAILevel,
+            setImprovedAILevel,
             travelToGalaxy,
         ]
     );
@@ -851,10 +811,10 @@ export const MarketplaceProvider = ({ children }) => {
 
     useEffect(() => {
         const decayInterval = setInterval(() => {
-            setimprovedAILevel((level) => (level > 0 ? level - 1 : 0));
+            setImprovedAILevel((level) => (level > 0 ? level - 1 : 0));
         }, 4000);
         return () => clearInterval(decayInterval);
-    }, [setimprovedAILevel]);
+    }, [setImprovedAILevel]);
 
     // Helper to map reliableItems (itemId) to item indices
     function getReliableIndices(reliableItemIds, items) {
@@ -953,7 +913,7 @@ export const MarketplaceProvider = ({ children }) => {
         setStealthActive,
         setInventory,
         setQuantumProcessors,
-        setimprovedAILevel,
+        setImprovedAILevel,
         travelToGalaxy,
     ]);
 
@@ -1018,20 +978,29 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Handle trader messages when in travel or when arriving
     useEffect(() => {
+        // Store the current timeout in a ref to avoid dependency on traderMessageTimeout
+        const currentTimeout = traderMessageTimeout;
+
         if (inTravel) {
             const goodbyeMessage = pickTraderMessage('goodbyes');
             if (goodbyeMessage) {
-                if (traderMessageTimeout) clearTimeout(traderMessageTimeout);
+                if (currentTimeout) clearTimeout(currentTimeout);
                 setTraderMessage(goodbyeMessage);
-                setTraderMessageTimeout(setTimeout(() => setTraderMessage(null), 3000));
+                const newTimeout = setTimeout(() => setTraderMessage(null), 3000);
+                setTraderMessageTimeout(newTimeout);
             }
         } else {
-            if (traderMessageTimeout) clearTimeout(traderMessageTimeout);
+            if (currentTimeout) clearTimeout(currentTimeout);
             setTraderMessage(null);
-            // console.log(traderMessage);
-            setTraderMessageTimeout(setTimeout(() => setTraderMessage(null), 4200));
+            const newTimeout = setTimeout(() => setTraderMessage(null), 4200);
+            setTraderMessageTimeout(newTimeout);
         }
-    }, [currentTrader, traderMessages, inTravel]);
+
+        // Cleanup function
+        return () => {
+            if (currentTimeout) clearTimeout(currentTimeout);
+        };
+    }, [pickTraderMessage, currentTrader, traderMessages, inTravel]); // Removed traderMessageTimeout from deps
 
     // regenerate stock on each cap at 1000
     useEffect(() => {
@@ -1131,28 +1100,176 @@ export const MarketplaceProvider = ({ children }) => {
     }, [traderIds, traderConfigs]);
 
     // Update price history when traders change
-    useEffect(() => {
-        if (!traders.length || !traderIds.length) return;
+    const updatePriceHistory = useCallback(
+        (prevHistory) => {
+            const now = Date.now();
+            const newHistory = { ...prevHistory };
+            let hasChanges = false;
 
-        const now = Date.now();
-        setPriceHistory((prev) => {
-            const ph = { ...prev };
             traders.forEach((cells, idx) => {
                 const tid = traderIds[idx];
                 if (!tid) return;
+
                 cells.forEach((cell, cellIdx) => {
                     if (!cell) return;
                     const key = `${tid}-${cellIdx}`;
-                    if (!ph[key]) ph[key] = [];
-                    // Keep only the last 10 price points for this item
-                    ph[key] = [...(ph[key] || []), { price: cell.price, timestamp: now }].slice(
-                        -10
-                    );
+                    const lastPrice = prevHistory[key]?.[prevHistory[key]?.length - 1]?.price;
+
+                    // Only update if price has changed or this is a new item
+                    if (lastPrice === undefined || lastPrice !== cell.price) {
+                        if (!newHistory[key]) {
+                            newHistory[key] = [];
+                        }
+                        newHistory[key] = [
+                            ...newHistory[key],
+                            { price: cell.price, timestamp: now },
+                        ].slice(-10);
+                        hasChanges = true;
+                    }
                 });
             });
-            return ph;
-        });
-    }, [traders, traderIds]);
+
+            return hasChanges ? newHistory : prevHistory;
+        },
+        [traders, traderIds]
+    );
+
+    // Use a ref to track the last update time to prevent rapid updates
+    // const lastUpdateRef = useRef(0);
+    // const updateInterval = 1000; // Update at most once per second
+
+    // // Update price history with debounce
+    // useEffect(() => {
+    //     if (!traders.length || !traderIds.length) return;
+
+    //     const now = Date.now();
+    //     if (now - lastUpdateRef.current < updateInterval) return;
+
+    //     setPriceHistory(prev => {
+    //         const updated = updatePriceHistory(prev);
+    //         if (updated !== prev) {
+    //             lastUpdateRef.current = now;
+    //         }
+    //         return updated;
+    //     });
+    // }, [traders, traderIds, updatePriceHistory]);
+
+    // trigger an enemy encounter with optional type
+    const triggerEnemyEncounter = useCallback(
+        (encounterType = 'random') => {
+            // Sound Enemy Encounter
+            // zzfx(volumeRef.current, 1.5, .8, 270, 0, .1, 0, 1, 1.5, 0, 0, 0, 0, 0, 0, .1, .01, 0, 0, 0);
+
+            let filteredEnemies = [...eventsList];
+
+            // Filter enemies based on encounter type if specified
+            if (encounterType !== 'random') {
+                filteredEnemies = eventsList.filter((e) => {
+                    // Match by event type or dialog tags if available
+                    const matchesType =
+                        e.type === encounterType || (e.tags && e.tags.includes(encounterType));
+                    // For market police encounters, check if it has a dialog
+                    const hasDialog = !!e.dialog;
+                    return matchesType && hasDialog;
+                });
+            } else {
+                // For random encounters, just filter for those with dialogs
+                filteredEnemies = eventsList.filter((e) => e.dialog);
+            }
+
+            if (!filteredEnemies.length) {
+                // Fallback to any enemy with dialog if no matches found
+                filteredEnemies = eventsList.filter((e) => e.dialog);
+                if (!filteredEnemies.length) return;
+            }
+
+            const ev = filteredEnemies[randomInt(0, filteredEnemies.length - 1)];
+            setCurrentGameEvent(ev);
+
+            // Create enemy data based on encounter type
+            const enemyData = {
+                name: '',
+                rank: 'D',
+                health: 100,
+                damage: 10,
+                homeGalaxy: 'Unknown',
+                language: 'EN',
+                credits: 0,
+                statusEffects: [],
+                isHostile: true,
+                isMarketPolice: false,
+                reason: encounterType,
+            };
+
+            // Customize enemy based on encounter type
+            switch (encounterType) {
+                case 'quantum_processor_limit':
+                    enemyData.name = 'Quantum Regulation Unit';
+                    enemyData.rank = 'S';
+                    enemyData.health = 300;
+                    enemyData.damage = 35;
+                    enemyData.statusEffects = ['Quantum Dampening', 'Reinforced Armor'];
+                    enemyData.isMarketPolice = true;
+                    break;
+                case 'ILLEGAL_AI_increase':
+                    enemyData.name = 'Compliance Officer';
+                    enemyData.rank = 'A';
+                    enemyData.health = 250;
+                    enemyData.damage = 20;
+                    enemyData.statusEffects = ['Lawful Presence', 'System Scan'];
+                    enemyData.isMarketPolice = true;
+                    break;
+                case 'random_inspection':
+                    enemyData.name = 'Market Inspector';
+                    enemyData.rank = 'B';
+                    enemyData.health = 180;
+                    enemyData.damage = 15;
+                    enemyData.credits = 200;
+                    enemyData.isMarketPolice = true;
+                    break;
+                case 'trader_combat':
+                    enemyData.name = 'Hostile Trader';
+                    enemyData.rank = 'C';
+                    enemyData.health = 150;
+                    enemyData.damage = 25;
+                    enemyData.credits = 500;
+                    enemyData.statusEffects = ['Combat Ready'];
+                    break;
+                case 'bounty_hunter':
+                    enemyData.name = 'Bounty Hunter';
+                    enemyData.rank = 'A';
+                    enemyData.health = 200;
+                    enemyData.damage = 30;
+                    enemyData.credits = 1000;
+                    enemyData.statusEffects = ['Tracking', 'Combat Ready'];
+                    break;
+                default:
+                    enemyData.name = 'Unknown Threat';
+                    enemyData.rank = 'D';
+                    enemyData.health = 100;
+                    enemyData.damage = 10;
+            }
+
+            setCurrentEnemy(enemyData);
+
+            // Add floating message with appropriate prefix
+            const prefix =
+                {
+                    quantum_processor_limit: 'Quantum Regulation Unit: ',
+                    ILLEGAL_AI_increase: 'Compliance Officer: ',
+                    random_inspection: 'Market Inspector: ',
+                    trader_combat: 'Hostile Trader: ',
+                    bounty_hunter: 'Bounty Hunter: ',
+                }[encounterType] || 'Alert: ';
+
+            addFloatingMessage(
+                `${prefix}${ev.dialog?.text || 'Enemy encountered!'}${
+                    ev.dialog?.cost ? ' Cost: ' + ev.dialog.cost : ''
+                }`
+            );
+        },
+        [eventsList, setCurrentGameEvent, setCurrentEnemy, addFloatingMessage]
+    );
 
     // ----- NEXT TRADER -----
     const handleNextTrader = useCallback(() => {
@@ -1217,7 +1334,16 @@ export const MarketplaceProvider = ({ children }) => {
             0, // Tremolo
             0 // Filter
         );
-    });
+    }, [
+        triggerEnemyEncounter,
+        addFloatingMessage,
+        currentTrader,
+        fuel,
+        fuelPrices,
+        shieldActive,
+        stealthActive,
+        traderIds,
+    ]);
 
     // ----- PREVIOUS TRADER -----
     const handlePrevTrader = useCallback(() => {
@@ -1283,7 +1409,16 @@ export const MarketplaceProvider = ({ children }) => {
             0, // Tremolo
             0 // Filter
         );
-    });
+    }, [
+        triggerEnemyEncounter,
+        addFloatingMessage,
+        currentTrader,
+        fuel,
+        fuelPrices,
+        shieldActive,
+        stealthActive,
+        traderIds,
+    ]);
 
     // ----- BUY SINGLE -----
     const handleBuyClick = useCallback(
@@ -1505,12 +1640,18 @@ export const MarketplaceProvider = ({ children }) => {
             // Disable selling during travel if not allowed or no Particle Beam Reverter
             if (inTravel) {
                 const itemDef = items.find((i) => i.name === cell.name);
+                if (!itemDef) {
+                    addFloatingMessage('Cannot sell: item definition not found', 'error');
+                    return false;
+                }
                 if (!itemDef.travelSell) {
-                    addFloatingMessage('Cannot sell during travel');
+                    console.log('no travel sell for this item allowed');
+                    addFloatingMessage('Cannot sell during travel', 'global');
                     return false;
                 }
                 if (!statusEffects['tool_reverter']) {
                     addFloatingMessage('Requires Particle Beam Reverter to sell during travel');
+                    console.log('no reverter installed');
                     return false;
                 }
             }
@@ -1930,6 +2071,9 @@ export const MarketplaceProvider = ({ children }) => {
                                 'global',
                                 'fuel_cost'
                             );
+                            // Play sound effect
+                            zzfx(volumeRef.current, 0.1, 500, 0.3, 0.2, 0.1, 1, 0.5, 0.1);
+
                             // Calculate duration in ms (if itemDef.duration is an array, pick a random value in range)
                             let durationMs = null;
                             if (Array.isArray(itemDef.duration)) {
@@ -1941,6 +2085,7 @@ export const MarketplaceProvider = ({ children }) => {
                             } else if (typeof itemDef.duration === 'number') {
                                 durationMs = itemDef.duration * 1000;
                             }
+
                             // Generate a unique key for this effect
                             const effectKey = `${itemDef.name}-${Date.now()}`;
                             setStatusEffects((prev) => ({
@@ -2014,7 +2159,7 @@ export const MarketplaceProvider = ({ children }) => {
                         break;
 
                     case 'improved_AI':
-                        setimprovedAILevel((prevLevel) => {
+                        setImprovedAILevel((prevLevel) => {
                             const safePrev =
                                 typeof prevLevel === 'number' && !isNaN(prevLevel) ? prevLevel : 0;
                             const safeValue =
@@ -2180,7 +2325,7 @@ export const MarketplaceProvider = ({ children }) => {
                     case '+improved_AI':
                         const def = items.find((i) => i.name === name);
                         if (def && def.illegal) {
-                            setimprovedAILevel((prevLevel) => {
+                            setImprovedAILevel((prevLevel) => {
                                 const safePrev =
                                     typeof prevLevel === 'number' && !isNaN(prevLevel)
                                         ? prevLevel
@@ -2218,7 +2363,7 @@ export const MarketplaceProvider = ({ children }) => {
             inventory,
             items,
             setCourierDrones,
-            setimprovedAILevel,
+            setImprovedAILevel,
             setCurrentEnemy,
         ]
     );
@@ -2302,120 +2447,6 @@ export const MarketplaceProvider = ({ children }) => {
         }
     };
 
-    // trigger an enemy encounter with optional type
-    const triggerEnemyEncounter = (encounterType = 'random') => {
-        // Sound Enemy Encounter
-        // zzfx(volumeRef.current, 1.5, .8, 270, 0, .1, 0, 1, 1.5, 0, 0, 0, 0, 0, 0, .1, .01, 0, 0, 0);
-
-        let filteredEnemies = [...eventsList];
-
-        // Filter enemies based on encounter type if specified
-        if (encounterType !== 'random') {
-            filteredEnemies = eventsList.filter((e) => {
-                // Match by event type or dialog tags if available
-                const matchesType =
-                    e.type === encounterType || (e.tags && e.tags.includes(encounterType));
-                // For market police encounters, check if it has a dialog
-                const hasDialog = !!e.dialog;
-                return matchesType && hasDialog;
-            });
-        } else {
-            // For random encounters, just filter for those with dialogs
-            filteredEnemies = eventsList.filter((e) => e.dialog);
-        }
-
-        if (!filteredEnemies.length) {
-            // Fallback to any enemy with dialog if no matches found
-            filteredEnemies = eventsList.filter((e) => e.dialog);
-            if (!filteredEnemies.length) return;
-        }
-
-        const ev = filteredEnemies[randomInt(0, filteredEnemies.length - 1)];
-        setCurrentGameEvent(ev);
-
-        // Create enemy data based on encounter type
-        const enemyData = {
-            name: '',
-            rank: 'D',
-            health: 100,
-            damage: 10,
-            homeGalaxy: 'Unknown',
-            language: 'EN',
-            credits: 0,
-            statusEffects: [],
-            isHostile: true,
-            isMarketPolice: false,
-            reason: encounterType,
-        };
-
-        // Customize enemy based on encounter type
-        switch (encounterType) {
-            case 'quantum_processor_limit':
-                enemyData.name = 'Quantum Regulation Unit';
-                enemyData.rank = 'S';
-                enemyData.health = 300;
-                enemyData.damage = 35;
-                enemyData.statusEffects = ['Quantum Dampening', 'Reinforced Armor'];
-                enemyData.isMarketPolice = true;
-                break;
-            case 'ILLEGAL_AI_increase':
-                enemyData.name = 'Compliance Officer';
-                enemyData.rank = 'A';
-                enemyData.health = 250;
-                enemyData.damage = 20;
-                enemyData.statusEffects = ['Lawful Presence', 'System Scan'];
-                enemyData.isMarketPolice = true;
-                break;
-            case 'random_inspection':
-                enemyData.name = 'Market Inspector';
-                enemyData.rank = 'B';
-                enemyData.health = 180;
-                enemyData.damage = 15;
-                enemyData.credits = 200;
-                enemyData.isMarketPolice = true;
-                break;
-            case 'trader_combat':
-                enemyData.name = 'Hostile Trader';
-                enemyData.rank = 'C';
-                enemyData.health = 150;
-                enemyData.damage = 25;
-                enemyData.credits = 500;
-                enemyData.statusEffects = ['Combat Ready'];
-                break;
-            case 'bounty_hunter':
-                enemyData.name = 'Bounty Hunter';
-                enemyData.rank = 'A';
-                enemyData.health = 200;
-                enemyData.damage = 30;
-                enemyData.credits = 1000;
-                enemyData.statusEffects = ['Tracking', 'Combat Ready'];
-                break;
-            default:
-                enemyData.name = 'Unknown Threat';
-                enemyData.rank = 'D';
-                enemyData.health = 100;
-                enemyData.damage = 10;
-        }
-
-        setCurrentEnemy(enemyData);
-
-        // Add floating message with appropriate prefix
-        const prefix =
-            {
-                quantum_processor_limit: 'Quantum Regulation Unit: ',
-                ILLEGAL_AI_increase: 'Compliance Officer: ',
-                random_inspection: 'Market Inspector: ',
-                trader_combat: 'Hostile Trader: ',
-                bounty_hunter: 'Bounty Hunter: ',
-            }[encounterType] || 'Alert: ';
-
-        addFloatingMessage(
-            `${prefix}${ev.dialog?.text || 'Enemy encountered!'}${
-                ev.dialog?.cost ? ' Cost: ' + ev.dialog.cost : ''
-            }`
-        );
-    };
-
     // Helper: Get volatility from event effect
     function getEventVolatility(event) {
         if (!event || !event.effect) return null;
@@ -2430,86 +2461,6 @@ export const MarketplaceProvider = ({ children }) => {
         }
         return null;
     }
-
-    // ----- CHEATS -----
-    // debug helpers for bypass gameplay
-    // cheat - add credits
-    // setCredits(defaultCredits);
-    // cheat - add quantum processors
-    const addQuantumProcessors = (amount) => {
-        if (amount <= 0) return;
-
-        setInventory((inv) => {
-            const existing = inv.find((i) => i.name === 'Quantum Processor');
-            const currentQty = existing ? existing.quantity || 0 : 0;
-            const qpDef = items.find((i) => i.name === 'Quantum Processor');
-            if (!qpDef) return inv; // Defensive
-
-            const newInv = existing
-                ? inv.map((i) =>
-                      i.name === 'Quantum Processor'
-                          ? { ...qpDef, ...i, quantity: currentQty + amount }
-                          : i
-                  )
-                : [...inv, { ...qpDef, quantity: amount }];
-
-            return newInv;
-        });
-    };
-
-    // Remove quantum processors from inventory
-    const subtractQuantumProcessor = (amount = 1) => {
-        return new Promise((resolve) => {
-            setInventory((inv) => {
-                const existingIndex = inv.findIndex((i) => i.name === 'Quantum Processor');
-                if (existingIndex === -1) {
-                    resolve(false);
-                    return inv;
-                }
-
-                const existing = inv[existingIndex];
-                if (existing.quantity < amount) {
-                    resolve(false);
-                    return inv;
-                }
-
-                const newQuantity = existing.quantity - amount;
-
-                if (newQuantity > 0) {
-                    // Update quantity if there are still processors left
-                    const newInv = [...inv];
-                    newInv[existingIndex] = {
-                        ...existing,
-                        quantity: newQuantity,
-                    };
-                    // Use setTimeout to ensure state is updated before resolving
-                    setTimeout(() => resolve(true), 0);
-                    return newInv;
-                } else {
-                    // Remove the item if no processors left
-                    const newInv = inv.filter((_, i) => i !== existingIndex);
-                    setTimeout(() => resolve(true), 0);
-                    return newInv;
-                }
-            });
-        }).catch((error) => {
-            console.error('Error in subtractQuantumProcessor:', error);
-            return false;
-        });
-    };
-
-    // Initialize quantum abilities - this effect only runs once on mount
-    useEffect(() => {
-        // Initialize with no abilities - they'll be added through player interaction
-        setQuantumInventory([]);
-    }, []); // Empty dependency array means this runs once on mount
-
-    // cheat - reset quantum processors after removing cheater status
-    const resetQuantumProcessors = () => {
-        setInventory((inv) =>
-            inv.map((i) => (i.name === 'Quantum Processor' ? { ...i, quantity: 0 } : i))
-        );
-    };
 
     // Create buyFuel function
     const buyFuel = useCallback(
@@ -2556,66 +2507,75 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Manage status effects and their durations
     useEffect(() => {
-        const interval = setInterval(() => {
-            setStatusEffects((prev) => {
-                const now = Date.now();
-                let changed = false;
-                const updated = Object.fromEntries(
-                    Object.entries(prev).filter(([key, effect]) => {
-                        if (effect.expiresAt && effect.expiresAt <= now) {
-                            // Show floating message for expiration
-                            if (effect.type === 'fuel_cost') {
-                                addFloatingMessage(
-                                    `Fuel cost reduction from ${effect.itemName} expired.`,
-                                    'global',
-                                    'fuel-cost'
-                                );
-                            } else if (
-                                [
-                                    'tool_receiver',
-                                    'tool_reverter',
-                                    'translate_CHIK',
-                                    'translate_LAY',
-                                ].includes(effect.type)
-                            ) {
-                                addFloatingMessage(
-                                    `${effect.type.replace('_', ' ')} expired.`,
-                                    'global'
-                                );
-                            }
-                            changed = true;
-                            return false; // Remove expired
-                        }
-                        return true;
-                    })
-                );
-                return changed ? updated : prev;
-            });
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+        let mounted = true;
 
-    // Update remainingTime for all statusEffects with duration every second
-    useEffect(() => {
-        const interval = setInterval(() => {
+        const checkStatusEffects = () => {
+            if (!mounted) return;
+
             setStatusEffects((prev) => {
                 const now = Date.now();
                 let changed = false;
-                const updated = Object.fromEntries(
-                    Object.entries(prev).map(([key, effect]) => {
-                        if (effect.duration && effect.expiresAt) {
-                            const newRemaining = Math.max(0, effect.expiresAt - now);
-                            if (effect.remainingTime !== newRemaining) changed = true;
-                            return [key, { ...effect, remainingTime: newRemaining }];
+                const updated = {};
+
+                // First, check which effects need to be removed
+                const effectsToRemove = [];
+
+                Object.entries(prev).forEach(([key, effect]) => {
+                    if (effect.expiresAt && effect.expiresAt <= now) {
+                        effectsToRemove.push({ key, effect });
+                        changed = true;
+                    } else {
+                        updated[key] = effect;
+                    }
+                });
+
+                // If no changes, return previous state to prevent re-renders
+                if (!changed) return prev;
+
+                // Process effects to be removed
+                effectsToRemove.forEach(({ key, effect }) => {
+                    if (effect.type === 'fuel_cost') {
+                        addFloatingMessage(
+                            `Fuel cost reduction from ${effect.itemName} expired.`,
+                            'global',
+                            'fuel-cost'
+                        );
+                    } else if (
+                        [
+                            'tool_receiver',
+                            'tool_reverter',
+                            'translate_CHIK',
+                            'translate_LAY',
+                        ].includes(effect.type)
+                    ) {
+                        addFloatingMessage(`${effect.type.replace('_', ' ')} expired.`, 'global');
+                    }
+                });
+
+                // Update remaining time for active effects
+                Object.entries(updated).forEach(([key, effect]) => {
+                    if (effect.expiresAt) {
+                        const newRemaining = Math.max(0, effect.expiresAt - now);
+                        if (effect.remainingTime !== newRemaining) {
+                            changed = true;
+                            updated[key] = { ...effect, remainingTime: newRemaining };
                         }
-                        return [key, effect];
-                    })
-                );
+                    }
+                });
+
                 return changed ? updated : prev;
             });
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+        };
+
+        // Run immediately and then every second
+        checkStatusEffects();
+        const interval = setInterval(checkStatusEffects, 1000);
+
+        return () => {
+            clearInterval(interval);
+            mounted = false;
+        };
+    }, [addFloatingMessage]);
 
     // DELIVERY PROCESSING EFFECT
     useEffect(() => {
@@ -2657,16 +2617,44 @@ export const MarketplaceProvider = ({ children }) => {
         }, 100);
 
         return () => clearInterval(interval);
-    }, [deliveryQueue]);
+    }, [deliveryQueue, items]);
 
-    // Only tick priceTick every GLOBAL_TICK_MS
+    // Track the latest itemTickMeta with a ref to avoid dependency issues
+    const itemTickMetaRef = useRef(itemTickMeta);
+
+    // Keep the ref in sync with state
     useEffect(() => {
-        const interval = setInterval(() => {
-            setPriceTick(Date.now());
-        }, GLOBAL_TICK_MS);
-        return () => clearInterval(interval);
+        itemTickMetaRef.current = itemTickMeta;
+    }, [itemTickMeta]);
+
+    // Only tick priceTick periodically; guard inside with GLOBAL_TICK_MS
+    const lastTickRef = useRef(0);
+    const tickIntervalRef = useRef();
+
+    useEffect(() => {
+        const tick = () => {
+            const now = Date.now();
+            // Only update if GLOBAL_TICK_MS has actually passed
+            if (now - lastTickRef.current >= GLOBAL_TICK_MS) {
+                lastTickRef.current = now;
+                setPriceTick(now);
+            }
+        };
+
+        // Initial tick
+        tick();
+
+        // Set up interval for subsequent ticks using GLOBAL_TICK_MS cadence
+        tickIntervalRef.current = setInterval(tick, GLOBAL_TICK_MS);
+
+        return () => {
+            if (tickIntervalRef.current) {
+                clearInterval(tickIntervalRef.current);
+            }
+        };
     }, []);
 
+    // Only update traders/prices when priceTick changes
     // Only update traders/prices when priceTick changes, not on every render
     useEffect(() => {
         const now = Date.now();
@@ -2780,10 +2768,7 @@ export const MarketplaceProvider = ({ children }) => {
             quantumPower,
             setQuantumInventory,
             checkQuantumTradeDelay,
-            updateLastQuantumTradeTime,
-            setQuantumProcessors,
-            setQuantumPower,
-            updateQuantumProcessors, // Add updateQuantumProcessors to quantumState
+            // Quantum state is now managed by QuantumContext
         };
 
         return {
@@ -2820,8 +2805,6 @@ export const MarketplaceProvider = ({ children }) => {
             // Game mechanics
             stealthActive,
             shieldActive,
-            isCheater,
-            setIsCheater,
             deliveryQueue,
             tradeHistory,
             priceHistory,
@@ -2865,7 +2848,7 @@ export const MarketplaceProvider = ({ children }) => {
             setGameCompleted,
             setTraderMessage,
             setVolume,
-            updateQuantumProcessors, // Add to dependencies array
+            // Quantum state is now managed by QuantumContext
             setRecordTimes: () => {},
             setPurchaseHistory: () => {},
 
@@ -2935,7 +2918,7 @@ export const MarketplaceProvider = ({ children }) => {
 
                 // Update AI level if specified
                 if (savedState.aiLevel !== undefined) {
-                    setimprovedAILevel(savedState.aiLevel);
+                    setImprovedAILevel(savedState.aiLevel);
                 }
 
                 // Mark as initialized
@@ -2949,7 +2932,8 @@ export const MarketplaceProvider = ({ children }) => {
         };
     }, [
         // State dependencies
-        checkQuantumTradeDelay,
+        buyFuel,
+
         handleBuyAll,
         handleBuyClick,
         handleNextTrader,
@@ -2957,12 +2941,16 @@ export const MarketplaceProvider = ({ children }) => {
         handleSellAll,
         handleSellClick,
         handleUseItem,
+        setStatusEffects,
+        setCredits,
+        setGameCompleted,
+        setTraderMessage,
+        setVolume,
         toggleQuantumAbilities,
         toggleShield,
         toggleStealth,
         travelToGalaxy,
-        updateLastQuantumTradeTime,
-        buyFuel,
+        setImprovedAILevel,
         credits,
         items,
         inventory,
@@ -2971,6 +2959,8 @@ export const MarketplaceProvider = ({ children }) => {
         fuelPrices,
         currentEnemy,
         currentGameEvent,
+        currentGalaxy,
+        showStarMap,
         gameCompleted,
         inTravel,
         isJumping,
@@ -2985,8 +2975,6 @@ export const MarketplaceProvider = ({ children }) => {
         displayCells,
         stealthActive,
         shieldActive,
-        isCheater,
-        setIsCheater,
         deliveryQueue,
         tradeHistory,
         priceHistory,
@@ -3003,19 +2991,13 @@ export const MarketplaceProvider = ({ children }) => {
         volumeRef,
         quantumSlotsUsed,
         quantumInventory,
+        updateQuantumProcessors,
         quantumPower,
         quantumProcessors,
-        setimprovedAILevel,
-        setQuantumProcessors,
-        updateQuantumProcessors,
-        setQuantumInventory,
-        setStatusEffects,
-        setCredits,
-        setGameCompleted,
-        setTraderMessage,
-        setVolume,
+        checkQuantumTradeDelay,
         canQuantumBuy,
         canQuantumSell,
+        updateLastQuantumTradeTime,
     ]);
 
     // Compute derived values
@@ -3104,7 +3086,6 @@ export const MarketplaceProvider = ({ children }) => {
             setCredits,
             setHealth,
             setFuel,
-            setIsCheater,
             setCurrentEnemy,
             setGameCompleted,
             setInTravel,
@@ -3172,9 +3153,9 @@ export const MarketplaceProvider = ({ children }) => {
             triggerRandomMarketEvent: () => {},
             setRecordTimes: () => {},
             setPurchaseHistory: () => {},
-            updateQuantumProcessors,
-            canQuantumBuy,
-            canQuantumSell,
+            // Quantum state is now managed by QuantumContext
+            canQuantumBuy: () => false,
+            canQuantumSell: () => false,
         }),
         [
             // Dependencies array
@@ -3239,8 +3220,12 @@ export const MarketplaceProvider = ({ children }) => {
             setShowOnboarding,
             showStarMap,
             setShowStarMap,
-            canQuantumBuy,
-            canQuantumSell,
+            addQuantumAbility,
+            currentGalaxy,
+            quantumPower,
+            removeQuantumAbility,
+            toggleQuantumAbilities,
+            toggleQuantumScan,
         ]
     );
 

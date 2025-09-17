@@ -6,7 +6,7 @@ export const AILevelProvider = ({ children }) => {
     const [sortMode, setSortMode] = useState(null);
     const [sortAsc, setSortAsc] = useState(true);
     const [courierDrones, setCourierDrones] = useState(0);
-    const [improvedAILevel, setimprovedAILevel] = useState(10);
+    const [improvedAILevel, setImprovedAILevel] = useState(10);
     const [activeEvent, setActiveEvent] = useState(null);
 
     const handleSort = useCallback(
@@ -54,7 +54,7 @@ export const AILevelProvider = ({ children }) => {
                 sortMode,
                 sortAsc,
                 setCourierDrones,
-                setimprovedAILevel,
+                setImprovedAILevel,
                 aiTier,
                 // Show a random event
                 showEvent: (eventData) => {

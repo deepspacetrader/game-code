@@ -3,6 +3,7 @@ import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
 import { useEventContext } from '../../context/EventContext';
 import { useStatusEffects } from '../../context/StatusEffectsContext';
+import { useQuantum } from '../../context/QuantumContext';
 import { zzfx } from 'zzfx';
 import { Danger, DANGER_TYPES } from '../Reusable/Danger';
 import { ENEMY_TYPES } from '../Reusable/Enemy';
@@ -21,14 +22,19 @@ const AdminDebug = () => {
         maxHealth,
         volumeRef,
         setDeliverySpeed,
-        quantumProcessors: currentQPs = 0,
-        updateQuantumProcessors,
-        quantumInventory = [],
+        inventory,
+        setInventory,
         isCheater: contextIsCheater,
         setIsCheater,
         setCurrentEnemy,
         setCurrentGameEvent,
+        items,
     } = useMarketplace();
+
+    const { quantumProcessors: currentQPs = 0, updateQuantumProcessors } = useQuantum();
+
+    // Find the quantum processor item definition
+    const qpDef = useMemo(() => items.find((i) => i.name === 'Quantum Processor'), [items]);
 
     const { triggerRandomMajorEvent } = useEventContext();
     const { addStatEffect } = useStatusEffects();
@@ -64,8 +70,10 @@ const AdminDebug = () => {
         }
     }, [triggerRandomMajorEvent, setCurrentGameEvent]);
 
-    // Ensure quantumInventory is an array
-    const safeQuantumInventory = Array.isArray(quantumInventory) ? quantumInventory : [];
+    // Get quantum processors from inventory
+    const safeQuantumInventory = useMemo(() => {
+        return inventory.filter((item) => item.name === 'Quantum Processor');
+    }, [inventory]);
 
     const [creditAmount, setCreditAmount] = useState(10000000);
     const [qpAmount, setQPAmount] = useState(1);
@@ -142,24 +150,45 @@ const AdminDebug = () => {
             alert('Failed to reset QPs: updateQuantumProcessors is not available');
             return;
         }
-        updateQuantumProcessors(0);
-    }, [updateQuantumProcessors]);
+
+        // Update the inventory to remove all quantum processors
+        setInventory((prevInv) => {
+            return prevInv.filter((item) => item.name !== 'Quantum Processor');
+        });
+
+        // Also update the quantum processor count in QuantumContext
+        updateQuantumProcessors(0, [], []);
+    }, [updateQuantumProcessors, setInventory]);
 
     // Handle adding quantum processors
     const handleAddQPs = useCallback(() => {
         try {
-            if (!updateQuantumProcessors) {
-                console.error('updateQuantumProcessors function is not available');
-                alert('Failed to add QPs: updateQuantumProcessors is not available');
+            if (!updateQuantumProcessors || !qpDef) {
+                console.error('Required functions or item definition not available');
+                alert('Failed to add QPs: System not properly initialized');
                 return;
             }
 
             const currentCount = currentQPs || 0;
             const newCount = currentCount + qpAmount;
 
-            // Add the processors - the updateQuantumProcessors function will handle updating the count
-            // Quantum abilities will be added when the player interacts with quantum slots
-            updateQuantumProcessors(newCount);
+            // Update the inventory to add the new quantum processors
+            setInventory((prevInv) => {
+                const existingQPs = prevInv.find((item) => item.name === 'Quantum Processor');
+
+                if (existingQPs) {
+                    return prevInv.map((item) =>
+                        item.name === 'Quantum Processor'
+                            ? { ...item, quantity: (item.quantity || 0) + qpAmount }
+                            : item
+                    );
+                } else {
+                    return [...prevInv, { ...qpDef, quantity: qpAmount }];
+                }
+            });
+
+            // Also update the quantum processor count in QuantumContext
+            updateQuantumProcessors(newCount, [], []);
         } catch (error) {
             console.error('Error adding QPs:', error);
             alert(`Failed to add QPs: ${error.message}`);

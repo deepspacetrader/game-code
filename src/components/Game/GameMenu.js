@@ -24,7 +24,7 @@ const GameMenu = () => {
         setIsCheater,
         setShowOnboarding,
     } = useMarketplace();
-    const { setimprovedAILevel } = useAILevel();
+    const { setImprovedAILevel } = useAILevel();
 
     useEffect(() => {
         // Check for saved game on component mount
@@ -122,7 +122,7 @@ const GameMenu = () => {
                     if (gameState.quantumProcessors !== undefined)
                         setQuantumProcessors(Number(gameState.quantumProcessors) || 0);
                     if (gameState.aiLevel !== undefined)
-                        setimprovedAILevel(Number(gameState.aiLevel) || 0);
+                        setImprovedAILevel(Number(gameState.aiLevel) || 0);
 
                     // Small delay to ensure state is updated before traveling
                     await new Promise((resolve) => setTimeout(resolve, 100));
