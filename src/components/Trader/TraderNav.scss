@@ -235,8 +235,6 @@
         transform-origin: top center;
         overflow: hidden;
     }
-
-
 }
 
 .trader-buttons {
@@ -348,6 +346,9 @@
         border: 1px solid transparent;
         border-radius: 4px;
         transition: all 0.3s ease;
+        &:hover {
+            cursor: default;
+        }
     }
 
     button {
@@ -1402,8 +1403,10 @@
 
 .trader-count {
     font-size: 60%;
+    &:hover {
+        cursor: default;
+    }
 }
-
 
 .trader-message {
     bottom: 0;
@@ -1611,8 +1614,8 @@
     }
 }
 
-.inventory.grid .cell{
-    &:hover{
+.inventory.grid .cell {
+    &:hover {
         cursor: default;
     }
 }
@@ -1660,7 +1663,7 @@
 }
 
 .inventory-content .item-image-bg {
-    &:hover{
+    &:hover {
         cursor: help;
     }
 }
@@ -2136,8 +2139,6 @@
     }
 }
 
-
-
 .pl-positive {
     color: var(--accent);
     margin-left: 4px;
@@ -2165,4 +2166,3 @@
     text-align: center;
     opacity: 0.8;
 }
-

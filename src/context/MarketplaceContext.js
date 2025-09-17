@@ -8,7 +8,7 @@ import React, {
     useCallback,
 } from 'react';
 import itemsData from '../data/items.json';
-import randomEvents from '../data/random-events.json';
+import breakingNews from '../data/breaking-news.json';
 import tradersData from '../data/traders.json';
 import galaxiesData from '../data/galaxies.json';
 import traderMessagesData from '../data/trader-messages.json';
@@ -42,7 +42,7 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Load game data - these are static imports, so we don't need dependency arrays
     const traderConfigs = useMemo(() => tradersData?.traders || [], []);
-    const eventsList = useMemo(() => (randomEvents?.events || []).map((e) => e || {}), []);
+    const eventsList = useMemo(() => (breakingNews?.events || []).map((e) => e || {}), []);
     const items = useMemo(() => itemsData?.items || [], []);
 
     // Core game state

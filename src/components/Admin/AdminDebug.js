@@ -28,25 +28,42 @@ const AdminDebug = () => {
         isCheater: contextIsCheater,
         setIsCheater,
         setCurrentEnemy,
+        setCurrentGameEvent,
     } = useMarketplace();
 
     const { triggerRandomMajorEvent } = useEventContext();
     const { addStatEffect } = useStatusEffects();
 
     // Debug function to trigger a test event
-    const triggerTestEvent = () => {
+    const triggerTestEvent = useCallback(() => {
         try {
             if (typeof triggerRandomMajorEvent !== 'function') {
-                throw new Error('triggerRandomMajorEvent is not a function');
+                console.error('triggerRandomMajorEvent is not a function');
+                return;
             }
-            console.log('[Event] Manually triggering test event');
-            triggerRandomMajorEvent();
-            alert('Random event triggered successfully!');
+            // console.log('[Event] Manually triggering test event');
+            const event = triggerRandomMajorEvent();
+
+            // Add the event to the market news ticker without a prompt
+            if (event && setCurrentGameEvent) {
+                const eventWithEffect = {
+                    ...event,
+                    effect: {
+                        priceMultiplierRange: event.effect?.priceMultiplierRange || [1, 1],
+                        stockMultiplierRange: event.effect?.stockMultiplierRange || [1, 1],
+                        affectedItems: event.effect?.affectedItems || [],
+                    },
+                    isFromAdmin: true, // Add a flag to indicate this came from admin
+                };
+
+                // Update the current game event in the marketplace context
+                setCurrentGameEvent(eventWithEffect);
+            }
         } catch (error) {
             console.error('Error triggering random event:', error);
-            alert(`Failed to trigger random event: ${error.message}`);
+            // Don't show alert to avoid interrupting the admin experience
         }
-    };
+    }, [triggerRandomMajorEvent, setCurrentGameEvent]);
 
     // Ensure quantumInventory is an array
     const safeQuantumInventory = Array.isArray(quantumInventory) ? quantumInventory : [];
@@ -59,8 +76,7 @@ const AdminDebug = () => {
     // Handle triggering a random encounter
     const triggerRandomEncounter = useCallback(() => {
         try {
-            console.log('=== DEBUG: Starting triggerRandomEncounter ===');
-            console.log('Selected enemy type:', selectedEnemyType);
+            // console.log('Selected enemy type:', selectedEnemyType);
 
             // Find the enemy configuration from enemies.json with case-insensitive match
             const enemyConfig = enemiesData.enemies.find(
@@ -75,7 +91,7 @@ const AdminDebug = () => {
                 throw new Error(errorMsg);
             }
 
-            console.log('Found enemy config:', enemyConfig);
+            // console.log('Found enemy config:', enemyConfig);
 
             // Use exact health value from config
             const health = typeof enemyConfig.health === 'number' ? enemyConfig.health : 100;

@@ -11,7 +11,8 @@
     border-radius: 8px;
     box-shadow: 0 0 10px var(--cell-hover-shadow);
     overflow: visible;
-
+    font-weight: bold;
+    font-size: 1.337rem;
     @include mobile {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
@@ -27,6 +28,9 @@
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 10px;
         padding: 10px;
+    }
+    &:hover {
+        cursor: default;
     }
 }
 
@@ -184,11 +188,11 @@
     z-index: 105;
     font-size: 1.1em;
     font-weight: bold;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 2px #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 2px #fff;
     pointer-events: none;
     white-space: nowrap;
     opacity: 1;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
     animation: hudFloatUpFade 1.5s ease-out forwards;
 }
 

@@ -1,0 +1,64 @@
+{
+    "news": [
+        {
+            "newsEvent": 1,
+            "name": "MINING STRIKE LOOMS",
+            "description": "Asteroid miners in the Kuiper belt threaten strike action over pay disputes. Analysts warn of potential supply chain disruptions."
+        },
+        {
+            "newsEvent": 2,
+            "name": "FUEL PRICE SPIKE",
+            "description": "Unrest in the Helium-3 mining colonies causes brief panic in fuel markets. Prices expected to stabilize within the cycle."
+        },
+        {
+            "newsEvent": 3,
+            "name": "TECH BREAKTHROUGH CLAIMED",
+            "description": "NeoGen Industries announces 'revolutionary' energy efficiency module. Competitors remain skeptical until peer review."
+        },
+        {
+            "newsEvent": 4,
+            "name": "PIRATE ACTIVITY INCREASES",
+            "description": "Security forces report heightened pirate presence in sector 7-G. Traders advised to exercise caution, not panic."
+        },
+        {
+            "newsEvent": 5,
+            "name": "TRADE ROUTE DISRUPTED",
+            "description": "Navigation beacons offline in the Rigel system. Authorities promise swift resolution to the technical issues."
+        },
+        {
+            "newsEvent": 6,
+            "name": "NEW MINERAL DEPOSITS FOUND",
+            "description": "Prospectors discover promising asteroid field. Market analysts predict minimal impact on current commodity prices."
+        },
+        {
+            "newsEvent": 7,
+            "name": "AI TRADING GLITCH",
+            "description": "Minor irregularities detected in automated trading algorithms. Exchange officials assure markets remain stable."
+        },
+        {
+            "newsEvent": 8,
+            "name": "SHIPYARD STRIKE ENDS",
+            "description": "Labor dispute at Titan Shipyards resolved. Production expected to resume normal levels within standard cycles."
+        },
+        {
+            "newsEvent": 9,
+            "name": "RESEARCH STATION LEAK",
+            "description": "Containment breach at deep-space lab contained. No lasting environmental impact reported."
+        },
+        {
+            "newsEvent": 10,
+            "name": "QUANTUM NETWORK OUTAGE",
+            "description": "Temporary disruption in FTL communications. Backup systems maintain critical operations during repairs."
+        },
+        {
+            "newsEvent": 11,
+            "name": "SMUGGLING RING BUSTED",
+            "description": "Customs officials intercept illegal tech shipment. Market impact expected to be negligible."
+        },
+        {
+            "newsEvent": 12,
+            "name": "WEATHER ALERT",
+            "description": "Solar flares may disrupt navigation in the outer systems. No immediate danger to shipping lanes."
+        }
+    ]
+}

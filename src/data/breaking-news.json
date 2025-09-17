@@ -10,7 +10,8 @@
                 "stockMultiplierRange": [0.9, 0.42]
             },
             "spawnEnemyType": [3, 4],
-            "dangerLevel": 8
+            "dangerLevel": 8,
+            "bearish": true
         },
         {
             "randomEventId": 2,
@@ -20,7 +21,9 @@
                 "affectedItems": [5, 5],
                 "priceMultiplierRange": [0.7, 0.7],
                 "stockMultiplierRange": [1.2, 1.2]
-            }
+            },
+            "dangerLevel": 2,
+            "bearish": true
         },
         {
             "randomEventId": 3,
@@ -31,7 +34,8 @@
                 "priceMultiplierRange": [2.0, 2.0],
                 "stockMultiplierRange": [0.3, 0.3]
             },
-            "dangerLevel": 5
+            "dangerLevel": 5,
+            "bearish": true
         },
         {
             "randomEventId": 4,
@@ -42,7 +46,8 @@
                 "priceMultiplierRange": [1.3, 1.3],
                 "stockMultiplierRange": [0.7, 0.7]
             },
-            "dangerLevel": 3
+            "dangerLevel": 3,
+            "bearish": true
         },
         {
             "randomEventId": 5,
@@ -52,7 +57,9 @@
                 "affectedItems": [14, 15],
                 "priceMultiplierRange": [1.8, 1.8],
                 "stockMultiplierRange": [0.4, 0.4]
-            }
+            },
+            "dangerLevel": 2,
+            "bearish": true
         },
         {
             "randomEventId": 6,
@@ -62,7 +69,9 @@
                 "affectedItems": [18, 19],
                 "priceMultiplierRange": [2.5, 2.5],
                 "stockMultiplierRange": [0.6, 0.6]
-            }
+            },
+            "dangerLevel": 0,
+            "bullish": true
         },
         {
             "randomEventId": 7,
@@ -72,17 +81,21 @@
                 "affectedItems": [20, 22],
                 "priceMultiplierRange": [1.6, 1.6],
                 "stockMultiplierRange": [0.5, 0.5]
-            }
+            },
+            "dangerLevel": 3,
+            "bearish": true
         },
         {
             "randomEventId": 8,
             "name": "RELIC DISCOVERY",
             "description": "Ancient alien tech found by scavengers boosts interest in exotic components.",
             "effect": {
-                "affected": [18, 25],
+                "affectedItems": [18, 25],
                 "priceMultiplierRange": [3.0, 3.0],
                 "stockMultiplierRange": [0.2, 0.2]
-            }
+            },
+            "dangerLevel": 0,
+            "bullish": true
         },
         {
             "randomEventId": 9,
@@ -93,7 +106,8 @@
                 "priceMultiplierRange": [2.2, 2.2],
                 "stockMultiplierRange": [0.3, 0.3]
             },
-            "dangerLevel": 5
+            "dangerLevel": 5,
+            "bearish": true
         },
         {
             "randomEventId": 10,
@@ -105,7 +119,8 @@
                 "stockMultiplierRange": [0.4, 0.4]
             },
             "spawnEnemyType": [1],
-            "dangerLevel": 1
+            "dangerLevel": 1,
+            "bearish": true
         },
         {
             "randomEventId": 11,
@@ -115,7 +130,9 @@
                 "affectedItems": [21, 27],
                 "priceMultiplierRange": [0.2, 1.4],
                 "stockMultiplierRange": [0.9, 1.12]
-            }
+            },
+            "dangerLevel": 0,
+            "bullish": true
         },
         {
             "randomEventId": 12,
@@ -127,7 +144,8 @@
                 "stockMultiplierRange": [1, 1.2]
             },
             "spawnEnemyType": [1],
-            "dangerLevel": 1
+            "dangerLevel": 1,
+            "bearish": true
         },
         {
             "randomEventId": 13,
@@ -137,7 +155,9 @@
                 "affectedItems": [30, 31],
                 "priceMultiplierRange": [1, 1.4],
                 "stockMultiplierRange": [2.5, 5]
-            }
+            },
+            "dangerLevel": 0,
+            "bullish": true
         },
         {
             "randomEventId": 14,
@@ -147,7 +167,9 @@
                 "affectedItems": [5, 10],
                 "priceMultiplierRange": [0.4, 0.7],
                 "stockMultiplierRange": [1.5, 20.0]
-            }
+            },
+            "dangerLevel": 0,
+            "bullish": true
         },
         {
             "randomEventId": 15,
@@ -157,7 +179,9 @@
                 "affectedItems": [7, 12, 13, 15],
                 "priceMultiplierRange": [0.2, 0.6],
                 "stockMultiplierRange": [1.13, 2.8]
-            }
+            },
+            "dangerLevel": 0,
+            "bullish": true
         },
         {
             "randomEventId": 15,
@@ -169,7 +193,8 @@
                 "stockMultiplierRange": [1.13, 2.8]
             },
             "spawnEnemyType": [2, 4],
-            "dangerLevel": 6
+            "dangerLevel": 6,
+            "bullish": true
         }
     ]
 }

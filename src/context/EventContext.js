@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useMemo } from 'react';
-import randomEventsData from '../data/random-events.json';
+import breakingNewsData from '../data/breaking-news.json';
 import galaxyEventsData from '../data/galaxy-events.json';
 import { randomInt } from '../utils/helpers';
 
@@ -11,7 +11,7 @@ export const EventProvider = ({ children }) => {
     const [eventQueue, setEventQueue] = useState([]);
 
     const galaxyEvents = useMemo(() => galaxyEventsData.galaxyEvents || [], []);
-    const randomEvents = useMemo(() => randomEventsData.events || [], []);
+    const breakingNews = useMemo(() => breakingNewsData.events || [], []);
 
     // Trigger a specific galaxy event by ID or a random one if no ID provided
     const triggerGalaxyEvent = useCallback(
@@ -42,8 +42,8 @@ export const EventProvider = ({ children }) => {
 
     // Trigger a random event from the random events pool
     const triggerRandomMajorEvent = useCallback(() => {
-        if (randomEvents.length === 0) return null;
-        const event = randomEvents[randomInt(0, randomEvents.length - 1)];
+        if (breakingNews.length === 0) return null;
+        const event = breakingNews[randomInt(0, breakingNews.length - 1)];
         const newEvent = {
             ...event,
             id: `event_${Date.now()}`,
@@ -54,7 +54,7 @@ export const EventProvider = ({ children }) => {
         setEventHistory((prev) => [newEvent, ...prev].slice(0, 10));
         setActiveEvent(newEvent);
         return newEvent;
-    }, [randomEvents]);
+    }, [breakingNews]);
 
     // Queue an event to be shown later
     const queueEvent = useCallback((event) => {

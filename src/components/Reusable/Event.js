@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
+import { useEventContext } from '../../context/EventContext';
 import { useAILevel } from '../../context/AILevelContext';
 import { randomFloatRange } from '../../utils/helpers';
 import itemsData from '../../data/items.json';
 import './Event.scss';
+
+const itemImages = require.context('../../images', false, /^\.\/item\d+\.webp$/);
 
 // Simple inline sparkline component
 const Sparkline = ({ data, width = 50, height = 20, color = '#00ff00' }) => {
@@ -48,12 +51,8 @@ const obfuscateText = (text, level) => {
 };
 
 const Event = () => {
-    const {
-        activeEvent,
-        triggerRandomMarketEvent,
-        marketData,
-        priceHistory = {},
-    } = useMarketplace();
+    const { triggerRandomMarketEvent, marketData, priceHistory = {} } = useMarketplace();
+    const { activeEvent, clearCurrentEvent } = useEventContext();
 
     const { improvedAILevel } = useAILevel();
 
@@ -206,22 +205,24 @@ const Event = () => {
         }));
     }, [marketData, priceHistory, setTrendData]);
 
-    // Auto-hide event after 10 seconds
-    useEffect(() => {
-        if (!showEvent || !displayEvent) return;
+    // Auto-hide event after 10 seconds (except for galaxy events which require acknowledge)
+    // useEffect(() => {
+    //     if (!showEvent || !displayEvent) return;
+    //     if (displayEvent?.type === 'galaxy') return; // Do not auto-hide galaxy events
 
-        const timer = setTimeout(() => {
-            console.log('[Event] Auto-hiding event');
-            setShowEvent(false);
-        }, 10000);
+    //     const timer = setTimeout(() => {
+    //         console.log('[Event] Auto-hiding event');
+    //         setShowEvent(false);
+    //         if (typeof clearCurrentEvent === 'function') clearCurrentEvent();
+    //     }, 10000);
 
-        return () => clearTimeout(timer);
-    }, [showEvent, displayEvent]);
+    //     return () => clearTimeout(timer);
+    // }, [showEvent, displayEvent, clearCurrentEvent]);
 
     // When we get a new event, update our display and apply effects
     useEffect(() => {
         if (activeEvent) {
-            console.log('[Event] New event detected:', activeEvent);
+            // console.log('[Event] New event detected:', activeEvent);
 
             // Apply the event effects to the market
             if (triggerRandomMarketEvent) {
@@ -448,31 +449,36 @@ const Event = () => {
                                 key={item.itemId}
                                 style={{
                                     display: 'flex',
-                                    justifyContent: 'space-between',
+                                    justifyContent: 'space-evenly',
                                     alignItems: 'center',
-                                    padding: '10px',
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    borderRadius: '4px',
-                                    marginBottom: '8px',
-                                    borderLeft: '3px solid #00ff00',
+                                    padding: '0.4269rem',
+                                    background: 'rgba(255, 255, 255, 0.1337)',
                                 }}
                             >
-                                <div
-                                    style={{
-                                        fontWeight: 'bold',
-                                        minWidth: '120px',
-                                    }}
-                                >
-                                    {item.name}
+                                <div className="event-image item-image-wrapper">
+                                    <span className="item-image-name">{item.name}</span>
+                                    {(() => {
+                                        if (item.itemId !== undefined) {
+                                            try {
+                                                const imageSrc = require(`../../images/item${item.itemId}.webp`);
+                                                return (
+                                                    <div
+                                                        className="item-image-bg"
+                                                        style={{
+                                                            backgroundImage: `url(${imageSrc})`,
+                                                        }}
+                                                    />
+                                                );
+                                            } catch (e) {
+                                                // Image failed to load, show fallback
+                                            }
+                                        }
+                                        // fallback visual if image is missing
+                                        return <div className="item-image-bg missing-image" />;
+                                    })()}
                                 </div>
 
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        gap: '20px',
-                                        alignItems: 'center',
-                                    }}
-                                >
+                                <div>
                                     {trendData.length > 0 && (
                                         <div style={{ width: '80px', marginRight: '10px' }}>
                                             <Sparkline
@@ -490,36 +496,23 @@ const Event = () => {
 
                                     <div
                                         style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'flex-end',
-                                            minWidth: '100px',
+                                            color:
+                                                item.priceMultiplier >= 1 ? '#4caf50' : '#f44336',
+                                            fontWeight: 'bold',
+                                            whiteSpace: 'nowrap',
                                         }}
                                     >
-                                        <div
-                                            style={{
-                                                color:
-                                                    item.priceMultiplier >= 1
-                                                        ? '#4caf50'
-                                                        : '#f44336',
-                                                fontWeight: 'bold',
-                                                whiteSpace: 'nowrap',
-                                            }}
-                                        >
-                                            PRICE: {formatMultiplier(item.priceMultiplier, true)}
-                                        </div>
-                                        <div
-                                            style={{
-                                                color:
-                                                    item.stockMultiplier >= 1
-                                                        ? '#4caf50'
-                                                        : '#f44336',
-                                                fontSize: '0.9em',
-                                                opacity: 0.8,
-                                            }}
-                                        >
-                                            STOCK: {formatMultiplier(item.stockMultiplier, true)}
-                                        </div>
+                                        PRICE: {formatMultiplier(item.priceMultiplier, true)}
+                                    </div>
+                                    <div
+                                        style={{
+                                            color:
+                                                item.stockMultiplier >= 1 ? '#4caf50' : '#f44336',
+                                            fontSize: '0.9em',
+                                            opacity: 0.8,
+                                        }}
+                                    >
+                                        STOCK: {formatMultiplier(item.stockMultiplier, true)}
                                     </div>
                                 </div>
                             </div>
@@ -548,25 +541,59 @@ const Event = () => {
         );
     };
 
+    const isGalaxy = displayEvent?.type === 'galaxy';
+
+    if (isGalaxy) {
+        // Full-screen modal for galaxy events
+        return (
+            <div
+            // style={{
+            //     position: 'fixed',
+            //     inset: 0,
+            //     background: 'rgba(0,0,0,0.85)',
+            //     zIndex: 10000,
+            //     display: 'flex',
+            //     alignItems: 'center',
+            //     justifyContent: 'center',
+            //     padding: '20px',
+            // }}
+            >
+                <div className={`event-container ${showEvent ? 'active' : ''}`}>
+                    {renderContent()}
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '12px' }}>
+                        <button
+                            onClick={() => {
+                                setShowEvent(false);
+                                if (typeof clearCurrentEvent === 'function') clearCurrentEvent();
+                            }}
+                            style={{
+                                background: '#00aa00',
+                                color: '#fff',
+                                border: '1px solid #00ff00',
+                                borderRadius: '4px',
+                                padding: '10px 18px',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px',
+                            }}
+                        >
+                            Acknowledge
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div
-            className={`event-container ${showEvent ? 'active' : ''}`}
-            style={{
-                position: 'fixed',
-                top: '20px',
-                left: '20px',
-                zIndex: 9999,
-                background: 'rgba(0, 0, 0, 0.95)',
-                border: '2px solid #00ff00',
-                borderRadius: '8px',
-                color: '#fff',
-                maxWidth: '600px',
-                boxShadow: '0 0 20px rgba(0, 255, 0, 0.5)',
-            }}
-        >
+        <div className={`event-container ${showEvent ? 'active' : ''}`}>
             <button
                 className="close-button"
-                onClick={() => setShowEvent(false)}
+                onClick={() => {
+                    setShowEvent(false);
+                    if (typeof clearCurrentEvent === 'function') clearCurrentEvent();
+                }}
                 style={{
                     position: 'absolute',
                     top: '10px',

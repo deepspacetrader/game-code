@@ -7,6 +7,8 @@ import QuantumHover from '../Quantum/QuantumHover';
 import QuantumScan from '../Quantum/QuantumScan';
 import Event from '../Reusable/Event';
 import MarketNews from '../Market/MarketNews';
+import MarketBreakingNews from '../Market/MarketBreakingNews';
+
 import QuantumMarket from '../Quantum/QuantumMarket';
 import '../PlayerHUD.scss';
 
@@ -110,7 +112,12 @@ const TradingArea = () => {
                     statusEffects={statusEffects}
                 />
 
-                {improvedAILevel > 100 && <MarketNews />}
+                {improvedAILevel > 100 && (
+                    <>
+                        <MarketBreakingNews />
+                        <MarketNews />
+                    </>
+                )}
 
                 <Event />
                 {/* {improvedAILevel >= 25 && } */}
