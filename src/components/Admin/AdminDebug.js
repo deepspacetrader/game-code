@@ -5,7 +5,6 @@ import { useEventContext } from '../../context/EventContext';
 import { useStatusEffects } from '../../context/StatusEffectsContext';
 import { zzfx } from 'zzfx';
 import { Danger, DANGER_TYPES } from '../Reusable/Danger';
-import Event from '../Reusable/Event';
 import { ENEMY_TYPES } from '../Reusable/Enemy';
 import enemiesData from '../../data/enemies.json';
 import { encryptData, decryptData } from '../../utils/encryption';
@@ -343,7 +342,7 @@ const AdminDebug = () => {
                             onClick={triggerRandomEncounter}
                             style={{ marginTop: '10px' }}
                         >
-                            Trigger Random Encounter
+                            Trigger Enemy Encounter
                         </button>
                     </div>
 
@@ -383,6 +382,18 @@ const AdminDebug = () => {
                     </div>
 
                     <div className="form-group">
+                        <div className="input-group">
+                            <button
+                                onClick={triggerTestEvent}
+                                className="admin-button"
+                                style={{ marginTop: '10px' }}
+                            >
+                                Trigger Random Event
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
                         <label>Delivery Speed (Courier Drones)</label>
                         <div className="input-group">
                             <input
@@ -414,22 +425,6 @@ const AdminDebug = () => {
                             >
                                 {deliverySpeedOverride === courierDrones ? 'Current' : 'Set'}
                             </button>
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Event System</label>
-                        <div className="input-group">
-                            <button onClick={triggerTestEvent} className="btn btn-warning">
-                                Trigger Random Event
-                            </button>
-                            <Event />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Danger Tester</label>
-                        <div className="danger-buttons">
                             {Object.keys(DANGER_TYPES).map((type) => (
                                 <button key={type} onClick={() => handleDangerTrigger(type)}>
                                     {type.replace('_', ' ')}

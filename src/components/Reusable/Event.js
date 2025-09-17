@@ -205,19 +205,33 @@ const Event = () => {
         }));
     }, [marketData, priceHistory, setTrendData]);
 
-    // Auto-hide event after 10 seconds (except for galaxy events which require acknowledge)
-    // useEffect(() => {
-    //     if (!showEvent || !displayEvent) return;
-    //     if (displayEvent?.type === 'galaxy') return; // Do not auto-hide galaxy events
+    // Auto-hide event after 30 seconds (except for galaxy events which require acknowledge)
+    useEffect(() => {
+        if (!showEvent || !displayEvent) return;
+        if (displayEvent?.type === 'galaxy') return; // Do not auto-hide galaxy events
 
-    //     const timer = setTimeout(() => {
-    //         console.log('[Event] Auto-hiding event');
-    //         setShowEvent(false);
-    //         if (typeof clearCurrentEvent === 'function') clearCurrentEvent();
-    //     }, 10000);
+        const timer = setTimeout(() => {
+            console.log('[Event] Auto-hiding event');
+            setShowEvent(false);
+            if (typeof clearCurrentEvent === 'function') clearCurrentEvent();
+        }, 30000);
 
-    //     return () => clearTimeout(timer);
-    // }, [showEvent, displayEvent, clearCurrentEvent]);
+        return () => clearTimeout(timer);
+    }, [showEvent, displayEvent, clearCurrentEvent]);
+
+    // Single effect to handle new events
+    useEffect(() => {
+        if (activeEvent && !displayEvent) {
+            // Only set displayEvent if it's not already set
+            setDisplayEvent(activeEvent);
+            setShowEvent(true);
+
+            // Apply the event effects to the market
+            if (triggerRandomMarketEvent) {
+                triggerRandomMarketEvent(activeEvent);
+            }
+        }
+    }, [activeEvent, displayEvent, triggerRandomMarketEvent]);
 
     // When we get a new event, update our display and apply effects
     useEffect(() => {
