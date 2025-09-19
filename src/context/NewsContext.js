@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import breakingNews from '../data/breaking-news.json';
 
-const NewsContext = createContext();
+export const NewsContext = createContext();
 
 export const NewsProvider = ({ children }) => {
     // News and events state

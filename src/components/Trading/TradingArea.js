@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
+import { useQuantum } from '../../context/QuantumContext';
 import { useAILevel } from '../../context/AILevelContext';
 import MarketGrid from '../Market/MarketGrid';
 import MarketSummary from '../Market/MarketSummary';
@@ -26,12 +27,13 @@ const TradingArea = () => {
         handleSellClick,
         handleSellAll,
         deliveryQueue,
-        quantumInventory = [],
         updateLastQuantumTradeTime,
-        quantumPower,
         credits,
         setStatusEffects,
     } = useMarketplace();
+
+    // Source quantum state from QuantumContext to avoid desync with MarketplaceContext
+    const { quantumInventory = [], quantumPower } = useQuantum();
 
     const { improvedAILevel } = useAILevel();
 

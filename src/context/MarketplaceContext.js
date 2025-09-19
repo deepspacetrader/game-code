@@ -15,7 +15,7 @@ import { randomInt, shuffle, randomFloatRange } from '../utils/helpers';
 import { useAILevel } from './AILevelContext';
 import { zzfx } from 'zzfx';
 import { MAX_FUEL } from '../utils/constants';
-import { useQuantum } from './QuantumContext';
+// Note: Do NOT import useQuantum here to avoid provider cycle; QuantumContext depends on MarketplaceContext
 import { useNews } from './NewsContext';
 import { useEventContext } from './EventContext';
 const MarketplaceContext = createContext();
@@ -32,14 +32,7 @@ export const MarketplaceProvider = ({ children }) => {
     // Hooks and context
     const { setImprovedAILevel, courierDrones, setCourierDrones, sortMode, sortAsc, handleSort } =
         useAILevel();
-    const {
-        updateQuantumProcessors,
-        getTotalQuantumProcessors,
-        checkQuantumTradeDelay,
-        updateLastQuantumTradeTime,
-        addQuantumProcessors,
-        subtractQuantumProcessor,
-    } = useQuantum();
+    // Quantum helpers implemented locally to avoid depending on QuantumContext
     const { addFloatingMessage } = useNews();
     const { currentGameEvent, setCurrentGameEvent, eventsList } = useEventContext();
 
@@ -142,6 +135,68 @@ export const MarketplaceProvider = ({ children }) => {
     const [quantumSlotsUsed, setQuantumSlotsUsed] = useState(0);
     const [lastQuantumTradeTime, setLastQuantumTradeTime] = useState(0);
     const [quantumProcessors, setQuantumProcessors] = useState(0);
+
+    // --- Local quantum helpers (avoid depending on QuantumContext to prevent provider cycle) ---
+    const getTotalQuantumProcessors = useCallback(
+        (inv = inventory, slots = quantumSlotsUsed) => {
+            const qp = inv?.find((i) => i?.name === 'Quantum Processor');
+            return (qp ? qp.quantity : 0) + (slots || 0);
+        },
+        [inventory, quantumSlotsUsed]
+    );
+
+    const addQuantumProcessors = useCallback(
+        (count, inv = inventory) => {
+            if (!inv) return inv;
+            const newInventory = [...inv];
+            const qpIndex = newInventory.findIndex((i) => i?.name === 'Quantum Processor');
+            if (qpIndex >= 0) {
+                newInventory[qpIndex] = {
+                    ...newInventory[qpIndex],
+                    quantity: (newInventory[qpIndex].quantity || 0) + count,
+                };
+            } else {
+                newInventory.push({ name: 'Quantum Processor', quantity: count, price: 0 });
+            }
+            setInventory(newInventory);
+            return newInventory;
+        },
+        [inventory]
+    );
+
+    const subtractQuantumProcessor = useCallback(
+        async (amount, inv = inventory) => {
+            if (!inv) return false;
+            const qpIndex = inv.findIndex((i) => i && i.name === 'Quantum Processor');
+            if (qpIndex < 0) return false;
+            const currentQPs = inv[qpIndex].quantity || 0;
+            if (currentQPs < amount) return false;
+            const newQuantity = Math.max(0, currentQPs - amount);
+            setInventory((prevInv) => {
+                const updatedInv = [...prevInv];
+                const idx = updatedInv.findIndex((i) => i && i.name === 'Quantum Processor');
+                if (idx >= 0) {
+                    if (newQuantity > 0) {
+                        updatedInv[idx] = { ...updatedInv[idx], quantity: newQuantity };
+                    } else {
+                        updatedInv.splice(idx, 1);
+                    }
+                }
+                return updatedInv;
+            });
+            return true;
+        },
+        [inventory]
+    );
+
+    const updateLastQuantumTradeTime = useCallback(() => {
+        setLastQuantumTradeTime(Date.now());
+    }, []);
+
+    const checkQuantumTradeDelay = useCallback(
+        (minDelayMs = 1000) => Date.now() - lastQuantumTradeTime >= minDelayMs,
+        [lastQuantumTradeTime]
+    );
 
     // Add a quantum ability to the inventory
     const addQuantumAbility = useCallback((ability) => {
@@ -2884,8 +2939,6 @@ export const MarketplaceProvider = ({ children }) => {
             // Empty function implementations for backward compatibility
 
             triggerEnemyEncounter: () => {},
-            addQuantumProcessors,
-            updateQuantumProcessors,
             initializeGameState: async (savedState) => {
                 console.log('Initializing game state with:', savedState);
 
@@ -2991,13 +3044,13 @@ export const MarketplaceProvider = ({ children }) => {
         volumeRef,
         quantumSlotsUsed,
         quantumInventory,
-        updateQuantumProcessors,
         quantumPower,
         quantumProcessors,
         checkQuantumTradeDelay,
         canQuantumBuy,
         canQuantumSell,
         updateLastQuantumTradeTime,
+        addQuantumProcessors,
     ]);
 
     // Compute derived values
@@ -3149,7 +3202,6 @@ export const MarketplaceProvider = ({ children }) => {
             // Placeholder functions for backward compatibility
             onBuyAll: () => {},
             resetQuantumProcessors: () => {},
-            subtractQuantumProcessor,
             triggerRandomMarketEvent: () => {},
             setRecordTimes: () => {},
             setPurchaseHistory: () => {},

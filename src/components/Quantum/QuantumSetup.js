@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
+import { useQuantum } from '../../context/QuantumContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { randomFloatRange } from '../../utils/helpers';
 import { zzfx } from 'zzfx';
@@ -16,17 +17,16 @@ import {
 import './QuantumSetup.scss';
 
 const QuantumSetup = ({ setStatusEffects }) => {
+    const { inventory, volumeRef } = useMarketplace();
     const {
-        inventory,
         quantumInventory,
         subtractQuantumProcessor,
         quantumPower,
         setQuantumSlotsUsed,
         setQuantumPower,
         toggleQuantumAbilities,
-        volumeRef,
         addQuantumAbility,
-    } = useMarketplace();
+    } = useQuantum();
     const quantumProcessor = inventory.find((i) => i.name === 'Quantum Processor');
     const quantumCount = quantumProcessor?.quantity || 0;
     const slotsCount = 6;

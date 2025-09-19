@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
+import { useQuantum } from '../../context/QuantumContext';
 import './QuantumMarket.scss';
 
 // Helper to calculate auto-trade interval based on AI level
@@ -51,17 +52,25 @@ const QuantumMarket = ({
     const handleBuyClick =
         handleBuyClickProp !== undefined ? handleBuyClickProp : handleBuyClickCtx;
     const handleSellAll = handleSellAllProp !== undefined ? handleSellAllProp : handleSellAllCtx;
+    // Prefer props, else fall back to QuantumContext, then MarketplaceContext (legacy)
+    const { quantumInventory: quantumInventoryQCtx = [], quantumPower: quantumPowerQCtx } = useQuantum();
     const quantumInventory =
-        quantumInventoryProp !== undefined ? quantumInventoryProp : quantumInventoryCtx;
+        quantumInventoryProp !== undefined
+            ? quantumInventoryProp
+            : (quantumInventoryQCtx && quantumInventoryQCtx.length >= 0
+                  ? quantumInventoryQCtx
+                  : quantumInventoryCtx);
     const improvedAILevel =
         improvedAILevelProp !== undefined ? improvedAILevelProp : improvedAILevelCtx;
+    // quantumPower can be passed as prop, else from QuantumContext
+    const quantumPowerEffective = quantumPower !== undefined ? quantumPower : !!quantumPowerQCtx;
 
     // Get courierDrones (delivery speed boost) from context
     const courierDrones = typeof courierDronesCtx === 'number' ? courierDronesCtx : 0;
-    const itemsList = itemsCtx || [];
+    const itemsList = useMemo(() => itemsCtx || [], [itemsCtx]);
 
     // Check if QuantumMarket is unlocked and quantumPower is enabled
-    const isUnlocked = quantumInventory.includes('QuantumMarket') && quantumPower;
+    const isUnlocked = quantumInventory.includes('QuantumMarket') && quantumPowerEffective;
 
     // Determine AI tier for styling
     let aiTier = 'zero';
@@ -266,6 +275,16 @@ const QuantumMarket = ({
         displayCells,
         minTakeProfit,
     ]);
+
+    // Execute Trade: performs a quick sell then buy once (used by QuantumContext automation)
+    const executeTrade = useCallback(() => {
+        if (!isUnlocked) return;
+        // Attempt to sell first; then buy
+        qSell();
+        setTimeout(() => {
+            qBuy();
+        }, 50);
+    }, [isUnlocked, qSell, qBuy]);
 
     // Q-Sell: pure function for auto-trader (liquidate only enough to meet minTakeProfit)
     const qSellAuto = useCallback(
@@ -505,6 +524,15 @@ const QuantumMarket = ({
                     {isAutoTrading ? 'Stop Auto-Trading' : 'Start Auto-Trading'}
                 </button>
 
+                {/* Execute Trade button for QuantumContext automation hooks */}
+                <button
+                    className="execute-trade"
+                    onClick={executeTrade}
+                    style={{ marginLeft: 8 }}
+                >
+                    Execute Trade
+                </button>
+
                 <div className="manual-controls">
                     <button
                         className={`ai-tier-${aiTier} quantum-btn${
@@ -512,6 +540,7 @@ const QuantumMarket = ({
                         }`}
                         onClick={qBuy}
                         disabled={isAutoTrading}
+                        data-testid="q-buy-button"
                     >
                         Q-Buy
                     </button>
@@ -521,6 +550,7 @@ const QuantumMarket = ({
                         }`}
                         onClick={qSell}
                         disabled={isAutoTrading || !canSell}
+                        data-testid="q-sell-button"
                     >
                         Q-Sell
                     </button>
