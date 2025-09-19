@@ -32,13 +32,22 @@ const StarMapHigh = ({ galaxies, onSelect, improvedAILevel, onClose, currentGala
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+    const containerRef = useRef();
+
+    // Calculate galaxy bounds
     const coords = galaxies.map((g) => g.coordinates);
     const xs = coords.map((c) => c.x);
     const ys = coords.map((c) => c.y);
-    const minX = Math.min(...xs),
-        maxX = Math.max(...xs);
-    const minY = Math.min(...ys),
-        maxY = Math.max(...ys);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+
+    // Calculate center point of all galaxies
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+
+    // Calculate view parameters
     const spanX = maxX - minX || 1;
     const spanY = maxY - minY || 1;
     const padX = Math.max(200, spanX * 0.2);
@@ -47,11 +56,43 @@ const StarMapHigh = ({ galaxies, onSelect, improvedAILevel, onClose, currentGala
     const viewMinY = minY - padY;
     const viewSpanX = spanX + padX * 2;
     const viewSpanY = spanY + padY * 2;
+    // Responsive dimensions
     const width = improvedAILevel >= 100 ? '90vw' : improvedAILevel >= 75 ? '70vw' : '50vw';
     const height = improvedAILevel >= 100 ? '60vh' : improvedAILevel >= 75 ? '45vh' : '30vh';
 
-    const containerRef = useRef();
+    // Calculate initial scale and position
     const [scale, setScale] = useState(1);
+
+    // Set initial position and scale when component mounts
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const container = containerRef.current;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        // Calculate the scale needed to fit all galaxies with padding
+        const contentWidth = maxX - minX + 2 * padX;
+        const contentHeight = maxY - minY + 2 * padY;
+
+        // Calculate scale to fit both dimensions with a minimum zoom level
+        const scaleFactor = 3.0; // Significantly increased zoom factor
+        const scaleX = (containerWidth * scaleFactor) / contentWidth;
+        const scaleY = (containerHeight * scaleFactor) / contentHeight;
+        const initialScale = Math.min(scaleX, scaleY, 4.0); // Increased maximum zoom cap
+
+        setScale(initialScale);
+
+        // Calculate center of the container
+        const centerScreenX = containerWidth / 2;
+        const centerScreenY = containerHeight / 2;
+
+        // Calculate position to center the content
+        setPosition({
+            x: centerScreenX - centerX * initialScale,
+            y: centerScreenY - centerY * initialScale,
+        });
+    }, [minX, maxX, minY, maxY, padX, padY, centerX, centerY]);
 
     // Handle mouse wheel zooming
     useEffect(() => {
@@ -64,10 +105,11 @@ const StarMapHigh = ({ galaxies, onSelect, improvedAILevel, onClose, currentGala
         // If we have a current galaxy and AI level is low, center on it
         if (currentGalaxy && improvedAILevel < 75) {
             const containerRect = container.getBoundingClientRect();
-            const targetX = -currentGalaxy.coordinates.x * 0.8 + containerRect.width / 2;
-            const targetY = -currentGalaxy.coordinates.y * 0.8 + containerRect.height / 2;
+            const zoomLevel = 2.5; // Increased zoom level when centering on current galaxy
+            const targetX = -currentGalaxy.coordinates.x * zoomLevel + containerRect.width / 2;
+            const targetY = -currentGalaxy.coordinates.y * zoomLevel + containerRect.height / 2;
             setPosition({ x: targetX, y: targetY });
-            setScale(0.8);
+            setScale(zoomLevel);
         }
 
         const handleWheel = (e) => {
@@ -128,29 +170,47 @@ const StarMapHigh = ({ galaxies, onSelect, improvedAILevel, onClose, currentGala
         <div
             ref={containerRef}
             className="star-map-high-container"
-            style={{ width, height, overflow: 'hidden' }}
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden',
+                backgroundColor: '#070a13',
+            }}
             onClick={(e) => e.stopPropagation()}
         >
             <div
                 style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: `translate(-50%, -50%) scale(${scale})`,
+                    transformOrigin: 'center center',
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    touchAction: 'none',
+                    willChange: 'transform',
                     width: '100%',
                     height: '100%',
-                    transform:
-                        improvedAILevel >= 75
-                            ? `translate(${position.x}px, ${position.y}px) scale(${scale})`
-                            : 'translate(0, 0) scale(1)',
-                    transformOrigin: improvedAILevel >= 75 ? '0 0' : 'center center',
-                    transition: improvedAILevel >= 75 ? 'none' : 'transform 0.3s ease-out',
-                    cursor: improvedAILevel >= 75 ? (isDragging ? 'grabbing' : 'grab') : 'default',
-                    touchAction: 'none',
                 }}
             >
                 <svg
                     className="star-map-high"
                     viewBox={`${viewMinX} ${viewMinY} ${viewSpanX} ${viewSpanY}`}
-                    width="100%"
-                    height="100%"
-                    style={{ background: '#070a13' }}
+                    preserveAspectRatio="xMidYMid meet"
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '100vmax',
+                        height: '100vmax',
+                        minWidth: '1000px',
+                        minHeight: '1000px',
+                    }}
                 >
                     <rect
                         x={viewMinX}
@@ -206,14 +266,18 @@ const StarMapHigh = ({ galaxies, onSelect, improvedAILevel, onClose, currentGala
                         {galaxies.map((g) => (
                             <text
                                 key={g.galaxyId + '-label'}
-                                x={g.coordinates.x + 18}
-                                y={g.coordinates.y + 18}
+                                x={g.coordinates.x}
+                                y={g.coordinates.y + 60}
+                                textAnchor="middle"
                                 fill="#fff"
                                 style={{
-                                    fontSize: '2rem',
+                                    fontSize: '3.5rem',
                                     pointerEvents: 'auto',
                                     textShadow: '0 0 6px #000, 0 0 2px #000',
                                     cursor: 'pointer',
+                                    fontFamily: '"Orbitron", "Segoe UI", sans-serif',
+                                    fontWeight: 500,
+                                    letterSpacing: '0.05em',
                                 }}
                                 onMouseEnter={(e) => {
                                     setHoveredGalaxy(g);

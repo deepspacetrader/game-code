@@ -64,24 +64,32 @@
 }
 
 .star-map-high {
-    width: 100%;
     border: 1px solid var(--accent);
     display: block;
-    margin: 1rem auto;
     cursor: grab;
     user-select: none;
+    background: #070a13;
 }
 
 .star-map-high text {
     fill: #fff;
 }
 
-.star-map-high svg,
-.star-map-high {
-    /* ensure SVG container handles events */
-    overflow: hidden;
+.star-map-high-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
-    min-width: 75vw;
+    height: 100%;
+    overflow: hidden;
+}
+
+.star-map-high svg {
+    display: block;
+    shape-rendering: geometricPrecision;
+    text-rendering: geometricPrecision;
 }
 
 .star-map-high circle {
@@ -174,7 +182,8 @@
     margin: 0 auto;
     width: 100%;
     height: 100%;
-    min-height: 400px;
+    min-width: 600px;
+    min-height: 600px;
     overflow: visible;
 }
 
@@ -309,7 +318,6 @@
 }
 
 @media (max-width: 900px) {
-    .star-map-high-container,
     .star-map-mid {
         min-width: 220px;
         min-height: 120px;
