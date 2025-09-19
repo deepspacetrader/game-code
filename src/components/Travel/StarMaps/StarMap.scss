@@ -23,36 +23,44 @@
     margin: 1rem auto;
     cursor: grab;
     user-select: none;
-    border-radius: 1em;
     box-shadow: 0 2px 16px #0007;
 }
 
 .star-dot.mid {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 0.75rem;
+    height: 0.75rem;
     border-radius: 50%;
     cursor: pointer;
     transition: transform 0.2s;
     border: 2px solid #222;
+    box-sizing: border-box;
+    background: #fff;
+    border-color: #fff;
+}
+
+/* War zones (red) */
+.star-dot.war {
+    background: #ef4444;
+    border-color: #f44;
+}
+
+/* Danger zones (orange) */
+.star-dot.danger {
+    background: #f59e0b;
+    border-color: #fc0;
 }
 
 .star-dot.mid:hover {
     transform: scale(1.5);
     filter: brightness(1.3) drop-shadow(0 0 6px var(--accent));
-    z-index: 10;
 }
 
-.star-dot.mid[style*='background: #e44'] {
-    border-color: #f44;
-}
-
-.star-dot.mid[style*='background: #f80'] {
-    border-color: #fc0;
-}
-
-.star-dot.mid[style*='background: var(--accent)'] {
-    border-color: var(--accent);
+.star-dot.mid.current-location {
+    background: #00ff00;
+    border-color: #00ff00;
+    width: 1rem;
+    height: 1rem;
 }
 
 .star-map-high {
@@ -113,11 +121,13 @@
     user-select: none;
 }
 
-.star-map-mid:active,
+.star-map-mid {
+    cursor: default;
+}
+
 .star-map-high:active {
     cursor: grabbing;
 }
-
 .star-map-container {
     position: fixed;
     background: rgba(0, 0, 0, 0.8);
@@ -133,7 +143,6 @@
     padding: 0.3rem 0.6rem;
     background: var(--accent);
     color: #000;
-
     border: none;
     cursor: pointer;
 }
@@ -300,7 +309,6 @@
 }
 
 @media (max-width: 900px) {
-
     .star-map-high-container,
     .star-map-mid {
         min-width: 220px;

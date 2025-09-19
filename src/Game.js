@@ -124,7 +124,7 @@ const GameUI = ({
             {/* overlay during galaxy jump */}
             <TravelOverlay />
             {/* star map overlay */}
-            <StarMapOverlay />
+            {improvedAILevel > 50 && <StarMapOverlay />}
             {/* floating messages manager */}
             <FloatingMessagesManager />
             {/* Debug logging for currentEnemy state */}

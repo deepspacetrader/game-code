@@ -46,6 +46,7 @@ export const MarketplaceProvider = ({ children }) => {
 
     // Core game state
     const [inventory, setInventory] = useState([]);
+    // Initialize with the first galaxy's ID from the data
 
     const [credits, setCredits] = useState(10000);
     const [health, setHealth] = useState(100);
@@ -95,6 +96,9 @@ export const MarketplaceProvider = ({ children }) => {
     const [pendingTrader, setPendingTrader] = useState(null);
     const [travelTimeLeft, setTravelTimeLeft] = useState(0);
     const [travelTotalTime, setTravelTotalTime] = useState(0);
+
+    // Derive currentGalaxyId from currentGalaxy
+    const currentGalaxyId = currentGalaxy?.galaxyId || currentGalaxy;
 
     // Star map state
     const [showStarMap, setShowStarMap] = useState(false);
@@ -584,7 +588,8 @@ export const MarketplaceProvider = ({ children }) => {
             // Update galaxy states
             setNextGalaxyName(toName);
             setGalaxyName(toName);
-            setCurrentGalaxy(toId);
+            // Set the full galaxy object to ensure currentGalaxyId is properly derived
+            setCurrentGalaxy(toObj);
             // Prepare trader listings for new galaxy
             const newGalaxy = prepareGalaxy(toName);
             setTraders(newGalaxy.map((t) => (Array.isArray(t) ? t : [])));
@@ -864,12 +869,12 @@ export const MarketplaceProvider = ({ children }) => {
         volumeRef.current = volume;
     }, [volume]);
 
-    useEffect(() => {
-        const decayInterval = setInterval(() => {
-            setImprovedAILevel((level) => (level > 0 ? level - 1 : 0));
-        }, 4000);
-        return () => clearInterval(decayInterval);
-    }, [setImprovedAILevel]);
+    // useEffect(() => {
+    //     const decayInterval = setInterval(() => {
+    //         setImprovedAILevel((level) => (level > 0 ? level - 1 : 0));
+    //     }, 4000);
+    //     return () => clearInterval(decayInterval);
+    // }, [setImprovedAILevel]);
 
     // Helper to map reliableItems (itemId) to item indices
     function getReliableIndices(reliableItemIds, items) {
@@ -888,11 +893,12 @@ export const MarketplaceProvider = ({ children }) => {
         // Skip if already initialized
         if (isInitialized) return;
 
-        // Initialize starting galaxy by galaxyId
-        const startGalaxyObj = galaxiesData.galaxies.find((g) => g.galaxyId === 10) || {};
-
+        // Initialize starting galaxy - specifically use Driftspire Helix (galaxyId: 10)
+        const startGalaxyObj = galaxiesData.galaxies.find((g) => g.galaxyId === 10);
+        if (!startGalaxyObj) {
+            return;
+        }
         setGalaxyName(startGalaxyObj.name);
-        // console.log('Initializing traders for galaxy:', startGalaxyObj.name);
 
         // Prepare traders' listings for the galaxy
         const prepared = prepareGalaxy(startGalaxyObj.name);
@@ -948,8 +954,8 @@ export const MarketplaceProvider = ({ children }) => {
         setPriceHistory(initialPH);
         // console.log('Price history initialized');
 
-        // Set currentGalaxy to its galaxyId
-        setCurrentGalaxy(startGalaxyObj.galaxyId);
+        // Set currentGalaxy to the full galaxy object
+        setCurrentGalaxy(startGalaxyObj);
         // console.log('Current galaxy set to:', startGalaxyObj.galaxyId);
 
         // Mark initialization as complete
@@ -3274,6 +3280,7 @@ export const MarketplaceProvider = ({ children }) => {
             setShowStarMap,
             addQuantumAbility,
             currentGalaxy,
+            currentGalaxyId, // Derived value from currentGalaxy
             quantumPower,
             removeQuantumAbility,
             toggleQuantumAbilities,

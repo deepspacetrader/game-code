@@ -5,8 +5,8 @@ import './StarMap.scss';
 // Mid-range interactive map: static dots with labels
 const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalaxyId }) => {
     const containerRef = useRef();
-    const width = improvedAILevel >= 75 ? 600 : 400,
-        height = improvedAILevel >= 75 ? 600 : 400;
+    const width = 600,
+        height = 600;
     const xs = galaxies.map((g) => g.coordinates.x);
     const ys = galaxies.map((g) => g.coordinates.y);
     const minX = Math.min(...xs),
@@ -15,48 +15,68 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
         maxY = Math.max(...ys);
     const spanX = maxX - minX || 1;
     const spanY = maxY - minY || 1;
-    // Add padding for scrollable background
-    const padX = Math.max(100, spanX * 0.15);
-    const padY = Math.max(100, spanY * 0.15);
+    // Calculate padding and view dimensions
+    const padX = Math.max(100, spanX * 0.042);
+    const padY = Math.max(100, spanY * 0.042);
     const viewMinX = minX - padX;
     const viewMinY = minY - padY;
     const viewSpanX = spanX + padX * 2;
     const viewSpanY = spanY + padY * 2;
 
-    // Note: Click outside handling is now done by the parent overlay
+    // Calculate aspect ratio
+    const svgAspectRatio = width / height;
+    const contentAspectRatio = viewSpanX / viewSpanY;
 
+    // Adjust viewBox to maintain aspect ratio and prevent black bars
+    let adjustedViewMinX = viewMinX;
+    let adjustedViewSpanX = viewSpanX;
+    let adjustedViewMinY = viewMinY;
+    let adjustedViewSpanY = viewSpanY;
+
+    if (svgAspectRatio > contentAspectRatio) {
+        // SVG is wider than content, adjust width
+        const newWidth = viewSpanY * svgAspectRatio;
+        const diff = (newWidth - viewSpanX) / 2;
+        adjustedViewMinX = viewMinX - diff;
+        adjustedViewSpanX = newWidth;
+    } else {
+        // SVG is taller than content, adjust height
+        const newHeight = viewSpanX / svgAspectRatio;
+        const diff = (newHeight - viewSpanY) / 2;
+        adjustedViewMinY = viewMinY - diff;
+        adjustedViewSpanY = newHeight;
+    }
     const contentRef = useRef();
-    const onUpdate = useCallback(({ x, y, scale }) => {
-        const { current: content } = contentRef;
-        if (content) {
-            const value = make3dTransformValue({ x, y, scale });
-            content.style.setProperty('transform', value);
-        }
-    }, []);
 
     return (
         <div ref={containerRef} className="star-map-mid-container">
-            <QuickPinchZoom onUpdate={onUpdate}>
-                <div
-                    ref={contentRef}
-                    className="star-map-mid"
-                    style={{ width, height, position: 'relative', touchAction: 'none' }}
+            <div
+                ref={contentRef}
+                className="star-map-mid"
+                style={{ width, height, position: 'relative', touchAction: 'none' }}
+            >
+                <svg
+                    className="star-map-mid-svg"
+                    viewBox={`${adjustedViewMinX} ${adjustedViewMinY} ${adjustedViewSpanX} ${adjustedViewSpanY}`}
+                    width="100%"
+                    height="100%"
+                    preserveAspectRatio="xMidYMid meet"
+                    style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        zIndex: 1,
+                        backgroundColor: '#070a13', // Fallback background
+                    }}
                 >
-                    <svg
-                        className="star-map-mid-svg"
-                        viewBox={`${viewMinX} ${viewMinY} ${viewSpanX} ${viewSpanY}`}
-                        width="100%"
-                        height="100%"
-                        style={{ position: 'absolute', left: 0, top: 0, zIndex: 1 }}
-                    >
-                        <rect
-                            x={viewMinX}
-                            y={viewMinY}
-                            width={viewSpanX}
-                            height={viewSpanY}
-                            fill="#070a13"
-                        />
-                        {galaxies.map((g) => {
+                    <rect
+                        x={adjustedViewMinX}
+                        y={adjustedViewMinY}
+                        width={adjustedViewSpanX}
+                        height={adjustedViewSpanY}
+                        fill="#070a13"
+                    />
+                    {/* {galaxies.map((g) => {
                             // Color logic
                             let fill = '#fff';
                             if (g.galaxyId === currentGalaxyId) fill = 'green';
@@ -74,36 +94,62 @@ const StarMapMid = ({ galaxies, onSelect, improvedAILevel, onClose, currentGalax
                                     onClick={() => onSelect && onSelect(g.galaxyId)}
                                 />
                             );
-                        })}
-                    </svg>
-                    {/* Overlay dots for pointer events and accessibility */}
-                    {galaxies.map((g) => {
-                        const x = ((g.coordinates.x - viewMinX) / viewSpanX) * width;
-                        const y = ((g.coordinates.y - viewMinY) / viewSpanY) * height;
-                        return (
-                            <div
-                                key={g.galaxyId}
-                                className="star-dot mid"
-                                style={{
-                                    left: `${x}px`,
-                                    top: `${y}px`,
-                                    background: g.war
-                                        ? 'red'
-                                        : g.danger
-                                        ? 'orange'
-                                        : g.galaxyId === currentGalaxyId
-                                        ? 'green'
-                                        : 'var(--accent)',
-                                    width: improvedAILevel >= 75 ? 14 : 8,
-                                    height: improvedAILevel >= 75 ? 14 : 8,
-                                    zIndex: 2,
-                                }}
-                                onClick={() => onSelect && onSelect(g.galaxyId)}
-                            />
-                        );
-                    })}
-                </div>
-            </QuickPinchZoom>
+                        })} */}
+                </svg>
+                {/* Overlay dots for pointer events and accessibility */}
+                {galaxies.map((g) => {
+                    const isCurrent = g.galaxyId === currentGalaxyId;
+                    const x = ((g.coordinates.x - adjustedViewMinX) / adjustedViewSpanX) * 100;
+                    const y = ((g.coordinates.y - adjustedViewMinY) / adjustedViewSpanY) * 100;
+
+                    // Determine dot classes based on status
+                    const dotClasses = ['star-dot', 'mid'];
+                    if (isCurrent) {
+                        dotClasses.push('current-location');
+                    } else {
+                        dotClasses.push('selectable');
+                    }
+                    if (g.war) {
+                        dotClasses.push('war');
+                    } else if (g.danger) {
+                        dotClasses.push('danger');
+                    }
+
+                    // Add hover effect only for non-current galaxies
+                    const hoverEffect = !isCurrent
+                        ? {
+                              transform: 'translate(-50%, -50%) scale(1.5)',
+                              transition: 'all 0.2s ease',
+                              boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
+                          }
+                        : {};
+
+                    return (
+                        <div
+                            key={g.galaxyId}
+                            className={dotClasses.join(' ')}
+                            style={{
+                                left: `${x}%`,
+                                top: `${y}%`,
+                                transform: 'translate(-50%, -50%)',
+                                position: 'absolute',
+                                // background: isCurrent ? '#00ff00' : 'var(--accent)',
+                                zIndex: 1,
+                                pointerEvents: isCurrent ? 'none' : 'auto',
+                                cursor: isCurrent ? 'default' : 'pointer',
+                                opacity: isCurrent ? 1 : 0.9,
+                                ...hoverEffect,
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isCurrent && onSelect) {
+                                    onSelect(g.galaxyId);
+                                }
+                            }}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
 import galaxiesData from '../../data/galaxies.json';
@@ -8,8 +8,19 @@ import StarMapLow from './StarMaps/StarMapLow';
 import './StarMaps/StarMap.scss';
 
 const StarMapOverlay = () => {
-    const { showStarMap, setShowStarMap, galaxyName, travelToGalaxy } = useMarketplace();
+    const { showStarMap, setShowStarMap, galaxyName, travelToGalaxy, currentGalaxyId: contextGalaxyId } = useMarketplace();
     const { improvedAILevel } = useAILevel();
+    
+    // Fallback to find the ID from galaxyName if currentGalaxyId is not available
+    const currentGalaxyId = useMemo(() => {
+        if (contextGalaxyId) return contextGalaxyId;
+        // If we don't have an ID but have a name, try to find the ID
+        if (galaxyName) {
+            const galaxy = galaxiesData.galaxies.find(g => g.name === galaxyName);
+            return galaxy ? galaxy.galaxyId : null;
+        }
+        return null;
+    }, [contextGalaxyId, galaxyName]);
 
     const handleSelect = (name) => {
         travelToGalaxy(name);
@@ -30,11 +41,11 @@ const StarMapOverlay = () => {
                     </button>
                 </div>
                 {improvedAILevel < 50 ? (
-                    <StarMapLow currentGalaxyId={galaxyName} onTravel={handleSelect} />
+                    <StarMapLow currentGalaxyId={currentGalaxyId} onTravel={handleSelect} />
                 ) : improvedAILevel < 100 ? (
                     <StarMapMid
                         galaxies={galaxiesData.galaxies}
-                        currentGalaxyId={galaxyName}
+                        currentGalaxyId={currentGalaxyId}
                         onSelect={handleSelect}
                         improvedAILevel={improvedAILevel}
                         onClose={() => setShowStarMap(false)}
@@ -42,7 +53,7 @@ const StarMapOverlay = () => {
                 ) : improvedAILevel > 100 ? (
                     <StarMapHigh
                         galaxies={galaxiesData.galaxies}
-                        currentGalaxyId={galaxyName}
+                        currentGalaxyId={currentGalaxyId}
                         onSelect={handleSelect}
                         improvedAILevel={improvedAILevel}
                         onClose={() => setShowStarMap(false)}

@@ -29,20 +29,23 @@ export const QuantumProvider = ({ children }) => {
 
     // Alias for getTotalQPs to maintain backward compatibility
     const getTotalQuantumProcessors = getTotalQPs;
-    
+
     // Update quantum processors count
-    const updateQuantumProcessorsCount = useCallback((inventoryToCheck) => {
-        if (!inventoryToCheck) return;
-        
-        const qp = inventoryToCheck.find((i) => i?.name === 'Quantum Processor');
-        const qpCount = qp?.quantity || 0;
-        const newQuantumProcessors = Math.min(
-            qpCount,
-            getTotalQuantumProcessors(inventoryToCheck, quantumSlotsUsed)
-        );
-        setQuantumProcessors(newQuantumProcessors);
-    }, [getTotalQuantumProcessors, quantumSlotsUsed]);
-    
+    const updateQuantumProcessorsCount = useCallback(
+        (inventoryToCheck) => {
+            if (!inventoryToCheck) return;
+
+            const qp = inventoryToCheck.find((i) => i?.name === 'Quantum Processor');
+            const qpCount = qp?.quantity || 0;
+            const newQuantumProcessors = Math.min(
+                qpCount,
+                getTotalQuantumProcessors(inventoryToCheck, quantumSlotsUsed)
+            );
+            setQuantumProcessors(newQuantumProcessors);
+        },
+        [getTotalQuantumProcessors, quantumSlotsUsed]
+    );
+
     // Initialize quantum processors count when inventory changes
     useEffect(() => {
         if (inventory) {
@@ -98,37 +101,43 @@ export const QuantumProvider = ({ children }) => {
     }, []);
 
     // Check quantum trade delay convenience helper
-    const checkQuantumTradeDelay = useCallback((minDelayMs = 1000) => {
-        const currentTime = Date.now();
-        return currentTime - lastQuantumTradeTime >= minDelayMs;
-    }, [lastQuantumTradeTime]);
+    const checkQuantumTradeDelay = useCallback(
+        (minDelayMs = 1000) => {
+            const currentTime = Date.now();
+            return currentTime - lastQuantumTradeTime >= minDelayMs;
+        },
+        [lastQuantumTradeTime]
+    );
 
     // Add quantum processors
-    const addQuantumProcessors = useCallback((count, inv = inventory) => {
-        if (!inv) return;
+    const addQuantumProcessors = useCallback(
+        (count, inv = inventory) => {
+            if (!inv) return;
 
-        const newInventory = [...inv];
-        const qpIndex = newInventory.findIndex((i) => i.name === 'Quantum Processor');
+            const newInventory = [...inv];
+            const qpIndex = newInventory.findIndex((i) => i.name === 'Quantum Processor');
 
-        if (qpIndex >= 0) {
-            newInventory[qpIndex] = {
-                ...newInventory[qpIndex],
-                quantity: newInventory[qpIndex].quantity + count,
-            };
-        } else {
-            newInventory.push({
-                name: 'Quantum Processor',
-                quantity: count,
-            });
-        }
+            if (qpIndex >= 0) {
+                newInventory[qpIndex] = {
+                    ...newInventory[qpIndex],
+                    quantity: newInventory[qpIndex].quantity + count,
+                };
+            } else {
+                newInventory.push({
+                    name: 'Quantum Processor',
+                    quantity: count,
+                });
+            }
 
-        // Update the inventory through setInventory if available
-        if (setInventory) {
-            setInventory(newInventory);
-        }
+            // Update the inventory through setInventory if available
+            if (setInventory) {
+                setInventory(newInventory);
+            }
 
-        return newInventory;
-    }, [inventory, setInventory]);
+            return newInventory;
+        },
+        [inventory, setInventory]
+    );
 
     // Remove quantum processors from inventory
     const subtractQuantumProcessor = useCallback(
@@ -145,10 +154,12 @@ export const QuantumProvider = ({ children }) => {
 
             // Update the main inventory through setInventory
             if (setInventory) {
-                setInventory(prevInv => {
+                setInventory((prevInv) => {
                     const updatedInv = [...prevInv];
-                    const qpIndex = updatedInv.findIndex(i => i && i.name === 'Quantum Processor');
-                    
+                    const qpIndex = updatedInv.findIndex(
+                        (i) => i && i.name === 'Quantum Processor'
+                    );
+
                     if (qpIndex >= 0) {
                         if (newQuantity > 0) {
                             updatedInv[qpIndex] = {
@@ -160,7 +171,7 @@ export const QuantumProvider = ({ children }) => {
                             updatedInv.splice(qpIndex, 1);
                         }
                     }
-                    
+
                     return updatedInv;
                 });
             }
@@ -199,98 +210,85 @@ export const QuantumProvider = ({ children }) => {
     // Effect to handle quantum trading when quantum power is active
     useEffect(() => {
         if (!quantumPower) {
-            console.log('Quantum power is off, stopping trading');
             return;
         }
-        
+
         // Only proceed if we have quantum processors in slots
         if (quantumSlotsUsed <= 0) {
-            console.log('No quantum processors in slots, stopping trading');
             return;
         }
-        
-        console.log('Starting quantum trading with', quantumSlotsUsed, 'processors');
-        
+
         // Function to execute a single trade sequence
         const executeTradeSequence = () => {
             if (!quantumPower) {
-                console.log('Quantum power turned off during trade sequence');
                 return;
             }
-            
+
             // Get fresh references to the buttons each time
             const quantumMarket = document.querySelector('.quantum-market');
             if (!quantumMarket) {
-                console.log('Quantum market not found');
                 return;
             }
-            
+
             const executeSellBtn = quantumMarket.querySelector('[data-testid="q-sell-button"]');
             const executeBuyBtn = quantumMarket.querySelector('[data-testid="q-buy-button"]');
             const executeTradeBtn = quantumMarket.querySelector('.execute-trade');
-            
+
             if (!executeSellBtn || !executeBuyBtn || !executeTradeBtn) {
-                console.log('One or more trade buttons not found');
                 return;
             }
-            
-            console.log('Executing trade sequence');
-            
+
             // Execute a sequence of trades with delays between them
             const tradeActions = [
                 { button: executeSellBtn, name: 'Sell' },
                 { button: executeBuyBtn, name: 'Buy' },
-                { button: executeTradeBtn, name: 'Trade' }
+                { button: executeTradeBtn, name: 'Trade' },
             ];
-            
+
             // Execute each action with a small delay between them
             tradeActions.forEach((action, index) => {
                 setTimeout(() => {
                     if (!quantumPower) return; // Stop if power was turned off
-                    
-                    console.log('Executing', action.name, 'action');
+
                     action.button.click();
-                    
+
                     // Play a subtle sound to indicate a trade
                     zzfx(
-                        0.3,    // volume
-                        0,      // frequency
-                        0.05,   // attack
-                        0.1,    // decay
-                        0.1,    // sustain
-                        0.1,    // release
-                        1,      // shape (sine)
-                        0,      // pan
-                        0,      // vibrato
-                        0,      // vibrato speed
-                        0,      // vibrato depth
-                        0,      // delay
-                        0,      // reverb
-                        0,      // noise
-                        0.1,    // filter frequency
-                        0.1,    // filter resonance
-                        0,      // filter type
-                        0       // filter delay
+                        0.3, // volume
+                        0, // frequency
+                        0.05, // attack
+                        0.1, // decay
+                        0.1, // sustain
+                        0.1, // release
+                        1, // shape (sine)
+                        0, // pan
+                        0, // vibrato
+                        0, // vibrato speed
+                        0, // vibrato depth
+                        0, // delay
+                        0, // reverb
+                        0, // noise
+                        0.1, // filter frequency
+                        0.1, // filter resonance
+                        0, // filter type
+                        0 // filter delay
                     );
                 }, index * 500); // 500ms delay between actions
             });
         };
-        
+
         // Set up the trading interval
         const interval = setInterval(() => {
             if (!quantumPower) {
-                console.log('Quantum power turned off, stopping trading');
                 clearInterval(interval);
                 return;
             }
-            
+
             executeTradeSequence();
-            
         }, 5000); // Run the full trade cycle every 5 seconds
-        
+
         // Clean up the interval on component unmount or when dependencies change
         return () => {
-            console.log('Cleaning up quantum trading interval');
             clearInterval(interval);
         };
     }, [quantumPower, quantumSlotsUsed]);
