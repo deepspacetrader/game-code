@@ -1,6 +1,14 @@
 {
     "versions": [
         {
+            "number": "1.0.7",
+            "date": "2025-09-19",
+            "title": "Star Maps",
+            "changes": [
+                "Various improvements to the Star Maps used when traveling between different galaxies."
+            ]
+        },
+        {
             "number": "1.0.6",
             "date": "2025-09-17",
             "title": "Random Events",

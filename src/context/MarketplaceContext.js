@@ -15,7 +15,6 @@ import { randomInt, shuffle, randomFloatRange } from '../utils/helpers';
 import { useAILevel } from './AILevelContext';
 import { zzfx } from 'zzfx';
 import { MAX_FUEL } from '../utils/constants';
-// Note: Do NOT import useQuantum here to avoid provider cycle; QuantumContext depends on MarketplaceContext
 import { useNews } from './NewsContext';
 import { useEventContext } from './EventContext';
 const MarketplaceContext = createContext();
