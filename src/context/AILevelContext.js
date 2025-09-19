@@ -48,14 +48,14 @@ export const AILevelProvider = ({ children }) => {
     return (
         <AILevelContext.Provider
             value={{
-                courierDrones,
-                handleSort,
+                aiTier,
                 improvedAILevel,
+                courierDrones,
                 sortMode,
                 sortAsc,
                 setCourierDrones,
                 setImprovedAILevel,
-                aiTier,
+                handleSort,
                 // Show a random event
                 showEvent: (eventData) => {
                     setActiveEvent({
@@ -86,4 +86,29 @@ export const AILevelProvider = ({ children }) => {
     );
 };
 
-export const useAILevel = () => useContext(AILevelContext);
+export const useAILevel = () => {
+    const context = useContext(AILevelContext);
+    
+    // If context is undefined, we're outside a provider
+    if (context === undefined) {
+        // In development, log a warning
+        if (process.env.NODE_ENV !== 'production') {
+            console.warn('useAILevel must be used within an AILevelProvider. Falling back to default values.');
+        }
+        
+        // Return default values
+        return {
+            sortMode: null,
+            sortAsc: true,
+            courierDrones: 0,
+            setCourierDrones: () => {},
+            improvedAILevel: 10,
+            setImprovedAILevel: () => {},
+            handleSort: () => {},
+            aiTier: 'bad',
+            activeEvent: null
+        };
+    }
+    
+    return context;
+};

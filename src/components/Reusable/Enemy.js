@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
-import { getTotalQuantumProcessors } from '../../utils/inventory';
+import { useQuantum } from '../../context/QuantumContext';
+
 // Base enemy types are now defined in this file
 import faceImage1 from '../../images/enemy0.webp';
 import faceImage2 from '../../images/enemy1.webp';
@@ -11,48 +12,6 @@ import faceImage5 from '../../images/enemy3.webp'; //TODO: Generate enemy4 image
 import './Enemy.scss';
 import GameOver from '../Game/GameOver';
 import enemiesData from '../../data/enemies.json';
-
-// AutoEnemy component for automatic handling
-const AutoEnemy = ({ enemy, playerHealth, playerCredits, timeLeft, onAutoAction, inventory }) => {
-    const [action, setAction] = useState(null);
-    const [showAuto, setShowAuto] = useState(false);
-
-    useEffect(() => {
-        // Only show auto controls if player has quantum processors
-        const hasQuantumPower = inventory && getTotalQuantumProcessors(inventory) > 0;
-        setShowAuto(hasQuantumPower);
-
-        if (hasQuantumPower) {
-            // Simple AI decision making
-            if (playerHealth < 30) {
-                setAction('ESCAPE_IMMEDIATELY');
-                onAutoAction('ESCAPE_IMMEDIATELY');
-            } else if (enemy.health < 30) {
-                setAction('ATTACK');
-                onAutoAction('ATTACK');
-            } else if (playerCredits > 1000) {
-                setAction('CONSIDER_BRIBE');
-                onAutoAction('CONSIDER_BRIBE');
-            } else {
-                setAction('ATTACK');
-                onAutoAction('ATTACK');
-            }
-        }
-    }, [enemy, playerHealth, playerCredits, timeLeft, onAutoAction, inventory]);
-
-    if (!showAuto) return null;
-
-    return (
-        <div className="auto-enemy-panel">
-            <div className="auto-status">
-                <span>AI Assistant: </span>
-                <span className={`action-${action?.toLowerCase()}`}>
-                    {action?.replace('_', ' ')}
-                </span>
-            </div>
-        </div>
-    );
-};
 
 /**
  * Enum for encounter types
@@ -129,15 +88,11 @@ const Enemy = ({
     onEncounterEnd = () => console.log('Encounter ended'),
     playerStats = { damage: 20, defense: 10 },
 }) => {
-    // ===== HOOKS - MUST BE AT TOP LEVEL =====
-
     // Context hooks
     const { aiTier } = useAILevel() || {};
     const { health, setHealth, credits, setCredits, inventory, addFloatingMessage } =
         useMarketplace() || {};
-
-    // Refs
-    const bribeAttempts = useRef(0);
+    const { getTotalQuantumProcessors } = useQuantum();
 
     // State management
     const [isGameOver, setIsGameOver] = useState(false);
@@ -155,7 +110,6 @@ const Enemy = ({
     const [actionSuccess, setActionSuccess] = useState(null);
     const [escapeAttempts, setEscapeAttempts] = useState(0);
     const [enemyDefeated, setEnemyDefeated] = useState(false);
-    const [showAutoEnemy, setShowAutoEnemy] = useState(false);
 
     // Enemy state with fallback
     const [enemy, setEnemy] = useState(() => {
@@ -499,11 +453,6 @@ const Enemy = ({
         [aiScaling]
     );
 
-    // Calculate quantum power and auto-enemy visibility
-    const hasQuantumPower = useMemo(() => {
-        return inventory && getTotalQuantumProcessors(inventory) > 0;
-    }, [inventory]);
-
     // Check if player has enough quantum processors to hack this enemy
     const canHack = useMemo(() => {
         // Count quantum processors from inventory
@@ -645,26 +594,6 @@ const Enemy = ({
         hackAnimationId.current = requestAnimationFrame(updateHackProgress);
     }, [canHack, playerTurn, isHacking, updateHackProgress]);
 
-    // Handle auto action from AutoEnemy component
-    const handleAutoAction = useCallback(
-        (actionType) => {
-            switch (actionType) {
-                case 'ATTACK':
-                    handleAttack();
-                    break;
-                case 'ESCAPE_IMMEDIATELY':
-                    handleEscape();
-                    break;
-                case 'CONSIDER_BRIBE':
-                    handleBribe();
-                    break;
-                default:
-                    break;
-            }
-        },
-        [handleAttack, handleEscape, handleBribe]
-    );
-
     // If no encounter is active, don't render anything
     if (isGameOver) {
         return <GameOver onRestart={() => window.location.reload()} />;
@@ -672,16 +601,6 @@ const Enemy = ({
 
     return (
         <div className={`enemy-encounter-overlay fade-out-${fadeOut}`} style={containerStyle}>
-            {showAutoEnemy && (
-                <AutoEnemy
-                    enemy={enemy}
-                    playerHealth={health}
-                    playerCredits={credits}
-                    timeLeft={timeLeft}
-                    inventory={inventory}
-                    onAutoAction={handleAutoAction}
-                />
-            )}
             <div className={`enemy-encounter-container ai-tier-${aiTier}`} style={textStyle}>
                 <div className="enemy-info">
                     <div className="enemy-header">
@@ -844,7 +763,7 @@ const Enemy = ({
                                             style={{
                                                 position: 'relative',
                                                 zIndex: 10,
-                                                '--hack-progress': hackProgress / 100
+                                                '--hack-progress': hackProgress / 100,
                                             }}
                                         >
                                             <div

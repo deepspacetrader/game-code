@@ -13,7 +13,7 @@ import './AdminDebug.scss';
 
 const AdminDebug = () => {
     const [showCheats, setShowCheats] = useState(false);
-    const { improvedAILevel, setimprovedAILevel, setCourierDrones, courierDrones } = useAILevel();
+    const { improvedAILevel, setImprovedAILevel, setCourierDrones, courierDrones } = useAILevel();
     const {
         health,
         healthRef,
@@ -31,7 +31,12 @@ const AdminDebug = () => {
         items,
     } = useMarketplace();
 
-    const { quantumProcessors: currentQPs = 0, updateQuantumProcessors } = useQuantum();
+    const { 
+        quantumProcessors: currentQPs = 0, 
+        setQuantumProcessors, 
+        setQuantumSlotsUsed,
+        resetQuantumProcessors
+    } = useQuantum();
 
     // Find the quantum processor item definition
     const qpDef = useMemo(() => items.find((i) => i.name === 'Quantum Processor'), [items]);
@@ -145,9 +150,9 @@ const AdminDebug = () => {
 
     // Handle resetting quantum processors
     const handleResetQPs = useCallback(() => {
-        if (!updateQuantumProcessors) {
-            console.error('updateQuantumProcessors function is not available');
-            alert('Failed to reset QPs: updateQuantumProcessors is not available');
+        if (!resetQuantumProcessors) {
+            console.error('resetQuantumProcessors function is not available');
+            alert('Failed to reset QPs: resetQuantumProcessors is not available');
             return;
         }
 
@@ -156,14 +161,14 @@ const AdminDebug = () => {
             return prevInv.filter((item) => item.name !== 'Quantum Processor');
         });
 
-        // Also update the quantum processor count in QuantumContext
-        updateQuantumProcessors(0, [], []);
-    }, [updateQuantumProcessors, setInventory]);
+        // Reset quantum processors in QuantumContext
+        resetQuantumProcessors();
+    }, [resetQuantumProcessors, setInventory]);
 
     // Handle adding quantum processors
     const handleAddQPs = useCallback(() => {
         try {
-            if (!updateQuantumProcessors || !qpDef) {
+            if (!setQuantumProcessors || !qpDef) {
                 console.error('Required functions or item definition not available');
                 alert('Failed to add QPs: System not properly initialized');
                 return;
@@ -187,13 +192,15 @@ const AdminDebug = () => {
                 }
             });
 
-            // Also update the quantum processor count in QuantumContext
-            updateQuantumProcessors(newCount, [], []);
+            // Update the quantum processor count in QuantumContext
+            setQuantumProcessors(newCount);
+            // Reset slots used to 0 when adding new QPs
+            setQuantumSlotsUsed?.(0);
         } catch (error) {
             console.error('Error adding QPs:', error);
             alert(`Failed to add QPs: ${error.message}`);
         }
-    }, [currentQPs, qpAmount, updateQuantumProcessors]);
+    }, [currentQPs, qpAmount, setQuantumProcessors, setQuantumSlotsUsed, qpDef, setInventory]);
 
     // Memoize quantum processor handlers
     const quantumProcessorHandlers = useMemo(
@@ -254,7 +261,7 @@ const AdminDebug = () => {
                 }
 
                 // Update the AI to reflect the new state
-                setimprovedAILevel(10);
+                setImprovedAILevel(10);
                 setCredits(10000);
                 quantumProcessorHandlers.reset();
                 setShowCheats(true);
@@ -280,7 +287,7 @@ const AdminDebug = () => {
         }
 
         // Reset game state to default values
-        setimprovedAILevel(10);
+        setImprovedAILevel(10);
         setCredits(10000);
         quantumProcessorHandlers.reset();
         setShowCheats(false);
@@ -344,7 +351,7 @@ const AdminDebug = () => {
                         <input
                             type="number"
                             value={improvedAILevel}
-                            onChange={(e) => setimprovedAILevel(Number(e.target.value))}
+                            onChange={(e) => setImprovedAILevel(Number(e.target.value))}
                             min={0}
                             max={100000}
                         />

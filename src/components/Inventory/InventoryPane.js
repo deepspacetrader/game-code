@@ -1,6 +1,7 @@
 import React from 'react';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
+import { useQuantum } from '../../context/QuantumContext';
 import InventoryList from './InventoryList';
 import QuantumSetup from '../Quantum/QuantumSetup';
 
@@ -20,13 +21,8 @@ function groupStatusEffectsByName(effects, filterFn) {
 }
 
 const InventoryPane = () => {
-    const {
-        statusEffects,
-        inventory,
-        setQuantumSlotsUsed,
-        setStatusEffects,
-        subtractQuantumProcessor,
-    } = useMarketplace();
+    const { statusEffects, inventory, setStatusEffects, subtractQuantumProcessor } = useMarketplace();
+    const { setQuantumSlotsUsed } = useQuantum();
     const { improvedAILevel } = useAILevel();
 
     // Group installed modules (all status effects)
