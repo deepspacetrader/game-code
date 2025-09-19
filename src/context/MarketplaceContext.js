@@ -869,12 +869,12 @@ export const MarketplaceProvider = ({ children }) => {
         volumeRef.current = volume;
     }, [volume]);
 
-    // useEffect(() => {
-    //     const decayInterval = setInterval(() => {
-    //         setImprovedAILevel((level) => (level > 0 ? level - 1 : 0));
-    //     }, 4000);
-    //     return () => clearInterval(decayInterval);
-    // }, [setImprovedAILevel]);
+    useEffect(() => {
+        const decayInterval = setInterval(() => {
+            setImprovedAILevel((level) => (level > 0 ? level - 1 : 0));
+        }, 4000);
+        return () => clearInterval(decayInterval);
+    }, [setImprovedAILevel]);
 
     // Helper to map reliableItems (itemId) to item indices
     function getReliableIndices(reliableItemIds, items) {
