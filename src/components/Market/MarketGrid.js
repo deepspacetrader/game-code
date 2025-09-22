@@ -1,5 +1,14 @@
 import React, { useState, useEffect, forwardRef } from 'react';
-import { Sparklines, SparklinesLine, SparklinesReferenceLine } from 'react-sparklines';
+import {
+    Sparklines,
+    SparklinesLine,
+    SparklinesCurve,
+    SparklinesNormalBand,
+    SparklinesText,
+    SparklinesSpots,
+    SparklinesBars,
+    SparklinesReferenceLine,
+} from 'react-sparklines';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
 import TieredMenu from './../Trading/TieredMenu';
@@ -228,32 +237,50 @@ const MarketGrid = forwardRef((props, ref) => {
                             )}
 
                             {/* inline price history sparkline, only if advanced AI and valid price data */}
-                            {improvedAILevel > 50 && prices.length > 1 && (
-                                <div className="price-sparkline">
-                                    <Sparklines
-                                        data={prices}
-                                        width={100}
-                                        height={20}
-                                        min={Math.min(...prices) * 0.95} // Add 5% padding
-                                        max={Math.max(...prices) * 1.05} // Add 5% padding
-                                    >
-                                        <SparklinesLine
-                                            color="cyan"
-                                            style={{ fill: 'none', strokeWidth: 1 }}
-                                        />
-                                        {improvedAILevel >= 75 && (
-                                            <SparklinesReferenceLine
-                                                type="avg"
-                                                style={{
-                                                    stroke: 'yellow',
-                                                    strokeWidth: 1,
-                                                    strokeDasharray: '2, 2',
-                                                }}
-                                            />
-                                        )}
-                                    </Sparklines>
-                                </div>
-                            )}
+                            {improvedAILevel > 50 &&
+                                prices.length > 1 &&
+                                (() => {
+                                    const avgPrice =
+                                        prices.reduce((sum, p) => sum + p, 0) / prices.length;
+                                    const currentPrice = prices[prices.length - 1];
+                                    const isAboveAverage = currentPrice > avgPrice;
+                                    const isBelowAverage = currentPrice < avgPrice;
+                                    const lineColor = isAboveAverage
+                                        ? 'green'
+                                        : isBelowAverage
+                                        ? 'red'
+                                        : 'blue';
+
+                                    return (
+                                        <div
+                                            className="price-sparkline"
+                                            style={{
+                                                backgroundColor: '#222',
+                                                padding: '2px',
+                                                borderRadius: '3px',
+                                            }}
+                                        >
+                                            <Sparklines data={prices} width={200} height={40}>
+                                                <SparklinesCurve
+                                                    color={lineColor}
+                                                    style={{ fill: 'none', strokeWidth: 1 }}
+                                                />
+                                                <SparklinesSpots />
+
+                                                {improvedAILevel >= 75 && (
+                                                    <SparklinesReferenceLine
+                                                        type="avg"
+                                                        style={{
+                                                            stroke: 'yellow',
+                                                            strokeWidth: 1,
+                                                            strokeDasharray: '2, 2',
+                                                        }}
+                                                    />
+                                                )}
+                                            </Sparklines>
+                                        </div>
+                                    );
+                                })()}
                             {/* delivery timers under price chart */}
                             {deliveryQueue &&
                                 deliveryQueue

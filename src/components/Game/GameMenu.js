@@ -215,18 +215,17 @@ const GameMenu = () => {
                             <h4>Goals</h4>
                             <ul>
                                 <li>
-                                    Starting with a small amount of credits <b>your goal</b> is to
-                                    navigate the galaxies in search of the highly sought after and
+                                    Navigate the galaxies in search of the highly sought after and
                                     tightly regulated <b>Quantum Processors</b>
                                 </li>
                                 <li>
-                                    Obtain and activate <b>6 Quantum Processors</b> to dominate the
+                                    Acquire and activate <b>6 Quantum Processors</b> to dominate the
                                     markets with ultra high speed quantum trading capabilities
                                 </li>
                                 <li>
                                     Don't run out of fuel, credits, and inventory at the same time
                                 </li>
-                                <li>Stay Alive</li>
+                                <li>Survive</li>
                             </ul>
                             <h4>Tips</h4>
                             <ul>
@@ -243,7 +242,7 @@ const GameMenu = () => {
                                     encounter some not so friendly individuals or groups
                                 </li>
                                 <li>Maintain, health, fuel and AI levels</li>
-                                <li>Travelling with illegal cargo is always risky</li>
+                                <li>Traveling between galaxies with illegal items is risky</li>
                             </ul>
                         </div>
                     </div>

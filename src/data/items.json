@@ -356,7 +356,7 @@
             "priceTickRate": [280, 1650],
             "duration": [0, 0],
             "effects": {
-                "+credit_balance": [4200, 100000]
+                "+credit_balance": [4200, 10000]
             }
         },
         {

@@ -33,7 +33,7 @@ const MarketSummary = () => {
             // Keep only the last 20 entries
             return newHistory.slice(-20);
         });
-    }, [total, setHistory]);
+    }, [total]);
 
     useEffect(() => {
         if (!alertMsg) return;

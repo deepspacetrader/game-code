@@ -1173,7 +1173,7 @@ export const MarketplaceProvider = ({ children }) => {
                 cells.forEach((cell, cellIdx) => {
                     if (!cell) return;
                     const key = `${tid}-${cellIdx}`;
-                    const lastPrice = prevHistory[key]?.[prevHistory[key]?.length - 1]?.price;
+                    const lastPrice = prevHistory[key]?.[prevHistory[key]?.length - 1]?.p;
 
                     // Only update if price has changed or this is a new item
                     if (lastPrice === undefined || lastPrice !== cell.price) {
@@ -1181,8 +1181,8 @@ export const MarketplaceProvider = ({ children }) => {
                             newHistory[key] = [];
                         }
                         newHistory[key] = [
-                            ...newHistory[key],
-                            { price: cell.price, timestamp: now },
+                            ...(newHistory[key] || []),
+                            { p: cell.price, t: now },
                         ].slice(-10);
                         hasChanges = true;
                     }
@@ -2679,13 +2679,28 @@ export const MarketplaceProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, [deliveryQueue, items]);
 
-    // Track the latest itemTickMeta with a ref to avoid dependency issues
+    // Use refs to avoid dependency issues in useEffect
     const itemTickMetaRef = useRef(itemTickMeta);
+    const currentGameEventRef = useRef(currentGameEvent);
+    const itemsRef = useRef(items);
+    const priceHistoryRef = useRef(priceHistory);
 
-    // Keep the ref in sync with state
+    // Keep refs in sync
     useEffect(() => {
         itemTickMetaRef.current = itemTickMeta;
     }, [itemTickMeta]);
+
+    useEffect(() => {
+        currentGameEventRef.current = currentGameEvent;
+    }, [currentGameEvent]);
+
+    useEffect(() => {
+        itemsRef.current = items;
+    }, [items]);
+
+    useEffect(() => {
+        priceHistoryRef.current = priceHistory;
+    }, [priceHistory]);
 
     // Only tick priceTick periodically; guard inside with GLOBAL_TICK_MS
     const lastTickRef = useRef(0);
@@ -2715,19 +2730,18 @@ export const MarketplaceProvider = ({ children }) => {
     }, []);
 
     // Only update traders/prices when priceTick changes
-    // Only update traders/prices when priceTick changes, not on every render
     useEffect(() => {
         const now = Date.now();
-        let newMeta = { ...itemTickMeta };
+        let newMeta = { ...itemTickMetaRef.current };
         setTraders((prev) =>
             prev.map((trader, tIdx) =>
                 trader.map((cell, cIdx) => {
                     if (!cell) return null;
-                    const itemDef = items.find((i) => i.name === cell.name);
+                    const itemDef = itemsRef.current.find((i) => i.name === cell.name);
                     const metaKey = `${tIdx}-${cIdx}`;
-                    const meta = itemTickMeta[metaKey] || {
+                    const meta = newMeta[metaKey] || {
                         last: now,
-                        rateMs: getEffectiveTickRateMs(itemDef, currentGameEvent),
+                        rateMs: getEffectiveTickRateMs(itemDef, currentGameEventRef.current),
                     };
                     if (now - meta.last < meta.rateMs) {
                         // Not time to update yet
@@ -2736,9 +2750,9 @@ export const MarketplaceProvider = ({ children }) => {
                     }
 
                     // Determine affected goods from event
-                    const affected = (currentGameEvent &&
-                        currentGameEvent.effect &&
-                        currentGameEvent.effect.priceMultiplierRange) || [0.8, 1.5];
+                    const affected = (currentGameEventRef.current &&
+                        currentGameEventRef.current.effect &&
+                        currentGameEventRef.current.effect.priceMultiplierRange) || [0.8, 1.5];
                     const [pMin, pMax] = cell.priceRange || [0.8, 1.5];
                     let newCell;
                     if (affected.includes(cell.name)) {
@@ -2755,13 +2769,22 @@ export const MarketplaceProvider = ({ children }) => {
                     }
                     newMeta[metaKey] = {
                         last: now,
-                        rateMs: getEffectiveTickRateMs(itemDef, currentGameEvent),
+                        rateMs: getEffectiveTickRateMs(itemDef, currentGameEventRef.current),
                     };
                     return newCell;
                 })
             )
         );
         setItemTickMeta(newMeta);
+
+        // Update price history after updating trader prices - only occasionally to prevent loops
+        if (Math.random() < 0.99) {
+            // Only update 10% of the time to reduce frequency
+            const updatedHistory = updatePriceHistory(priceHistoryRef.current);
+            if (JSON.stringify(updatedHistory) !== JSON.stringify(priceHistoryRef.current)) {
+                setPriceHistory(updatedHistory);
+            }
+        }
     }, [priceTick]);
 
     // Add: Helper to check if quantum trading is allowed (buy/sell) based on travel and status effects

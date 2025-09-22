@@ -56,9 +56,6 @@ const StarMapHigh = ({ galaxies, onSelect, improvedAILevel, onClose, currentGala
     const viewMinY = minY - padY;
     const viewSpanX = spanX + padX * 2;
     const viewSpanY = spanY + padY * 2;
-    // Responsive dimensions
-    const width = improvedAILevel >= 100 ? '90vw' : improvedAILevel >= 75 ? '70vw' : '50vw';
-    const height = improvedAILevel >= 100 ? '60vh' : improvedAILevel >= 75 ? '45vh' : '30vh';
 
     // Calculate initial scale and position
     const [scale, setScale] = useState(1);
