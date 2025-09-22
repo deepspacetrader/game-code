@@ -6,8 +6,7 @@
     height: 100vh;
     z-index: 10000;
     pointer-events: auto;
-    /* The background and mask are set via inline style in React (clip-path) */
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
 }
 
 @keyframes pulse-bg {
@@ -25,26 +24,26 @@
 }
 
 @keyframes arrow-wiggle-lr {
-    0%{
-        transform: translateX(50%);
+    0% {
+        transform: translateX(100%);
     }
-    50%{
+    50% {
         transform: translateX(0%);
     }
-    100%{
-        transform: translateX(50%);
+    100% {
+        transform: translateX(100%);
     }
 }
 
 @keyframes arrow-wiggle-rl {
-    0%{
-        transform: translateX(-50%);
+    0% {
+        transform: translateX(-100%);
     }
-    50%{
+    50% {
         transform: translateX(0%);
     }
-    100%{
-        transform: translateX(-50%);
+    100% {
+        transform: translateX(-100%);
     }
 }
 
@@ -60,10 +59,8 @@
 
     .arrow {
         position: absolute;
-        width: 0;
-        height: 0;
         border-style: solid;
-        border-width: 10px;
+        border-width: 1rem;
         border-color: transparent;
     }
     .arrow-top {
@@ -83,7 +80,7 @@
     .arrow-left {
         border-right-color: #0f0;
         left: -1.25rem;
-        top: 50%;
+        top: 40%;
         transform: translateY(-50%);
         animation: arrow-wiggle-rl 1s infinite;
     }
@@ -91,7 +88,7 @@
     .arrow-right {
         border-left-color: #0f0;
         right: -1.25rem;
-        top: 50%;
+        top: 40%;
         transform: translateY(-50%);
         animation: arrow-wiggle-lr 1s infinite;
     }
@@ -119,6 +116,14 @@
             &:hover {
                 background-color: #0f0;
                 color: #000;
+            }
+            &.skip-tutorial {
+                color: #ddd;
+                border: 1px solid #ddd;
+                &:hover {
+                    background-color: #000;
+                    color: #fff;
+                }
             }
         }
     }

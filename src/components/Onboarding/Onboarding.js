@@ -536,6 +536,7 @@ const Onboarding = () => {
                             onMouseEnter={() => setSkipHovered(true)}
                             onMouseLeave={() => setSkipHovered(false)}
                             style={{ position: 'relative', overflow: 'hidden' }}
+                            className="skip-tutorial"
                         >
                             <span
                                 style={{
