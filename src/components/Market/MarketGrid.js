@@ -14,6 +14,7 @@ import { useAILevel } from '../../context/AILevelContext';
 import TieredMenu from './../Trading/TieredMenu';
 import DeliveryBar from './../Reusable/DeliveryBar';
 import galaxiesData from '../../data/galaxies.json';
+import itemsData from '../../data/items.json';
 
 // Dynamic import of galaxy images
 const galaxyImages = require.context('../../images', false, /^\.\/galaxy\d+(-war)?\.webp$/);
@@ -88,11 +89,20 @@ const MarketGrid = forwardRef((props, ref) => {
                     if (!cell) return null;
                     const ownedQty = inventory.find((i) => i.name === cell.name)?.quantity || 0;
                     const history = priceHistory[`${currentTrader}-${idx}`] || [];
-                    const recommended = cell.basePrice > cell.price ? 'buy' : 'sell';
-                    const showStrategy =
-                        improvedAILevel >= 500 &&
-                        !(recommended === 'buy' && credits < cell.price) &&
-                        !(recommended === 'sell' && improvedAILevel >= 1000 && ownedQty === 0);
+                    const basePrice =
+                        itemsData.items.find((item) => item.itemId === cell.itemId)?.basePrice ||
+                        cell.basePrice;
+                    const currentPrice = cell.price;
+
+                    // Simple strategy recommendation based purely on price vs base price
+                    let strategy = 'hold';
+                    if (currentPrice < basePrice) {
+                        strategy = 'buy';
+                    } else if (currentPrice > basePrice) {
+                        strategy = 'sell';
+                    }
+
+                    const showStrategy = improvedAILevel >= 50; // Show strategy for players who can understand market analysis
 
                     const quantumClass =
                         statusEffects['Quantum Processor'] &&
@@ -196,9 +206,7 @@ const MarketGrid = forwardRef((props, ref) => {
                             }}
                             style={{ cursor: soldOut ? 'not-allowed' : 'pointer' }}
                         >
-                            <span className={`owned ${ownedQty > 0 ? 'sell' : ''}`}>
-                                Owned: {ownedQty}
-                            </span>
+                            <span className="owned">Owned: {ownedQty}</span>
                             {/* Item image as background with name overlay */}
                             <div className="item-image-wrapper">
                                 <span className="item-image-name">{cell.name}</span>
@@ -227,29 +235,50 @@ const MarketGrid = forwardRef((props, ref) => {
                                     <p>Fair Price: {cell.basePrice}</p>
                                     <p>
                                         Strategy:{' '}
-                                        {recommended === 'buy' ? (
+                                        {strategy === 'buy' ? (
                                             <span className="buy">BUY</span>
-                                        ) : (
+                                        ) : strategy === 'sell' ? (
                                             <span className="sell">SELL</span>
+                                        ) : (
+                                            <span className="hold">HOLD</span>
                                         )}
                                     </p>
                                 </>
                             )}
 
                             {/* inline price history sparkline, only if advanced AI and valid price data */}
-                            {improvedAILevel > 50 &&
-                                prices.length > 1 &&
+                            {improvedAILevel >= 100 &&
+                                prices.length >= 1 &&
                                 (() => {
-                                    const avgPrice =
-                                        prices.reduce((sum, p) => sum + p, 0) / prices.length;
-                                    const currentPrice = prices[prices.length - 1];
-                                    const isAboveAverage = currentPrice > avgPrice;
-                                    const isBelowAverage = currentPrice < avgPrice;
-                                    const lineColor = isAboveAverage
-                                        ? 'green'
-                                        : isBelowAverage
-                                        ? 'red'
-                                        : 'blue';
+                                    const basePrice =
+                                        itemsData.items.find((item) => item.itemId === cell.itemId)
+                                            ?.basePrice || cell.basePrice;
+                                    const currentPrice = cell.price;
+                                    const isAboveBase = currentPrice > basePrice;
+                                    const isBelowBase = currentPrice < basePrice;
+
+                                    // Red when above base price, Green when below base price
+                                    const lineColor = isAboveBase
+                                        ? '#ff0000'
+                                        : isBelowBase
+                                        ? '#00ff00'
+                                        : '#0000ff';
+
+                                    // Calculate base price position relative to current data range
+                                    const dataMin = Math.min(...prices);
+                                    const dataMax = Math.max(...prices);
+
+                                    const halfBase = basePrice / 2;
+                                    const doubleBase = basePrice * 2;
+
+                                    // If base price is outside current data range, show it at the edge
+                                    let referenceValue = basePrice;
+
+                                    if (basePrice < dataMin) {
+                                        referenceValue = dataMin;
+                                    } else if (basePrice > dataMax) {
+                                        referenceValue = dataMax;
+                                    }
 
                                     return (
                                         <div
@@ -260,24 +289,29 @@ const MarketGrid = forwardRef((props, ref) => {
                                                 borderRadius: '3px',
                                             }}
                                         >
-                                            <Sparklines data={prices} width={200} height={40}>
+                                            <Sparklines data={prices} width={200} height={60}>
                                                 <SparklinesCurve
                                                     color={lineColor}
                                                     style={{ fill: 'none', strokeWidth: 1 }}
                                                 />
-                                                <SparklinesSpots />
-
-                                                {improvedAILevel >= 75 && (
-                                                    <SparklinesReferenceLine
-                                                        type="avg"
-                                                        style={{
-                                                            stroke: 'yellow',
-                                                            strokeWidth: 1,
-                                                            strokeDasharray: '2, 2',
-                                                        }}
-                                                    />
-                                                )}
+                                                <SparklinesReferenceLine
+                                                    value={referenceValue}
+                                                    style={{
+                                                        stroke: lineColor,
+                                                        strokeWidth: 2,
+                                                        strokeDasharray: '5, 5',
+                                                    }}
+                                                />
                                             </Sparklines>
+
+                                            {/* Base price indicator when outside visible range */}
+
+                                            {currentPrice > doubleBase && (
+                                                <span className="overvalued">Overvalued</span>
+                                            )}
+                                            {currentPrice < halfBase && (
+                                                <span className="undervalued">Undervalued</span>
+                                            )}
                                         </div>
                                     );
                                 })()}

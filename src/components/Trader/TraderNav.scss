@@ -1539,11 +1539,13 @@
 
 .buy {
     color: rgb(0, 255, 0);
+    text-shadow: 1px 0px 2px #222;
     font-weight: bold;
 }
 
 .sell {
     color: rgb(255, 0, 0);
+    text-shadow: 1px 0px 2px #222;
     font-weight: bold;
 }
 
@@ -1581,6 +1583,7 @@
     color: var(--hud-text);
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
+    text-shadow: 1px 0px 2px #222;
 
     &:hover {
         transform: scale(1.02);
@@ -1594,11 +1597,12 @@
     }
 
     .owned {
-        background: var(--cell-bg);
-
-        .sell {
-            background: var(--accent);
-        }
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        font-size: 0.8rem;
+        padding: 2px 4px;
+        border-radius: 3px;
     }
 
     .item-detail-popup {
@@ -1611,6 +1615,21 @@
         background: #444;
         color: black;
         border: 0.25rem outset gold;
+    }
+
+    .overvalued {
+        position: absolute;
+        top: 65%;
+        right: 0.5rem;
+        color: red;
+        font-size: 75%;
+    }
+    .undervalued {
+        position: absolute;
+        bottom: 2rem;
+        color: green;
+        font-size: 75%;
+        right: 0.5rem;
     }
 }
 
