@@ -442,7 +442,7 @@ const QuantumSetup = ({ setStatusEffects }) => {
             }`}
         >
             <div className="quantum-header">
-                <h3>Quantum Processor</h3>
+                <h3>Quantum Computer</h3>
                 <div className="quantum-toggle-container">
                     <div className={`quantum-status ${localQuantumPower ? 'active' : ''}`}>
                         <span className="status-indicator">

@@ -64,7 +64,7 @@ const GameUI = ({
         if (secretMarkets[galaxyName]) return;
         const timeout = setTimeout(() => {
             setShowSecretOffer(true);
-        }, 120000 + Math.random() * 120000);
+        }, 140000 + Math.random() * 140000);
         return () => clearTimeout(timeout);
     }, [galaxyName, secretMarkets]);
 

@@ -294,7 +294,7 @@
             "itemId": 23,
             "name": "Quantum Ledger Chip",
             "travelSell": true,
-            "description": "Quality Qontrolled Qomputing with QuickBitts! The smartest way to process information with a quantum edge!",
+            "description": "Quality Qontrolled Qomputing with QuickBits! The smartest way to process information with a quantum edge!",
             "basePrice": 990,
             "deliveryTime": 7.5,
             "priceTickRate": [42, 90],
@@ -362,7 +362,7 @@
         {
             "itemId": 28,
             "name": "Salvaged Alloy",
-            "illegal": true,
+            "illegal": false,
             "travelSell": false,
             "description": "Damaged alloy scraps that were 'found' and can be 'recycled' for credits.",
             "basePrice": 800,
