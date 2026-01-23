@@ -1,6 +1,6 @@
 # Deep Space Trader Game
 
-![Game Screenshot](https://raw.githubusercontent.com/deepspacetrader/game-code/refs/heads/master/images/screen-shot.jpg)
+![Game Screenshot](https://github.com/deepspacetrader/game-code/blob/master/screen-shot.jpg)
 
 [Play Game](https://deepspacetrader.github.io/)
 
