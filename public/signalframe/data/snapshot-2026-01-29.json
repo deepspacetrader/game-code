@@ -1,0 +1,3310 @@
+{
+  "lastUpdated": "2026-01-30T15:55:44.215Z",
+  "narrative": "Geopolitical instability persists, marked by heightened tensions between the US and Iran, the EU's designation of Iran's Revolutionary Guard as a terrorist entity, and domestic political crises in the US centered on border security and potential government shutdowns. Concurrently, the finalization of hostage repatriations in the Middle East underscores the volatile security environment, while climate-related concerns and regional conflicts, including exchanges of bodies between Ukraine and Russia, further strain international relations.\n\nTechnological advancement, particularly in AI, continues across sectors, with Google integrating AI into Maps and addressing music generation challenges, while generative AI sparks debate in creative industries like gaming and faces legal challenges from music publishers. Tech companies are also focusing on user experience (e.g., Microsoft, Apple) and ethical considerations (e.g., Anthropic's AI consciousness questions), alongside practical applications like AI-driven airport management and autonomous vehicles.\n\nClimate change remains a legislative focus, with states considering taxes on fossil fuel companies to fund remediation, while scientific research observes environmental adaptation, such as polar bears in Norway. Economic transformations are evident in the energy sector's rapid growth for Tesla, shifts in US government spending (including defense), and market reactions to geopolitical developments like oil price spikes, alongside personal finance inquiries reflecting broader economic anxieties.\n\nSocial and ethical challenges are prominent, including ongoing debates over immigration enforcement policies and their political fallout, legislative changes in France regarding marital duties, and controversies surrounding healthcare technologies like weight loss treatments. Legal and ethical issues also surface in healthcare incidents and challenges to public access policies, reflecting broader societal tensions.\n\nThese themes intersect, with technological developments influencing economic and geopolitical dynamics, and social issues often exacerbating political and international tensions.",
+  "signals": [
+    {
+      "id": "sig_2a2e895f",
+      "title": "EU Labels IRGC as Terrorist",
+      "text": "The EU adds Iran's Revolutionary Guards to the terrorist list in response to deadly protests, escalating international isolation.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "deltaType": "policy",
+      "novelty": 87,
+      "source": [
+        {
+          "feedId": "3",
+          "source": "BBC World",
+          "title": "EU adds Iran's Revolutionary Guards to terrorist list",
+          "link": "https://www.marketwatch.com/story/how-nvidias-stock-can-get-back-to-its-winning-ways-after-an-underwhelming-stretch-2f4acc3e?mod=mw_rss_topstories",
+          "timestamp": "2026-01-29 16:49:20 UTC",
+          "quote": "EU foreign policy chief Kaja Kallas says the move is a response to Tehran's deadly crackdown on protesters."
+        },
+        {
+          "feedId": "13",
+          "source": "BBC World",
+          "title": "EU adds Iran's Revolutionary Guards to terrorist list",
+          "link": "https://www.bbc.com/news/articles/c20gypw8enjo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-29 16:49:20 UTC",
+          "quote": "The move, which comes after the killing of protesters, brings the European Union in line with the United States and Canada."
+        },
+        {
+          "feedId": "35",
+          "source": "NY Times World",
+          "title": "European Union Labels Iran’s Revolutionary Guard a Terrorist Group",
+          "link": "https://www.nytimes.com/2026/01/29/world/europe/european-union-iran-sanctions-irgc.html",
+          "timestamp": "2026-01-29 15:44:42 UTC",
+          "quote": "The move, which comes after the killing of protesters, brings the European Union in line with the United States and Canada."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_6146ab3d",
+      "title": "Rafah Crossing Blocked",
+      "text": "Palestinian civilians face critical humanitarian access issues as Rafah crossing remains closed, worsening the humanitarian crisis.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 95,
+      "source": [
+        {
+          "feedId": "68",
+          "source": "Al Jazeera",
+          "title": "Video: Palestinians in Gaza wait for vital Rafah crossing to open",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/video-palestinians-in-gaza-wait-for-vital-rafah-crossing-to-open?traffic_source=rss",
+          "timestamp": "Thu, 29 Jan 2026 11:41:40 +0000 UTC",
+          "quote": "Video emerges of Dutch police assault on two Muslim women"
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_77e8de19",
+      "title": "Anthropic Sued for Piracy",
+      "text": "Music publishers file $3B lawsuit against Anthropic over alleged piracy of 20,000 copyrighted works, highlighting AI content risks.",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "novelty": 94,
+      "source": [
+        {
+          "feedId": "20",
+          "source": "TechCrunch",
+          "title": "Music publishers sue Anthropic for $3B over ‘flagrant piracy’ of 20,000 works",
+          "link": "https://techcrunch.com/2026/01/29/music-publishers-sue-anthropic-for-3b-over-flagrant-piracy-of-20000-works/",
+          "timestamp": "2026-01-29 16:30:29 UTC",
+          "quote": "Originally, these music publishers had filed a lawsuit against Anthropic over its use of about 500 copyrighted works."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_a7d92083",
+      "title": "Hostage Swap Concludes",
+      "text": "Final Israeli captive returns after prolonged captivity, marking the end of a major hostage crisis but leaving unresolved humanitarian issues.",
+      "sentiment": "neutral",
+      "category": "Conflicts",
+      "novelty": 94,
+      "source": [
+        {
+          "feedId": "14",
+          "source": "Al Jazeera",
+          "title": "Inside Gaza after Israel’s last captive is found",
+          "link": "https://www.aljazeera.com/video/the-take-2/2026/1/29/aje-onl-pal_lastcaptive_av_v3-270126?traffic_source=rss",
+          "timestamp": "Thu, 29 Jan 2026 16:49:00 +0000 UTC",
+          "quote": "With the final Israeli captive returned, Palestinians are waiting to see if Israel will now implement a true ceasefire."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_fbab8ce2",
+      "title": "US-Backed Military Buildup",
+      "text": "US announces military build-up near Iran amid escalating tensions, signaling potential imminent conflict in the region.",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "novelty": 88,
+      "source": [
+        {
+          "feedId": "52",
+          "source": "Al Jazeera",
+          "title": "Key questions about US military build-up near Iran",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/key-questions-about-us-military-build-up-near-iran?traffic_source=rss",
+          "timestamp": "Thu, 29 Jan 2026 14:22:07 +0000 UTC",
+          "quote": "Trump is building up a military force in the Middle East, saying the US is ready to strike Iran."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_527939c3",
+      "title": "Polar Bear Adaptation",
+      "text": "Norwegian polar bears are healthier despite ice loss, showing unexpected adaptation to climate change impacts.",
+      "sentiment": "neutral",
+      "category": "Other",
+      "novelty": 94,
+      "source": [
+        {
+          "feedId": "33",
+          "source": "BBC Science",
+          "title": "Polar bears on Norwegian islands fatter and healthier despite ice loss, scientists say",
+          "link": "https://www.bbc.com/news/articles/cx2l1xpz03no?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-29 16:00:09 UTC",
+          "quote": "Scientists think that Svalbard bears have adapted to recent ice loss by eating more land-based prey."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_6603fb81",
+      "title": "Weight Loss Jab Risks",
+      "text": "Health warnings issued for weight loss injections due to rare but serious pancreatitis cases requiring medical vigilance.",
+      "sentiment": "neutral",
+      "category": "Other",
+      "novelty": 92,
+      "source": [
+        {
+          "feedId": "12",
+          "source": "BBC Health",
+          "title": "Weight loss jab users warned over rare but serious pancreas issue",
+          "link": "https://www.bbc.com/news/articles/cr57jzz9jvno?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-29 16:50:40 UTC",
+          "quote": "Symptoms to look out for include severe pain in the stomach and back which does not go away."
+        }
+      ],
+      "contradictions": []
+    },
+    {
+      "id": "sig_aef25af6",
+      "title": "Tesla Energy Storage Growth",
+      "text": "Tesla's energy storage business surpasses all other company segments, driving significant profit growth amid increasing demand.",
+      "sentiment": "neutral",
+      "category": "Tech/AI",
+      "deltaType": "market",
+      "novelty": 94,
+      "source": [
+        {
+          "feedId": "46",
+          "source": "TechCrunch",
+          "title": "Tesla’s energy storage business is growing faster than any other part of the company",
+          "link": "https://techcrunch.com/2026/01/29/teslas-energy-storage-business-is-growing-faster-than-any-other-part-of-the-company/",
+          "timestamp": "2026-01-29 14:58:47 UTC",
+          "quote": "Energy storage products like the Megapack, Megablock, and Powerwall drove nearly a quarter of Tesla’s gross profit."
+        }
+      ],
+      "contradictions": []
+    }
+  ],
+  "insights": [
+    {
+      "text": "Observation | Strategic implication",
+      "sentiment": "neutral",
+      "source": [
+        {
+          "feedId": "39",
+          "source": "MarketWatch",
+          "title": "U.S. oil prices surge by nearly 5% on bets that U.S. strike on Iran is imminent",
+          "link": "https://www.marketwatch.com/story/u-s-oil-prices-surge-by-nearly-5-on-bets-that-u-s-strike-on-iran-is-imminent-ffada56d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-29 16:27:00 UTC",
+          "quote": "U.S. oil prices surge by nearly 5% on bets that U.S. strike on Iran is imminent"
+        },
+        {
+          "feedId": "9",
+          "source": "The Verge",
+          "title": "Microsoft is working to rebuild trust in Windows",
+          "link": "https://www.theverge.com/tech/870045/microsoft-windows-11-issues-rebuilding-trust-notepad",
+          "timestamp": "2026-01-29 17:00:00 UTC",
+          "quote": "Windows is in a weird spot. In its 40-year history, the operating system has weathered its fair share of missteps"
+        }
+      ],
+      "signalId": "sig_d0988138"
+    }
+  ],
+  "feeds": [
+    {
+      "id": "https://www.theverge.com/?p=870288",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 17:36:13 UTC",
+      "content": "Spotify’s new group chats share music with everyone in your circle. Spotify is expanding its in-app messaging feature with group chats. Now you can add up to 10 friends and family members to your discussion about your new favorite song, podcast, or audiobook, as reported earlier by TechCrunch. The music streaming platform launched direct messaging last August, allowing you to share what you're listening to without […]",
+      "category": "Technology",
+      "title": "Spotify’s new group chats share music with everyone in your circle",
+      "link": "https://www.theverge.com/news/870288/spotify-group-chats-direct-messaging-expansion",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087840",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 17:29:11 UTC",
+      "content": "I built marshmallow castles in Google’s new AI world generator. Starting Thursday, Google AI Ultra subscribers in the U.S. can play around with Project Genie, which is powered by a combination of Google’s latest world model Genie 3, its image generation model Nano Banana Pro, and Gemini.",
+      "category": "Technology",
+      "title": "I built marshmallow castles in Google’s new AI world generator",
+      "link": "https://techcrunch.com/2026/01/29/i-built-marshmallow-castles-in-googles-new-ai-world-generator-project-genie/",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/health/2026/01/custom-machine-kept-man-alive-without-lungs-for-48-hours/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-29 17:26:08 UTC",
+      "content": "Custom machine kept man alive without lungs for 48 hours. Infections had turned his lungs to soup and had to be cleared before transplant.",
+      "category": "Technology",
+      "title": "Custom machine kept man alive without lungs for 48 hours",
+      "link": "https://arstechnica.com/health/2026/01/custom-machine-kept-man-alive-without-lungs-for-48-hours/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/GettyImages-1358869815-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "WP-MKTW-0004735621",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 17:15:00 UTC",
+      "content": "How Nvidia’s stock can get back to its winning ways after an underwhelming stretch. Nvidia’s stock has trailed the chip sector this year, but Morgan Stanley thinks some investor concerns are overblown.",
+      "category": "Business",
+      "title": "How Nvidia’s stock can get back to its winning ways after an underwhelming stretch",
+      "link": "https://www.marketwatch.com/story/how-nvidias-stock-can-get-back-to-its-winning-ways-after-an-underwhelming-stretch-2f4acc3e?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769700870",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 17:14:32 +0000 UTC",
+      "content": "Airports embrace AI to manage growing global passenger traffic. Airports use AI for passenger flow, baggage tracking and predictive maintenance to enhance efficiency and experience.",
+      "category": "World",
+      "title": "Airports embrace AI to manage growing global passenger traffic",
+      "link": "https://www.aljazeera.com/news/2026/1/29/airports-embrace-ai-to-manage-growing-global-passenger-traffic?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theguardian.com/world/2026/jan/29/gunfire-blasts-heard-airport-niamey-niger-planes-hit-reports",
+      "source": "The Guardian",
+      "timestamp": "2026-01-29 17:09:30 UTC",
+      "content": "Heavy security deployed at airport in Niger capital after overnight explosions. Source says two aircraft on ground in Niamey ‘destroyed’ by gunfire although authorities yet to comment on situation Heavy security has been deployed around the main airport in Niger’s capital, Niamey, after overnight gunfire and explosions. The shooting and detonations began shortly after midnight on Wednesday, according to residents of a neighbourhood near the airport, which is next to Base Aérienne 101, a military base previously used by US and then Russian troops . Continue reading...",
+      "category": "World",
+      "title": "Heavy security deployed at airport in Niger capital after overnight explosions",
+      "link": "https://www.theguardian.com/world/2026/jan/29/gunfire-blasts-heard-airport-niamey-niger-planes-hit-reports",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004735872",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 17:00:00 UTC",
+      "content": "Why Elon Musk is making a smart move by killing off Tesla’s Model S and Model X. One analyst estimates Tesla could ultimately make $25 billion a year by selling Optimus robots manufactured on former Model S and Model X production lines.",
+      "category": "Business",
+      "title": "Why Elon Musk is making a smart move by killing off Tesla’s Model S and Model X",
+      "link": "https://www.marketwatch.com/story/why-elon-musk-is-making-a-smart-move-by-killing-off-teslas-model-s-and-model-x-c1aa44cb?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=869386",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 17:00:00 UTC",
+      "content": "Half of developers think gen AI is bad for the gaming industry. While generative AI is being adopted at various levels of game development, a new survey suggests that developers increasingly think the technology is bad for the industry. According to the most recent survey from the Game Developers Conference, 52 percent of respondents said that gen AI is having a \"negative\" impact on the games industry, […]",
+      "category": "Technology",
+      "title": "Half of developers think gen AI is bad for the gaming industry",
+      "link": "https://www.theverge.com/entertainment/869386/ai-game-development-gdc-survey",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=869726",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 17:00:00 UTC",
+      "content": "Google’s AI helped me make bad Nintendo knockoffs. This week, a new generative AI tool from Google let me create bad knockoffs of 3D Nintendo worlds. Check out my version of something like Super Mario 64: I didn't like Metroid Prime 4: Beyond, but it's better than my version of a Metroid Prime experience: Or how about my take on The Legend of […]",
+      "category": "Technology",
+      "title": "Google’s AI helped me make bad Nintendo knockoffs",
+      "link": "https://www.theverge.com/news/869726/google-ai-project-genie-3-world-model-hands-on",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=870045",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 17:00:00 UTC",
+      "content": "Microsoft is working to rebuild trust in Windows. Windows is in a weird spot. In its 40-year history, the operating system has weathered its fair share of missteps, but Windows 11 is testing the patience of its users in new ways. Persistent bugs, performance issues, intrusive prompts, ads, and bloatware have eroded the core Windows experience. Early system requirement decisions have also damaged […]",
+      "category": "Technology",
+      "title": "Microsoft is working to rebuild trust in Windows",
+      "link": "https://www.theverge.com/tech/870045/microsoft-windows-11-issues-rebuilding-trust-notepad",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=870102",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 17:00:00 UTC",
+      "content": "Waymo is finally starting passenger trips at SFO — but not to the terminals. Waymo has finally broken through its SFO logjam. The company announced today that it will start offering robotaxi rides to a select group of passengers traveling to and from the San Francisco International Airport, a major step in Waymo's effort to increase its footprint in the Bay Area. The company plans on gradually growing the […]",
+      "category": "Technology",
+      "title": "Waymo is finally starting passenger trips at SFO — but not to the terminals",
+      "link": "https://www.theverge.com/news/870102/waymo-sfo-passenger-trip-approval-airport",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/29/climate/why-a-new-mexico-developer-quit-natural-gas.html",
+      "source": "NY Times Science",
+      "timestamp": "2026-01-29 16:52:39 UTC",
+      "content": "Why a New Mexico Developer Quit Natural Gas. For John Moscato, a land developer in Las Cruces, N.M., installing gas lines at new home sites was “an ongoing headache.” Ditching gas saved him money.",
+      "category": "Science",
+      "title": "Why a New Mexico Developer Quit Natural Gas",
+      "link": "https://www.nytimes.com/2026/01/29/climate/why-a-new-mexico-developer-quit-natural-gas.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cr57jzz9jvno#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-29 16:50:40 UTC",
+      "content": "Weight loss jab users warned over rare but serious pancreas issue. Symptoms to look out for include severe pain in the stomach and back which does not go away.",
+      "category": "Health",
+      "title": "Weight loss jab users warned over rare but serious pancreas issue",
+      "link": "https://www.bbc.com/news/articles/cr57jzz9jvno?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/1cd3/live/a6ac34d0-fd2b-11f0-890b-55ca0a00c59d.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c20gypw8enjo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 16:49:20 UTC",
+      "content": "EU adds Iran's Revolutionary Guards to terrorist list. EU foreign policy chief Kaja Kallas says the move is a response to Tehran's deadly crackdown on protesters.",
+      "category": "World",
+      "title": "EU adds Iran's Revolutionary Guards to terrorist list",
+      "link": "https://www.bbc.com/news/articles/c20gypw8enjo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/a72e/live/aa66c7a0-fd32-11f0-a8b8-bdd2c5f9bcad.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769705077",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 16:49:00 +0000 UTC",
+      "content": "Inside Gaza after Israel’s last captive is found. With the final Israeli captive returned, Palestinians are waiting to see if Israel will now implement a true ceasefire.",
+      "category": "World",
+      "title": "Inside Gaza after Israel’s last captive is found",
+      "link": "https://www.aljazeera.com/video/the-take-2/2026/1/29/aje-onl-pal_lastcaptive_av_v3-270126?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087814",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 16:48:44 UTC",
+      "content": "OpenAI’s Sora app is struggling after its stellar launch. Sora's mobile app downloads fell 45% in January, and consumer spending dropped.",
+      "category": "Technology",
+      "title": "OpenAI’s Sora app is struggling after its stellar launch",
+      "link": "https://techcrunch.com/2026/01/29/openais-sora-app-is-struggling-after-its-stellar-launch/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769699524",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 16:47:46 +0000 UTC",
+      "content": "Al Jazeera denounces YouTube’s compliance with Israel’s ban on network. Livestreams of Al Jazeera Arabic, Al Jazeera English and Al Jazeera Mubasher blocked in Israel.",
+      "category": "World",
+      "title": "Al Jazeera denounces YouTube’s compliance with Israel’s ban on network",
+      "link": "https://www.aljazeera.com/news/2026/1/29/al-jazeera-denounces-youtubes-compliance-with-israels-ban-on-network?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=870159",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 16:36:51 UTC",
+      "content": "Linux gaming developers join forces to form the Open Gaming Collective. Gaming on Linux has already come a long way over recent years, with improvements to Valve's Proton and more gamers switching to Linux, but the newly-formed Open Gaming Collective (OGC) is aiming to take it even further. Universal Blue, developer of the gaming-focused Linux distribution Bazzite, announced on Wednesday that its helping to form the […]",
+      "category": "Technology",
+      "title": "Linux gaming developers join forces to form the Open Gaming Collective",
+      "link": "https://www.theverge.com/tech/870159/linux-gaming-open-gaming-collective-bazzite",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769696854",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 16:35:18 +0000 UTC",
+      "content": "Hakan Fidan on Iran and Turkiye’s role in global security. Turkish foreign minister warns against escalation with Iran, explaining how Ankara sees the future of regional security.",
+      "category": "World",
+      "title": "Hakan Fidan on Iran and Turkiye’s role in global security",
+      "link": "https://www.aljazeera.com/video/talk-to-al-jazeera/2026/1/29/hakan-fidan-on-iran-and-turkiyes-role-in-global-security?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004725051",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 16:32:00 UTC",
+      "content": "‘I‘m facing an ethical dilemma’: My widowed mother is cutting my step siblings out of the family trust. Do I have a responsibility?. “My mother has now hired an attorney to revise the trust and remove her late husband’s children as beneficiaries.”",
+      "category": "Business",
+      "title": "‘I‘m facing an ethical dilemma’: My widowed mother is cutting my step siblings out of the family trust. Do I have a responsibility?",
+      "link": "https://www.marketwatch.com/story/im-facing-an-ethical-dilemma-my-widowed-mother-is-cutting-my-step-siblings-out-of-the-family-trust-do-i-have-an-ethical-responsibility-59e60ffb?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087790",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 16:30:29 UTC",
+      "content": "Music publishers sue Anthropic for $3B over ‘flagrant piracy’ of 20,000 works. Originally, these music publishers had filed a lawsuit against Anthropic over its use of about 500 copyrighted works.",
+      "category": "Technology",
+      "title": "Music publishers sue Anthropic for $3B over ‘flagrant piracy’ of 20,000 works",
+      "link": "https://techcrunch.com/2026/01/29/music-publishers-sue-anthropic-for-3b-over-flagrant-piracy-of-20000-works/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c89q287qxelo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 16:29:28 UTC",
+      "content": "Melania Trump documentary not showing in South African cinemas. No reason has been given but the decision follows a huge fall-out between South Africa and the US.",
+      "category": "World",
+      "title": "Melania Trump documentary not showing in South African cinemas",
+      "link": "https://www.bbc.com/news/articles/c89q287qxelo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/df54/live/5bd8b5d0-fd2d-11f0-9972-d3f265c101c6.jpg"
+    },
+    {
+      "id": "WP-MKTW-0004735734",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 16:27:00 UTC",
+      "content": "How a partial government shutdown this weekend would differ from the last one — and what it could mean for you. A partial federal government shutdown is looming as Senate Democrats threaten to hold up funding for the Department of Homeland Security.",
+      "category": "Business",
+      "title": "How a partial government shutdown this weekend would differ from the last one — and what it could mean for you",
+      "link": "https://www.marketwatch.com/story/how-a-partial-government-shutdown-this-weekend-would-differ-from-the-last-one-and-what-it-could-mean-for-you-47f963c7?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c8rm20gm364o#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 16:25:40 UTC",
+      "content": "'I can breathe again' says Israeli hostage held for nearly 500 days in Gaza. In his first international interview, Sasha Troufanov tells the BBC how he thought he would die in captivity after he was taken hostage on 7 October 2023.",
+      "category": "World",
+      "title": "'I can breathe again' says Israeli hostage held for nearly 500 days in Gaza",
+      "link": "https://www.bbc.com/news/articles/c8rm20gm364o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/354f/live/8973c100-fd24-11f0-a8b8-bdd2c5f9bcad.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769607072",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 16:22:50 +0000 UTC",
+      "content": "Will killings by immigration agents cause another US government shutdown?. The death of Alex Pretti has prompted a shift among Democratic senators, who are willing to risk a shutdown for reforms.",
+      "category": "World",
+      "title": "Will killings by immigration agents cause another US government shutdown?",
+      "link": "https://www.aljazeera.com/news/2026/1/29/will-killings-by-immigration-agents-cause-another-us-government-shutdown?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=870030",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 16:18:16 UTC",
+      "content": "Pokémon Legends: Z-A is 20 percent off at Best Buy today only. If you’ve been considering picking up the latest Pokémon game for the Switch 2, there’s good reason to do it today, as Best Buy is knocking $14 off the physical version. Pokémon Legends: Z-A normally costs $69.99, but you can snag it for $55.99 for the rest of the day — a price that other […]",
+      "category": "Technology",
+      "title": "Pokémon Legends: Z-A is 20 percent off at Best Buy today only",
+      "link": "https://www.theverge.com/gadgets/870030/pokemon-legends-za-switch-2-apple-airtags-deal-sale",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004734921",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 16:16:00 UTC",
+      "content": "‘I’m worried about cash flow’: I’m 71 with a $2.7 million IRA and $470K in stocks. Why can’t I relax?. “My home is paid for and has an estimated value of $700,000.”",
+      "category": "Business",
+      "title": "‘I’m worried about cash flow’: I’m 71 with a $2.7 million IRA and $470K in stocks. Why can’t I relax?",
+      "link": "https://www.marketwatch.com/story/im-worried-about-cash-flow-im-71-with-a-2-7-million-ira-and-470k-in-stocks-why-cant-i-relax-9caaec66?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769700213",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 16:13:57 +0000 UTC",
+      "content": "Spain launches probe as expired vaccines given to 253 children. Basque health minister apologises, says expired vaccines pose no risk to 253 patients affected, mostly children.",
+      "category": "World",
+      "title": "Spain launches probe as expired vaccines given to 253 children",
+      "link": "https://www.aljazeera.com/news/2026/1/29/spain-launches-probe-as-expired-vaccines-given-to-253-children?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004731331",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 16:12:00 UTC",
+      "content": "‘I don’t own a house’: I’m 50 with $2 million and I’m scared about losing my job. Can I retire early?. “My monthly expenses are around $6,000. That includes rent.”",
+      "category": "Business",
+      "title": "‘I don’t own a house’: I’m 50 with $2 million and I’m scared about losing my job. Can I retire early?",
+      "link": "https://www.marketwatch.com/story/i-dont-own-a-house-im-50-with-2-million-and-im-scared-about-losing-my-job-can-i-retire-early-bff8a8c3?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.theverge.com/?p=870186",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 16:07:53 UTC",
+      "content": "Deezer opens its AI music detection tool to other platforms. The music streaming service Deezer is giving other companies access to its AI song-detecting tool. The tool, which identifies, tags, and excludes AI-generated music from algorithmic recommendations, is now available for businesses to purchase and use, according to an announcement on Wednesday. Deezer launched its AI music detection tool last year as part of efforts […]",
+      "category": "Technology",
+      "title": "Deezer opens its AI music detection tool to other platforms",
+      "link": "https://www.theverge.com/news/870186/deezer-ai-music-detection-commercially-available",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004729428",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 16:05:00 UTC",
+      "content": "‘They upset me every time I see them’: How long do I keep my mother’s IRS and medical records? She died 4 years ago.. “Her low income did not require her to file taxes, and once she moved to the care facility, I got her on Medi-Cal.”",
+      "category": "Business",
+      "title": "‘They upset me every time I see them’: How long do I keep my mother’s IRS and medical records? She died 4 years ago.",
+      "link": "https://www.marketwatch.com/story/they-upset-me-every-time-i-see-them-how-long-do-i-keep-my-mothers-irs-and-medical-records-she-died-4-years-ago-22a436fc?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769696905",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 16:04:12 +0000 UTC",
+      "content": "French ISIL suspects transferred from Syria allege torture in Iraqi prisons. French lawyers for suspected ISIL members transferred from Syria say men suffering inhumane treatment in Iraqi jails.",
+      "category": "World",
+      "title": "French ISIL suspects transferred from Syria allege torture in Iraqi prisons",
+      "link": "https://www.aljazeera.com/news/2026/1/29/french-isil-suspects-transferred-from-syria-allege-torture-in-iraqi-prisons?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cgjwxdz45ywo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 16:00:41 UTC",
+      "content": "France moves to abolish concept of marital duty to have sex. The proposed bill would enshrine in law the end of so-called \"conjugal rights\" – the notion that marriage means a duty to have sex.",
+      "category": "World",
+      "title": "France moves to abolish concept of marital duty to have sex",
+      "link": "https://www.bbc.com/news/articles/cgjwxdz45ywo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/7701/live/9317e120-fd1d-11f0-8de9-b9e0f3a8919a.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cx2l1xpz03no#0",
+      "source": "BBC Science",
+      "timestamp": "2026-01-29 16:00:09 UTC",
+      "content": "Polar bears on Norwegian islands fatter and healthier despite ice loss, scientists say. Scientists think that Svalbard bears have adapted to recent ice loss by eating more land-based prey.",
+      "category": "Science",
+      "title": "Polar bears on Norwegian islands fatter and healthier despite ice loss, scientists say",
+      "link": "https://www.bbc.com/news/articles/cx2l1xpz03no?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/d523/live/e9300230-fc56-11f0-8617-9b1f1bfe5268.jpg"
+    },
+    {
+      "id": "https://www.theverge.com/?p=869824",
+      "source": "The Verge",
+      "timestamp": "2026-01-29 16:00:00 UTC",
+      "content": "The rise of the slopagandist. The violent federal occupation of Minneapolis - and the subsequent killings of two residents at the hands of immigration agents - began with a vlog. Nick Shirley, a roving 23-year-old with a smartphone and a taste for outrage, made a YouTube video with unfounded allegations of fraud at daycares operated by the local Somali American […]",
+      "category": "Technology",
+      "title": "The rise of the slopagandist",
+      "link": "https://www.theverge.com/news/869824/right-wing-influencers-nick-shirley-slopaganda",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/29/world/europe/european-union-iran-sanctions-irgc.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-29 15:44:42 UTC",
+      "content": "European Union Labels Iran’s Revolutionary Guard a Terrorist Group. The move, which comes after the killing of protesters, brings the European Union in line with the United States and Canada.",
+      "category": "World",
+      "title": "European Union Labels Iran’s Revolutionary Guard a Terrorist Group",
+      "link": "https://www.nytimes.com/2026/01/29/world/europe/european-union-iran-sanctions-irgc.html",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004735698",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 15:36:00 UTC",
+      "content": "The maid of honor won’t put expenses on her credit card for the bachelorette party. As a bridesmaid, should I be offering?. “I still haven’t been reimbursed for the cabin deposit I paid for the wedding weekend.”",
+      "category": "Business",
+      "title": "The maid of honor won’t put expenses on her credit card for the bachelorette party. As a bridesmaid, should I be offering?",
+      "link": "https://www.marketwatch.com/story/the-maid-of-honor-wont-put-expenses-on-her-credit-card-for-the-bachelorette-party-as-a-bridesmaid-should-i-be-offering-b562ad51?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087477",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 15:29:31 UTC",
+      "content": "India is teaching Google how AI in education can scale. With the highest global usage of Gemini for learning, India is emerging as a key market shaping Google's approach to AI in education.",
+      "category": "Technology",
+      "title": "India is teaching Google how AI in education can scale",
+      "link": "https://techcrunch.com/2026/01/29/india-is-teaching-google-how-ai-in-education-can-scale/",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087787",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 15:22:29 UTC",
+      "content": "Flapping Airplanes and the promise of research-driven AI. A new AI lab called Flapping Airplanes launched yesterday, and a Sequoia partner has an interesting take on why they stand out.",
+      "category": "Technology",
+      "title": "Flapping Airplanes and the promise of research-driven AI",
+      "link": "https://techcrunch.com/2026/01/29/flapping-airplanes-and-the-promise-of-research-driven-ai/",
+      "picture": ""
+    },
+    {
+      "id": "WP-MKTW-0004735756",
+      "source": "MarketWatch",
+      "timestamp": "2026-01-29 15:21:00 UTC",
+      "content": "U.S. oil prices surge by nearly 5% on bets that U.S. strike on Iran is imminent. Oil prices rallied Thursday by nearly 5%, with the global benchmark touching its highest level since July as tensions between the U.S. and Iran worsened, raising concerns over disruptions to the global flow of crude.",
+      "category": "Business",
+      "title": "U.S. oil prices surge by nearly 5% on bets that U.S. strike on Iran is imminent",
+      "link": "https://www.marketwatch.com/story/u-s-oil-prices-surge-by-nearly-5-on-bets-that-u-s-strike-on-iran-is-imminent-ffada56d?mod=mw_rss_topstories",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/information-technology/2026/01/does-anthropic-believe-its-ai-is-conscious-or-is-that-just-what-it-wants-claude-to-think/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-29 15:19:56 UTC",
+      "content": "Does Anthropic believe its AI is conscious, or is that just what it wants Claude to think?. We have no proof that AI models suffer, but Anthropic acts like they might for training purposes.",
+      "category": "Technology",
+      "title": "Does Anthropic believe its AI is conscious, or is that just what it wants Claude to think?",
+      "link": "https://arstechnica.com/information-technology/2026/01/does-anthropic-believe-its-ai-is-conscious-or-is-that-just-what-it-wants-claude-to-think/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/the-AI-ghost-in-the-machine-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cq841e4n4v8o#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-29 15:19:32 UTC",
+      "content": "Great Ormond Street doctor who botched surgery harmed nearly 100 children. Yaser Jabbar specialised in limb-lengthening and reconstruction for children with complex problems.",
+      "category": "Health",
+      "title": "Great Ormond Street doctor who botched surgery harmed nearly 100 children",
+      "link": "https://www.bbc.com/news/articles/cq841e4n4v8o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/1311/live/110208b0-fd12-11f0-833e-6bf0186607ca.jpg"
+    },
+    {
+      "id": "https://arstechnica.com/space/2026/01/do-you-have-ideas-about-how-to-improve-americas-space-program/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-29 15:18:44 UTC",
+      "content": "Do you have ideas about how to improve America's space program?. \"Any time there’s dynamic change, there’s the opportunity for new ideas.\"",
+      "category": "Technology",
+      "title": "Do you have ideas about how to improve America's space program?",
+      "link": "https://arstechnica.com/space/2026/01/do-you-have-ideas-about-how-to-improve-americas-space-program/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/space-suggestion-box-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cr57j47811yo#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-29 15:04:19 UTC",
+      "content": "Assisted dying bill 'no hope' of passing unless Lords change approach, warns peer. Lord Falconer said the bill has \"absolutely no hope\" of passing without a \"fundamental change\" in approach.",
+      "category": "Health",
+      "title": "Assisted dying bill 'no hope' of passing unless Lords change approach, warns peer",
+      "link": "https://www.bbc.com/news/articles/cr57j47811yo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/40e1/live/59cd9570-fcde-11f0-b7e1-afb6d0884c18.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769698108",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 15:01:37 +0000 UTC",
+      "content": "White House ‘Border Czar’ announces shift in Minnesota tactics. White House “Border Czar” Tom Homan said federal immigration agents will conduct “targeted” operations in Minnesota.",
+      "category": "World",
+      "title": "White House ‘Border Czar’ announces shift in Minnesota tactics",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/white-house-border-czar-announces-shift-in-minnesota-tactics?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/28/health/angella-ferguson-dead.html",
+      "source": "NY Times Health",
+      "timestamp": "2026-01-29 14:59:51 UTC",
+      "content": "Angella Ferguson, a Leader in Sickle Cell Anemia Research, Dies at 100. A Black female doctor when that was rare, she developed a diagnostic test for the disease that is still a standard tool, as well as treatment guidelines.",
+      "category": "Health",
+      "title": "Angella Ferguson, a Leader in Sickle Cell Anemia Research, Dies at 100",
+      "link": "https://www.nytimes.com/2026/01/28/health/angella-ferguson-dead.html",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087791",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 14:58:47 UTC",
+      "content": "Tesla’s energy storage business is growing faster than any other part of the company. Energy storage products like the Megapack, Megablock, and Powerwall drove nearly a quarter of Tesla’s gross profit.",
+      "category": "Technology",
+      "title": "Tesla’s energy storage business is growing faster than any other part of the company",
+      "link": "https://techcrunch.com/2026/01/29/teslas-energy-storage-business-is-growing-faster-than-any-other-part-of-the-company/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cvgp47neze4o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 14:55:58 UTC",
+      "content": "Heavy gunfire and blasts heard near airport in Niger's capital. The airport houses an air force base and is about 10km (six miles) from the presidential place.",
+      "category": "World",
+      "title": "Heavy gunfire and blasts heard near airport in Niger's capital",
+      "link": "https://www.bbc.com/news/articles/cvgp47neze4o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/252c/live/b6de6170-fcdb-11f0-9c97-69939b61e7c7.jpg"
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cq8413k1xvno#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 14:55:35 UTC",
+      "content": "US Senator Amy Klobuchar announces bid for Minnesota governor. She fills the void for Democrats after current Governor Tim Walz ended his re-election campaign early.",
+      "category": "World",
+      "title": "US Senator Amy Klobuchar announces bid for Minnesota governor",
+      "link": "https://www.bbc.com/news/articles/cq8413k1xvno?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/2c1b/live/8ac85580-fd19-11f0-833e-6bf0186607ca.jpg"
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087783",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 14:52:13 UTC",
+      "content": "Spotify rolls out group chats. Spotify users can now share the podcasts, playlists, and audiobooks they're listening to with up to 10 people.",
+      "category": "Technology",
+      "title": "Spotify rolls out group chats",
+      "link": "https://techcrunch.com/2026/01/29/spotify-rolls-out-group-chats/",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087775",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 14:50:57 UTC",
+      "content": "Apple’s new iPhone and iPad security feature limits cell networks from collecting precise location data. The new security feature makes it more difficult for police and malicious hackers to obtain a person's precise location data from a cell phone company.",
+      "category": "Technology",
+      "title": "Apple’s new iPhone and iPad security feature limits cell networks from collecting precise location data",
+      "link": "https://techcrunch.com/2026/01/29/apples-new-iphone-and-ipad-security-feature-limits-cell-networks-from-collecting-precise-location-data/",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087434",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 14:30:00 UTC",
+      "content": "Google Maps now lets you access Gemini while walking and cycling. When you're walking around and navigating with Maps, you can now ask Gemini questions like \"What neighborhood am I in?\" or \"What are top-rated restaurants nearby?\"",
+      "category": "Technology",
+      "title": "Google Maps now lets you access Gemini while walking and cycling",
+      "link": "https://techcrunch.com/2026/01/29/google-maps-now-lets-you-access-gemini-while-walking-and-cycling/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769693232",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 14:22:07 +0000 UTC",
+      "content": "Key questions about US military build-up near Iran. Trump is building up a military force in the Middle East, saying the US is ready to strike Iran.",
+      "category": "World",
+      "title": "Key questions about US military build-up near Iran",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/key-questions-about-us-military-build-up-near-iran?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769686853",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 14:15:42 +0000 UTC",
+      "content": "What’s UpScrolled, the app gaining popularity after TikTok’s US takeover?. Disgruntled TikTok users are flocking to the platform which is promising a ‘transparent tech&#039; experience.",
+      "category": "World",
+      "title": "What’s UpScrolled, the app gaining popularity after TikTok’s US takeover?",
+      "link": "https://www.aljazeera.com/news/2026/1/29/whats-upscrolled-the-app-gaining-popularity-after-tiktoks-us-takeover?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://arstechnica.com/tech-policy/2026/01/states-want-to-charge-fossil-fuel-companies-for-climate-change-superfunds/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-29 14:14:29 UTC",
+      "content": "States want to tax fossil fuel companies to create climate change superfunds. As climate costs rise, states are passing legislation so fossil fuel can pay their share.",
+      "category": "Technology",
+      "title": "States want to tax fossil fuel companies to create climate change superfunds",
+      "link": "https://arstechnica.com/tech-policy/2026/01/states-want-to-charge-fossil-fuel-companies-for-climate-change-superfunds/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2026/01/houseflooded-500x500.jpg?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/28/world/asia/china-starmer-xi-jinping.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-29 14:04:05 UTC",
+      "content": "U.K.’s Starmer Meets Xi Jinping in Beijing as Ties Warm. Prime Minister Keir Starmer of Britain is seeking to promote economic ties for growth, offering China’s leader, Xi Jinping, a way to court one of America’s allies.",
+      "category": "World",
+      "title": "U.K.’s Starmer Meets Xi Jinping in Beijing as Ties Warm",
+      "link": "https://www.nytimes.com/2026/01/28/world/asia/china-starmer-xi-jinping.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cp9jl8vxdy9o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 13:31:24 UTC",
+      "content": "Ukraine receives 1,000 bodies in latest soldier swap with Russia. Russia received 38 soldiers' bodies in exchange as part of an agreement between the warring countries.",
+      "category": "World",
+      "title": "Ukraine receives 1,000 bodies in latest soldier swap with Russia",
+      "link": "https://www.bbc.com/news/articles/cp9jl8vxdy9o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/97d6/live/4b0d51b0-fd15-11f0-833e-6bf0186607ca.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769693063",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 13:28:49 +0000 UTC",
+      "content": "Trump border security chief Homan doubles down on Minnesota operations. Top official promises shift in operations after killings of US citizens, but says Trump not &#039;surrendering&#039; mission.",
+      "category": "World",
+      "title": "Trump border security chief Homan doubles down on Minnesota operations",
+      "link": "https://www.aljazeera.com/news/2026/1/29/trump-border-czar-says-staying-in-minnesota-until-problems-gone?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/29/world/europe/trump-iran-threats.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-29 13:21:02 UTC",
+      "content": "Trump Warns Iran With Military Muscle, but Risks a Regional War. Iran’s Islamic Republic, weakened by airstrikes in June and huge popular unrest, warns that it will strike back hard if attacked by the United States. This time, Iran may mean it.",
+      "category": "World",
+      "title": "Trump Warns Iran With Military Muscle, but Risks a Regional War",
+      "link": "https://www.nytimes.com/2026/01/29/world/europe/trump-iran-threats.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/c70lyrpekr2o#0",
+      "source": "BBC Health",
+      "timestamp": "2026-01-29 13:16:22 UTC",
+      "content": "Hampstead ponds trans access challenge dismissed. The current policy is that trans men and trans women are entitled to use the pond of their choice.",
+      "category": "Health",
+      "title": "Hampstead ponds trans access challenge dismissed",
+      "link": "https://www.bbc.com/news/articles/c70lyrpekr2o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/11aa/live/60b3ac90-fd0f-11f0-833e-6bf0186607ca.jpg"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769684167",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 13:05:35 +0000 UTC",
+      "content": "Israel hands over 15 bodies of Palestinians in last stage of captive swap. Palestinians still waiting for the Red Cross to turn over the bodies either in Khan Younis or Gaza City.",
+      "category": "World",
+      "title": "Israel hands over 15 bodies of Palestinians in last stage of captive swap",
+      "link": "https://www.aljazeera.com/news/2026/1/29/israel-hands-over-15-bodies-of-palestinians-in-last-stage-of-captive-swap?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://techcrunch.com/?p=3087763",
+      "source": "TechCrunch",
+      "timestamp": "2026-01-29 12:53:49 UTC",
+      "content": "Waymo robotaxi hits a child near an elementary school in Santa Monica. The child, whose age is not public, sustained minor injuries according to Waymo. The National Highway Traffic Safety Administration is investigating.",
+      "category": "Technology",
+      "title": "Waymo robotaxi hits a child near an elementary school in Santa Monica",
+      "link": "https://techcrunch.com/2026/01/29/waymo-robotaxi-hits-a-child-near-an-elementary-school-in-santa-monica/",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769689236",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 12:26:11 +0000 UTC",
+      "content": "Family blames ICE for disabled son’s death after father’s detention. Wael Tarabishi died after weeks in intensive care while his father, his primary caregiver, was held in ICE detention.",
+      "category": "World",
+      "title": "Family blames ICE for disabled son’s death after father’s detention",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/family-blames-ice-for-disabled-sons-death-after-fathers-detention?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769688345",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 12:21:18 +0000 UTC",
+      "content": "Anti-ICE protesters tear-gassed outside Texas detention centre. Anti-ICE protesters tear-gassed outside Texas detention centre",
+      "category": "World",
+      "title": "Anti-ICE protesters tear-gassed outside Texas detention centre",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/anti-ice-protesters-tear-gassed-outside-texas-detention-centre?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cp87l604nx8o#1",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 12:20:47 UTC",
+      "content": "Nicki Minaj calls herself Trump's 'number one fan' and shows off gold card visa. The rapper, born in Trinidad and Tobago, praises the US president while Bruce Springsteen protests aboout ICE.",
+      "category": "World",
+      "title": "Nicki Minaj calls herself Trump's 'number one fan' and shows off gold card visa",
+      "link": "https://www.bbc.com/news/articles/cp87l604nx8o?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/2c5f/live/977ebc80-fd03-11f0-9972-d3f265c101c6.jpg"
+    },
+    {
+      "id": "https://arstechnica.com/science/2026/01/early-universes-supermassive-black-holes-grew-in-cocoons-like-butterflies/",
+      "source": "Ars Technica",
+      "timestamp": "2026-01-29 12:00:33 UTC",
+      "content": "Early Universe's supermassive black holes grew in cocoons like butterflies. During cocoon phase, young, supermassive black holes are surrounded by high-density gas.",
+      "category": "Technology",
+      "title": "Early Universe's supermassive black holes grew in cocoons like butterflies",
+      "link": "https://arstechnica.com/science/2026/01/early-universes-supermassive-black-holes-grew-in-cocoons-like-butterflies/",
+      "picture": "https://cdn.arstechnica.net/wp-content/uploads/2023/04/image-1-500x500.png?w=128&h=128&crop=1"
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769608857",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 11:51:03 +0000 UTC",
+      "content": "Why is ‘Deuce Bigalow’ rooting for Viktor Orban in Hungary?. A washed-up American comedian’s endorsement offers a window into Hungary’s central role in the global far right.",
+      "category": "World",
+      "title": "Why is ‘Deuce Bigalow’ rooting for Viktor Orban in Hungary?",
+      "link": "https://www.aljazeera.com/opinions/2026/1/29/why-is-deuce-bigalow-rooting-for-viktor-orban-in-hungary?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769673943",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 11:43:54 +0000 UTC",
+      "content": "Why is the UK’s Keir Starmer in China and what does he want to achieve?. Prime Minister Keir Starmer has portrayed his trip as a pragmatic move to improve UK-China relations.",
+      "category": "World",
+      "title": "Why is the UK’s Keir Starmer in China and what does he want to achieve?",
+      "link": "https://www.aljazeera.com/news/2026/1/29/why-is-the-uks-keir-starmer-in-china-and-what-does-he-want-to-achieve?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769686193",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 11:41:40 +0000 UTC",
+      "content": "Video: Palestinians in Gaza wait for vital Rafah crossing to open. Palestinians in Gaza are waiting with uncertainty for the partial Israeli reopening of Gaza’s Rafah border crossing.",
+      "category": "World",
+      "title": "Video: Palestinians in Gaza wait for vital Rafah crossing to open",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/video-palestinians-in-gaza-wait-for-vital-rafah-crossing-to-open?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769674169",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 11:38:31 +0000 UTC",
+      "content": "Israel raids several occupied West Bank towns after killing Hebron youth. Raids come as Israeli settlers storm Joseph&#039;s Tomb in Nablus, said to be the burial ground of biblical father of Jesus.",
+      "category": "World",
+      "title": "Israel raids several occupied West Bank towns after killing Hebron youth",
+      "link": "https://www.aljazeera.com/news/2026/1/29/israel-raids-several-occupied-west-bank-towns-after-killing-hebron-youth?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.aljazeera.com/?t=1769686571",
+      "source": "Al Jazeera",
+      "timestamp": "Thu, 29 Jan 2026 11:38:01 +0000 UTC",
+      "content": "Video emerges of Dutch police assault on two Muslim women. Two Muslim women who were kicked and hit by a police officer in Utrecht have made a formal complaint.",
+      "category": "World",
+      "title": "Video emerges of Dutch police assault on two Muslim women",
+      "link": "https://www.aljazeera.com/video/newsfeed/2026/1/29/video-emerges-of-dutch-police-assault-on-two-muslim-women?traffic_source=rss",
+      "picture": ""
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/29/world/europe/greenland-trump-anxiety-american-turmoil.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-29 11:22:39 UTC",
+      "content": "Greenlanders Watching Turmoil in the United States Say No Thanks. The violence in Minneapolis and President Trump’s threats have soured Greenlanders on the United States and, unexpectedly, pushed them closer to Denmark.",
+      "category": "World",
+      "title": "Greenlanders Watching Turmoil in the United States Say No Thanks",
+      "link": "https://www.nytimes.com/2026/01/29/world/europe/greenland-trump-anxiety-american-turmoil.html",
+      "picture": ""
+    },
+    {
+      "id": "https://www.bbc.com/news/articles/cn9zp0nyvxdo#0",
+      "source": "BBC World",
+      "timestamp": "2026-01-29 11:03:08 UTC",
+      "content": "Talks ramp up to avert US government shutdown after Minneapolis shooting. Democrats are pushing to remove funding for the Department of Homeland Security unless new measures are implemented.",
+      "category": "World",
+      "title": "Talks ramp up to avert US government shutdown after Minneapolis shooting",
+      "link": "https://www.bbc.com/news/articles/cn9zp0nyvxdo?at_medium=RSS&at_campaign=rss",
+      "picture": "https://ichef.bbci.co.uk/ace/standard/128/cpsprodpb/c3b8/live/3bbd2080-fc7c-11f0-b9c1-0d3cbd49d190.jpg"
+    },
+    {
+      "id": "https://www.nytimes.com/2026/01/29/world/middleeast/israel-us-aid-weapons-gaza-biden-netanyahu.html",
+      "source": "NY Times World",
+      "timestamp": "2026-01-29 10:30:19 UTC",
+      "content": "Netanyahu Vows to Cut Israel’s Reliance on U.S. Military Aid. Prime Minister Benjamin Netanyahu blamed some soldiers’ deaths in the Gaza war on a lack of ammunition caused by a pause in American weapon deliveries during President Biden’s term.",
+      "category": "World",
+      "title": "Netanyahu Vows to Cut Israel’s Reliance on U.S. Military Aid",
+      "link": "https://www.nytimes.com/2026/01/29/world/middleeast/israel-us-aid-weapons-gaza-biden-netanyahu.html",
+      "picture": ""
+    }
+  ],
+  "mapPoints": [
+    {
+      "id": "map-0",
+      "lat": 34.0522,
+      "lng": -118.2437,
+      "title": "Los Angeles",
+      "sentiment": "neutral",
+      "category": "Geopolitical",
+      "description": "US oil prices surge as market anticipates military action against Iran, reflecting heightened geo...",
+      "sourceLink": "",
+      "signalId": "sig_d0988138"
+    }
+  ],
+  "availableDates": [
+    "2026-01-27",
+    "2026-01-28",
+    "2026-01-29"
+  ],
+  "foreignRelations": [],
+  "bigPicture": {
+    "summary": "Okay, let's synthesize the data from January 27, 2026, into a Grand Narrative and identify the underlying Meta-Narrative.\n\n## The Grand Narrative: A Turbulent Year\n\nThe early months of 2026 are defined by a volatile interplay between **unilateral US actions**, **accelerating technological change**, and **geopolitical fragmentation**. The stage is set where the established order is fraying, replaced by a landscape marked by uncertainty, contested alliances, and the disruptive potential of new technologies.\n\n## Connecting the Dots: The Trajectory\n\n1.  **Unilateralism as a Catalyst:** The US withdrawal from the Paris Climate Accord is not an isolated policy shift but a stark signal of a broader turn towards unilateralism. This action directly repudiates the multilateral frameworks that underpinned international cooperation for years. It immediately creates ripple effects:\n    *   **Escalation of Geopolitical Tensions:** This signals a weakened commitment to international agreements, emboldening other actors (like China or Russia) to pursue more assertive foreign policies elsewhere, potentially filling the vacuum left by US disengagement. It also fuels anti-establishment sentiment globally, contributing to domestic instability within other nations.\n    *   **Erosion of Alliances:** Simultaneously, this dovetails with the ongoing trade disputes. The Trump administration's unpredictable style and aggressive trade policies strain alliances built on shared economic rules and cooperation. The friction surrounding the US-EU trade deal, despite its substance, is a direct consequence of this underlying US trajectory – partners are wary and responding defensively.\n\n2.  **The Humanitarian and Migration Front:** The severe crisis in Gaza serves as a stark example of the international community's fractured response to major conflicts. The disparity in attention and action reflects the weakened efficacy of traditional international institutions and norms, directly impacted by US unilateralism. This crisis, like migration itself, is a defining challenge of the era. Migration is not just a humanitarian issue but a potent geopolitical tool – seen in Spain's regularization program (attempting to manage flows) and Rwanda's legal challenge (using migration as a bargaining chip). The constant movement of people intersects with national security anxieties and economic pressures, further destabilizing regions and challenging the social contract in receiving countries.\n\n3.  **Technology as Disruptor and Mirror:** The rapid advancement of AI represents a fundamental transformation, cutting across all other domains. It's not just a background trend; it's actively reshaping industries, raising profound regulatory questions (liability, addiction), and influencing political discourse and power dynamics. The specific examples (TikTok scrutiny, legal challenges to tech giants, emergence of digital alternatives like Yahoo Scout) illustrate this disruption. AI capabilities are accelerating change, demanding new governance models, and reflecting the era's underlying theme of rapid escalation and transformation. The rise of digital alternatives also hints at a fragmentation in the information and communication space, parallel to the geopolitical fragmentation.\n\n4.  **Domestic Instability Fueling Global Impact:** The domestic instability in the US, fueled by Trump-era rhetoric and actions, is not contained. Issues like ICE-related deaths and legal challenges are viewed with concern by allies, further damaging the US's global reputation and credibility. This internal turmoil contributes to the perception of the US as an unreliable partner, reinforcing the geopolitical fragmentation narrative.\n\n## The Meta-Narrative: The End of the Established Order and the Acceleration of Instability\n\nThe big story underneath the noise of 2026 is the **fundamental shift from a relatively stable, rules-based international system (even with its flaws) towards a more chaotic, fragmented, and unpredictable world.**\n\n*   **The Decline of Multilateralism:** The US withdrawal from the Paris Climate Accord is a potent symbol of this decline. Established international agreements and institutions are increasingly viewed as unreliable or inconvenient by major powers, particularly the US. This erodes the foundations of global cooperation.\n*   **Rise of Geopolitical Fragmentation:** Alliances are under strain, and the traditional balance of power is destabilized. Nations are forced to make choices about whom to align with or appease, leading to a world with more competing blocs and spheres of influence.\n*   **Escalation as Normalized:** Tensions, whether in trade, climate, humanitarian crises, or technology, are escalating more rapidly. The US's own style of governance, characterized by unpredictability and disruption, sets a tone that permeates the global environment. Crises seem more frequent, severe, and less likely to be resolved through established diplomatic channels.\n*   **Acceleration of Change:** Technological advancements, particularly in AI, are not just tools but forces of change that outpace societal and regulatory adaptation. This creates new risks (addiction, misinformation, geopolitical AI arms races) and deepens existing anxieties. The rise of digital alternatives suggests a faster turnover and fragmentation in even core sectors like search.\n*   **Interconnected Instability:** The trajectory is not linear, but the connections are clear: US unilateralism → Geopolitical Fragmentation → Escalation of Tensions (trade, climate, conflict) → Increased Migration Pressures → Technological Disruption → Domestic Instabilities Globally.\n\n## Conclusion\n\nThe narrative of 2026 is one of **deceleration of the established international order** and the **acceleration of disruptive change and instability**. The US's pivot towards unilateralism is a central driver, eroding multilateral frameworks and triggering cascading effects across geopolitics, the economy, society, and technology. The world is hurtling towards a \"new normal\" characterized by fragmentation, rapid escalation of crises, and the profound challenge of adapting governance structures to manage the accelerating pace of transformation and the inherent tensions of a less stable international system.",
+    "timeline": [
+      {
+        "date": "2026-01-27",
+        "title": "Major shifts in global power dynamics and economic uncertainty persist amid escalating geopolitical tensions and domestic instability in the United States. The US withdrawal from the Paris Climate Accord marks a significant repudiation of multilateral environmental agreements. Simultaneously, trade disputes continue to strain alliances as Trump administration policies provoke unpredictable reactions from traditional partners like Canada and South Korea. The US-EU trade deal, while substantial, occurs against a backdrop of heightened friction with Washington.",
+        "summary": "Humanitarian crises remain severe, particularly in Gaza where international attention is focused on the dire living conditions and high civilian death toll. This conflict highlights a stark disparity in international concerns and actions. Migration remains a defining challenge for many nations, with Spain implementing a major regularization program while Rwanda takes legal action concerning a UK migration deal. The global movement of people continues to intersect with national security and economic anxieties. Technological transformation is accelerating, most notably with the rapid development and integration of artificial intelligence. The US government's stance on TikTok reflects ongoing concerns about foreign technology influence. Concurrently, numerous technology companies face legal scrutiny, including Meta, TikTok, and YouTube over claims of youth addiction. Advancements in AI capabilities are reshaping industries and raising fundamental questions about liability and regulation. Geopolitical fragmentation and domestic instability in the United States are increasingly intertwined. Trump's rhetoric and actions regarding issues like Greenland, immigration, and trade are fueling division and uncertainty both domestically and internationally. The situation in the US, including ICE-related deaths and legal challenges, is viewed with concern by its allies. The rise of digital alternatives like Yahoo Scout suggests a broader reconfiguration of the online search landscape.",
+        "sentiment": "neutral"
+      }
+    ],
+    "lastUpdated": "2026-01-27T19:16:55.817Z"
+  },
+  "predictionHistory": [
+    {
+      "topic": "What will happen in Iran?",
+      "date": "1/10/2026",
+      "data": {
+        "shortTerm": "In the short term, Iran's protests are expected to continue with sporadic demonstrations, particularly in impoverished areas. The government may intensify its crackdown, including arrests and restrictions on internet access, to quell unrest. International attention may shift to the region as tensions rise, potentially affecting diplomatic relations and oil markets.",
+        "mediumTerm": "Over the next 6 months, Iran's political landscape may see increased internal pressure, possibly leading to reforms or a shift in leadership. The government could face challenges in maintaining control, especially if economic conditions worsen. Regional tensions with the U.S. and its allies may escalate, influencing Iran's foreign policy and military posturing.",
+        "longTerm": "In the long term, Iran's economic and political stability may remain fragile, with potential for further protests or shifts in governance. The country could experience a gradual transition toward more moderate policies or increased authoritarian control. Global energy markets and international relations will likely be shaped by Iran's strategic decisions and regional dynamics."
+      }
+    },
+    {
+      "topic": "When will there be a Mars base?",
+      "date": "1/10/2026",
+      "data": {
+        "shortTerm": "In the short term, no significant progress toward establishing a Mars base is expected. Current geopolitical tensions, including conflicts in Syria, Ukraine, and Venezuela, as well as economic and political instability, will likely divert resources and attention away from space exploration initiatives. The focus of global powers will remain on terrestrial conflicts and domestic issues, making large-scale international collaboration on a Mars base improbable within the next 7 days.",
+        "mediumTerm": "In the medium term, the establishment of a Mars base remains unlikely within 6 months. While technological advancements in satellite networks, AI, and space exploration continue, geopolitical conflicts and economic instability will hinder sustained international cooperation. The U.S. and other nations may prioritize immediate security and economic concerns over long-term space missions. However, small-scale robotic missions or research stations on the Moon might see incremental progress.",
+        "longTerm": "In the long term, a Mars base could be feasible within 1-3 years, assuming geopolitical tensions subside and international collaboration intensifies. The U.S. and potential allies may redirect resources toward space exploration if terrestrial conflicts ease. Advances in technology, such as AI and satellite infrastructure, could support logistical and communication needs for a Mars mission. However, the timeline remains uncertain due to ongoing geopolitical and economic challenges."
+      }
+    }
+  ],
+  "deepDiveBySignalId": {
+    "sig_4b1f1c3": {
+      "signalId": "sig_4b1f1c3",
+      "generatedAt": "2026-01-19T14:30:00Z",
+      "header": {
+        "title": "Greenland Tariffs Escalate U.S.-EU Trade War",
+        "text": "President Trump has doubled down on his threat to impose tariffs on European goods, prompting the EU to vow stronger countermeasures as tensions reach a critical point.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "President Trump",
+          "EU",
+          "European leaders"
+        ],
+        "what": "Threatening and implementing tariffs on European goods",
+        "where": "Greenland, Europe, United States",
+        "when": "January 19, 2026",
+        "why": "Partisan political strategy and personal grievances",
+        "soWhat": "Escalation of trade tensions between the US and Europe, affecting global markets and transatlantic relations."
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-greenland-europe-nato-alliance.html",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests"
+        },
+        {
+          "feedId": "1",
+          "source": "MarketWatch",
+          "title": "Stock futures slump as U.S.-Europe trade tensions ramp up over Trump’s Greenland demands",
+          "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 23:21:00 UTC",
+          "quote": "Wall Street braced for losses when regular trading resumes Tuesday, as U.S. stock futures fell over the holiday weekend following President Donald Trump’s latest tariff threats against Europe."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's tariffs are necessary for national security",
+          "claimB": "Tariffs are detrimental to the global economy",
+          "sourceA": [
+            {
+              "feedId": "4",
+              "source": "NY Times World",
+              "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+              "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+              "timestamp": "2026-01-19 23:14:17 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "1",
+              "source": "BBC World",
+              "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+              "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 23:36:24 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Market reactions to further trade measures",
+        "Diplomatic efforts to de-escalate the situation",
+        "Impact on Greenland's economy and its relationship with the US",
+        "Broader implications for NATO and transatlantic alliances"
+      ]
+    },
+    "sig_e7aa6d1f": {
+      "signalId": "sig_e7aa6d1f",
+      "generatedAt": "2026-01-19T12:00:00Z",
+      "header": {
+        "title": "Spain Train Disaster Claims Dozens",
+        "text": "A high-speed train crash in southern Spain has killed at least 40 people, prompting national mourning and investigations into safety standards.",
+        "sentiment": "neutral",
+        "deltaType": "Incident",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Spanish citizens"
+        ],
+        "what": "A high-speed train crash that resulted in at least 40 deaths",
+        "where": "Southern Spain, near the city of Córdoba",
+        "when": "Sunday, January 18, 2026",
+        "why": "Systemic safety concerns in Spain's transport system",
+        "soWhat": "This is the deadliest transport accident in Spain in over a decade, leading to national mourning and investigations"
+      },
+      "source": [
+        {
+          "feedId": "1",
+          "source": "BBC World",
+          "title": "High-speed train crash in Spain kills at least 39",
+          "link": "https://www.bbc.com/news/articles/cedw6ylpynyo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 08:20:42 UTC",
+          "quote": "High-speed train crash in Spain kills at least 39. More than 400 passengers were on board the trains that derailed near the city of Córdoba, in Spain's worst rail crash in more than a decade."
+        },
+        {
+          "feedId": "5",
+          "source": "BBC World",
+          "title": "What we know about Spain's worst rail disaster in over a decade",
+          "link": "https://www.bbc.com/news/articles/clye22ljxw4o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 21:00:21 UTC",
+          "quote": "What caused the train to derail remains unclear but officials say an investigation has been launched."
+        },
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+          "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+          "timestamp": "2026-01-19 23:11:36 UTC",
+          "quote": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40. Crews were working to retrieve bodies after two high-speed trains derailed in southern Spain. The regional authorities said 41 people were hospitalized, with a dozen of them in intensive care."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The crash was caused by a track failure",
+          "claimB": "The crash was caused by human error",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+              "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+              "timestamp": "2026-01-19 23:11:36 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "BBC World",
+              "title": "What we know about Spain's worst rail disaster in over a decade",
+              "link": "https://www.bbc.com/news/articles/clye22ljxw4o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 21:00:21 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Investigation findings on the cause of the crash",
+        "Potential changes to transportation safety regulations in Spain",
+        "Impact on tourism in Spain",
+        "Similar incidents in other countries with high-speed rail systems",
+        "Broader implications for international transportation safety standards"
+      ]
+    },
+    "sig_ed1370e5": {
+      "signalId": "sig_ed1370e5",
+      "generatedAt": "2026-01-19T14:30:00Z",
+      "header": {
+        "title": "Powell Faces Supreme Court Testimony",
+        "text": "Federal Reserve Chair Jerome Powell is set to appear before the Supreme Court in a case related to the Trump administration's financial policies.",
+        "sentiment": "neutral",
+        "deltaType": "Legal",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Federal Reserve Chair Jerome Powell"
+        ],
+        "what": "Appear before the Supreme Court regarding a case involving the Trump administration's financial policies.",
+        "where": "Supreme Court",
+        "when": "2026-01-19",
+        "why": "To address legal challenges against the Fed's independence.",
+        "soWhat": "This could impact monetary policy and financial markets."
+      },
+      "source": [
+        {
+          "feedId": "9",
+          "source": "NY Times World",
+          "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+          "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+          "timestamp": "2026-01-19 23:14:17 UTC",
+          "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The Supreme Court testimony will reinforce the Fed's independence.",
+          "claimB": "The testimony may lead to erosion of the Fed's autonomy.",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "MarketWatch",
+              "title": "Jerome Powell will attend Supreme Court hearing on Lisa Cook’s firing",
+              "link": "https://www.marketwatch.com/story/jerome-powell-will-attend-supreme-court-hearing-on-lisa-cooks-firing-23e75828?mod=mw_rss_topstories",
+              "timestamp": "2026-01-19 19:57:00 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "US Fed Chair Powell to attend Supreme Court session on Cook case: Report",
+              "link": "https://www.aljazeera.com/economy/2026/1/19/us-fed-chair-powell-to-attend-supreme-court-session-on-cook-case-report?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 20:03:18 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential outcomes of the Supreme Court ruling on Fed independence",
+        "Market reaction to Powell's testimony",
+        "Broader implications for US financial policy"
+      ]
+    },
+    "sig_56bc415c": {
+      "signalId": "sig_56bc415c",
+      "generatedAt": "2026-01-19T15:30:00Z",
+      "header": {
+        "title": "Greenland Tariff Crisis Escalates",
+        "text": "President Trump threatens massive tariffs on European goods over Greenland, causing stock futures to plummet and prompting strong diplomatic condemnations from the EU and UK leaders.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Donald Trump",
+          "European Union leaders",
+          "UK leaders"
+        ],
+        "what": "Threat of imposing tariffs on European goods",
+        "where": "Greenland",
+        "when": "2026-01-19 to 2026-019-20",
+        "why": "Trump's geopolitical strategy involving Greenland and perceived slights, including Nobel Peace Prize snub",
+        "soWhat": "Significant escalation in US-EU relations, potential economic downturn, and strategic implications for NATO alliance"
+      },
+      "source": [
+        {
+          "feedId": "4",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Kaja Kallas, the EU's foreign policy chief, said the bloc has \"no interest to pick a fight, but we will hold our ground\""
+        },
+        {
+          "feedId": "6",
+          "source": "NY Times World",
+          "title": "Trump Is Pushing the U.S.-Europe Alliance to the Brink...Over Greenland",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+          "timestamp": "2026-01-20 00:18:56 UTC",
+          "quote": "As President Trump tries to coerce European leaders over Greenland..."
+        },
+        {
+          "feedId": "7",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.aljazeera.com/news/2026/1/19/trump-asks-putin-to-join-gaza-board-of-peace-even-as-ukraine-war-rages?traffic_source=rss",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Kaja Kallas, the EU's foreign policy chief, said the bloc has \"no interest to pick a fight, but we will hold our ground\""
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's tariffs on European goods are solely for strategic reasons related to Greenland",
+          "claimB": "The tariffs are a response to Trump's perceived slights, including the Nobel Peace Prize snub",
+          "sourceA": [
+            {
+              "feedId": "4",
+              "source": "BBC World",
+              "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+              "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 23:36:24 UTC"
+            },
+            {
+              "feedId": "6",
+              "source": "Al Jazeera",
+              "title": "Norway PM: Trump ‘preoccupied’ with Nobel Peace Prize on Greenland texts",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 20:52:05 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "NY Times World",
+              "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+              "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+              "timestamp": "2026-01-19 23:14:17 UTC"
+            },
+            {
+              "feedId": "6",
+              "source": "Al Jazeera",
+              "title": "Norway PM: Trump ‘preoccupied’ with Nobel Peace Prize on Greenland texts",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 20:52:05 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Market fluctuations and potential trade war escalation",
+        "Diplomatic responses from NATO allies",
+        "Broader implications for US-EU relations and global economic stability",
+        "Internal EU policy debates on tariffs and trade retaliation",
+        "Reactions from Greenland and other territories",
+        "Potential for direct US-EU confrontation or summit meetings"
+      ]
+    },
+    "sig_50b66196": {
+      "signalId": "sig_50b66196",
+      "generatedAt": "2026-01-19T19:00:00Z",
+      "header": {
+        "title": "Spain Train Disaster Deepens Political Crisis",
+        "text": "A deadly high-speed train collision has killed at least 40 people, prompting Spain's PM to announce three days of national mourning and an immediate investigation into the cause of the derailment.",
+        "sentiment": "neutral",
+        "deltaType": "incident",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Spanish government",
+          "Prime Minister Pedro Sanchez"
+        ],
+        "what": "A deadly high-speed train collision",
+        "where": "Southern Spain",
+        "when": "January 19, 2026",
+        "why": "An immediate investigation is being conducted to determine the cause.",
+        "soWhat": "This is one of Europe's worst rail disasters in over a decade, leading to national mourning and significant political implications."
+      },
+      "source": [
+        {
+          "feedId": "6",
+          "source": "NY Times World",
+          "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+          "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+          "timestamp": "2026-01-19 23:11:36 UTC",
+          "quote": "Crews were working to retrieve bodies after two high-speed trains derailed in southern Spain. The regional authorities said 41 people were hospitalized, with a dozen of them in intensive care."
+        },
+        {
+          "feedId": "2",
+          "source": "BBC World",
+          "title": "High-speed train crash in Spain kills at least 39",
+          "link": "https://www.bbc.com/news/articles/cedw6ylpynyo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 08:20:42 UTC",
+          "quote": "More than 400 passengers were on board the trains that derailed near the city of Córdoba, in Spain's worst rail crash in more than a decade."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The derailment was caused by a break in the track.",
+          "claimB": "The derailment was caused by a technical failure.",
+          "sourceA": [
+            {
+              "feedId": "6",
+              "source": "NY Times World",
+              "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+              "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+              "timestamp": "2026-01-19 23:11:36 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "6",
+              "source": "NY Times World",
+              "title": "Spain Scrutinizes Break in Track After 2 Trains Collide, Killing 40",
+              "link": "https://www.nytimes.com/live/2026/01/18/world/spain-high-speed-train-derailment",
+              "timestamp": "2026-01-19 23:11:36 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further updates on the investigation findings.",
+        "Political fallout and policy changes in response to the disaster.",
+        "Similar incidents in other countries' rail systems.",
+        "Humanitarian aid efforts and long-term recovery plans."
+      ]
+    },
+    "sig_b9568183": {
+      "signalId": "sig_b9568183",
+      "generatedAt": "2026-01-19T15:14:00Z",
+      "header": {
+        "title": "Greenland Tariffs Escalate U.S.-EU Trade War",
+        "text": "U.S. President Trump threatens tariffs on European goods, prompting EU leaders to vow stronger defense, while UK Prime Minister and opposition figure condemn the move as politically motivated.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "U.S. President Trump",
+          "EU leaders",
+          "UK Prime Minister",
+          "opposition figure"
+        ],
+        "what": "Threatening tariffs on European goods",
+        "where": "Greenland",
+        "when": "2026-01-19",
+        "why": "Trump links the move to not winning Nobel Peace Prize and global security needs",
+        "soWhat": "Escalation of trade disputes between U.S. and EU, potential economic impact and strain on U.S.-EU alliance"
+      },
+      "source": [
+        {
+          "feedId": "1",
+          "source": "NY Times World",
+          "title": "Trump Is Pushing the U.S.-Europe Alliance to the Brink Over Greenland",
+          "link": "https://www.nytimes.com/2026/01/19/world/europe/trump-norway-greenland-nobel.html",
+          "timestamp": "2026-01-20 00:18:56 UTC",
+          "quote": "As President Trump tries to coerce European leaders over Greenland, they are pondering the unthinkable: Is an 80-year-old alliance doomed?"
+        },
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+          "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-19 23:14:17 UTC",
+          "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
+        },
+        {
+          "feedId": "3",
+          "source": "BBC World",
+          "title": "Trump says he will '100%' carry out Greenland tariffs threat, as EU vows to protect its interests",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/norway-pm-trump-preoccupied-with-nobel-peace-prize-on-greenland-texts?traffic_source=rss",
+          "timestamp": "2026-01-19 23:36:24 UTC",
+          "quote": "Kaja Kallas, the EU's foreign policy chief, said the bloc has \"no interest to pick a fight, but we will hold our ground\"."
+        },
+        {
+          "feedId": "7",
+          "source": "Al Jazeera",
+          "title": "Keir Starmer says Trump’s tariffs over Greenland are ‘completely wrong’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/keir-starmer-says-trumps-tariffs-over-greenland-are-completely?traffic_source=rss",
+          "timestamp": "Mon, 19 Jan 2026 13:44:56 +0000 UTC",
+          "quote": "Keir Starmer said Donald Trump’s threats to impose tariffs on allies over Greenland are ‘completely wrong’."
+        },
+        {
+          "feedId": "9",
+          "source": "MarketWatch",
+          "title": "Stock futures slump as U.S.-Europe trade tensions ramp up over Trump’s Greenland demands",
+          "link": "https://www.marketwatch.com/story/stock-futures-slump-as-u-s-europe-trade-tensions-ramp-up-over-trumps-greenland-demands-2fdf8af8?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 01:35:00 UTC",
+          "quote": "Wall Street braced for losses when regular trading resumes Tuesday, as U.S. stock futures fell over the holiday weekend following President Donald Trump’s latest tariff threats against Europe."
+        },
+        {
+          "feedId": "10",
+          "source": "MarketWatch",
+          "title": "Trump’s latest E.U. tariff threats may spur more investors away from the ‘buy America’ trade, analysts say",
+          "link": "https://www.marketwatch.com/story/trumps-latest-e-u-tariff-threats-may-spur-more-investors-away-from-the-buy-america-trade-analysts-say-6e6cbdbc?mod=mw_rss_topstories",
+          "timestamp": "2026-01-19 17:23:00 UTC",
+          "quote": "Some are watching for a “weaponization of capital,” and moves into some Europe stocks — and away from the dollar — amid fresh U.S. tariffs threats against Europe."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump’s tariff threats are justified for national security reasons",
+          "claimB": "Trump’s tariff threats are politically motivated and undermine the U.S.-EU alliance",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Trump Links His Push for Greenland to Not Winning Nobel Peace Prize",
+              "link": "https://www.bbc.com/news/articles/c4g5345ylk0o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-19 23:14:17 UTC",
+              "quote": "In a text, President Trump told Norway’s prime minister that he no longer felt obliged to “think purely of Peace” and that the U.S. needed the island for global security."
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "7",
+              "source": "Al Jazeera",
+              "title": "Keir Starmer says Trump’s tariffs over Greenland are ‘completely wrong’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/19/keir-starmer-says-trumps-tariffs-over-greenland-are-completely?traffic_source=rss",
+              "timestamp": "Mon, 19 Jan 2026 13:44:56 +0000 UTC",
+              "quote": "Keir Starmer said Donald Trump’s threats to impose tariffs on allies over Greenland are ‘completely wrong’."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments on the implementation of tariffs",
+        "Reactions from other NATO allies to the U.S. stance",
+        "Market movements in European stocks and currencies",
+        "Diplomatic efforts to de-escalate the trade conflict",
+        "Broader implications for global trade policies"
+      ]
+    },
+    "sig_ec2964d3": {
+      "signalId": "sig_ec2964d3",
+      "generatedAt": "2026-01-20T17:04:01.954Z",
+      "header": {
+        "title": "Tariff Threats Escalate Global Economic Tensions",
+        "text": "President Trump's aggressive tariff policies against European allies have intensified market volatility and sparked concerns about a new Cold War-style economic confrontation, prompting retaliatory measures from the EU.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "European Union",
+          "United States"
+        ],
+        "what": "Tariff threats and economic confrontation",
+        "where": "Global markets, Europe, United States",
+        "when": "January 2026",
+        "why": "President Trump's aggressive trade policies",
+        "soWhat": "Increased market volatility and potential for economic conflict"
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "NY Times World",
+          "title": "Trump Heckles Europe Before Heading to Davos",
+          "link": "https://www.marketwatch.com/story/the-sell-america-trade-is-making-a-comeback-but-investors-are-selling-most-everything-else-too-a2f6da9a?mod=mw_rss_topstories",
+          "timestamp": "2026-01-20 16:08:53 UTC",
+          "quote": "As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak."
+        },
+        {
+          "feedId": "1",
+          "source": "MarketWatch",
+          "title": "The ‘Sell America’ trade is making a comeback on Tuesday",
+          "link": "https://www.nytimes.com/2026/01/20/insider/trilobites-column.html",
+          "timestamp": "2026-01-20 16:04:00 UTC",
+          "quote": "Talk of the 'Sell America' trade is making a big comeback... as President Donald Trump's latest tariff threats raise the possibility of a rerun of last April's violent market spasms."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Tariff policies lead to economic conflict",
+          "claimB": "Tariff policies may be necessary for national security",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "NY Times World",
+              "title": "Trump Heckles Europe Before Heading to Davos",
+              "link": "https://www.marketwatch.com/story/the-sell-america-trade-is-making-a-comeback-but-investors-are-selling-most-everything-else-too-a2f6da9a?mod=mw_rss_topstories",
+              "timestamp": "2026-01-20 16:08:53 UTC",
+              "quote": "As European leaders try to engage with the American president over Greenland and the future of Ukraine, he is mocking them as weak."
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "22",
+              "source": "MarketWatch",
+              "title": "How Greenland could turn into a Big Tech problem",
+              "timestamp": "2026-01-20 14:38:00 UTC",
+              "quote": "Strategists like Morgan Stanley’s chief U.S. equity strategist say fallout from a brewing U.S.-Europe spat over Greenland could be bad for tech."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential escalation of tariffs leading to trade war",
+        "Impact on global markets and natural gas prices",
+        "Davos economic forum discussions on trade policies",
+        "Future policy announcements by President Trump",
+        "Retaliatory measures from European Union"
+      ]
+    },
+    "sig_2a31223": {
+      "signalId": "sig_2a31223",
+      "generatedAt": "2026-01-20T17:04:26.258Z",
+      "header": {
+        "title": "Spain Train Disaster Exposes Critical Infrastructure Failures",
+        "text": "Spain's deadliest train crash in a decade has killed at least 41 people, raising urgent questions about rail safety protocols and infrastructure maintenance following the derailment near Córdoba.",
+        "sentiment": "neutral",
+        "deltaType": "Incident",
+        "category": "World"
+      },
+      "fiveWs": {
+        "who": [
+          "Spain",
+          "Investigators"
+        ],
+        "what": "Train derailment and subsequent rescue operations",
+        "where": "Near Córdoba, Spain",
+        "when": "January 20, 2026",
+        "why": "Due to a 'gap' in rail safety protocols and infrastructure maintenance",
+        "soWhat": "This incident has exposed systemic failures in Spain's rail infrastructure, potentially leading to increased safety regulations and investigations into similar incidents globally."
+      },
+      "source": [
+        {
+          "feedId": "2",
+          "source": "BBC World",
+          "title": "Spain train crash recovery continues as investigators probe 'gap' in rail",
+          "link": "https://www.bbc.com/news/articles/c5y2qjy9l4yo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-20 14:28:55 UTC",
+          "quote": "Authorities say the twisted train wreckage makes it difficult to recover people trapped inside."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The derailment was caused by a technical failure in the rail system.",
+          "claimB": "The derailment was caused by human error.",
+          "sourceA": [],
+          "sourceB": []
+        }
+      ],
+      "watchNext": [
+        "Investigations into the cause of the derailment",
+        "Potential changes in rail safety regulations",
+        "Similar incidents in other countries' rail systems"
+      ]
+    },
+    "sig_8ff2c623": {
+      "signalId": "sig_8ff2c623",
+      "generatedAt": "2026-01-21T16:56:38.299Z",
+      "header": {
+        "title": "Greenland Acquisition Ambitions Escalate Amid Geopolitical Tensions",
+        "text": "US President Trump's continued public pursuit of Greenland, despite downplaying military options, has intensified concerns among European allies about potential strategic shifts.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Trump",
+          "European allies"
+        ],
+        "what": "Pursuit of Greenland",
+        "where": "Greenland",
+        "when": "2026-01-21",
+        "why": "Strategic interest in the Arctic region",
+        "soWhat": "Potential implications for Arctic strategy and transatlantic relations"
+      },
+      "source": [
+        {
+          "feedId": "11",
+          "source": "Al Jazeera",
+          "title": "Trump live news: US president says ‘won’t use force’ to acquire Greenland",
+          "link": "https://www.aljazeera.com/news/liveblog/2026/1/21/trump-live-news-us-president-in-davos-as-greenland-threats-spark-outrage?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 12:05:35 +0000 UTC",
+          "quote": "The US president, at the World Economic Forum, says he’ll have ‘many meetings’ on Greenland as Europe tensions simmer."
+        },
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC",
+          "quote": "Donald Trump said the US needs “ownership” of Greenland, but he “won’t use force” to acquire the territory."
+        },
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+          "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC",
+          "quote": "Trump has angered European leaders with his Greenland ambitions and tariffs-for-all-who-oppose approach."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "US President Trump is pursuing Greenland for strategic reasons.",
+          "claimB": "European allies are concerned about this pursuit.",
+          "sourceA": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+              "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Davos discussions on Greenland policy",
+        "Future US-Greenland negotiations",
+        "Potential reactions from Greenland authorities",
+        "Broader implications for Arctic sovereignty"
+      ]
+    },
+    "sig_8267f892": {
+      "signalId": "sig_8267f892",
+      "generatedAt": "2026-01-21T17:55:40.366Z",
+      "header": {
+        "title": "Market Confidence Shifts Amid Tech Forecast Concerns",
+        "text": "Investor confidence in Netflix remains fragile despite its diversification efforts, reflecting broader market concerns about AI integration in healthcare information.",
+        "sentiment": "neutral",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Netflix investors",
+          "Market analysts",
+          "AI developers"
+        ],
+        "what": "Investor confidence in Netflix is fragile due to concerns about its forecasts and diversification efforts, while broader market worries about AI's role in healthcare information.",
+        "where": "Global markets, particularly U.S. stock market",
+        "when": "January 2026",
+        "why": "Investors are skeptical about Netflix's 2026 guidance and its acquisition of Warner Bros. Discovery, and there is growing concern about the implications of AI chatbots in healthcare information.",
+        "soWhat": "This could lead to further stock volatility for Netflix and other companies involved in AI and healthcare sectors, and may indicate broader shifts in investor sentiment towards tech and AI applications."
+      },
+      "source": [
+        {
+          "feedId": "6",
+          "source": "MarketWatch",
+          "title": "Netflix’s stock remains under pressure as investors balk at forecast and Warner Bros. acquisition",
+          "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 16:11:00 UTC",
+          "quote": "Investors appear unconvinced by Netflix’s effort to acquire Warner Bros. Discovery’s studio and streaming businesses and have registered their discontent over the company’s 2026 guidance."
+        },
+        {
+          "feedId": "3",
+          "source": "MarketWatch",
+          "title": "‘Dr. Google’ is done. AI chatbots like OpenAI and Claude will change how we search for health information.",
+          "link": "https://www.marketwatch.com/story/sorry-dr-google-chatgpt-and-claude-are-now-getting-into-the-business-of-providing-health-advice-426c167e?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 15:32:00 UTC",
+          "quote": "OpenAI and Anthropic are moving into the complicated world of health information. Will ChatGPT help or hurt patient health?"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Netflix's diversification into content and healthcare through acquisitions is expected to stabilize its business model.",
+          "claimB": "Market concerns about AI's role in healthcare information may negatively impact Netflix's stock performance.",
+          "sourceA": [
+            {
+              "feedId": "6",
+              "source": "MarketWatch",
+              "title": "Netflix’s stock remains under pressure as investors balk at forecast and Warner Bros. acquisition",
+              "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 16:28:00 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "3",
+              "source": "MarketWatch",
+              "title": "‘Dr. Google’ is done. AI chatbots like OpenAI and Claude will change how we search for health information.",
+              "link": "https://www.marketwatch.com/story/sorry-dr-google-chatgpt-and-claude-are-now-getting-into-the-business-of-providing-health-advice-426c167e?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 15:32:00 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments on Netflix's acquisition of Warner Bros. Discovery and its 2026 guidance.",
+        "Market reactions to AI's integration in healthcare, particularly with OpenAI and Anthropic.",
+        "Other tech companies' strategies in AI and diversification efforts.",
+        "Broader economic indicators affecting investor sentiment in the financial sector.",
+        "Potential regulatory responses to AI in healthcare information services."
+      ]
+    },
+    "sig_86c47804": {
+      "signalId": "sig_86c47804",
+      "generatedAt": "2026-01-21T20:28:45.160Z",
+      "header": {
+        "title": "Greenland Becomes Geopolitical Flashpoint",
+        "text": "Trump's proposed 'Board of Peace' includes Greenland, sparking international concern over U.S. intentions and potential conflicts with NATO allies.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "U.S. President Donald Trump",
+          "Trump's administration"
+        ],
+        "what": "Proposed inclusion of Greenland in Trump's 'Board of Peace' and related comments about U.S. 'ownership' of Greenland.",
+        "where": "Greenland, Denmark (as part of the Kingdom of Denmark)",
+        "when": "2026-01-21",
+        "why": "Trump's stated intention to negotiate for U.S. 'ownership' of Greenland, framed as part of a peace initiative.",
+        "soWhat": "This raises concerns about U.S. foreign policy intentions, potential conflict with NATO allies, and implications for Arctic sovereignty and resource control."
+      },
+      "source": [
+        {
+          "feedId": "5",
+          "source": "MarketWatch",
+          "title": "This Trump comment about Greenland at Davos is calming markets. Here’s why.",
+          "link": "https://www.nytimes.com/2026/01/20/world/canada/carney-speech-davos-trump.html",
+          "timestamp": "2026-01-21 16:28:00 UTC",
+          "quote": "Trump said he wouldn’t use force to obtain Greenland and called for negotiations."
+        },
+        {
+          "feedId": "6",
+          "source": "MarketWatch",
+          "title": "This Trump comment about Greenland at Davos is calming markets. Here’s why.",
+          "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-21 16:28:00 UTC",
+          "quote": "U.S. President Donald Trump on Wednesday said he wouldn’t use force to obtain Greenland and called for negotiations, with his remarks coming during a speech at the World Economic Forum’s annual gathering in Davos, Switzerland."
+        },
+        {
+          "feedId": "8",
+          "source": "Al Jazeera",
+          "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC",
+          "quote": "Donald Trump said the US needs “ownership” of Greenland, but he “won’t use force” to acquire the territory."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's proposal for a 'Board of Peace' that includes Greenland is a strategic move to assert U.S. influence in the Arctic region.",
+          "claimB": "Greenland's inclusion in the Board of Peace may be a diplomatic effort to address global conflicts without resorting to military action.",
+          "sourceA": [
+            {
+              "feedId": "8",
+              "source": "Al Jazeera",
+              "title": "Trump says he wants ‘ownership’ of Greenland, but ‘won’t use force’",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/trump-says-he-wants-ownership-of-greenland-but-wont-use?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 15:20:33 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "NY Times World",
+              "title": "Carney Speech on U.S. ‘Rupture’ and Canada’s Survival Draws Standing Ovation at Davos",
+              "link": "https://www.nytimes.com/2026/01/20/world/canada/carney-speech-davos-trump.html",
+              "timestamp": "2026-01-21 12:32:10 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential reactions from NATO allies regarding U.S. foreign policy shifts.",
+        "Market responses to Trump's comments on Greenland and broader economic policies.",
+        "Broader implications for U.S.-European relations and Arctic sovereignty disputes.",
+        "Potential for similar geopolitical maneuvers in other contested territories."
+      ]
+    },
+    "sig_a9a068aa": {
+      "signalId": "sig_a9a068aa",
+      "generatedAt": "2026-01-21T20:29:29.089Z",
+      "header": {
+        "title": "EU Energy Security Under Threat",
+        "text": "Europe's dependence on U.S. policy regarding Greenland raises concerns about energy security and strategic autonomy.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "European leaders",
+          "U.S. President Donald Trump"
+        ],
+        "what": "Concerns about energy security and strategic autonomy due to U.S. policy on Greenland.",
+        "where": "Greenland, Europe",
+        "when": "2026-01-21",
+        "why": "Trump's ambitions regarding Greenland and his approach towards international relations.",
+        "soWhat": "This could affect transatlantic relations and Europe's energy security if U.S. policies shift."
+      },
+      "source": [
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+          "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC",
+          "quote": "Trump has angered European leaders with his Greenland ambitions and tariffs-for-all-who-oppose approach."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Europe is dependent on U.S. policy regarding Greenland.",
+          "claimB": "Trump's stance on Greenland may not necessarily threaten energy security.",
+          "sourceA": [
+            {
+              "feedId": "1",
+              "source": "Al Jazeera",
+              "title": "Can Europe break with Trump? A tale of energy, defence, economic dependence",
+              "link": "https://www.aljazeera.com/economy/2026/1/21/can-europe-break-with-trump-a-tale-of-energy-defence-economic-dependence?traffic_source=rss",
+              "timestamp": "Wed, 21 Jan 2026 13:20:59 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "MarketWatch",
+              "title": "This Trump comment about Greenland at Davos is calming markets. Here’s why.",
+              "link": "https://www.marketwatch.com/story/this-trump-comment-about-greenland-at-davos-is-calming-markets-heres-why-3be5f37d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-21 16:28:00 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments in U.S.-Greenland relations",
+        "Reactions from Greenland authorities",
+        "Changes in energy markets if Greenland resources become contested"
+      ]
+    },
+    "sig_f1566085": {
+      "signalId": "sig_f1566085",
+      "generatedAt": "2026-01-21T20:29:47.990Z",
+      "header": {
+        "title": "Nuclear Energy Renaissance Post-Fukushima",
+        "text": "Japan restarts its largest nuclear plant amid ongoing safety concerns following the Fukushima disaster.",
+        "sentiment": "neutral",
+        "deltaType": "event",
+        "category": "Science"
+      },
+      "fiveWs": {
+        "who": [
+          "Japanese government",
+          "Tokyo Electric Power Company"
+        ],
+        "what": "Restart of the largest nuclear reactor in Japan",
+        "where": "Japan",
+        "when": "2026-01-21",
+        "why": "To address climate change pressures and energy needs, despite ongoing safety concerns from the Fukushima disaster",
+        "soWhat": "This could signal a potential global shift toward nuclear energy as climate change pressures mount, but safety concerns remain."
+      },
+      "source": [
+        {
+          "feedId": "8",
+          "source": "BBC World",
+          "title": "Japan restarts world's largest nuclear plant as Fukushima memories loom large",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/killer-of-japans-former-pm-shinzo-abe-sentenced-to-life-in-prison?traffic_source=rss",
+          "timestamp": "2026-01-21 16:03:54 UTC",
+          "quote": "Japan restarts a reactor at the world's largest nuclear plant nearly 15 years after the Fukushima meltdown."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Restarting nuclear plants will help combat climate change by reducing carbon emissions.",
+          "claimB": "Restarting nuclear plants increases the risk of future meltdowns and long-term environmental damage.",
+          "sourceA": [
+            {
+              "feedId": "7",
+              "source": "Al Jazeera",
+              "title": "Key takeaways from Trump’s one-year anniversary briefing",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/21/key-takeaways-from-trumps-one-year-anniversary-briefing?traffic_source=rss",
+              "timestamp": "2026-01-21 13:01:13 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "BBC World",
+              "title": "Japan restarts world's largest nuclear plant as Fukushima memories loom large",
+              "link": "https://www.bbc.com/news/articles/cq6v0v32rg1o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-21 16:03:54 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Global trends in nuclear energy adoption",
+        "Safety standards for nuclear plants post-Fukushima",
+        "Impact of climate change on energy policies worldwide",
+        "Reactions from international organizations to Japan's decision"
+      ]
+    },
+    "sig_7ad67f9a": {
+      "signalId": "sig_7ad67f9a",
+      "generatedAt": "2026-01-21T20:30:03.599Z",
+      "header": {
+        "title": "AI's Growing Water Appetite",
+        "text": "The rapid expansion of artificial intelligence is creating unprecedented strain on global water supplies, posing a public health risk.",
+        "sentiment": "neutral",
+        "deltaType": "emerging_concern",
+        "category": "Tech/AI"
+      },
+      "fiveWs": {
+        "who": [
+          "AI developers",
+          "Tech companies"
+        ],
+        "what": "AI's increasing water consumption",
+        "where": "Global scale",
+        "when": "2026",
+        "why": "Rapid expansion of AI infrastructure and training processes",
+        "soWhat": "Potential public health risk and strain on water resources"
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "Al Jazeera",
+          "title": "AI’s growing thirst for water is becoming a public health risk",
+          "link": "https://www.aljazeera.com/opinions/2026/1/21/ais-growing-thirst-for-water-is-becoming-a-public-health-risk?traffic_source=rss",
+          "timestamp": "Wed, 21 Jan 2026 12:04:40 +0000 UTC",
+          "quote": "AI’s rapid expansion is placing growing pressure on water supplies and public health."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "AI's water consumption is a minor environmental issue",
+          "claimB": "AI's water usage poses a significant public health risk",
+          "sourceA": [],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "AI’s growing thirst for water is becoming a public health risk",
+              "link": "https://www.aljazeera.com/opinions/2026/1/21/ais-growing-thirst-for-water-is-becoming-a-public-health-risk?traffic_source=rss",
+              "timestamp": "Wed, 20 Jan 2026 12:04:40 UTC",
+              "quote": "AI’s rapid expansion is placing growing pressure on water supplies and public health."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Other environmental impacts of AI technology",
+        "Water scarcity in regions with high AI infrastructure",
+        "Policy responses to AI's resource consumption"
+      ]
+    },
+    "sig_4d60d72b": {
+      "signalId": "sig_4d60d72b",
+      "generatedAt": "2026-01-22T16:58:00.776Z",
+      "header": {
+        "title": "Greenland Deal Escalation: Trump Secured 'Total Access'",
+        "text": "Following his meeting with NATO leaders, President Trump announced securing 'total access' to Greenland, raising concerns among European allies who scrambled to respond to his abrupt policy reversal.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US President Donald Trump",
+          "NATO leaders"
+        ],
+        "what": "Securing 'total access' to Greenland through a NATO deal",
+        "where": "Greenland, Denmark (as part of the Kingdom of Denmark)",
+        "when": "2026-01-22",
+        "why": "Abrupt policy reversal, concerns among European allies",
+        "soWhat": "Significant geopolitical shift with implications for NATO and U.S.-European relations"
+      },
+      "source": [
+        {
+          "feedId": "52",
+          "source": "Al Jazeera",
+          "title": "Trump claims to have secured ‘total access’ to Greenland in NATO deal",
+          "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-pact-will-demand-allies-boost-arctic-security-nato-chief?traffic_source=rss",
+          "timestamp": "2026-01-22 13:31:28 UTC",
+          "quote": "Trump claims to have secured ‘total access’ to Greenland in NATO deal"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump has secured 'total access' to Greenland",
+          "claimB": "European allies are concerned about this abrupt policy reversal",
+          "sourceA": [
+            {
+              "feedId": "52",
+              "source": "Al Jazeera",
+              "title": "Trump claims to have secured ‘total access’ to Greenland in NATO deal",
+              "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-pact-will-demand-allies-boost-arctic-security-nato-chief?traffic_source=rss",
+              "timestamp": "2026-01-22 13:31:28 UTC",
+              "quote": "Trump claims to have secured ‘total access’ to Greenland in NATO deal"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "4",
+              "source": "NY Times World",
+              "title": "Trump’s Rift With Europe Is Clear. Europe Must Decide What to Do About It.",
+              "link": "https://www.nytimes.com/2026/01/21/world/europe/trump-rift-europe.html",
+              "timestamp": "2026-01-22 15:43:09 UTC",
+              "quote": "After President Trump aired his disdain for Europe, its leaders will gather in Brussels Thursday to take stock of what comes next."
+            },
+            {
+              "feedId": "9",
+              "source": "Al Jazeera",
+              "title": "Trump’s Greenland ‘framework’ deal: What we know about it, what we don’t",
+              "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-framework-deal-what-we-know-about-it-what-we-dont?traffic_source=rss",
+              "timestamp": "2026-01-22 13:50:52 UTC",
+              "quote": "Trump says he reached a ‘framework of a future deal’ on Greenland during a meeting with NATO’s Mark Rutte in Davos."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Reactions from Greenland and Denmark regarding the deal",
+        "Potential implications for NATO's strategic posture in the Arctic",
+        "Broader U.S.-European relations following Trump's recent statements",
+        "Follow-up meetings between Trump administration and European allies"
+      ]
+    },
+    "sig_7e580931": {
+      "signalId": "sig_7e580931",
+      "generatedAt": "2026-01-22T17:27:53.193Z",
+      "header": {
+        "title": "Greenland Deal Escalation",
+        "text": "U.S. President Trump announces a 'framework of future deal' for Greenland, raising concerns among NATO allies about sovereignty and strategic implications.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "U.S. President Trump",
+          "NATO allies"
+        ],
+        "what": "Announcement of a 'framework of future deal' for Greenland",
+        "where": "Greenland",
+        "when": "2026-01-22",
+        "why": "Concerns about sovereignty and strategic implications",
+        "soWhat": "This could alter strategic balances in the North Atlantic region"
+      },
+      "source": [
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Live Updates: Zelensky Criticizes European Allies After Meeting With Trump",
+          "link": "https://www.aljazeera.com/news/2026/1/22/mapping-the-10-countries-with-the-most-overseas-territories?traffic_source=rss",
+          "timestamp": "2026-01-22 16:43:42 UTC",
+          "quote": "Zelensky Criticizes European Allies After Meeting With Trump"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump's announcement is a positive move for U.S. interests",
+          "claimB": "The move raises concerns about sovereignty and strategic implications",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Live Updates: Zelensky Criticizes European Allies After Meeting With Trump",
+              "link": "https://www.aljazeera.com/news/2026/1/22/mapping-the-10-countries-with-the-most-overseas-territories?traffic_source=rss",
+              "timestamp": "2026-01-22 16:43:42 UTC",
+              "quote": "Zelensky Criticizes European Allies After Meeting With Trump"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "8",
+              "source": "Al Jazeera",
+              "title": "Trump’s Greenland ‘framework’ deal: What we know about it, what we don’t",
+              "link": "https://www.aljazeera.com/news/2026/1/22/trumps-greenland-framework-deal-what-we-know-about-it-what-we-dont?traffic_source=rss",
+              "timestamp": "2026-01-22 13:50:52 UTC",
+              "quote": "Trump says he reached a 'framework of a future deal' on Greenland during a meeting with NATO's Mark Rutte in Davos."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further details on the deal framework",
+        "Reactions from Greenland and Denmark",
+        "Potential impact on NATO strategy",
+        "Broader implications for U.S.-European relations"
+      ]
+    },
+    "sig_5ec591b0": {
+      "signalId": "sig_5ec591b0",
+      "generatedAt": "2026-01-22T17:29:40.570Z",
+      "header": {
+        "title": "AI Integration of Personal Data",
+        "text": "Tech giants like Google and Spotify are increasingly integrating personal data from email and photo accounts into AI systems, raising privacy concerns.",
+        "sentiment": "neutral",
+        "deltaType": "operational",
+        "category": "Technology"
+      },
+      "fiveWs": {
+        "who": [
+          "Google",
+          "Spotify"
+        ],
+        "what": "Integration of personal data (email and photo accounts) into AI systems.",
+        "where": "United States",
+        "when": "January 2026",
+        "why": "To enable Personal Intelligence and AI Mode for more personalized responses.",
+        "soWhat": "This raises significant privacy concerns and represents a shift in how AI systems are personalized."
+      },
+      "source": [
+        {
+          "feedId": "5",
+          "source": "Ars Technica",
+          "title": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\"",
+          "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+          "timestamp": "2026-01-22 16:35:41 UTC",
+          "quote": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\""
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Integration of personal data into AI systems enhances user experience by providing more personalized services.",
+          "claimB": "Such integration poses significant privacy risks and may lead to misuse of personal data.",
+          "sourceA": [
+            {
+              "feedId": "5",
+              "source": "Ars Technica",
+              "title": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\"",
+              "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+              "timestamp": "2026-01-22 16:35:41 UTC",
+              "quote": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\""
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "Ars Technica",
+              "title": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\"",
+              "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+              "timestamp": "2026-01-22 16:35:41 UTC",
+              "quote": "Google adds your Gmail and Photos to AI Mode to enable \"Personal Intelligence\""
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "How widespread is this integration across other tech companies?",
+        "What are the regulatory responses to these data privacy concerns?",
+        "What are the potential benefits and risks of Personal Intelligence in AI systems?"
+      ]
+    },
+    "sig_5a25072f": {
+      "signalId": "sig_5a25072f",
+      "generatedAt": "2026-01-22T17:30:13.315Z",
+      "header": {
+        "title": "Bitcoin Market Correction",
+        "text": "Bitcoin prices drop below $90K as large investors sell holdings, signaling growing uncertainty in cryptocurrency markets.",
+        "sentiment": "neutral",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Large investors"
+        ],
+        "what": "Bitcoin price drops below $90K due to selling by large investors.",
+        "where": "Global cryptocurrency markets",
+        "when": "January 22, 2026",
+        "why": "Growing uncertainty in cryptocurrency markets.",
+        "soWhat": "This indicates a potential broader market correction and shift in investor confidence away from cryptocurrency as a haven or growth asset."
+      },
+      "source": [
+        {
+          "feedId": "4",
+          "source": "MarketWatch",
+          "title": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere",
+          "link": "https://www.nytimes.com/2026/01/22/world/asia/philippines-cumpio-journalist-prison.html",
+          "timestamp": "2026-01-22 16:39:00 UTC",
+          "quote": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Bitcoin is losing its appeal as a haven or growth asset.",
+          "claimB": "The market correction is temporary and will not affect long-term potential.",
+          "sourceA": [
+            {
+              "feedId": "4",
+              "source": "MarketWatch",
+              "title": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere",
+              "link": "https://www.nytimes.com/2026/01/22/world/asia/philippines-cumpio-journalist-prison.html",
+              "timestamp": "2026-01-22 16:39:00 UTC",
+              "quote": "Bitcoin sinks below $90K as large investors sell their holdings and haven seekers go elsewhere"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "7",
+              "source": "MarketWatch",
+              "title": "These 20 stocks are strong choices for momentum investors",
+              "link": "https://www.marketwatch.com/story/these-20-stocks-are-strong-choices-for-momentum-investors-3c9b1ecd?mod=mw_rss_topstories",
+              "timestamp": "2026-01-22 15:26:00 UTC",
+              "quote": "“Big mo” is an “eternal feature” of financial markets worldwide."
+            },
+            {
+              "feedId": "8",
+              "source": "MarketWatch",
+              "title": "This momentum fund has dodged U.S. stocks and trounced the competition",
+              "link": "https://www.marketwatch.com/story/this-momentum-fund-has-dodged-u-s-stocks-and-trounced-the-competition-7bbc28e8?mod=mw_rss_topstories",
+              "timestamp": "2026-01-22 15:52:00 UTC",
+              "quote": "A momentum strategy can be especially useful for investors looking outside the U.S."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Broader cryptocurrency market trends",
+        "Reactions from other digital assets",
+        "Central bank responses to cryptocurrency volatility",
+        "Investor sentiment reports and surveys",
+        "Regulatory updates on cryptocurrency"
+      ]
+    },
+    "sig_a75537c4": {
+      "signalId": "sig_a75537c4",
+      "generatedAt": "2026-01-22T17:31:14.882Z",
+      "header": {
+        "title": "AMD Stock Surge",
+        "text": "AMD's stock reaches unprecedented levels driven by strong demand for its AI-focused processors.",
+        "sentiment": "neutral",
+        "deltaType": "market",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "AMD"
+        ],
+        "what": "Stock surge due to strong demand for AI-focused processors",
+        "where": "Stock market",
+        "when": "2026-01-22",
+        "why": "Strong demand for AI-focused processors",
+        "soWhat": "Indicates strong market confidence in AMD's position in the growing AI processor market"
+      },
+      "source": [
+        {
+          "feedId": "3",
+          "source": "MarketWatch",
+          "title": "AMD’s stock is on a hot streak not seen in six years",
+          "link": "https://www.marketwatch.com/story/amds-stock-is-on-a-hot-streak-not-seen-in-six-years-eae76f1d?mod=mw_rss_topstories",
+          "timestamp": "2026-01-22 16:17:00 UTC",
+          "quote": "AMD’s stock is on a hot streak not seen in six years"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "AMD's stock surge is solely due to AI demand",
+          "claimB": "The surge may also be influenced by broader market trends or competitor actions",
+          "sourceA": [
+            {
+              "feedId": "3",
+              "source": "MarketWatch",
+              "title": "AMD’s stock is on a hot streak not seen in six years",
+              "link": "https://www.marketwatch.com/story/amds-stock-is-on-a-hot-streak-not-seen-in-six-years-eae76f1d?mod=mw_rss_topstories",
+              "timestamp": "2026-01-22 16:17:00 UTC",
+              "quote": "AMD’s stock is on a hot streak not seen in six years"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "1",
+              "source": "MarketWatch",
+              "title": "These 20 stocks are strong choices for momentum investors",
+              "link": "https://www.marketwatch.com/story/these-20-stocks-are-strong-choices-for-momentum-investors-3c9b1ecd?mod=mw_rss_topstories",
+              "timestamp": "2026-01-26 15:26:00 UTC",
+              "quote": "These 20 stocks are strong choices for momentum investors"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "AMD's earnings report",
+        "Competitor Intel's earnings",
+        "Market trends for AI processors"
+      ]
+    },
+    "sig_257aea1d": {
+      "signalId": "sig_257aea1d",
+      "generatedAt": "2026-01-22T17:33:41.128Z",
+      "header": {
+        "title": "Severe Flooding in Mozambique",
+        "text": "Torrential rains cause severe flooding in Mozambique, displacing over 620,000 people and destroying critical infrastructure.",
+        "sentiment": "neutral",
+        "deltaType": "Crisis",
+        "category": "Humanitarian"
+      },
+      "fiveWs": {
+        "who": [
+          "Residents of Mozambique"
+        ],
+        "what": "Severe flooding displacing people and destroying infrastructure",
+        "where": "Mozambique",
+        "when": "January 2026",
+        "why": "Torrential rains",
+        "soWhat": "Humanitarian crisis with displacement and infrastructure damage"
+      },
+      "source": [
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "Flooding causes widespread damage across southern Africa",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/22/flooding-causes-widespread-damage-across-southern-africa?traffic_source=rss",
+          "timestamp": "Thu, 22 Jan 2026 15:47:31 +0000 UTC",
+          "quote": "Flooding causes widespread damage across southern Africa"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The flooding is solely due to natural causes.",
+          "claimB": "The flooding may be exacerbated by climate change.",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "Flooding causes widespread damage across southern Africa",
+              "link": "https://www.aljazeera.com/video/newsfeed/2026/1/22/flooding-causes-widespread-damage-across-southern-africa?traffic_source=rss",
+              "timestamp": "Thu, 22 Jan 2026 15:47:31 +0000 UTC",
+              "quote": "Flooding causes widespread damage across southern Africa"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "Torrential rains displace thousands in Mozambique as floods wreak havoc",
+              "link": "https://www.aljazeera.com/gallery/2026/1/22/torrential-rains-displace-thousands-in-mozambique-as-floods-wreak-havoc?traffic_source=rss",
+              "timestamp": "Thu, 22 Jan 2026 15:28:28 +0000 UTC",
+              "quote": "More than 620,000 affected by Mozambique floods, as vital infrastructure and tens of thousands of homes are destroyed."
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential for disease outbreaks in displaced populations",
+        "Long-term reconstruction efforts and international aid requirements",
+        "Impact on regional stability and migration patterns"
+      ]
+    },
+    "sig_a44b6876": {
+      "signalId": "sig_a44b6876",
+      "generatedAt": "2026-01-24T09:05:02.607Z",
+      "header": {
+        "title": "Russia-Ukraine War Escalation During Peace Talks",
+        "text": "Despite ongoing peace discussions in Abu Dhabi, Russia launched attacks on Kyiv and Kharkiv, resulting in civilian casualties, highlighting a significant worsening of hostilities.",
+        "sentiment": "neutral",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Russia",
+          "Ukraine"
+        ],
+        "what": "Military attacks and civilian casualties during peace talks",
+        "where": "Kyiv and Kharkiv, Ukraine; Abu Dhabi, UAE",
+        "when": "2026-01-24",
+        "why": "Despite ongoing peace talks, Russia continues military operations",
+        "soWhat": "Escalation of hostilities despite diplomatic efforts, raising concerns about further conflict and humanitarian impact"
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "BBC World",
+          "title": "Russia strikes Ukraine as talks with US to end war continue",
+          "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 07:59:48 UTC",
+          "quote": "One person died and 23 were injured as trilateral discussions in Abu Dhabi were set to resume."
+        },
+        {
+          "feedId": "1",
+          "source": "Al Jazeera",
+          "title": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks",
+          "link": "https://www.aljazeera.com/news/liveblog/2026/1/24/live-kyiv-kharkiv-come-under-attack-amid-russia-ukraine-peace-talks?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 06:04:24 +0000 UTC",
+          "quote": "At least one person has been killed in overnight Russian attacks on the capital and the northeastern city."
+        },
+        {
+          "feedId": "2",
+          "source": "NY Times World",
+          "title": "Ukrainian, Russian and U.S. Officials Meet in Abu Dhabi for Peace Talks",
+          "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+          "timestamp": "2026-01-23 18:42:25 UTC",
+          "quote": "In the past, Ukrainian and Russian negotiators have relied on Americans to mediate, and it was unclear how the talks would play out."
+        },
+        {
+          "feedId": "6",
+          "source": "BBC World",
+          "title": "High stakes but low expectations for Ukraine talks with Russia and US",
+          "link": "https://www.bbc.com/news/articles/c3edde1pwx8o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-23 21:33:55 UTC",
+          "quote": "Donald Trump is pushing hard for a peace deal - but major issues between Russia and Ukraine are still unresolved, writes Sarah Rainsford."
+        },
+        {
+          "feedId": "7",
+          "source": "Al Jazeera",
+          "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+          "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+          "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC",
+          "quote": "Ukraine's Volodymyr Zelenskyy says territorial disputes will be central, but Russia must be ready to end war it started."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Russia's military operations are necessary for strategic gains",
+          "claimB": "Diplomatic efforts should be prioritized to avoid further escalation",
+          "sourceA": [
+            {
+              "feedId": "6",
+              "source": "BBC World",
+              "title": "High stakes but low expectations for Ukraine talks with Russia and US",
+              "link": "https://www.bbc.com/news/articles/c3edde1pwx8o?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-23 21:33:55 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "2",
+              "source": "NY Times World",
+              "title": "Ukrainian, Russian and U.S. Officials Meet in Abu Dhabi for Peace Talks",
+              "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+              "timestamp": "2026-01-23 18:42:25 UTC"
+            },
+            {
+              "feedId": "7",
+              "source": "Al Jazeera",
+              "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+              "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+              "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further developments in the peace talks and military actions",
+        "Humanitarian impact of the escalating conflict",
+        "International responses and potential sanctions",
+        "Broader geopolitical implications, including reactions from the US and other nations"
+      ]
+    },
+    "sig_7dd693bf": {
+      "signalId": "sig_7dd693bf",
+      "generatedAt": "2026-01-24T09:07:37.882Z",
+      "header": {
+        "title": "ICE Crackdown in Minneapolis Ignites Protests",
+        "text": "Thousands have gathered in Minneapolis to protest against Immigration and Customs Enforcement actions, with reports of increased enforcement leading to public outcry.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "Protesters"
+        ],
+        "what": "ICE crackdown",
+        "where": "Minneapolis",
+        "when": "January 24, 2026",
+        "why": "Increased enforcement by Immigration and Customs Enforcement",
+        "soWhat": "This event highlights rising anti-immigration tensions and could escalate into broader social unrest, drawing national and international attention."
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "Al Jazeera",
+          "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+          "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC",
+          "quote": "Protesters march in icy conditions against Trump administration's anti-immigration policies, demanding ICE leave city."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "ICE crackdowns lead to public protests",
+          "claimB": "ICE actions are necessary for enforcing immigration laws",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+              "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Al Jazeera",
+              "title": "Thousands in Minneapolis brave bitter cold to protest ICE crackdown",
+              "link": "https://www.aljazeera.com/news/2026/1/24/thousands-in-minneapolis-brave-bitter-cold-to-protest-ice-crackdown?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 08:17:49 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Potential escalation of protests to other cities",
+        "Impact on national immigration policy debates",
+        "Response from federal authorities",
+        "International reactions to the crackdown",
+        "Effect on local economy and business operations"
+      ]
+    },
+    "sig_fba1145c": {
+      "signalId": "sig_fba1145c",
+      "generatedAt": "2026-01-24T09:12:42.626Z",
+      "header": {
+        "title": "US Defense Strategy Shifts Toward Limited Ally Support",
+        "text": "The Pentagon is revising its defense strategy to offer 'more limited' support to allies, signaling a potential weakening of traditional alliances amid geopolitical tensions.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "The Pentagon"
+        ],
+        "what": "Revising defense strategy to offer more limited support to allies",
+        "where": "United States",
+        "when": "2026",
+        "why": "Amid geopolitical tensions",
+        "soWhat": "This could weaken traditional alliances and alter global power dynamics"
+      },
+      "source": [
+        {
+          "feedId": "1",
+          "source": "BBC World",
+          "title": "Pentagon to offer 'more limited' support to US allies in defence strategy shift",
+          "link": "https://arstechnica.com/gadgets/2026/01/core-ultra-series-3-launch-may-be-hampered-by-chip-shortages-says-intel/",
+          "timestamp": "2026-01-24 07:57:00 UTC",
+          "quote": "The US will also offer “more limited” support to US allies, according to a new national defence strategy document."
+        },
+        {
+          "feedId": "2",
+          "source": "Ars Technica",
+          "title": "US army says homeland, curbing China priorities; limited support for allies",
+          "link": "https://www.aljazeera.com/news/2026/1/24/us-army-says-homeland-curbing-china-priorities-limited-support-for-allies?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 07:06:55 +0000 UTC",
+          "quote": "A new Pentagon strategy document softens tone on traditional foes, China and Russia."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The US defense strategy shift to limited ally support is a response to geopolitical tensions.",
+          "claimB": "This shift may be due to budget constraints and a focus on domestic security.",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "Ars Technica",
+              "title": "US army says homeland, curbing China priorities; limited support for allies",
+              "link": "https://www.aljazeera.com/news/2026/1/24/us-army-says-homeland-curbing-china-priorities-limited-support-for-allies?traffic_source=rss",
+              "timestamp": "Sat, 24 Jan 2026 07:06:55 +000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "11",
+              "source": "Ars Technica",
+              "title": "Tiny falcons are helping keep the food supply safe on cherry farms",
+              "link": "https://arstechnica.com/science/2026/01/tiny-falcons-are-helping-keep-the-food-supply-safe-on-cherry-farms/",
+              "timestamp": "2026-01-23 14:10:48 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Geopolitical implications of the US defense strategy shift",
+        "Reactions from allied nations to the limited support policy",
+        "Potential impact on global power dynamics",
+        "Budgetary details of the new defense strategy",
+        "Specific changes in military commitments to allies"
+      ]
+    },
+    "sig_6d002eb8": {
+      "signalId": "sig_6d002eb8",
+      "generatedAt": "2026-01-24T09:13:13.020Z",
+      "header": {
+        "title": "US Withdrawal from WHO Raises Global Health Concerns",
+        "text": "The US officially withdraws from the World Health Organization, potentially undermining global health coordination and response mechanisms.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Other"
+      },
+      "fiveWs": {
+        "who": [
+          "United States"
+        ],
+        "what": "US withdrawal from WHO",
+        "where": "Global",
+        "when": "2026-01-23",
+        "why": "Accusations of the UN agency failing to adopt reforms and mishandling the pandemic.",
+        "soWhat": "This could impact global health initiatives and diminish US participation in international health governance."
+      },
+      "source": [
+        {
+          "feedId": "19",
+          "source": "Al Jazeera",
+          "title": "What does the US withdrawal from the WHO mean for global health?",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/23/what-does-the-us-withdrawal-from-the-who-mean-for-global-health?traffic_source=rss",
+          "timestamp": "2026-01-24",
+          "quote": "The US completed its withdrawal from the World Health Organization, ending its membership for the first time since 1948."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The US withdrawal will severely damage global health coordination.",
+          "claimB": "The withdrawal may allow the US to focus resources on domestic health issues.",
+          "sourceA": [
+            {
+              "feedId": "19",
+              "source": "Al Jazeera"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "1",
+              "source": "BBC Health",
+              "title": "US officially leaves World Health Organization",
+              "link": "https://www.bbc.com/news/articles/cn9zznx8qdno?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-23 09:18:30 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Impact on global vaccine distribution",
+        "Changes in US domestic health policy",
+        "Reactions from other WHO member states"
+      ]
+    },
+    "sig_2b9b133f": {
+      "signalId": "sig_2b9b133f",
+      "generatedAt": "2026-01-24T09:19:53.862Z",
+      "header": {
+        "title": "Russia-Ukraine War Escalation During Peace Talks",
+        "text": "Despite ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict, Russia launched strikes on Kyiv and Kharkiv, resulting in at least one death and multiple injuries, marking a severe escalation in the war.",
+        "sentiment": "neutral",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Russia",
+          "Ukraine",
+          "United States"
+        ],
+        "what": "Russia launched airstrikes on Kyiv and Kharkiv during peace talks",
+        "where": "Kyiv, Kharkiv, Abu Dhabi",
+        "when": "January 24, 2026",
+        "why": "To escalate the conflict during ongoing peace negotiations",
+        "soWhat": "This undermines diplomatic efforts and indicates a high level of instability in the region"
+      },
+      "source": [
+        {
+          "feedId": "5",
+          "source": "Al Jazeera",
+          "title": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks",
+          "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 06:04:24 +0000 UTC",
+          "quote": "Russia-Ukraine war live: Kyiv, Kharkiv come under attack amid peace talks. At least one person has been killed in overnight Russian attacks on the capital and the northeastern city."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Russia's attack during peace talks shows a disregard for diplomatic efforts.",
+          "claimB": "The attack may be a tactical move to gain leverage in negotiations.",
+          "sourceA": [
+            {
+              "feedId": "2",
+              "source": "Al Jazeera",
+              "title": "One survivor reported, two killed in US boat strike in the eastern Pacific",
+              "link": "https://www.nytimes.com/2026/01/23/world/europe/ukraine-russia-war-us-peace-talks-abu-dhabi.html",
+              "timestamp": "Fri, 23 Jan 2026 23:08:46 +0000 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "5",
+              "source": "Al Jazeera",
+              "title": "Ukraine-Russia-US hold talks in Abu Dhabi with territory as key issue",
+              "link": "https://www.aljazeera.com/news/2026/1/23/ukraine-russia-us-talks-open-in-abu-dhabi-with-territory-as-key-issue?traffic_source=rss",
+              "timestamp": "Fri, 23 Jan 2026 22:02:39 +0000 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Peace talks in Abu Dhabi",
+        "Casualty reports from Kyiv and Kharkiv",
+        "Ukraine's response to the attacks",
+        "Broader implications for Middle East stability"
+      ]
+    },
+    "sig_54a106d6": {
+      "signalId": "sig_54a106d6",
+      "generatedAt": "2026-01-25T00:08:45.617Z",
+      "header": {
+        "title": "Cyberattack Escalates Against Energy Grid",
+        "text": "A wiper malware attack targeted Poland's energy grid, potentially disrupting services amid ongoing global cyber threats.",
+        "sentiment": "neutral",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Wiper Malware"
+        ],
+        "what": "Cyberattack on energy grid",
+        "where": "Poland",
+        "when": "2026-01-24",
+        "why": "Ongoing global cyber threats and potential destructive intent",
+        "soWhat": "Significant escalation in cyber warfare, risking critical infrastructure failure and mirroring past destructive attacks."
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "Ars Technica",
+          "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+          "link": "https://arstechnica.com/?p=2137210",
+          "timestamp": "2026-01-24 19:08:06 UTC",
+          "quote": "Wiper malware targeted Poland energy grid, but failed to knock out electricity. Destructive payload unleashed on 10-year anniversary of Russia's attack on Ukraine's grid."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "The cyberattack was solely a destructive act with no geopolitical motives.",
+          "claimB": "The attack is part of a broader pattern of state-sponsored cyber warfare targeting critical infrastructure.",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "Ars Technica",
+              "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+              "link": "https://arstechnica.com/?p=2137210",
+              "timestamp": "2026-01-24 19:08:06 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "Ars Technica",
+              "title": "Wiper malware targeted Poland energy grid, but failed to knock out electricity",
+              "link": "https://arstechnica.com/?p=2137210",
+              "timestamp": "2026-01-24 19:08:06 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Further cyberattacks on energy grids in other countries",
+        "Response from international cybersecurity organizations",
+        "Analysis of the malware's origin and capabilities",
+        "Potential links to ongoing geopolitical tensions",
+        "Impact on global energy markets"
+      ]
+    },
+    "sig_14daded3": {
+      "signalId": "sig_14daded3",
+      "generatedAt": "2026-01-25T01:07:43.330Z",
+      "header": {
+        "title": "Russia launches strikes on Kyiv and Kharkiv, escalating war with Ukraine",
+        "text": "Despite ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict, Russia launched strikes on Kyiv and Kharkiv, resulting in at least one death and multiple injuries. This marks a severe escalation in the war between Russia and Ukraine.",
+        "sentiment": "neutral",
+        "deltaType": "escalation",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Russia",
+          "Ukraine"
+        ],
+        "what": "strikes on Kyiv and Kharkiv",
+        "where": "Abu Dhabi, Kyiv, Kharkiv",
+        "when": "2026-01-24",
+        "why": "Ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict",
+        "soWhat": "Escalation of the war between Russia and Ukraine"
+      },
+      "source": [
+        {
+          "feedId": "15",
+          "source": "BBC World",
+          "title": "Two days of peace talks end as Russia continues Ukraine attacks",
+          "link": "https://www.bbc.com/news/articles/cwyr6p30054o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-24 16:56:55 UTC"
+        },
+        {
+          "feedId": "6",
+          "source": "Al Jazeera",
+          "title": "US-brokered Russia-Ukraine talks close with no breakthrough",
+          "link": "https://www.theverge.com/gadgets/866788/anker-nano-travel-adapter-samsung-p9-microsd-express-card-deal-sale",
+          "timestamp": "Sat, 24 Jan 2026 18:32:32 +0000 UTC"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Russia launched strikes on Kyiv and Kharkiv",
+          "claimB": "Ongoing trilateral discussions in Abu Dhabi aimed at ending the conflict",
+          "sourceA": [
+            {
+              "feedId": "15",
+              "source": "BBC World"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "6",
+              "source": "Al Jazeera",
+              "title": "MicroSD Express cards and Anker’s travel adapter rule the deal roost this week",
+              "link": "https://www.theverge.com/gadgets/866788/anker-nano-travel-adapter-samsung-p9-microsd-express-card-deal-sale",
+              "timestamp": "2026-01-24 18:21:02 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Russia-Ukraine talks",
+        "US-China trade deal"
+      ]
+    },
+    "sig_69da623": {
+      "signalId": "sig_69da623",
+      "generatedAt": "2026-01-25T01:14:07.443Z",
+      "header": {
+        "title": "Trump threatens Canada with 100% tariffs over China trade deal",
+        "text": "President Trump said he would impose tariffs if Canada made 'a deal with China,' though there is no sign that those countries are discussing a broad trade agreement.",
+        "sentiment": "neutral",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "Trump"
+        ],
+        "what": "imposed tariff threat",
+        "where": "Canada",
+        "when": "2026-01-24",
+        "why": "made 'a deal with China'"
+      },
+      "source": [
+        {
+          "feedId": "20",
+          "source": "NY Times World",
+          "title": "Trump Threatens Canada With Tariffs as Post-Davos Fallout Continues",
+          "link": "https://www.nytimes.com/2026/01/24/world/canada/trump-canada-tariffs.html",
+          "timestamp": "2026-01-24 16:00:00 UTC"
+        },
+        {
+          "feedId": "19",
+          "source": "Al Jazeera",
+          "title": "Trump threatens 100 percent tariff on Canada over China deal",
+          "link": "https://www.aljazeera.com/news/2026/1/24/trump-threatens-100-percent-tariff-on-canada-over-china-deal?traffic_source=rss",
+          "timestamp": "Sat, 24 Jan 2026 16:11:38 +0000 UTC"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump threatens Canada with 100% tariffs",
+          "claimB": "No sign that those countries are discussing a broad trade agreement",
+          "sourceA": [
+            {
+              "feedId": "20",
+              "source": "NY Times World"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "19",
+              "source": "Al Jazeera"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Canada-China trade deal",
+        "US-China trade relations"
+      ]
+    },
+    "sig_682688f7": {
+      "signalId": "sig_682688f7",
+      "generatedAt": "2026-01-25T19:41:05.765Z",
+      "header": {
+        "title": "US Military Deploys Carriers to Middle East Amid Escalating Tensions with Iran",
+        "text": "The US military has ordered a carrier strike group and an aircraft wing to the Middle East as tensions with Iran escalate, in what is seen as a show of force.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Conflicts"
+      },
+      "fiveWs": {
+        "who": [
+          "The US military"
+        ],
+        "what": "ordered a carrier strike group and an aircraft wing to the Middle East",
+        "where": "the Middle East",
+        "when": "2026-01-25",
+        "why": "as tensions with Iran escalate"
+      },
+      "source": [
+        {
+          "feedId": "33",
+          "source": "Al Jazeera",
+          "title": "Trump says ‘US armada’ moving towards Iran as tensions escalate.",
+          "link": "https://www.aljazeera.com/video/newsfeed/2026/1/25/trump-says-us-armada-moving-towards-iran-as-tensions-escalate?traffic_source=rss",
+          "timestamp": "2026-01-25 13:27:53 +0000 UTC"
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Iran has threatened to respond with military force",
+          "claimB": "The US military deployment is seen as a show of force",
+          "sourceA": [
+            {
+              "feedId": "33",
+              "source": "Al Jazeera"
+            }
+          ],
+          "sourceB": []
+        }
+      ],
+      "watchNext": [
+        "envoys from US meet Netanyahu as Israel continues to bomb Gaza",
+        "Pentagon downplays China threat: What it means for US allies"
+      ]
+    },
+    "sig_66756ee": {
+      "signalId": "sig_66756ee",
+      "generatedAt": "2026-01-25T19:52:28.954Z",
+      "header": {
+        "title": "Cuban Official Accuses US of ‘Piracy’ Against Sanctioned Caribbean Island",
+        "text": "The Cuban government has accused the US of using economic coercion, or 'piracy', in response to the country's refusal to sell oil to the island.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Cuban government",
+          "US Ambassador Carlos de Cespedes",
+          "Venezuelan oil exports to Cuba dry out"
+        ],
+        "what": "accusations of economic coercion or 'piracy'",
+        "where": "Sanctioned Caribbean island",
+        "when": "2026-01-25"
+      },
+      "source": [
+        {
+          "feedId": "47",
+          "source": "Al Jazeera",
+          "title": "Cuban official accuses US of ‘piracy’ against sanctioned Caribbean island.",
+          "link": "https://www.aljazeera.com/news/2026/1/25/cuban-official-accuses-us-of-piracy-against-sanctioned-caribbean-island?traffic_source=rss",
+          "timestamp": "2026-01-25 09:41:20 +0000 UTC"
+        }
+      ],
+      "counterpoints": [],
+      "watchNext": [
+        "US military moves Navy, Air Force assets to the Middle East: What to know",
+        "Envoys from US meet Netanyahu as Israel continues to bomb Gaza",
+        "Storm causes widespread US power outages, thousands of flights cancelled"
+      ]
+    },
+    "sig_6a40e106": {
+      "signalId": "sig_6a40e106",
+      "generatedAt": "2026-01-30T15:39:16.084Z",
+      "header": {
+        "title": "Fed Chair Nomination Escalates US Economic Policy Debates",
+        "text": "Trump's nomination of Kevin Warsh for Fed chair has intensified debates over monetary policy amid conflicting signals about job growth and inflation, creating uncertainty for financial markets.",
+        "sentiment": "neutral",
+        "deltaType": "policy",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "Trump administration",
+          "Kevin Warsh"
+        ],
+        "what": "Nomination of Kevin Warsh for Federal Reserve Chair",
+        "where": "United States",
+        "when": "2026-01-30",
+        "why": "Amid debates over monetary policy and conflicting signals about job growth and inflation",
+        "soWhat": "Creating uncertainty for financial markets and intensifying economic policy debates"
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "MarketWatch",
+          "title": "Trump picked Kevin Warsh to boost markets. What this means for your portfolio.",
+          "link": "https://www.marketwatch.com/story/trump-picked-kevin-warsh-to-boost-markets-what-this-means-for-your-portfolio-f83826cb?mod=mw_rss_topstories",
+          "timestamp": "2026-01-30 15:18:00 UTC",
+          "quote": "Trump’s nominee for Fed chair has been hawkish about easy money. But this president demands it."
+        },
+        {
+          "feedId": "2",
+          "source": "Al Jazeera",
+          "title": "Trump nominates Kevin Warsh to replace Powell as Fed chair",
+          "link": "https://www.aljazeera.com/economy/2026/1/30/trump-nominates-kevin-warsh-to-replace-powell-as-fed-chair?traffic_source=rss",
+          "timestamp": "2026-01-30 14:41:45 UTC",
+          "quote": "Nomination comes as Trump heaps pressure on Powell to cut interest rates; Warsh to face challenging Senate confirmation."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Warsh's nomination will lead to continued aggressive monetary tightening",
+          "claimB": "Trump demands lower interest rates despite economic conditions",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "MarketWatch",
+              "title": "Trump picked Kevin Warsh to boost markets. What this means for your portfolio.",
+              "link": "https://www.marketwatch.com/story/trump-picked-kevin-warsh-to-boost-markets-what-this-means-for-your-portfolio-f83826cb?mod=mw_rss_topstories",
+              "timestamp": "2026-01-30 15:18:00 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "MarketWatch",
+              "title": "Trump picked Kevin Warsh to boost markets. What this means for your portfolio.",
+              "link": "https://www.marketwatch.com/story/trump-picked-kevin-warsh-to-boost-markets-what-this-means-for-your-portfolio-f83826cb?mod=mw_rss_topstories",
+              "timestamp": "2026-01-30 15:18:00 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Market reaction to Fed chair nomination confirmation vote",
+        "Inflation and job growth data releases in the coming weeks",
+        "Senate banking committee hearings for Warsh nomination"
+      ]
+    },
+    "sig_42fd02d8": {
+      "signalId": "sig_42fd02d8",
+      "generatedAt": "2026-01-30T15:40:09.496Z",
+      "header": {
+        "title": "US-Iran Diplomatic Crisis Deepens Amid Provocations",
+        "text": "Amid escalating rhetoric, Iran has ruled out direct talks with the US while simultaneously intensifying diplomatic outreach to prevent potential military conflict, highlighting the volatile nature of regional stability.",
+        "sentiment": "neutral",
+        "deltaType": "Escalation",
+        "category": "Geopolitical"
+      },
+      "fiveWs": {
+        "who": [
+          "US Government",
+          "Iran"
+        ],
+        "what": "Escalation in diplomatic tensions, refusal of direct talks, mutual accusations and diplomatic efforts to prevent military conflict.",
+        "where": "Middle East, with diplomatic activities involving countries like Turkiye.",
+        "when": "2026-01-30",
+        "why": "Mutual threats, accusations regarding nuclear aims, protests in Iran, and rhetoric from US leadership.",
+        "soWhat": "Increased risk of military conflict, potential regional instability, and impact on global oil markets and international relations."
+      },
+      "source": [
+        {
+          "feedId": "11",
+          "source": "BBC World",
+          "title": "Trump tells Iran to drop nuclear aims and stop killing protesters to avoid military action",
+          "link": "https://www.theguardian.com/world/2026/jan/30/venezuela-approves-bill-to-open-oil-sector-to-foreign-investment-after-us-pressure",
+          "timestamp": "2026-01-30 14:59:56 UTC",
+          "quote": "Trump tells Iran to drop nuclear aims and stop killing protesters to avoid military action."
+        },
+        {
+          "feedId": "15",
+          "source": "NY Times World",
+          "title": "Iran Rules Out Talks With U.S. Until Trump’s Threats Stop",
+          "link": "https://www.nytimes.com/2026/01/30/world/europe/iran-trump-us-threats-turkey.html",
+          "timestamp": "2026-01-30 14:31:25 UTC",
+          "quote": "Iran’s foreign minister ruled out direct talks unless President Trump stops threatening to attack it."
+        },
+        {
+          "feedId": "16",
+          "source": "Al Jazeera",
+          "title": "US-Iran tensions: The diplomatic scramble to prevent a war",
+          "link": "https://www.aljazeera.com/news/2026/1/30/us-iran-tensions-the-diplomatic-scramble-to-prevent-a-war?traffic_source=rss",
+          "timestamp": "2026-01-30 14:30:20 UTC",
+          "quote": "Facing the prospect of US strikes, Iran has intensified diplomatic efforts with countries including Turkiye."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Trump demands Iran stop killing protesters to avoid military action",
+          "claimB": "Iran refuses direct talks until Trump stops threatening attacks",
+          "sourceA": [
+            {
+              "feedId": "11",
+              "source": "BBC World",
+              "title": "Trump tells Iran to drop nuclear aims and stop killing protesters to avoid military action",
+              "link": "https://www.theguardian.com/world/2026/jan/30/venezuela-approves-bill-to-open-oil-sector-to-foreign-investment-after-us-pressure",
+              "timestamp": "2026-01-30 14:59:56 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "15",
+              "source": "NY Times World",
+              "title": "Iran Rules Out Talks With U.S. Until Trump’s Threats Stop",
+              "link": "https://www.nytimes.com/2026/01/30/world/europe/iran-trump-us-threats-turkey.html",
+              "timestamp": "2026-01-30 14:31:25 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Diplomatic developments between US and Iran, including any potential indirect channels or third-party mediations.",
+        "Military postures and readiness levels of both nations.",
+        "Reactions from regional allies of both the US and Iran.",
+        "Broader implications for global oil markets and international security.",
+        "Any escalation or de-escalation in rhetoric or actions involving other countries like Turkiye."
+      ]
+    },
+    "sig_99d0df9": {
+      "signalId": "sig_99d0df9",
+      "generatedAt": "2026-01-30T15:41:34.304Z",
+      "header": {
+        "title": "Global Markets Respond to Geopolitical Uncertainty",
+        "text": "Despite regional conflicts and economic policy shifts, South Korean markets reached record highs amid government stimulus and AI-driven economic growth, highlighting divergent market responses to global instability.",
+        "sentiment": "neutral",
+        "deltaType": "Financial",
+        "category": "Financial"
+      },
+      "fiveWs": {
+        "who": [
+          "South Korean government",
+          "South Korean markets"
+        ],
+        "what": "South Korean markets reached record highs",
+        "where": "South Korea",
+        "when": "January 30, 2026",
+        "why": "Government stimulus and AI-driven economic growth",
+        "soWhat": "This highlights divergent market responses to global instability, showing how some regions can benefit from geopolitical tensions while others are negatively affected."
+      },
+      "source": [
+        {
+          "feedId": "0",
+          "source": "NY Times World",
+          "title": "South Korean Stocks, Kospi Index Are Trading at a Record High",
+          "link": "https://www.nytimes.com/2026/01/30/world/asia/south-korea-stock-boom-kospi.html",
+          "timestamp": "2026-01-30 08:03:26 UTC",
+          "quote": "Spurred by government policies and the global A.I. boom, the market’s value has jumped by hundreds of billions of dollars. Individual investors have piled in."
+        },
+        {
+          "feedId": "4",
+          "source": "NY Times World",
+          "title": "Syrian Government and Kurdish-Led Militia Seal a Deal to Merge Forces",
+          "link": "https://www.nytimes.com/2026/01/30/world/middleeast/syria-kurd-sdf-agreement.html",
+          "timestamp": "2026-01-30 13:50:53 UTC",
+          "quote": "The long-anticipated agreement closes a period of intense uncertainty in northeastern Syria after rebel forces led by Ahmed al-Sharaa, who is now the president, seized power in December 2024."
+        },
+        {
+          "feedId": "3",
+          "source": "Al Jazeera",
+          "title": "Alcaraz beats Zverev to break slam record in reaching Australian Open final",
+          "link": "https://www.nytimes.com/2026/01/30/world/asia/trump-starmer-china-canada-trade.html",
+          "timestamp": "Fri, 30 Jan 2026 10:23:58 +0000 UTC",
+          "quote": "Carlos Alcaraz becomes the youngest man to reach all four slam finals and can now become youngest to win all four."
+        },
+        {
+          "feedId": "5",
+          "source": "BBC World",
+          "title": "Syrian government reaches deal with Kurdish-led forces",
+          "link": "https://www.bbc.com/news/articles/cz0pj0n0yk3o?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-30 12:42:37 UTC",
+          "quote": "The deal will see the gradual integration of Kurdish forces and administration into the Syrian state."
+        },
+        {
+          "feedId": "7",
+          "source": "BBC World",
+          "title": "South Africa and Israel expel each other's envoys in diplomatic row",
+          "link": "https://www.bbc.com/news/articles/cvgn8ejljqwo?at_medium=RSS&at_campaign=rss",
+          "timestamp": "2026-01-30 14:40:32 UTC",
+          "quote": "South Africa accuses the Israeli envoy of insulting President Ramaphosa. Israel says the expulsion is \"baseless\"."
+        },
+        {
+          "feedId": "8",
+          "source": "Al Jazeera",
+          "title": "Is Israel’s current path setting it on course for collapse?",
+          "link": "https://www.aljazeera.com/news/2026/1/30/is-israels-current-path-setting-it-on-course-for-collapse?traffic_source=rss",
+          "timestamp": "Fri, 30 Jan 2026 13:52:52 +0000 UTC",
+          "quote": "Political polarisation, economic strain and emigration challenge Israel&#039;s future as a secure and sustainable state."
+        }
+      ],
+      "counterpoints": [
+        {
+          "claimA": "Geopolitical uncertainty negatively impacts markets.",
+          "claimB": "Government stimulus and AI-driven growth can offset geopolitical risks.",
+          "sourceA": [
+            {
+              "feedId": "3",
+              "source": "NY Times World",
+              "title": "Alcaraz beats Zverev to break slam record in reaching Australian Open final",
+              "link": "https://www.nytimes.com/2026/01/30/world/asia/trump-starmer-china-canada-trade.html",
+              "timestamp": "2026-01-30 10:23:58 UTC"
+            },
+            {
+              "feedId": "8",
+              "source": "Al Jazeera",
+              "title": "Is Israel’s current path setting it on course for collapse?",
+              "link": "https://www.aljazeera.com/news/2026/1/30/is-israels-current-path-setting-it-on-course-for-collapse?traffic_source=rss",
+              "timestamp": "Fri, 30 Jan 2026 13:52:52 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "0",
+              "source": "NY Times World",
+              "title": "South Korean Stocks, Kospi Index Are Trading at a Record High",
+              "link": "https://www.nytimes.com/2026/01/30/world/asia/south-korea-stock-boom-kospi.html",
+              "timestamp": "2026-01-30 08:03:26 UTC"
+            },
+            {
+              "feedId": "4",
+              "source": "NY Times World",
+              "title": "Syrian Government and Kurdish-Led Militia Seal a Deal to Merge Forces",
+              "link": "https://www.nytimes.com/2026/01/30/world/middleeast/syria-kurd-sdf-agreement.html",
+              "timestamp": "2026-01-30 13:50:53 UTC"
+            }
+          ]
+        },
+        {
+          "claimA": "AI-driven economic growth is a positive factor.",
+          "claimB": "Regional conflicts and economic policy shifts are negative factors.",
+          "sourceA": [
+            {
+              "feedId": "0",
+              "source": "NY Times World",
+              "title": "South Korean Stocks, Kospi Index Are Trading at a Record High",
+              "link": "https://www.nytimes.com/2026/01/30/world/asia/south-korea-stock-boom-kospi.html",
+              "timestamp": "2026-01-30 08:03:26 UTC"
+            }
+          ],
+          "sourceB": [
+            {
+              "feedId": "3",
+              "source": "NY Times World",
+              "title": "Alcaraz beats Zverev to break slam record in reaching Australian Open final",
+              "link": "https://www.nytimes.com/2026/01/30/world/asia/trump-starmer-china-canada-trade.html",
+              "timestamp": "2026-01-30 10:23:58 +0000 UTC"
+            },
+            {
+              "feedId": "7",
+              "source": "BBC World",
+              "title": "South Africa and Israel expel each other's envoys in diplomatic row",
+              "link": "https://www.bbc.com/news/articles/cvgn8ejljqwo?at_medium=RSS&at_campaign=rss",
+              "timestamp": "2026-01-30 14:40:32 UTC"
+            }
+          ]
+        }
+      ],
+      "watchNext": [
+        "Monitor South Korean market performance in response to ongoing geopolitical tensions.",
+        "Track the integration process of Kurdish forces into the Syrian army to assess long-term stability.",
+        "Analyze the impact of diplomatic expulsions between South Africa and Israel on global trade relations.",
+        "Follow the outcomes of the Australian Open final and its potential influence on sports-related investments.",
+        "Assess the broader implications of AI-driven economic growth on global markets."
+      ]
+    }
+  },
+  "globalState": {
+    "isOnline": true,
+    "lastChecked": {},
+    "lastError": null
+  }
+}
