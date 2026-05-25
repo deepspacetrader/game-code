@@ -1,8 +1,19 @@
 // Import breakpoints from App.scss
 @import './App.scss';
 
+.top-menu-bar {
+    position: fixed;
+    height: 2rem;
+    z-index: 1000;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 16px;
+    background-color: #1a1a1a;
+}
+
 .admin-debug {
-    background: none;
+    z-index: 1001;
 }
 
 .main-container {

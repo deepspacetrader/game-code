@@ -31,9 +31,9 @@ const AdminDebug = () => {
         items,
     } = useMarketplace();
 
-    const { 
-        quantumProcessors: currentQPs = 0, 
-        setQuantumProcessors, 
+    const {
+        quantumProcessors: currentQPs = 0,
+        setQuantumProcessors,
         setQuantumSlotsUsed,
         resetQuantumProcessors
     } = useQuantum();
@@ -358,7 +358,7 @@ const AdminDebug = () => {
                     </div>
 
                     <div className="admin-section">
-                        <h3>Random Encounter</h3>
+                        <p>Random Encounter</p>
                         <div className="enemy-type-selector">
                             {Object.values(ENEMY_TYPES).map((type) => (
                                 <label key={type} className="radio-label">

@@ -1,0 +1,6 @@
+- Player's health resets back to 100 once it reaches 0 during enemy encounter.
+- The various quantum trading tools aren't very profitable. They tend to lose credits more often than trade successfully to acquire more.
+- The Scanner and ScannerLite components are not working. It was supposed to be a simple mini game interaction with an animated moving ascii art background representing a radar like interface with lots of signal noise. The player clicks and drags a line from the green dot to orange dot to advance to the next step. They continue to do this 3 more times until the scan is completed. It resets each time they make a mistake such as mouse exits the scanner area after clicking to hold to begin the mini game or they release click after holding it to begin drawing the line. Its a connect the dots sort of game that is meant to be played very quickly. There are two components because I tried different approaches. Neither one is working.
+- There are no sounds during enemy encounter button events. Please use zzfx to add sounds. See other components for examples.
+- There is no sound for the traveling state when using Galaxy Travel like there is with Trader Travel.
+- Ensure both the GameOver (losing) and GameOverScreen (winning) components are shown to the player when their conditions are met during gameplay.

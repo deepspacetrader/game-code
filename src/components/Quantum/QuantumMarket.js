@@ -261,9 +261,7 @@ const QuantumMarket = ({
             const minQty = Math.ceil(minTakeProfit / profitPerItem);
             const sellQty = Math.max(0, Math.min(item.quantity, minQty));
             if (sellQty > 0 && profitPerItem * sellQty >= minTakeProfit) {
-                for (let i = 0; i < sellQty; i++) {
-                    handleSellAll(item.name); // Sells one at a time (if you want to sell all at once, update context to accept qty)
-                }
+                handleSellAll(item.name, sellQty);
             }
         });
         setTimeout(() => {}, 100);
@@ -313,10 +311,8 @@ const QuantumMarket = ({
                 const minQty = Math.ceil(minTakeProfitArg / profitPerItem);
                 const sellQty = Math.max(0, Math.min(item.quantity, minQty));
                 if (sellQty > 0 && profitPerItem * sellQty >= minTakeProfitArg) {
-                    for (let i = 0; i < sellQty; i++) {
-                        handleSellAllArg(item.name);
-                        sold = true;
-                    }
+                    handleSellAllArg(item.name, sellQty);
+                    sold = true;
                 }
             });
             return sold;
@@ -376,7 +372,7 @@ const QuantumMarket = ({
                 handleSellAll,
                 minTakeProfitRef.current
             );
-            if (!sold) {
+            if (!sold && Math.random() < 0.5) {
                 qBuyAuto(
                     isUnlocked,
                     creditsRef.current,
@@ -395,7 +391,7 @@ const QuantumMarket = ({
         return () => {
             clearInterval(interval);
         };
-    }, [isAutoTrading, improvedAILevel]);
+    }, [isAutoTrading, improvedAILevel, qSellAuto, qBuyAuto, isUnlocked, getAveragePurchasePrice, handleSellAll, buyPercentage, itemsList, handleBuyClick]);
 
     // Refactored auto-trading: useEffect-based, always uses latest state
     useEffect(() => {

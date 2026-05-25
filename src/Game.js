@@ -30,8 +30,7 @@ import EnemySpawner from './components/Reusable/EnemySpawner';
 import Onboarding from './components/Onboarding/Onboarding';
 import SecretOffer from './components/Reusable/SecretOffer';
 import ConsentAndAnalytics from './components/Reusable/ConsentAndAnalytics';
-// import Scanner from './components/Scanner';
-// import ScannerLite from './components/ScannerLite';
+import Scanner from './components/Scanner';
 
 const GameUI = ({
     gameCompleted,
@@ -99,17 +98,7 @@ const GameUI = ({
     return (
         <div className={`main-container ai-tier-${aiTier} ai-level-${improvedAILevel}`}>
             {/* Top right controls */}
-            <div
-                style={{
-                    position: 'absolute',
-                    height: '2rem',
-                    right: 24,
-                    zIndex: 1000,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                }}
-            >
+            <div className="top-menu-bar">
                 <Version />
                 <SaveGame />
                 <VolumeSlider
@@ -157,13 +146,14 @@ const GameUI = ({
                 {/* Secret Trading Area appears after TradingArea if unlocked for this galaxy */}
             </div>
 
+            <Scanner />
+
+
             <SecretTradingArea
                 secretItems={randomizedSecretItems}
                 onBuy={handleSecretBuy}
                 visible={!!secretMarkets[galaxyName] && showSecretArea}
             />
-            {/* <Scanner />
-            <ScannerLite /> */}
             <Modal show={gameCompleted} backdrop="static" keyboard={false} centered>
                 <Modal.Header>
                     <Modal.Title>Game Complete</Modal.Title>

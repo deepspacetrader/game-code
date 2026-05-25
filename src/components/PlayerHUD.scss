@@ -13,6 +13,7 @@
     overflow: visible;
     font-weight: bold;
     font-size: 1.337rem;
+
     @include mobile {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
@@ -29,6 +30,7 @@
         gap: 10px;
         padding: 10px;
     }
+
     &:hover {
         cursor: default;
     }
@@ -37,7 +39,7 @@
 // Container for the sticky header
 .sticky-hud {
     position: sticky;
-    top: 0;
+    top: 2rem;
     left: 0;
     width: 100%;
     z-index: 15;
@@ -201,10 +203,12 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
     70% {
         opacity: 1;
         transform: translateY(-30px) scale(1.08);
     }
+
     100% {
         opacity: 0;
         transform: translateY(-60px) scale(1.12);

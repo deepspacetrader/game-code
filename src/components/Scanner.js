@@ -9,191 +9,188 @@ const CORNERS = [
     { x: 1, y: 1, label: 'bottom-right' },
 ];
 
-const Scanner = ({ images = [], onScanComplete }) => {
+const getRandomCorner = (exclude = []) => {
+    const available = CORNERS.filter(
+        (c) => !exclude.some((ex) => ex.label === c.label)
+    );
+    return available[Math.floor(Math.random() * available.length)];
+};
+
+const Scanner = ({ onScanComplete, images = [] }) => {
+    const [stage, setStage] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
-    const [scanProgress, setScanProgress] = useState(0);
-    const [visitedCorners, setVisitedCorners] = useState([]);
-    const [currentCorner, setCurrentCorner] = useState(null);
-    const [isMoving, setIsMoving] = useState(false);
-    const [scanPosition, setScanPosition] = useState({ x: 0, y: 0 });
-
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [corners, setCorners] = useState({ start: null, end: null });
     const scannerRef = useRef(null);
-    const animationRef = useRef(null);
+    const startPosRef = useRef({ x: 0, y: 0 });
     const currentImage = images.length > 0 ? images[0] : null;
 
-    // Get a random corner that hasn't been visited yet
-    const getRandomCorner = useCallback((exclude = []) => {
-        const available = CORNERS.filter(corner => 
-            !exclude.some(c => c.x === corner.x && c.y === corner.y)
-        );
-        return available[Math.floor(Math.random() * available.length)] || CORNERS[0];
+    const setupStage = useCallback(() => {
+        const start = getRandomCorner();
+        const end = getRandomCorner([start]);
+        setCorners({ start, end });
     }, []);
 
-    // Move to the next corner in sequence
-    const moveToNextCorner = useCallback(() => {
-        if (visitedCorners.length >= 4) {
-            setIsComplete(true);
-            setIsScanning(false);
-            if (onScanComplete) onScanComplete();
-            return;
+    useEffect(() => {
+        if (isScanning && stage < 4) {
+            setupStage();
         }
+    }, [isScanning, stage, setupStage]);
 
-        const next = getRandomCorner(visitedCorners);
-        setIsMoving(true);
-        
-        // Animate to next corner
-        const startTime = Date.now();
-        const duration = 1000; // 1 second per corner
-        
-        const animate = () => {
-            const now = Date.now();
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            if (currentCorner && next) {
-                const x = currentCorner.x + (next.x - currentCorner.x) * progress;
-                const y = currentCorner.y + (next.y - currentCorner.y) * progress;
-                setScanPosition({ x, y });
-                setScanProgress(visitedCorners.length / 4 + progress / 4);
-            }
-            
-            if (progress < 1) {
-                animationRef.current = requestAnimationFrame(animate);
-            } else {
-                setCurrentCorner(next);
-                setVisitedCorners(prev => [...prev, next]);
-                setIsMoving(false);
-                
-                // Auto-move to next corner after a short delay
-                if (visitedCorners.length < 3) {
-                    setTimeout(moveToNextCorner, 500);
+    const startScan = useCallback(() => {
+        setIsScanning(true);
+        setIsComplete(false);
+        setStage(0);
+    }, []);
+
+    const resetScan = useCallback(() => {
+        setIsComplete(false);
+        setIsScanning(false);
+        setStage(0);
+        setCorners({ start: null, end: null });
+    }, []);
+
+    const handleMouseDown = (e) => {
+        if (isComplete || !isScanning || !corners.start) return;
+
+        const rect = scannerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const zoneSize = 30;
+        const startX = corners.start.x * (rect.width - zoneSize) + zoneSize / 2;
+        const startY = corners.start.y * (rect.height - zoneSize) + zoneSize / 2;
+
+        if (Math.abs(x - startX) < zoneSize && Math.abs(y - startY) < zoneSize) {
+            startPosRef.current = { x: startX, y: startY };
+            setMousePosition({ x, y });
+            setIsDragging(true);
+        }
+    };
+
+    const handleMouseMove = useCallback(
+        (e) => {
+            if (!isScanning || !isDragging) return;
+
+            const rect = scannerRef.current.getBoundingClientRect();
+            const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+            const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+            setMousePosition({ x, y });
+
+            const zoneSize = 30;
+            const endX = corners.end.x * (rect.width - zoneSize) + zoneSize / 2;
+            const endY = corners.end.y * (rect.height - zoneSize) + zoneSize / 2;
+
+            if (Math.abs(x - endX) < zoneSize && Math.abs(y - endY) < zoneSize) {
+                setIsDragging(false);
+                if (stage < 3) {
+                    setStage((s) => s + 1);
                 } else {
                     setIsComplete(true);
                     setIsScanning(false);
                     if (onScanComplete) onScanComplete();
                 }
             }
-        };
-        
-        animationRef.current = requestAnimationFrame(animate);
-    }, [currentCorner, visitedCorners, onScanComplete, getRandomCorner]);
+        },
+        [isScanning, isDragging, corners, stage, onScanComplete]
+    );
+
+    const handleMouseUp = () => {
+        if (isDragging) {
+            setIsDragging(false);
+            // Reset current stage, but not the whole game
+            setupStage();
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (isDragging) {
+            setIsDragging(false);
+            setupStage();
+        }
+    };
     
-    // Start the scanning process
-    const startScan = useCallback(() => {
-        setIsComplete(false);
-        setIsScanning(true);
-        const firstCorner = getRandomCorner();
-        setCurrentCorner(firstCorner);
-        setVisitedCorners([firstCorner]);
-        setScanProgress(0);
-    }, [getRandomCorner]);
+    const getLineStyle = () => {
+        if (!isDragging) return { display: 'none' };
 
-    // Reset the scanner
-    const resetScan = useCallback(() => {
-        setIsComplete(false);
-        setIsScanning(false);
-        setScanProgress(0);
-        setVisitedCorners([]);
-        setCurrentCorner(null);
-    }, []);
+        const dx = mousePosition.x - startPosRef.current.x;
+        const dy = mousePosition.y - startPosRef.current.y;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
-    // Start moving to next corner when current corner changes
-    useEffect(() => {
-        if (isScanning && currentCorner && !isMoving && visitedCorners.length < 4) {
-            const timer = setTimeout(moveToNextCorner, 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [currentCorner, isScanning, isMoving, visitedCorners, moveToNextCorner]);
-
-    // Clean up animation frame on unmount
-    useEffect(() => {
-        return () => {
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current);
-            }
+        return {
+            position: 'absolute',
+            left: `${startPosRef.current.x}px`,
+            top: `${startPosRef.current.y}px`,
+            width: `${length}px`,
+            height: '2px',
+            backgroundColor: '#0f0',
+            transformOrigin: '0 50%',
+            transform: `rotate(${angle}deg)`,
+            pointerEvents: 'none',
         };
-    }, []);
-
-    // Update scan position when current corner changes
-    useEffect(() => {
-        if (currentCorner) {
-            // Add 10% padding from edges
-            const padding = 0.1;
-            setScanPosition({
-                x: currentCorner.x * (1 - padding * 2) + padding,
-                y: currentCorner.y * (1 - padding * 2) + padding
-            });
-        }
-    }, [currentCorner]);
-
-    // Mouse event handlers (kept for potential future use)
-    const handleMouseDown = () => {};
-    const handleMouseMove = () => {};
-    const handleMouseUp = () => {};
-    const handleMouseLeave = () => {};
+    };
 
     return (
-        <div className="scanner-container" ref={scannerRef}>
+        <div className="scanner-container">
             <h2>Scanner</h2>
-            <div className="scanner-display">
-                {currentImage && (
-                    <div
-                        className={`scanner-preview ${isComplete ? 'complete' : ''} ${!isScanning ? 'not-scanning' : ''}`}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        {isScanning && (
-                            <div 
-                                className="scan-indicator"
-                                style={{
-                                    position: 'absolute',
-                                    left: `${scanPosition.x * 100}%`,
-                                    top: `${scanPosition.y * 100}%`,
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    backgroundColor: '#0f0',
-                                    transform: 'translate(-50%, -50%)',
-                                    boxShadow: '0 0 10px #0f0',
-                                    zIndex: 10,
-                                    transition: 'all 0.5s ease-out'
-                                }}
-                            />
-                        )}
-
-                        <AsciiWaveAnimator
-                            imagePath={currentImage}
-                            isScanning={isScanning}
-                            showFinalResult={isComplete}
-                            scanProgress={scanProgress}
-                            onScanComplete={() => {}}
+            <div
+                ref={scannerRef}
+                className={`scanner-display ${isComplete ? 'complete' : ''} ${!isScanning ? 'not-scanning' : ''}`}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+            >
+                {isScanning && corners.start && corners.end && (
+                    <>
+                        <div
+                            className="start-zone"
+                            style={{
+                                left: `${corners.start.x * 100}%`,
+                                top: `${corners.start.y * 100}%`,
+                                transform: `translate(${corners.start.x === 1 ? '-100%' : '0'}, ${corners.start.y === 1 ? '-100%' : '0'})`,
+                            }}
                         />
-
-                        <div className="scanner-controls">
-                            {!isScanning ? (
-                                <button
-                                    className="start-scan-button"
-                                    onClick={isComplete ? resetScan : startScan}
-                                    disabled={isMoving}
-                                >
-                                    {isComplete ? 'Scan Again' : 'Start Scan'}
-                                </button>
-                            ) : (
-                                <div className="scan-progress">
-                                    <div className="progress-bar" style={{ width: `${scanProgress * 100}%` }} />
-                                    <span>
-                                        Scanning... {Math.round(scanProgress * 100)}%
-                                        {currentCorner && ` (${currentCorner.label})`}
-                                    </span>
-                                </div>
-                            )}
-                            {isComplete && <div className="scan-complete">Scan Complete!</div>}
-                        </div>
-                    </div>
+                        <div
+                            className="end-zone"
+                            style={{
+                                left: `${corners.end.x * 100}%`,
+                                top: `${corners.end.y * 100}%`,
+                                transform: `translate(${corners.end.x === 1 ? '-100%' : '0'}, ${corners.end.y === 1 ? '-100%' : '0'})`,
+                            }}
+                        />
+                        {isDragging && <div className="scan-line" style={getLineStyle()} />}
+                    </>
                 )}
+
+                <AsciiWaveAnimator
+                    imagePath={currentImage}
+                    isScanning={isScanning}
+                    showFinalResult={isComplete}
+                    scanProgress={(stage + (isDragging ? 0.5 : 0)) / 4}
+                />
+
+                <div className="scanner-controls">
+                    {!isScanning ? (
+                        <button
+                            className="start-scan-button"
+                            onClick={isComplete ? resetScan : startScan}
+                        >
+                            {isComplete ? 'Scan Again' : 'Start Scan'}
+                        </button>
+                    ) : (
+                        <div className="scan-progress">
+                            <div className="progress-bar" style={{ width: `${(stage / 4) * 100}%` }} />
+                            <span>
+                                Scanning... {stage}/4
+                            </span>
+                        </div>
+                    )}
+                    {isComplete && <div className="scan-complete">Scan Complete!</div>}
+                </div>
             </div>
         </div>
     );

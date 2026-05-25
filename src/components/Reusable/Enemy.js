@@ -3,6 +3,8 @@ import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAILevel } from '../../context/AILevelContext';
 import { useQuantum } from '../../context/QuantumContext';
 
+import { zzfx } from 'zzfx';
+
 // Base enemy types are now defined in this file
 import faceImage1 from '../../images/enemy0.webp';
 import faceImage2 from '../../images/enemy1.webp';
@@ -90,7 +92,7 @@ const Enemy = ({
 }) => {
     // Context hooks
     const { aiTier } = useAILevel() || {};
-    const { health, setHealth, credits, setCredits, inventory, addFloatingMessage } =
+    const { health, setHealth, credits, setCredits, inventory, addFloatingMessage, volumeRef } =
         useMarketplace() || {};
     const { getTotalQuantumProcessors } = useQuantum();
 
@@ -179,7 +181,7 @@ const Enemy = ({
         if (isGameOver || !enemy) return;
 
         const damage = Math.max(5, Math.floor(Math.random() * enemy.damage));
-        const newHealth = Math.max(0, (health || 100) - damage);
+        const newHealth = Math.max(0, health - damage);
 
         setHealth(newHealth);
         addBattleLog(`${enemy.name} attacks you for ${damage} damage!`);
@@ -206,6 +208,7 @@ const Enemy = ({
         setEscapeAttempts((prev) => prev + 1);
 
         if (isSuccessful) {
+            zzfx(volumeRef.current, 1, 1200, .2, .5, .8, 1, 2, 20); // Escape success sound
             setActionSuccess('escape');
             setFadeOut(true);
             addBattleLog(`You successfully escaped from ${enemy.name}!`);
@@ -219,6 +222,7 @@ const Enemy = ({
                 });
             }, 1000);
         } else {
+            zzfx(volumeRef.current, 1.2, 200, .1, .1, .1, 3, 1, -15); // Escape failure sound
             addBattleLog(`Escape attempt failed! ${enemy.name} is still after you!`);
             setPlayerTurn(false);
             setTimeout(handleEnemyTurn, 1000);
@@ -237,6 +241,7 @@ const Enemy = ({
         setEncounterActive,
         setPlayerTurn,
         setEscapeAttempts,
+        volumeRef
     ]);
 
     // Handle bribe
@@ -248,6 +253,7 @@ const Enemy = ({
         const isSuccessful = Math.random() < successChance;
 
         if (isSuccessful) {
+            zzfx(volumeRef.current, 1, 900, .1, .1, .2, 2, 2, -10); // Bribe success sound
             setActionSuccess('bribe');
             setFadeOut(true);
             addBattleLog(`Bribe successful! You paid ${bribeAmount} credits to avoid a fight.`);
@@ -263,6 +269,7 @@ const Enemy = ({
                 });
             }, 1000);
         } else {
+            zzfx(volumeRef.current, 1.2, 300, .1, .1, .1, 3, 1, -15); // Bribe failure sound
             const newBribeAmount = bribeAmount * 2;
             setCurrentBribeAmount(newBribeAmount);
             addBattleLog(
@@ -281,11 +288,14 @@ const Enemy = ({
         setFadeOut,
         setEncounterActive,
         currentBribeAmount,
+        volumeRef
     ]);
 
     // Handle attack
     const handleAttack = useCallback(() => {
         if (!playerTurn || !encounterActive || !enemy || actionSuccess) return;
+
+        zzfx(volumeRef.current, .8, 400, .1, .3, .1, 3, 1.5, -10); // Attack sound
 
         const damage = Math.max(5, Math.floor(Math.random() * (playerStats.damage || 20)));
         const newEnemyHealth = Math.max(0, (enemy.health || 0) - damage);
@@ -298,6 +308,7 @@ const Enemy = ({
         addBattleLog(`You attack ${enemy.name} for ${damage} damage!`);
 
         if (newEnemyHealth <= 0) {
+            zzfx(volumeRef.current, 1, 1500, .2, .2, .5, 1, 1, 0, .1); // Attack success sound
             setActionSuccess('attack');
             setFadeOut(true);
             setPlayerTurn(false);
@@ -313,6 +324,7 @@ const Enemy = ({
                 });
             }, 1000);
         } else {
+            zzfx(volumeRef.current, .8, 300, .1, .1, .1, 2, 1, -10); // Attack hit sound
             setPlayerTurn(false);
             setTimeout(handleEnemyTurn, 1000);
         }
@@ -329,6 +341,7 @@ const Enemy = ({
         setActionSuccess,
         setFadeOut,
         setPlayerTurn,
+        volumeRef
     ]);
 
     // Handle timer expiration
@@ -422,10 +435,10 @@ const Enemy = ({
     // Handle game over state
     useEffect(() => {
         if (isGameOver) {
-            onEncounterEnd({
-                outcome: 'defeat',
-                enemy: { ...enemy },
-            });
+            // onEncounterEnd({
+            //     outcome: 'defeat',
+            //     enemy: { ...enemy },
+            // });
         }
     }, [isGameOver, enemy, onEncounterEnd]);
 
@@ -531,6 +544,7 @@ const Enemy = ({
         hackProgressRef.current = progress;
 
         if (progress >= 100) {
+            zzfx(volumeRef.current, 1, 1500, .2, .2, .5, 1, 1, 0, .1); // Hack success sound
             // Hack completed successfully
             const enemyConfig = enemiesData.enemies.find((e) => e.enemyId === enemy.enemyId);
             const [minBounty, maxBounty] = enemyConfig?.hack_bounty || [1000, 3000];
@@ -564,7 +578,7 @@ const Enemy = ({
 
         // Queue next frame
         hackAnimationId.current = requestAnimationFrame(updateHackProgress);
-    }, [enemy.enemyId, setCredits, addFloatingMessage, onEncounterEnd]);
+    }, [enemy.enemyId, setCredits, addFloatingMessage, onEncounterEnd, volumeRef]);
 
     // Handle hack button mouse/touch up/leave
     const handleHackMouseUp = useCallback(() => {
@@ -577,6 +591,8 @@ const Enemy = ({
     // Handle hack button mouse/touch down
     const handleHackMouseDown = useCallback(() => {
         if (!canHack || !playerTurn) return;
+
+        zzfx(volumeRef.current, .7, 1e3, .05, .1, .2, 2, 1, 0, .1); // Hack sound
 
         // Mark as pressed
         setIsHackButtonPressed(true);
@@ -596,7 +612,7 @@ const Enemy = ({
 
     // If no encounter is active, don't render anything
     if (isGameOver) {
-        return <GameOver onRestart={() => window.location.reload()} />;
+        return <GameOver onRestart={() => window.location.reload()} enemy={enemy} />;
     }
 
     return (
@@ -628,9 +644,8 @@ const Enemy = ({
                                 <div
                                     className="health-bar-fill enemy-health"
                                     style={{
-                                        width: `${
-                                            (enemy.health / (enemy.maxHealth || 100)) * 100
-                                        }%`,
+                                        width: `${(enemy.health / (enemy.maxHealth || 100)) * 100
+                                            }%`,
                                     }}
                                 >
                                     <span className="health-text">
@@ -671,8 +686,8 @@ const Enemy = ({
                                                 timeLeft > 15
                                                     ? '#4CAF50'
                                                     : timeLeft > 5
-                                                    ? '#FFC107'
-                                                    : '#F44336',
+                                                        ? '#FFC107'
+                                                        : '#F44336',
                                         }}
                                     >
                                         <div className="timer-content">
@@ -750,9 +765,8 @@ const Enemy = ({
                                         </div> */}
                                     {!enemyDefeated && (
                                         <button
-                                            className={`action-btn hack ${
-                                                !canHack ? 'disabled' : 'hack-available'
-                                            } ${isHackButtonPressed ? 'active' : ''}`}
+                                            className={`action-btn hack ${!canHack ? 'disabled' : 'hack-available'
+                                                } ${isHackButtonPressed ? 'active' : ''}`}
                                             onMouseDown={handleHackMouseDown}
                                             onMouseUp={handleHackMouseUp}
                                             onMouseLeave={handleHackMouseUp}
@@ -793,7 +807,6 @@ const Enemy = ({
                         </div>
                     </div>
                 </div>
-                {isGameOver && <GameOver onRestart={() => window.location.reload()} />}
             </div>
         </div>
     );

@@ -98,8 +98,15 @@ const MarketBreakingNews = () => {
         setItems((prev) => {
             // Keep a small list to loop smoothly
             const next = [newItem, ...prev].slice(0, 8);
-            // Duplicate if too few to make loop smooth
-            if (next.length < 4) return [...next, ...next];
+            // Duplicate if too few to make loop smooth, but ensure unique IDs
+            if (next.length < 4) {
+                const duplicated = [...next];
+                const secondSet = next.map(item => ({
+                    ...item,
+                    id: `${item.id}_dup_${Date.now()}_${Math.random()}`
+                }));
+                return [...duplicated, ...secondSet];
+            }
             return next;
         });
 
@@ -123,9 +130,9 @@ const MarketBreakingNews = () => {
             );
         }, 15000);
 
-        // Remove item entirely after 35s
+        // Remove item entirely after 35s (including any duplicates)
         const removeTimer = setTimeout(() => {
-            setItems((prev) => prev.filter((it) => it.id !== newItem.id));
+            setItems((prev) => prev.filter((it) => !it.id.startsWith(`${newItem.id}`)));
         }, 35000);
 
         return () => {
@@ -145,11 +152,21 @@ const MarketBreakingNews = () => {
     if (!items || items.length === 0) return null;
 
     const latest = items[0];
-    const labelStyle = latest?.sentiment === 'bullish'
-        ? { background: 'linear-gradient(90deg, rgba(0,60,0,0.9), rgba(0,140,0,0.7))', color: '#d7ffd7' }
-        : latest?.sentiment === 'bearish'
-        ? { background: 'linear-gradient(90deg, rgba(80,0,0,0.9), rgba(160,0,0,0.7))', color: '#ffd0d0' }
-        : { background: 'linear-gradient(90deg, rgba(0,50,100,0.9), rgba(0,80,160,0.7))', color: '#a0e0ff' };
+    const labelStyle =
+        latest?.sentiment === 'bullish'
+            ? {
+                  background: 'linear-gradient(90deg, rgba(0,60,0,0.9), rgba(0,140,0,0.7))',
+                  color: '#d7ffd7',
+              }
+            : latest?.sentiment === 'bearish'
+            ? {
+                  background: 'linear-gradient(90deg, rgba(80,0,0,0.9), rgba(160,0,0,0.7))',
+                  color: '#ffd0d0',
+              }
+            : {
+                  background: 'linear-gradient(90deg, rgba(0,50,100,0.9), rgba(0,80,160,0.7))',
+                  color: '#a0e0ff',
+              };
 
     return (
         <div className="event-predictor" style={{ marginTop: '8px' }}>
@@ -181,15 +198,13 @@ const MarketBreakingNews = () => {
                     >
                         {items.map((item) => (
                             <div
-                                key={item.id}
+                                key={`breaking-news-item-${item.id}`}
                                 className={`ticker-item ${item.isBreaking ? 'breaking' : ''} ${
                                     item.sentiment || ''
                                 }`}
                                 title={item.eventData ? 'Click for details' : ''}
                             >
-                                <span className="event-icon">
-                                    {item.icon}
-                                </span>
+                                <span className="event-icon">{item.icon}</span>
                                 <div className="event-details">
                                     <div
                                         className="event-title"
@@ -208,7 +223,10 @@ const MarketBreakingNews = () => {
                                         {item.description}
                                     </div>
                                 </div>
-                                <div className="event-time" title={new Date(item.timestamp).toLocaleString()}>
+                                <div
+                                    className="event-time"
+                                    title={new Date(item.timestamp).toLocaleString()}
+                                >
                                     {item.timeAgo || formatTimeAgo(item.timestamp)}
                                 </div>
                             </div>
@@ -221,4 +239,3 @@ const MarketBreakingNews = () => {
 };
 
 export default MarketBreakingNews;
-

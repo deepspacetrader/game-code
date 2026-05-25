@@ -505,7 +505,7 @@ export const MarketplaceProvider = ({ children }) => {
                     if (availableRareItems.length > 0) {
                         const rareItem =
                             availableRareItems[
-                                Math.floor(Math.random() * availableRareItems.length)
+                            Math.floor(Math.random() * availableRareItems.length)
                             ];
                         const rareIndex = items.findIndex(
                             (item) => item.itemId === rareItem.itemId
@@ -519,7 +519,7 @@ export const MarketplaceProvider = ({ children }) => {
                         if (replaceableIndices.length > 0) {
                             const replaceIndex =
                                 replaceableIndices[
-                                    Math.floor(Math.random() * replaceableIndices.length)
+                                Math.floor(Math.random() * replaceableIndices.length)
                                 ];
                             picks[replaceIndex] = rareIndex;
                         }
@@ -647,6 +647,33 @@ export const MarketplaceProvider = ({ children }) => {
     // Define travelToGalaxy function at the component level
     const travelToGalaxy = useCallback(
         (target) => {
+            const timeSound = 3;
+            const timeSoundHalf = timeSound / 2;
+            // NEXT GALAXY SOUND
+            zzfx(
+                volumeRef.current, // Volume
+                0.07, //0.042, // Randomness
+                13.37, // Freq
+                0.1337, // Attack
+                0, // Sustain
+                timeSound, // Release
+                4, //  Wave Shape (0,1,2,3,4)
+                1.337, // Shape curve
+                0.69, //  Slide
+                0.42, // Delta Slide
+                800, // Pitch Jump
+                timeSoundHalf, // Pitch Jump Time
+                0.001, // Repeat Time
+                0.5, // Noise
+                0, // Modulation
+                0.002, // Bit Crush
+                0, // Delay
+                1, // Sustain Volume
+                0, // Decay
+                1.337, // Tremolo
+                0 // Filter
+            );
+
             // Get the current galaxy object
             const currentGalaxyObj =
                 galaxiesData.galaxies.find((g) => g.galaxyId === currentGalaxy) ||
@@ -879,8 +906,8 @@ export const MarketplaceProvider = ({ children }) => {
     function getReliableIndices(reliableItemIds, items) {
         return Array.isArray(reliableItemIds)
             ? reliableItemIds
-                  .map((id) => items.findIndex((it) => it.itemId === id))
-                  .filter((idx) => idx >= 0)
+                .map((id) => items.findIndex((it) => it.itemId === id))
+                .filter((idx) => idx >= 0)
             : [];
     }
 
@@ -1323,8 +1350,7 @@ export const MarketplaceProvider = ({ children }) => {
                 }[encounterType] || 'Alert: ';
 
             addFloatingMessage(
-                `${prefix}${ev.dialog?.text || 'Enemy encountered!'}${
-                    ev.dialog?.cost ? ' Cost: ' + ev.dialog.cost : ''
+                `${prefix}${ev.dialog?.text || 'Enemy encountered!'}${ev.dialog?.cost ? ' Cost: ' + ev.dialog.cost : ''
                 }`
             );
         },
@@ -1449,17 +1475,17 @@ export const MarketplaceProvider = ({ children }) => {
         zzfx(
             volumeRef.current, // Volume
             0, //0.042, // Randomness
-            500, // Freq
+            50, // Freq
             0.1337, // Attack
             0, // Sustain
             timeSound, // Release
-            0, // Wave Shape (0,1,2,3,4)
+            1, //  Wave Shape (0,1,2,3,4)
             1.337, // Shape curve
             0.69, //  Slide
             0.42, // Delta Slide
-            50, // Pitch Jump
+            500, // Pitch Jump
             timeSoundHalf, // Pitch Jump Time
-            0.01, // Repeat Time
+            0.001, // Repeat Time
             0.5, // Noise
             0, // Modulation
             0, // Bit Crush
@@ -1545,13 +1571,13 @@ export const MarketplaceProvider = ({ children }) => {
                 ts.map((g, i) =>
                     i === traderIdx
                         ? g.map((c, j) =>
-                              j === idx
-                                  ? {
-                                        ...c,
-                                        stock: Math.max(0, c.stock - 1), // Ensure stock never goes below 0
-                                    }
-                                  : c
-                          )
+                            j === idx
+                                ? {
+                                    ...c,
+                                    stock: Math.max(0, c.stock - 1), // Ensure stock never goes below 0
+                                }
+                                : c
+                        )
                         : g
                 )
             );
@@ -1774,8 +1800,8 @@ export const MarketplaceProvider = ({ children }) => {
                     avgCost:
                         historyArr.length > 0
                             ? +(historyArr.reduce((a, v) => a + v, 0) / historyArr.length).toFixed(
-                                  2
-                              )
+                                2
+                            )
                             : 0,
                 },
             ]);
@@ -1863,7 +1889,7 @@ export const MarketplaceProvider = ({ children }) => {
     // ----- SELL ALL -----
     // sell all quantity of an item
     const handleSellAll = useCallback(
-        (name) => {
+        (name, quantity) => {
             // Disable bulk selling during travel if not allowed or no Particle Beam Reverter
             if (inTravel) {
                 const itemDef = items.find((i) => i.name === name);
@@ -1888,7 +1914,9 @@ export const MarketplaceProvider = ({ children }) => {
             }
             const invItem = inventory.find((i) => i.name === name);
             if (!invItem) return;
-            const qty = invItem.quantity;
+            const qty = quantity !== undefined ? quantity : invItem.quantity;
+            if (invItem.quantity < qty) return; // not enough items
+
             // Determine trader index based on currentTrader id
             const traderIdx = traderIds.findIndex((tid) => tid === currentTrader);
             const list = traders[traderIdx] || [];
@@ -1902,7 +1930,7 @@ export const MarketplaceProvider = ({ children }) => {
             }
             const sale = cell.price;
             setCredits((c) => c + sale * qty);
-            addFloatingMessage(`Sold All ${name} (+${sale * qty})`, 'global');
+            addFloatingMessage(`Sold ${qty} ${name} (+${sale * qty})`, 'global');
             addFloatingMessage(`+${sale * qty}`, 'credits');
             // record single combined sell event with profit
             const historyArr = purchaseHistory[name] || [];
@@ -1923,7 +1951,11 @@ export const MarketplaceProvider = ({ children }) => {
             ]);
 
             // remove from inventory
-            setInventory((prev) => prev.filter((i) => i.name !== name));
+            setInventory((prev) =>
+                prev
+                    .map((i) => (i.name === name ? { ...i, quantity: i.quantity - qty } : i))
+                    .filter((i) => i.quantity > 0)
+            );
 
             // Remove the correct number of oldest purchase prices (FIFO)
             setPurchaseHistory((ph) => {
@@ -1940,12 +1972,12 @@ export const MarketplaceProvider = ({ children }) => {
                 ts.map((g, i) =>
                     i === traderIdx
                         ? g.map((c, j) => {
-                              if (j !== idx) return c;
-                              const itemDef = items.find((item) => item.name === name);
-                              const maxStock = itemDef?.maxStock || 99; // Default to 99 if no maxStock defined
-                              const newStock = Math.min(maxStock, c.stock + qty);
-                              return { ...c, stock: newStock };
-                          })
+                            if (j !== idx) return c;
+                            const itemDef = items.find((item) => item.name === name);
+                            const maxStock = itemDef?.maxStock || 99; // Default to 99 if no maxStock defined
+                            const newStock = Math.min(maxStock, c.stock + qty);
+                            return { ...c, stock: newStock };
+                        })
                         : g
                 )
             );
@@ -2317,12 +2349,12 @@ export const MarketplaceProvider = ({ children }) => {
                             ...prev,
                             [type]: durationMs
                                 ? {
-                                      active: !!value,
-                                      expiresAt: Date.now() + durationMs,
-                                      duration: durationMs,
-                                      remainingTime: durationMs,
-                                      type,
-                                  }
+                                    active: !!value,
+                                    expiresAt: Date.now() + durationMs,
+                                    duration: durationMs,
+                                    remainingTime: durationMs,
+                                    type,
+                                }
                                 : { active: !!value, type },
                         }));
                         addFloatingMessage(
@@ -2345,12 +2377,12 @@ export const MarketplaceProvider = ({ children }) => {
                             ...prev,
                             [type]: durationMs
                                 ? {
-                                      active: !!value,
-                                      expiresAt: Date.now() + durationMs,
-                                      duration: durationMs,
-                                      remainingTime: durationMs,
-                                      type,
-                                  }
+                                    active: !!value,
+                                    expiresAt: Date.now() + durationMs,
+                                    duration: durationMs,
+                                    remainingTime: durationMs,
+                                    type,
+                                }
                                 : { active: !!value, type },
                         }));
                         addFloatingMessage(
@@ -2393,8 +2425,8 @@ export const MarketplaceProvider = ({ children }) => {
                                 const safeValue = Array.isArray(effectValue)
                                     ? effectValue[1]
                                     : typeof effectValue === 'number'
-                                    ? effectValue
-                                    : 0;
+                                        ? effectValue
+                                        : 0;
                                 const newLevel = safePrev + safeValue;
                                 if (safePrev <= 1000 && newLevel > 1000) {
                                     setCurrentEnemy({
@@ -2465,14 +2497,14 @@ export const MarketplaceProvider = ({ children }) => {
                 pMax > 1
                     ? `↑${Math.round((pMax - 1) * 100)}%`
                     : pMax < 1
-                    ? `↓${Math.round((1 - pMax) * 100)}%`
-                    : '±0%';
+                        ? `↓${Math.round((1 - pMax) * 100)}%`
+                        : '±0%';
             const stockChange =
                 sMax > 1
                     ? `↑${Math.round((sMax - 1) * 100)}%`
                     : sMax < 1
-                    ? `↓${Math.round((1 - sMax) * 100)}%`
-                    : '±0%';
+                        ? `↓${Math.round((1 - sMax) * 100)}%`
+                        : '±0%';
 
             // Find affected item names
             const affectedItemsData = items.filter((item) => affectedItems.includes(item.itemId));
@@ -2932,8 +2964,8 @@ export const MarketplaceProvider = ({ children }) => {
             setTraderMessage,
             setVolume,
             // Quantum state is now managed by QuantumContext
-            setRecordTimes: () => {},
-            setPurchaseHistory: () => {},
+            setRecordTimes: () => { },
+            setPurchaseHistory: () => { },
 
             // Actions
             travelToGalaxy,
@@ -2959,14 +2991,14 @@ export const MarketplaceProvider = ({ children }) => {
             travelTotalTime: 0,
 
             // Empty function implementations for backward compatibility
-            onBuyAll: () => {},
-            resetQuantumProcessors: () => {},
-            subtractQuantumProcessor: () => {},
-            triggerRandomMarketEvent: () => {},
+            onBuyAll: () => { },
+            resetQuantumProcessors: () => { },
+            subtractQuantumProcessor: () => { },
+            triggerRandomMarketEvent: () => { },
 
             // Empty function implementations for backward compatibility
 
-            triggerEnemyEncounter: () => {},
+            triggerEnemyEncounter: () => { },
             initializeGameState: async (savedState) => {
                 console.log('Initializing game state with:', savedState);
 
@@ -3228,11 +3260,11 @@ export const MarketplaceProvider = ({ children }) => {
             removeQuantumAbility,
 
             // Placeholder functions for backward compatibility
-            onBuyAll: () => {},
-            resetQuantumProcessors: () => {},
-            triggerRandomMarketEvent: () => {},
-            setRecordTimes: () => {},
-            setPurchaseHistory: () => {},
+            onBuyAll: () => { },
+            resetQuantumProcessors: () => { },
+            triggerRandomMarketEvent: () => { },
+            setRecordTimes: () => { },
+            setPurchaseHistory: () => { },
             // Quantum state is now managed by QuantumContext
             canQuantumBuy: () => false,
             canQuantumSell: () => false,

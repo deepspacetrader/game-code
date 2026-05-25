@@ -102,7 +102,7 @@ const MarketGrid = forwardRef((props, ref) => {
                         strategy = 'sell';
                     }
 
-                    const showStrategy = improvedAILevel >= 50; // Show strategy for players who can understand market analysis
+                    const showStrategy = improvedAILevel >= 500; // Show strategy for players who can understand market analysis
 
                     const quantumClass =
                         statusEffects['Quantum Processor'] &&
