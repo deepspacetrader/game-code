@@ -31,6 +31,7 @@ import Onboarding from './components/Onboarding/Onboarding';
 import SecretOffer from './components/Reusable/SecretOffer';
 import ConsentAndAnalytics from './components/Reusable/ConsentAndAnalytics';
 import Scanner from './components/Scanner';
+import AIControlPanel from './components/AIControl/AIControlPanel';
 
 const GameUI = ({
     gameCompleted,
@@ -50,11 +51,15 @@ const GameUI = ({
     aiTier,
     improvedAILevel,
     handleEncounterEnd,
+    gameFunctions,
+    quantumPower,
+    quantumSlotsUsed,
 }) => {
     // UI state for secret market offer/unlock
     const [showSecretOffer, setShowSecretOffer] = useState(false);
     const [secretMarkets, setSecretMarkets] = useState({}); // { [galaxyName]: true }
     const [showSecretArea, setShowSecretArea] = useState(false);
+    const [showAIControl, setShowAIControl] = useState(false);
 
     // Use secret item context for randomized items
     const { randomizedSecretItems } = useSecretItems();
@@ -101,6 +106,13 @@ const GameUI = ({
             <div className="top-menu-bar">
                 <Version />
                 <SaveGame />
+                <Button 
+                    variant="outline-primary" 
+                    size="sm"
+                    onClick={() => setShowAIControl(!showAIControl)}
+                >
+                    🤖 AI Control
+                </Button>
                 <VolumeSlider
                     volume={volume}
                     setVolume={setVolume}
@@ -175,6 +187,18 @@ const GameUI = ({
             {/* Secret Offer Popup */}
             <SecretOffer show={showSecretOffer} onResult={handleSecretOfferResult} />
 
+            {/* AI Control Panel */}
+            {showAIControl && (
+                <div className="ai-control-overlay">
+                    <AIControlPanel
+                        gameFunctions={gameFunctions}
+                        currentEnemy={currentEnemy}
+                        quantumPower={quantumPower}
+                        quantumSlotsUsed={quantumSlotsUsed}
+                    />
+                </div>
+            )}
+
             <ConsentAndAnalytics />
         </div>
     );
@@ -196,12 +220,73 @@ const Game = () => {
         addFloatingMessage,
         galaxyName,
         currentTrader,
+        traders,
+        currentGalaxy,
+        fuel,
+        health,
+        handleBuyClick,
+        handleSellClick,
+        handleSellAll,
+        travelToGalaxy,
+        buyFuel,
+        handleUseItem,
+        handleNextTrader,
+        handlePrevTrader,
+        toggleShield,
+        toggleStealth,
+        inTravel,
+        isJumping,
+        traderIds,
+        traderNames,
+        fuelPrices,
+        deliveryQueue,
+        shieldActive,
+        stealthActive,
+        toggleQuantumAbilities,
+        quantumSlotsUsed,
+        quantumPower,
+        subtractQuantumProcessor,
     } = useMarketplace();
     const { aiTier, improvedAILevel } = useAILevel();
 
     const handleEncounterEnd = useCallback(() => {
         setCurrentEnemy(null);
     }, [setCurrentEnemy]);
+
+    // Game functions object for AI control
+    const gameFunctions = {
+        credits,
+        inventory,
+        fuel,
+        health,
+        traders,
+        currentTrader,
+        currentGalaxy,
+        galaxyName,
+        handleBuyClick,
+        handleSellClick,
+        handleSellAll,
+        travelToGalaxy,
+        buyFuel,
+        handleUseItem,
+        handleNextTrader,
+        handlePrevTrader,
+        toggleShield,
+        toggleStealth,
+        inTravel,
+        isJumping,
+        traderIds,
+        traderNames,
+        fuelPrices,
+        deliveryQueue,
+        shieldActive,
+        stealthActive,
+        toggleQuantumAbilities,
+        quantumSlotsUsed,
+        improvedAILevel,
+        aiTier,
+        subtractQuantumProcessor,
+    };
 
     return (
         <SecretItemProvider currentTrader={currentTrader}>
@@ -223,6 +308,9 @@ const Game = () => {
                 aiTier={aiTier}
                 improvedAILevel={improvedAILevel}
                 handleEncounterEnd={handleEncounterEnd}
+                gameFunctions={gameFunctions}
+                quantumPower={quantumPower}
+                quantumSlotsUsed={quantumSlotsUsed}
             />
         </SecretItemProvider>
     );

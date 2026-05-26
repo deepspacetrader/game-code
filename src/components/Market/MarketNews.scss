@@ -1,4 +1,4 @@
-@import '../../App.scss';
+@use '../../App.scss' as *;
 
 @keyframes ticker-scroll {
     0% {

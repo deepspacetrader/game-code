@@ -2955,6 +2955,7 @@ export const MarketplaceProvider = ({ children }) => {
             updateLastQuantumTradeTime,
             toggleQuantumAbilities,
             setQuantumSlotsUsed,
+            subtractQuantumProcessor,
 
             // State setters
             setHealth,

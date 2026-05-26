@@ -6,7 +6,7 @@ import { randomFloatRange } from '../../utils/helpers';
 import itemsData from '../../data/items.json';
 import './Event.scss';
 
-const itemImages = require.context('../../images', false, /^\.\/item\d+\.webp$/);
+const itemImages = import.meta.glob('/src/images/item*.webp', { eager: true, as: 'url' });
 
 // Simple inline sparkline component
 const Sparkline = ({ data, width = 50, height = 20, color = '#00ff00' }) => {

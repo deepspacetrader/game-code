@@ -6,7 +6,13 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 import AlertBanner from '../Reusable/AlertBanner';
 
 // dynamic import of galaxy images
-const galaxyImages = require.context('../../images', false, /^\.\/galaxy\d+(-war)?\.webp$/);
+const galaxyImages = import.meta.glob('/src/images/galaxy*.webp', { eager: true, as: 'url' });
+
+// Helper function to get image URL
+const getImageUrl = (imageMap, filename) => {
+    const key = Object.keys(imageMap).find(k => k.endsWith(filename));
+    return key ? imageMap[key] : null;
+};
 
 const MarketSummary = () => {
     const { displayCells, galaxyName, onBuyAll, credits } = useMarketplace();
@@ -46,8 +52,8 @@ const MarketSummary = () => {
         const { galaxyId, war = false } = info;
         let imgSrc = null;
         if (typeof galaxyId === 'number') {
-            const key = `./galaxy${galaxyId}${war ? '-war' : ''}.webp`;
-            if (galaxyImages.keys().includes(key)) imgSrc = galaxyImages(key);
+            const filename = `galaxy${galaxyId}${war ? '-war' : ''}.webp`;
+            imgSrc = getImageUrl(galaxyImages, filename);
         }
         setBgImage(imgSrc);
     }, [galaxyName]);

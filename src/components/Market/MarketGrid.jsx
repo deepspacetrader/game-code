@@ -17,8 +17,14 @@ import galaxiesData from '../../data/galaxies.json';
 import itemsData from '../../data/items.json';
 
 // Dynamic import of galaxy images
-const galaxyImages = require.context('../../images', false, /^\.\/galaxy\d+(-war)?\.webp$/);
-const itemImages = require.context('../../images', false, /^\.\/item\d+\.webp$/);
+const galaxyImages = import.meta.glob('/src/images/galaxy*.webp', { eager: true, as: 'url' });
+const itemImages = import.meta.glob('/src/images/item*.webp', { eager: true, as: 'url' });
+
+// Helper function to get image URL
+const getImageUrl = (imageMap, filename) => {
+    const key = Object.keys(imageMap).find(k => k.endsWith(filename));
+    return key ? imageMap[key] : null;
+};
 
 const MarketGrid = forwardRef((props, ref) => {
     const {
@@ -66,8 +72,8 @@ const MarketGrid = forwardRef((props, ref) => {
         const info = galaxiesData.galaxies.find((g) => g.name === galaxyName) || {};
         const { galaxyId, war = false } = info;
         let imgSrc = null;
-        const key = `./galaxy${galaxyId}${war ? '-war' : ''}.webp`;
-        if (galaxyImages.keys().includes(key)) imgSrc = galaxyImages(key);
+        const filename = `galaxy${galaxyId}${war ? '-war' : ''}.webp`;
+        imgSrc = getImageUrl(galaxyImages, filename);
 
         setBgImage(imgSrc);
     }, [galaxyName]);
@@ -213,9 +219,10 @@ const MarketGrid = forwardRef((props, ref) => {
                                 <div
                                     className="item-image-bg"
                                     style={(() => {
-                                        const key = `./item${cell.itemId}.webp`;
-                                        return itemImages.keys().includes(key)
-                                            ? { backgroundImage: `url(${itemImages(key)})` }
+                                        const filename = `item${cell.itemId}.webp`;
+                                        const imgUrl = getImageUrl(itemImages, filename);
+                                        return imgUrl
+                                            ? { backgroundImage: `url(${imgUrl})` }
                                             : {};
                                     })()}
                                 />

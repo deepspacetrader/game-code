@@ -1,5 +1,5 @@
 // Import breakpoints from App.scss
-@import '../App.scss';
+@use '../App.scss' as *;
 
 .spaceship-hud {
     display: grid;
@@ -83,33 +83,34 @@
 }
 
 .hud-item {
-    background: var(--cell-bg);
-    padding: 6px 4px;
-    border: 1px solid var(--cell-border);
-    border-radius: 4px;
-    text-align: center;
-    transition: background 0.3s, box-shadow 0.3s;
-    position: relative;
-    font-size: 0.9em;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 50px;
+ background: var(--cell-bg);
+ padding: 6px 4px;
+ border: 1px solid var(--cell-border);
+ border-radius: 4px;
+ text-align: center;
+ transition: background 0.3s, box-shadow 0.3s;
+ position: relative;
+ font-size: 0.9em;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ min-height: 50px;
+ text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.5);
 
-    @include mobile {
-        padding: 4px 2px;
-        font-size: 0.8em;
-        min-height: 45px;
-    }
+ @include mobile {
+ padding: 4px 2px;
+ font-size: 0.8em;
+ min-height: 45px;
+ }
 
-    @include tablet {
-        padding: 6px 4px;
-    }
+ @include tablet {
+ padding: 6px 4px;
+ }
 
-    @include desktop {
-        padding: 8px;
-        font-size: 0.9em;
-    }
+ @include desktop {
+ padding: 8px;
+ font-size: 0.9em;
+ }
 }
 
 .hud-item:hover {
@@ -117,31 +118,38 @@
 }
 
 .hud-item--credit {
-    color: var(--accent);
+ color: var(--accent);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hud-item--health {
-    color: var(--info);
+ color: var(--info);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hud-item--fuel {
-    color: var(--error);
+ color: var(--error);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hud-item--avg {
-    color: var(--accent);
+ color: var(--accent);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hud-item--speed {
-    color: var(--info);
+ color: var(--info);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hud-item--stealth {
-    color: var(--info);
+ color: var(--info);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .hud-item--shield {
-    color: var(--accent);
+ color: var(--accent);
+ text-shadow: 0 0 3px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.7);
 }
 
 .cheater {

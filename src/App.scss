@@ -1,10 +1,12 @@
+@use 'sass:color';
+
 /* Define variables */
 $gold: gold;
 $cheap: green;
-$deal: darken($cheap, 10%);
+$deal: color.adjust($cheap, $lightness: -10%);
 $normal: rgb(0, 0, 100);
 $avoid: red;
-$expensive: darken($avoid, 10%);
+$expensive: color.adjust($avoid, $lightness: -10%);
 $hud-bg: var(--hud-bg);
 $hud-text: var(--hud-text);
 $cell-border: var(--cell-border);
@@ -338,7 +340,7 @@ button {
 }
 
 .ai-tier-skilled {
-    --hud-bg: rgb(18, 44, 172);
+    --hud-bg: rgba(18, 44, 172, 0.25);
     --hud-border: #667;
     --hud-text: #fff;
     --cell-border: #778;
@@ -349,7 +351,7 @@ button {
 }
 
 .ai-tier-knowledgeable {
-    --hud-bg: rgb(16, 47, 202);
+    --hud-bg: rgba(16, 47, 202, 0.25);
     --hud-border: #667;
     --hud-text: #fff;
     --cell-border: #778;
@@ -360,7 +362,7 @@ button {
 }
 
 .ai-tier-smart {
-    --hud-bg: rgb(9, 47, 235);
+    --hud-bg: rgba(9, 47, 235, 0.25);
     --hud-border: #667;
     --hud-text: #fff;
     --cell-border: #778;
@@ -371,7 +373,7 @@ button {
 }
 
 .ai-tier-expert {
-    --hud-bg: rgb(0, 59, 11);
+    --hud-bg: rgba(0, 59, 11, 0.25);
     --hud-border: #667;
     --hud-text: #fff;
     --cell-border: #778;
@@ -382,7 +384,7 @@ button {
 }
 
 .ai-tier-master {
-    --hud-bg: rgb(52, 85, 0);
+    --hud-bg: rgba(52, 85, 0, 0.25);
     --hud-border: #667;
     --hud-text: #fff;
     --cell-border: #778;
@@ -393,7 +395,7 @@ button {
 }
 
 .ai-tier-grandmaster {
-    --hud-bg: rgb(118, 150, 65);
+    --hud-bg: rgba(118, 150, 65, 0.25);
     --hud-border: #667;
     --hud-text: #fff;
     --cell-border: #778;
@@ -404,7 +406,7 @@ button {
 }
 
 .ai-tier-elite {
-    --hud-bg: #33003e;
+    --hud-bg: rgba(51, 0, 62, 0.25);
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */
@@ -416,7 +418,7 @@ button {
 }
 
 .ai-tier-legendary {
-    --hud-bg: #d97700;
+    --hud-bg: rgba(217, 119, 0, 0.25);
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */
@@ -427,7 +429,7 @@ button {
     --info: #cef;
 }
 .ai-tier-potential {
-    --hud-bg: #580000;
+    --hud-bg: rgba(88, 0, 0, 0.25);
     --hud-border: #889;
     --hud-text: #ffffff;
     /* --cell-bg: #000a1a74; */
@@ -438,12 +440,12 @@ button {
     --info: #cef;
 }
 .ai-tier-endgame {
-    --hud-bg: #ff0000;
+    --hud-bg: rgba(255, 0, 0, 0.25);
     --hud-border: #889;
     --hud-text: #ffffff;
     --cell-bg: #000a1a74;
     --cell-border: gold;
-    --cell-hover-shadow: darken(gold, 55%);
+    --cell-hover-shadow: color.adjust(gold, $lightness: -55%);
     --accent: #eee;
     --error: #f11;
     --info: #000;

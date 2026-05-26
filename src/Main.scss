@@ -1,19 +1,24 @@
 // Import breakpoints from App.scss
-@import './App.scss';
+@use './App.scss' as *;
 
 .top-menu-bar {
-    position: fixed;
-    height: 2rem;
-    z-index: 1000;
-    display: flex;
-    width: 100%;
-    align-items: center;
-    gap: 16px;
-    background-color: #1a1a1a;
+ position: sticky;
+ top: 0;
+ height: 2rem;
+ z-index: 1000;
+ display: flex;
+ width: 100%;
+ align-items: center;
+ gap: 16px;
+ background-color: #1a1a1a;
 }
 
 .admin-debug {
-    z-index: 1001;
+ z-index: 1001;
+}
+
+.trader-info-trigger {
+ z-index: 1002;
 }
 
 .main-container {
@@ -57,7 +62,6 @@
 }
 
 .inventory-pane {
-    flex: 1;
     min-height: 40vh;
     width: 100%;
     position: relative;
@@ -68,7 +72,7 @@
     box-sizing: border-box;
 
     @media (min-width: $breakpoint-tablet) {
-        width: 48%;
+        width: 50%;
         min-height: 10rem;
     }
 }

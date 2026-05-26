@@ -60,8 +60,14 @@ const InventoryList = () => {
             : improvedAILevel < 100
             ? 'ultra'
             : 'elite';
-    const itemImages = require.context('../../images', false, /^\.\/item\d+\.webp$/);
-    const secretItemImages = require.context('../../images', false, /^\.\/secret-item\d+\.webp$/);
+    const itemImages = import.meta.glob('/src/images/item*.webp', { eager: true, as: 'url' });
+    const secretItemImages = import.meta.glob('/src/images/secret-item*.webp', { eager: true, as: 'url' });
+
+    // Helper function to get image URL
+    const getImageUrl = (imageMap, filename) => {
+        const key = Object.keys(imageMap).find(k => k.endsWith(filename));
+        return key ? imageMap[key] : null;
+    };
 
     // Helper: get current galaxy danger/war status
     // (Assume useMarketplace or context provides this, or add a helper if not)
@@ -196,15 +202,14 @@ const InventoryList = () => {
                                         <span className="item-image-name">{item.name}</span>
                                         {(() => {
                                             if (itemId !== undefined) {
-                                                const key = `./item${itemId}.webp`;
-                                                if (itemImages.keys().includes(key)) {
+                                                const filename = `item${itemId}.webp`;
+                                                const imgUrl = getImageUrl(itemImages, filename);
+                                                if (imgUrl) {
                                                     return (
                                                         <div
                                                             className="item-image-bg"
                                                             style={{
-                                                                backgroundImage: `url(${itemImages(
-                                                                    key
-                                                                )})`,
+                                                                backgroundImage: `url(${imgUrl})`,
                                                             }}
                                                         />
                                                     );
@@ -417,15 +422,14 @@ const InventoryList = () => {
                                                 {(() => {
                                                     const secretId = def?.secretItemId;
                                                     if (secretId !== undefined) {
-                                                        const key = `./secret-item${secretId}.webp`;
-                                                        if (secretItemImages.keys().includes(key)) {
+                                                        const filename = `secret-item${secretId}.webp`;
+                                                        const imgUrl = getImageUrl(secretItemImages, filename);
+                                                        if (imgUrl) {
                                                             return (
                                                                 <div
                                                                     className="item-image-bg"
                                                                     style={{
-                                                                        backgroundImage: `url(${secretItemImages(
-                                                                            key
-                                                                        )})`,
+                                                                        backgroundImage: `url(${imgUrl})`,
                                                                     }}
                                                                 />
                                                             );

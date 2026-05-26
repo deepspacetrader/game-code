@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx react-scripts *)",
+      "Bash(curl -s http://localhost:1234/api/v1/models)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:1234/v1/models)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:1234/api/v1/models)",
+      "Bash(curl -s http://localhost:1234/v1/models)",
+      "Bash(bun run *)",
+      "Bash(bun x *)"
+    ]
+  }
+}

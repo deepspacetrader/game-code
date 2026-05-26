@@ -1,5 +1,5 @@
 /* Mixins for AI Tiers */
-@import '../../App.scss';
+@use '../../App.scss' as *;
 
 // Mixins for responsive design
 @mixin mobile {
@@ -233,7 +233,6 @@
     .trader-actions {
         transition: opacity 0.3s ease-out 0.1s;
         transform-origin: top center;
-        overflow: hidden;
     }
 }
 
@@ -310,46 +309,132 @@
 }
 
 .trader-actions {
-    gap: 1rem;
-    flex-wrap: nowrap;
-    justify-content: center;
-    width: 100%;
     display: flex;
-    overflow: hidden;
+    justify-content: center;
     align-items: center;
-
+    width: 100%;
+    margin: 0 auto;
+    max-width: 40rem;
+    padding: 0 !important;
     p {
-        margin: 0 auto;
         text-align: center;
     }
 }
 
-.action-fuel,
-.action-galaxy {
+.actions-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0 auto;
+    min-height: 5rem;
+    padding: 0 !important;
+    gap: 1rem !important;
+}
+
+
+.galaxy-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    width: 100%;
+}
+
+.action-fuel,
+.action-galaxy {
+    transition: none !important;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 10rem;
     max-width: 20rem;
-    margin: 0 0 1rem 0;
-    position: relative;
-    transition: all 0.3s ease;
+    height: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+
+    .fuel-button,
+    .galaxy-button {
+        margin: 0 auto !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: auto;
+        height: auto !important;
+        padding: 0.5rem 1rem !important;
+        box-sizing: border-box;
+        font-size: 0.875rem !important;
+        position: relative !important;
+    }
 
     .info {
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem 0 !important;
         width: 100%;
         text-align: center;
-        padding: 0.5rem;
-        background: rgba(0, 0, 0, 0.7);
-        border: 1px solid transparent;
+        padding: 0.5rem !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        border: 1px solid transparent !important;
         border-radius: 4px;
-        transition: all 0.3s ease;
+        transition: none !important;
+        min-height: auto;
+        height: auto !important;
+        box-sizing: border-box;
+        font-size: 0.75rem !important;
+        position: relative !important;
         &:hover {
             cursor: default;
         }
     }
+}
+
+// Override AI tier specific styling for action buttons
+.ai-tier-journeyman .action-fuel,
+.ai-tier-journeyman .action-galaxy,
+.ai-tier-adventurer .action-fuel,
+.ai-tier-adventurer .action-galaxy,
+.ai-tier-professional .action-fuel,
+.ai-tier-professional .action-galaxy,
+.ai-tier-skilled .action-fuel,
+.ai-tier-skilled .action-galaxy,
+.ai-tier-knowledgeable .action-fuel,
+.ai-tier-knowledgeable .action-galaxy,
+.ai-tier-smart .action-fuel,
+.ai-tier-smart .action-galaxy,
+.ai-tier-expert .action-fuel,
+.ai-tier-expert .action-galaxy,
+.ai-tier-master .action-fuel,
+.ai-tier-master .action-galaxy,
+.ai-tier-grandmaster .action-fuel,
+.ai-tier-grandmaster .action-galaxy,
+.ai-tier-elite .action-fuel,
+.ai-tier-elite .action-galaxy,
+.ai-tier-legendary .action-fuel,
+.ai-tier-legendary .action-galaxy,
+.ai-tier-potential .action-fuel,
+.ai-tier-potential .action-galaxy,
+.ai-tier-endgame .action-fuel,
+.ai-tier-endgame .action-galaxy {
+    transition: none !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 10rem !important;
+    max-width: 15rem !important;
+    height: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
 
     button {
         width: 100%;

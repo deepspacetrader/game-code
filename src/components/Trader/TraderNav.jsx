@@ -10,7 +10,13 @@ import tradersData from '../../data/traders.json';
 import FloatingMessage from '../Reusable/FloatingMessage';
 import { zzfx } from 'zzfx';
 
-const traderImages = require.context('../../images', false, /\.\/trader\d+\.webp$/);
+const traderImages = import.meta.glob('/src/images/trader*.webp', { eager: true, as: 'url' });
+
+// Helper function to get image URL
+const getImageUrl = (imageMap, filename) => {
+    const key = Object.keys(imageMap).find(k => k.endsWith(filename));
+    return key ? imageMap[key] : null;
+};
 
 const TraderNav = () => {
     const traderNavRef = useRef(null);
@@ -70,8 +76,8 @@ const TraderNav = () => {
 
     // resolve trader data
     const traderData = tradersData.traders.find((t) => t.traderId === currentTrader);
-    const key = traderData?.traderId ? `./trader${traderData?.traderId}.webp` : null;
-    const imgSrc = key && traderImages.keys().includes(key) ? traderImages(key) : null;
+    const filename = traderData?.traderId ? `trader${traderData?.traderId}.webp` : null;
+    const imgSrc = filename ? getImageUrl(traderImages, filename) : null;
     const [showTraderInfo, setShowTraderInfo] = useState(false);
 
     const handleSelect = (name) => {
@@ -565,101 +571,99 @@ const TraderNav = () => {
                                 ))}
                             </div>
                         )}
-                        <div className="action-fuel action-container">
-                            {(() => {
-                                const traderIdx = traderIds
-                                    ? traderIds.findIndex((tid) => tid === currentTrader)
-                                    : -1;
-                                const basePrice = traderIdx >= 0 ? fuelPrices[traderIdx] : 0;
-                                const effectivePrice = Math.max(
-                                    basePrice - (totalFuelCostReduction || 0),
-                                    0
-                                );
-                                return (
-                                    <div className="fuel-button" style={{ position: 'relative' }}>
-                                        <p className="fuel-cost-info info">
-                                            {improvedAILevel >= 25
-                                                ? `(5 units @ ${effectivePrice.toFixed(
-                                                      2
-                                                  )} each = ${(effectivePrice * 5).toFixed(
-                                                      2
-                                                  )} credits)`
-                                                : `(5 units @ ${effectivePrice.toFixed(2)} each)`}
-                                        </p>
-                                        <button
-                                            ref={(el) => {
-                                                // Store the button element in a variable that can be accessed in the click handler
-                                                const buttonElement = el;
-                                                return () => {
-                                                    // This is a no-op, but it satisfies the ref requirement
-                                                };
-                                            }}
-                                            onClick={(event) => {
-                                                const traderIdx = traderIds.findIndex(
-                                                    (tid) => tid === currentTrader
-                                                );
-                                                const basePrice =
-                                                    traderIdx >= 0 ? fuelPrices[traderIdx] : 0;
-                                                const effectivePrice = Math.max(
-                                                    basePrice - (totalFuelCostReduction || 0),
-                                                    0
-                                                );
-                                                const totalCost = effectivePrice * 5;
-                                                const buttonElement = event.currentTarget;
+                        <div className="actions-container">
+                            <div className="action-fuel">
+                                {(() => {
+                                    const traderIdx = traderIds
+                                        ? traderIds.findIndex((tid) => tid === currentTrader)
+                                        : -1;
+                                    const basePrice = traderIdx >= 0 ? fuelPrices[traderIdx] : 0;
+                                    const effectivePrice = Math.max(
+                                        basePrice - (totalFuelCostReduction || 0),
+                                        0
+                                    );
+                                    return (
+                                        <div className="fuel-button" style={{ position: 'relative' }}>
+                                            <p className="fuel-cost-info info">
+                                                {improvedAILevel >= 25
+                                                    ? `5 units @ ${effectivePrice.toFixed(2)} each = ${(effectivePrice * 5).toFixed(2)} credits`
+                                                    : `5 units @ ${effectivePrice.toFixed(2)} each`}
+                                            </p>
+                                            <button
+                                                ref={(el) => {
+                                                    // Store the button element in a variable that can be accessed in the click handler
+                                                    const buttonElement = el;
+                                                    return () => {
+                                                        // This is a no-op, but it satisfies the ref requirement
+                                                    };
+                                                }}
+                                                onClick={(event) => {
+                                                    const traderIdx = traderIds.findIndex(
+                                                        (tid) => tid === currentTrader
+                                                    );
+                                                    const basePrice =
+                                                        traderIdx >= 0 ? fuelPrices[traderIdx] : 0;
+                                                    const effectivePrice = Math.max(
+                                                        basePrice - (totalFuelCostReduction || 0),
+                                                        0
+                                                    );
+                                                    const totalCost = effectivePrice * 5;
+                                                    const buttonElement = event.currentTarget;
 
-                                                if (credits < totalCost) {
-                                                    handleInsufficientFuel();
-                                                    return;
-                                                }
+                                                    if (credits < totalCost) {
+                                                        handleInsufficientFuel();
+                                                        return;
+                                                    }
 
-                                                zzfx(
-                                                    volumeRef.current,
-                                                    0.129,
-                                                    0.01,
-                                                    0,
-                                                    0.15,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    5,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0
-                                                );
-                                                buyFuel(5, totalCost);
-                                            }}
-                                        >
-                                            <p>Buy Fuel</p>
-                                        </button>
-                                    </div>
-                                );
-                            })()}
-                        </div>
+                                                    zzfx(
+                                                        volumeRef.current,
+                                                        0.129,
+                                                        0.01,
+                                                        0,
+                                                        0.15,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        5,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0
+                                                    );
+                                                    buyFuel(5, totalCost);
+                                                }}
+                                            >
+                                                <p>Buy Fuel</p>
+                                            </button>
+                                        </div>
+                                    );
+                                })()}
+                            </div>
 
-                        <div className="action-galaxy action-container">
-                            <div className="galaxy-button" style={{ position: 'relative' }}>
-                                <p className="galaxy-info info">
-                                    Current: {galaxyName ? `${galaxyName}` : 'Traveling...'}
-                                </p>
-                                <button
-                                    className={`next-galaxy-button ${
-                                        warnWar ? ' highlight-war' : ''
-                                    }`}
-                                    onClick={handleNextGalaxyClick}
-                                >
-                                    <p>
-                                        {showPreview ? `Next: ${nextGalaxyName}` : 'Next Galaxy'}{' '}
-                                        {improvedAILevel < 50 ? `(Random)` : `(StarMap)`}
+                            <div className="action-galaxy">
+                                <div className="galaxy-button" style={{ position: 'relative' }}>
+                                    <p className="galaxy-info info">
+                                        Current: {galaxyName ? `${galaxyName}` : 'Traveling...'}
                                     </p>
-                                </button>
+                                    <button
+                                        className={`next-galaxy-button ${
+                                            warnWar ? ' highlight-war' : ''
+                                        }`}
+                                        onClick={handleNextGalaxyClick}
+                                    >
+                                        <p>
+                                            {showPreview ? `Next: ${nextGalaxyName}` : 'Next Galaxy'}{' '}
+                                            {improvedAILevel < 50 ? `(Random)` : `(StarMap)`}
+                                        </p>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </>

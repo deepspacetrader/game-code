@@ -1,4 +1,4 @@
-@import '../../App.scss';
+@use '../../App.scss' as *;
 
 // Animation keyframes for AI elements
 @keyframes pulse {

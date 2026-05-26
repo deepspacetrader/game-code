@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './Scanner.scss';
 import AsciiWaveAnimator from './Reusable/AsciiWaveAnimator';
 
+const ZONE_SIZE = 30;
 const CORNERS = [
     { x: 0, y: 0, label: 'top-left' },
     { x: 1, y: 0, label: 'top-right' },
@@ -14,6 +15,12 @@ const getRandomCorner = (exclude = []) => {
         (c) => !exclude.some((ex) => ex.label === c.label)
     );
     return available[Math.floor(Math.random() * available.length)];
+};
+
+const getZoneCenter = (corner, rect) => {
+    const centerX = corner.x * (rect.width - ZONE_SIZE) + ZONE_SIZE / 2;
+    const centerY = corner.y * (rect.height - ZONE_SIZE) + ZONE_SIZE / 2;
+    return { x: centerX, y: centerY };
 };
 
 const Scanner = ({ onScanComplete, images = [] }) => {
@@ -59,12 +66,10 @@ const Scanner = ({ onScanComplete, images = [] }) => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        const zoneSize = 30;
-        const startX = corners.start.x * (rect.width - zoneSize) + zoneSize / 2;
-        const startY = corners.start.y * (rect.height - zoneSize) + zoneSize / 2;
+        const startZoneCenter = getZoneCenter(corners.start, rect);
 
-        if (Math.abs(x - startX) < zoneSize && Math.abs(y - startY) < zoneSize) {
-            startPosRef.current = { x: startX, y: startY };
+        if (Math.abs(x - startZoneCenter.x) < ZONE_SIZE && Math.abs(y - startZoneCenter.y) < ZONE_SIZE) {
+            startPosRef.current = startZoneCenter;
             setMousePosition({ x, y });
             setIsDragging(true);
         }
@@ -79,11 +84,9 @@ const Scanner = ({ onScanComplete, images = [] }) => {
             const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
             setMousePosition({ x, y });
 
-            const zoneSize = 30;
-            const endX = corners.end.x * (rect.width - zoneSize) + zoneSize / 2;
-            const endY = corners.end.y * (rect.height - zoneSize) + zoneSize / 2;
+            const endZoneCenter = getZoneCenter(corners.end, rect);
 
-            if (Math.abs(x - endX) < zoneSize && Math.abs(y - endY) < zoneSize) {
+            if (Math.abs(x - endZoneCenter.x) < ZONE_SIZE && Math.abs(y - endZoneCenter.y) < ZONE_SIZE) {
                 setIsDragging(false);
                 if (stage < 3) {
                     setStage((s) => s + 1);
@@ -100,7 +103,6 @@ const Scanner = ({ onScanComplete, images = [] }) => {
     const handleMouseUp = () => {
         if (isDragging) {
             setIsDragging(false);
-            // Reset current stage, but not the whole game
             setupStage();
         }
     };
@@ -111,7 +113,7 @@ const Scanner = ({ onScanComplete, images = [] }) => {
             setupStage();
         }
     };
-    
+
     const getLineStyle = () => {
         if (!isDragging) return { display: 'none' };
 

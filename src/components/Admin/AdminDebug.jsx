@@ -49,29 +49,23 @@ const AdminDebug = () => {
         try {
             if (typeof triggerRandomMajorEvent !== 'function') {
                 console.error('triggerRandomMajorEvent is not a function');
+                alert('Failed to trigger random event: triggerRandomMajorEvent is not a function');
                 return;
             }
             // console.log('[Event] Manually triggering test event');
-            const event = triggerRandomMajorEvent();
+            // Force the event to bypass cooldown for admin use
+            const event = triggerRandomMajorEvent(true);
 
             // Add the event to the market news ticker without a prompt
             if (event && setCurrentGameEvent) {
-                const eventWithEffect = {
-                    ...event,
-                    effect: {
-                        priceMultiplierRange: event.effect?.priceMultiplierRange || [1, 1],
-                        stockMultiplierRange: event.effect?.stockMultiplierRange || [1, 1],
-                        affectedItems: event.effect?.affectedItems || [],
-                    },
-                    isFromAdmin: true, // Add a flag to indicate this came from admin
-                };
-
                 // Update the current game event in the marketplace context
-                setCurrentGameEvent(eventWithEffect);
+                setCurrentGameEvent(event);
+            } else if (!event) {
+                alert('Failed to trigger random event: No eligible events available');
             }
         } catch (error) {
             console.error('Error triggering random event:', error);
-            // Don't show alert to avoid interrupting the admin experience
+            alert(`Failed to trigger random event: ${error.message}`);
         }
     }, [triggerRandomMajorEvent, setCurrentGameEvent]);
 

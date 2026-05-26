@@ -1,5 +1,5 @@
 /* Mixins for AI Tiers */
-@import '../../App.scss';
+@use '../../App.scss' as *;
 
 // Base styles
 .trader-card {
@@ -22,17 +22,17 @@
 }
 
 .trader-info-trigger {
-    position: absolute;
-    top: 0.25rem;
-    z-index: 10;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: scale(0.69);
+ position: absolute;
+ top: 0.25rem;
+ z-index: inherit;
+ cursor: pointer;
+ transition: transform 0.2s ease;
+ background: rgba(0, 0, 0, 0.6);
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transform: scale(0.69);
 
     &:hover {
         transform: scale(1.5);

@@ -3,7 +3,7 @@ import { useMarketplace } from '../../context/MarketplaceContext';
 import galaxiesData from '../../data/galaxies.json';
 import enemiesData from '../../data/enemies.json';
 
-const ENEMY_SPAWN_INTERVAL = 300; // 30 seconds between spawn checks in dangerous zones
+const ENEMY_SPAWN_INTERVAL = 30000; // 30 seconds between spawn checks in dangerous zones
 const DANGER_LEVEL_INTERVAL = 60000; // 1 minute between danger level checks
 
 const EnemySpawner = () => {
