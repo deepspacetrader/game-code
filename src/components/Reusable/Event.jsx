@@ -6,7 +6,45 @@ import { randomFloatRange } from '../../utils/helpers';
 import itemsData from '../../data/items.json';
 import './Event.scss';
 
-const itemImages = import.meta.glob('../../images/item*.webp', { eager: true, as: 'url' });
+// Use direct paths to public folder images
+const itemImages = {
+  'item1.webp': '/images/item1.webp',
+  'item2.webp': '/images/item2.webp',
+  'item3.webp': '/images/item3.webp',
+  'item4.webp': '/images/item4.webp',
+  'item5.webp': '/images/item5.webp',
+  'item6.webp': '/images/item6.webp',
+  'item7.webp': '/images/item7.webp',
+  'item8.webp': '/images/item8.webp',
+  'item9.webp': '/images/item9.webp',
+  'item10.webp': '/images/item10.webp',
+  'item11.webp': '/images/item11.webp',
+  'item12.webp': '/images/item12.webp',
+  'item13.webp': '/images/item13.webp',
+  'item14.webp': '/images/item14.webp',
+  'item15.webp': '/images/item15.webp',
+  'item16.webp': '/images/item16.webp',
+  'item17.webp': '/images/item17.webp',
+  'item18.webp': '/images/item18.webp',
+  'item19.webp': '/images/item19.webp',
+  'item20.webp': '/images/item20.webp',
+  'item21.webp': '/images/item21.webp',
+  'item22.webp': '/images/item22.webp',
+  'item23.webp': '/images/item23.webp',
+  'item24.webp': '/images/item24.webp',
+  'item25.webp': '/images/item25.webp',
+  'item26.webp': '/images/item26.webp',
+  'item27.webp': '/images/item27.webp',
+  'item28.webp': '/images/item28.webp',
+  'item29.webp': '/images/item29.webp',
+  'item30.webp': '/images/item30.webp',
+  'item31.webp': '/images/item31.webp',
+  'item32.webp': '/images/item32.webp',
+  'item33.webp': '/images/item33.webp',
+  'item34.webp': '/images/item34.webp',
+  'item35.webp': '/images/item35.webp',
+  'item36.webp': '/images/item36.webp',
+};
 
 // Simple inline sparkline component
 const Sparkline = ({ data, width = 50, height = 20, color = '#00ff00' }) => {

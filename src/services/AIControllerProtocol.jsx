@@ -188,12 +188,21 @@ const ACTIONS_CATALOG = {
   },
 
   useItem: {
-    description: 'Use/activate an item from inventory',
+    description: 'Use/activate 1 unit of an item from inventory',
     context: 'Items have effects like healing, AI boost, fuel, shields, etc.',
     params: {
       item: 'string (item name)',
     },
     example: { action: 'useItem', params: { item: 'MultiMed' }, reason: 'Health is low, need healing' },
+  },
+
+  useAll: {
+    description: 'Use ALL units of a specific item type from inventory',
+    context: 'Applies every unit of the named item at once. Useful for boosting AI level in bulk.',
+    params: {
+      item: 'string (item name)',
+    },
+    example: { action: 'useAll', params: { item: 'Basic QBiT Inverter' }, reason: 'Boosting AI level with all units' },
   },
 
   // ----- TRAVEL ACTIONS -----
@@ -554,7 +563,7 @@ export function getGameSnapshot(gameFunctions, extraState = {}) {
 // ============================================================
 
 const ACTION_HANDLES = [
-  'buy', 'sell', 'sellAll', 'buyFuel', 'useItem',
+  'buy', 'sell', 'sellAll', 'buyFuel', 'useItem', 'useAll',
   'nextTrader', 'prevTrader', 'travelGalaxy',
   'assignQuantum', 'toggleQuantum',
   'attack', 'escape', 'bribe', 'hack',
@@ -705,6 +714,7 @@ const SHORT_ACTION_MAP = {
   galaxy: 'travelGalaxy',
   travel: 'travelGalaxy',
   use: 'useItem',
+  useall: 'useAll',
   qp: 'assignQuantum',
   quantum: 'toggleQuantum',
 };

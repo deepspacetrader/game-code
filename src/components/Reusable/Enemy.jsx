@@ -6,11 +6,11 @@ import { useQuantum } from '../../context/QuantumContext';
 import { zzfx } from 'zzfx';
 
 // Base enemy types are now defined in this file
-import faceImage1 from '../../images/enemy0.webp';
-import faceImage2 from '../../images/enemy1.webp';
-import faceImage3 from '../../images/enemy2.webp';
-import faceImage4 from '../../images/enemy3.webp';
-import faceImage5 from '../../images/enemy3.webp'; //TODO: Generate enemy4 image
+import faceImage1 from '/images/enemy0.webp';
+import faceImage2 from '/images/enemy1.webp';
+import faceImage3 from '/images/enemy2.webp';
+import faceImage4 from '/images/enemy3.webp';
+import faceImage5 from '/images/enemy4.webp';
 import './Enemy.scss';
 import GameOver from '../Game/GameOver';
 import enemiesData from '../../data/enemies.json';

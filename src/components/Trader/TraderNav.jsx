@@ -10,12 +10,26 @@ import tradersData from '../../data/traders.json';
 import FloatingMessage from '../Reusable/FloatingMessage';
 import { zzfx } from 'zzfx';
 
-const traderImages = import.meta.glob('../../images/trader*.webp', { eager: true, as: 'url' });
+// Use direct paths to public folder images
+const traderImages = {
+  'trader1.webp': '/images/trader1.webp',
+  'trader2.webp': '/images/trader2.webp',
+  'trader3.webp': '/images/trader3.webp',
+  'trader4.webp': '/images/trader4.webp',
+  'trader5.webp': '/images/trader5.webp',
+  'trader6.webp': '/images/trader6.webp',
+  'trader7.webp': '/images/trader7.webp',
+  'trader8.webp': '/images/trader8.webp',
+  'trader9.webp': '/images/trader9.webp',
+  'trader10.webp': '/images/trader10.webp',
+  'trader11.webp': '/images/trader11.webp',
+  'trader12.webp': '/images/trader12.webp',
+  'trader12-old.webp': '/images/trader12-old.webp',
+};
 
 // Helper function to get image URL
 const getImageUrl = (imageMap, filename) => {
-    const key = Object.keys(imageMap).find(k => k.endsWith(filename));
-    return key ? imageMap[key] : null;
+    return imageMap[filename] || null;
 };
 
 const TraderNav = () => {

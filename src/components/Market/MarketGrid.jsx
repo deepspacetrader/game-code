@@ -16,14 +16,68 @@ import DeliveryBar from './../Reusable/DeliveryBar';
 import galaxiesData from '../../data/galaxies.json';
 import itemsData from '../../data/items.json';
 
-// Dynamic import of galaxy images
-const galaxyImages = import.meta.glob('../../images/galaxy*.webp', { eager: true, as: 'url' });
-const itemImages = import.meta.glob('../../images/item*.webp', { eager: true, as: 'url' });
+// Use direct paths to public folder images
+const galaxyImages = {
+  'galaxy1.webp': '/images/galaxy1.webp',
+  'galaxy2.webp': '/images/galaxy2.webp',
+  'galaxy3.webp': '/images/galaxy3.webp',
+  'galaxy4.webp': '/images/galaxy4.webp',
+  'galaxy5.webp': '/images/galaxy5.webp',
+  'galaxy6.webp': '/images/galaxy6.webp',
+  'galaxy7.webp': '/images/galaxy7.webp',
+  'galaxy8.webp': '/images/galaxy8.webp',
+  'galaxy9.webp': '/images/galaxy9.webp',
+  'galaxy10.webp': '/images/galaxy10.webp',
+  'galaxy10-war.webp': '/images/galaxy10-war.webp',
+  'galaxy11.webp': '/images/galaxy11.webp',
+  'galaxy11-war.webp': '/images/galaxy11-war.webp',
+  'galaxy14-war.webp': '/images/galaxy14-war.webp',
+  'galaxy15.webp': '/images/galaxy15.webp',
+  'galaxy222.webp': '/images/galaxy222.webp',
+  'galaxy-notsure.webp': '/images/galaxy-notsure.webp',
+};
+const itemImages = {
+  'item1.webp': '/images/item1.webp',
+  'item2.webp': '/images/item2.webp',
+  'item3.webp': '/images/item3.webp',
+  'item4.webp': '/images/item4.webp',
+  'item5.webp': '/images/item5.webp',
+  'item6.webp': '/images/item6.webp',
+  'item7.webp': '/images/item7.webp',
+  'item8.webp': '/images/item8.webp',
+  'item9.webp': '/images/item9.webp',
+  'item10.webp': '/images/item10.webp',
+  'item11.webp': '/images/item11.webp',
+  'item12.webp': '/images/item12.webp',
+  'item13.webp': '/images/item13.webp',
+  'item14.webp': '/images/item14.webp',
+  'item15.webp': '/images/item15.webp',
+  'item16.webp': '/images/item16.webp',
+  'item17.webp': '/images/item17.webp',
+  'item18.webp': '/images/item18.webp',
+  'item19.webp': '/images/item19.webp',
+  'item20.webp': '/images/item20.webp',
+  'item21.webp': '/images/item21.webp',
+  'item22.webp': '/images/item22.webp',
+  'item23.webp': '/images/item23.webp',
+  'item24.webp': '/images/item24.webp',
+  'item25.webp': '/images/item25.webp',
+  'item26.webp': '/images/item26.webp',
+  'item27.webp': '/images/item27.webp',
+  'item28.webp': '/images/item28.webp',
+  'item29.webp': '/images/item29.webp',
+  'item30.webp': '/images/item30.webp',
+  'item31.webp': '/images/item31.webp',
+  'item32.webp': '/images/item32.webp',
+  'item33.webp': '/images/item33.webp',
+  'item34.webp': '/images/item34.webp',
+  'item35.webp': '/images/item35.webp',
+  'item36.webp': '/images/item36.webp',
+};
 
 // Helper function to get image URL
 const getImageUrl = (imageMap, filename) => {
-    const key = Object.keys(imageMap).find(k => k.endsWith(filename));
-    return key ? imageMap[key] : null;
+    return imageMap[filename] || null;
 };
 
 const MarketGrid = forwardRef((props, ref) => {

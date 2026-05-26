@@ -5,13 +5,30 @@ import galaxiesData from '../../data/galaxies.json';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 import AlertBanner from '../Reusable/AlertBanner';
 
-// dynamic import of galaxy images
-const galaxyImages = import.meta.glob('../../images/galaxy*.webp', { eager: true, as: 'url' });
+// Use direct paths to public folder images
+const galaxyImages = {
+  'galaxy1.webp': '/images/galaxy1.webp',
+  'galaxy2.webp': '/images/galaxy2.webp',
+  'galaxy3.webp': '/images/galaxy3.webp',
+  'galaxy4.webp': '/images/galaxy4.webp',
+  'galaxy5.webp': '/images/galaxy5.webp',
+  'galaxy6.webp': '/images/galaxy6.webp',
+  'galaxy7.webp': '/images/galaxy7.webp',
+  'galaxy8.webp': '/images/galaxy8.webp',
+  'galaxy9.webp': '/images/galaxy9.webp',
+  'galaxy10.webp': '/images/galaxy10.webp',
+  'galaxy10-war.webp': '/images/galaxy10-war.webp',
+  'galaxy11.webp': '/images/galaxy11.webp',
+  'galaxy11-war.webp': '/images/galaxy11-war.webp',
+  'galaxy14-war.webp': '/images/galaxy14-war.webp',
+  'galaxy15.webp': '/images/galaxy15.webp',
+  'galaxy222.webp': '/images/galaxy222.webp',
+  'galaxy-notsure.webp': '/images/galaxy-notsure.webp',
+};
 
 // Helper function to get image URL
 const getImageUrl = (imageMap, filename) => {
-    const key = Object.keys(imageMap).find(k => k.endsWith(filename));
-    return key ? imageMap[key] : null;
+    return imageMap[filename] || null;
 };
 
 const MarketSummary = () => {

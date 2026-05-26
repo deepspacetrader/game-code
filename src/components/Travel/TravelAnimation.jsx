@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './TravelAnimation.scss';
 
-import signal1 from '../../images/signal1.webp';
-import signal2 from '../../images/signal2.webp';
-import signal3 from '../../images/signal3.webp';
+import signal1 from '/images/signal1.webp';
+import signal2 from '/images/signal2.webp';
+import signal3 from '/images/signal3.webp';
 
 const SIGNAL_IMAGES = [signal1, signal2, signal3];
 const SIGNAL_IMAGE_SWITCH_MS = 420;
