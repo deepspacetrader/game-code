@@ -10,7 +10,7 @@ import tradersData from '../../data/traders.json';
 import FloatingMessage from '../Reusable/FloatingMessage';
 import { zzfx } from 'zzfx';
 
-const traderImages = import.meta.glob('/src/images/trader*.webp', { eager: true, as: 'url' });
+const traderImages = import.meta.glob('../../images/trader*.webp', { eager: true, as: 'url' });
 
 // Helper function to get image URL
 const getImageUrl = (imageMap, filename) => {

@@ -17,8 +17,8 @@ import galaxiesData from '../../data/galaxies.json';
 import itemsData from '../../data/items.json';
 
 // Dynamic import of galaxy images
-const galaxyImages = import.meta.glob('/src/images/galaxy*.webp', { eager: true, as: 'url' });
-const itemImages = import.meta.glob('/src/images/item*.webp', { eager: true, as: 'url' });
+const galaxyImages = import.meta.glob('../../images/galaxy*.webp', { eager: true, as: 'url' });
+const itemImages = import.meta.glob('../../images/item*.webp', { eager: true, as: 'url' });
 
 // Helper function to get image URL
 const getImageUrl = (imageMap, filename) => {

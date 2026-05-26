@@ -3,6 +3,11 @@
  *
  * Training mode: AI pauses after each action and waits for human feedback.
  * Every 10 ratings: AI analyzes what worked/didn't and suggests a strategy update.
+ *
+ * Each action card shows:
+ *  - What the AI wanted to do (action + item)
+ *  - Why the AI chose it (reason)
+ *  - Whether it succeeded or failed with details
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -10,12 +15,32 @@ import { Button, Badge, Alert } from 'react-bootstrap';
 import { aiControlService } from '../../services/AIControlService';
 import './AIFeedbackPanel.scss';
 
+const ACTION_LABELS = {
+  buy: 'Buy',
+  sell: 'Sell',
+  sellAll: 'Sell All',
+  buyFuel: 'Buy Fuel',
+  useItem: 'Use Item',
+  nextTrader: 'Travel → Next',
+  prevTrader: 'Travel ← Prev',
+  travelGalaxy: 'Jump Galaxy',
+  assignQuantum: 'Assign QP',
+  toggleQuantum: 'Toggle Quantum',
+  attack: 'Attack',
+  escape: 'Escape',
+  bribe: 'Bribe',
+  hack: 'Hack',
+  chooseLeft: 'Choose Left',
+  chooseRight: 'Choose Right',
+  wait: 'Wait',
+};
+
 const AIFeedbackPanel = ({ isVisible, trainingMode, onTrainingModeChange, onApplyStrategy }) => {
   const [unreviewed, setUnreviewed] = useState([]);
   const [feedbackStats, setFeedbackStats] = useState(null);
   const [lastFeedbackCount, setLastFeedbackCount] = useState(0);
   const [recommendation, setRecommendation] = useState(null);
-  const [ratedEntries, setRatedEntries] = useState(new Set()); // Track which entries have been rated
+  const [ratedEntries, setRatedEntries] = useState(new Set());
 
   // Poll for new unreviewed actions
   useEffect(() => {
@@ -23,7 +48,6 @@ const AIFeedbackPanel = ({ isVisible, trainingMode, onTrainingModeChange, onAppl
 
     const interval = setInterval(() => {
       const unreviewedList = aiControlService.getUnreviewedActions();
-      // Sort with most recent first
       setUnreviewed([...unreviewedList].reverse());
       setFeedbackStats(aiControlService.getFeedbackStats());
     }, 500);
@@ -34,7 +58,6 @@ const AIFeedbackPanel = ({ isVisible, trainingMode, onTrainingModeChange, onAppl
   const handleFeedback = useCallback((feedback, entry) => {
     if (entry) {
       aiControlService.rateAction(entry, feedback);
-      // Mark this entry as rated
       setRatedEntries(prev => new Set([...prev, entry.timestamp]));
     } else {
       aiControlService.submitFeedback(feedback);
@@ -42,7 +65,6 @@ const AIFeedbackPanel = ({ isVisible, trainingMode, onTrainingModeChange, onAppl
 
     const completed = aiControlService.totalFeedbacksCompleted;
 
-    // Every 10 completed ratings: generate strategy recommendation
     if (completed > 0 && completed % 10 === 0 && completed !== lastFeedbackCount) {
       setLastFeedbackCount(completed);
       const rec = aiControlService.generateStrategyRecommendation();
@@ -88,10 +110,10 @@ const AIFeedbackPanel = ({ isVisible, trainingMode, onTrainingModeChange, onAppl
       {/* Stats bar */}
       {feedbackStats && (
         <div className="feedback-stats small mb-2">
-          <span className="me-2">👍 {feedbackStats.positive}</span>
-          <span className="me-2">😐 {feedbackStats.neutral}</span>
-          <span className="me-2">👎 {feedbackStats.negative}</span>
-          <span>| {feedbackStats.unreviewed} pending review</span>
+          <span className="me-2 text-success">👍 {feedbackStats.positive} good</span>
+          <span className="me-2 text-secondary">😐 {feedbackStats.neutral} neutral</span>
+          <span className="me-2 text-danger">👎 {feedbackStats.negative} bad</span>
+          <span>| {feedbackStats.unreviewed} pending</span>
         </div>
       )}
 
@@ -124,60 +146,98 @@ const AIFeedbackPanel = ({ isVisible, trainingMode, onTrainingModeChange, onAppl
       {/* Stacked list of unreviewed actions */}
       <div className="unreviewed-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
         {unreviewed.length === 0 && (
-          <div className="small p-2 text-center">No actions pending review</div>
+          <div className="small p-2 text-center text-secondary">No actions pending review</div>
         )}
-        {unreviewed.map((entry, idx) => (
-          <div key={entry.timestamp + '-' + idx} className="action-card mb-1 p-2 border rounded" style={{ fontSize: '0.8rem' }}>
-            <div className="d-flex justify-content-between align-items-start">
-              <div>
-                <Badge bg="secondary" className="me-1">{entry.action?.action || '?'}</Badge>
-                {entry.action?.params?.item && (
-                  <small className="text-secondary">{entry.action.params.item}</small>
-                )}
+        {unreviewed.map((entry, idx) => {
+          const actionType = entry.action?.action || '?';
+          const actionLabel = ACTION_LABELS[actionType] || actionType;
+          const itemName = entry.action?.params?.item || '';
+          const reason = entry.action?.reason || '';
+          const succeeded = entry.result?.success;
+          const failed = entry.result && !entry.result.success;
+          const errorMsg = entry.result?.error || '';
+
+          return (
+            <div key={entry.timestamp + '-' + idx} className="action-card mb-1 p-2 border rounded">
+              {/* Top bar: action + result badge + time */}
+              <div className="d-flex justify-content-between align-items-center mb-1">
+                <div className="d-flex align-items-center gap-1">
+                  <Badge bg="secondary" className="me-1">{actionLabel}</Badge>
+                  {itemName && (
+                    <strong style={{ fontSize: '0.8rem' }}>{itemName}</strong>
+                  )}
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  {succeeded && (
+                    <Badge bg="success" style={{ fontSize: '0.6rem' }}>OK</Badge>
+                  )}
+                  {failed && (
+                    <Badge bg="danger" style={{ fontSize: '0.6rem' }}>FAILED</Badge>
+                  )}
+                  <small className="text-secondary" style={{ fontSize: '0.65rem' }}>
+                    {new Date(entry.timestamp).toLocaleTimeString()}
+                  </small>
+                </div>
               </div>
-              <small className="text-secondary">
-                {new Date(entry.timestamp).toLocaleTimeString()}
-              </small>
-            </div>
-            {entry.action?.reason && (
-              <div className="text-secondary small mt-1" style={{ fontSize: '0.7rem', opacity: 0.8 }}>
-                {entry.action.reason}
-              </div>
-            )}
-            <div className="d-flex gap-1 mt-1">
-              <Button
-                size="sm"
-                variant={ratedEntries.has(entry.timestamp) ? 'success' : 'outline-success'}
-                style={{ padding: '1px 8px', fontSize: '0.7rem' }}
-                onClick={() => handleFeedback('positive', entry)}
-                disabled={ratedEntries.has(entry.timestamp)}
-              >
-                👍 Good
-              </Button>
-              <Button
-                size="sm"
-                variant={ratedEntries.has(entry.timestamp) ? 'secondary' : 'outline-secondary'}
-                style={{ padding: '1px 8px', fontSize: '0.7rem' }}
-                onClick={() => handleFeedback('neutral', entry)}
-                disabled={ratedEntries.has(entry.timestamp)}
-              >
-                😐 Neutral
-              </Button>
-              <Button
-                size="sm"
-                variant={ratedEntries.has(entry.timestamp) ? 'danger' : 'outline-danger'}
-                style={{ padding: '1px 8px', fontSize: '0.7rem' }}
-                onClick={() => handleFeedback('negative', entry)}
-                disabled={ratedEntries.has(entry.timestamp)}
-              >
-                👎 Bad
-              </Button>
-              {entry.result && !entry.result.success && (
-                <small className="text-danger ms-auto" style={{ fontSize: '0.65rem' }}>FAILED</small>
+
+              {/* Reason — why the AI chose this action */}
+              {reason && (
+                <div className="text-secondary small mb-1" style={{ fontSize: '0.7rem', lineHeight: 1.3 }}>
+                  <span className="fw-bold">Why:</span> {reason}
+                </div>
               )}
+
+              {/* Result details — what happened */}
+              {entry.result && (
+                <div className="small" style={{ fontSize: '0.65rem', lineHeight: 1.3 }}>
+                  {succeeded && (
+                    <span className="text-success">
+                      Action completed{entry.result.item ? ` — ${entry.result.item}` : ''}
+                      {entry.result.amount ? ` (${entry.result.amount})` : ''}
+                      {entry.result.to ? ` → ${entry.result.to}` : ''}
+                    </span>
+                  )}
+                  {failed && (
+                    <span className="text-danger">
+                      Failed: {errorMsg || 'Unknown error'}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Rating buttons */}
+              <div className="d-flex gap-1 mt-1 pt-1 border-top">
+                <Button
+                  size="sm"
+                  variant={ratedEntries.has(entry.timestamp) ? 'success' : 'outline-success'}
+                  style={{ padding: '1px 8px', fontSize: '0.7rem' }}
+                  onClick={() => handleFeedback('positive', entry)}
+                  disabled={ratedEntries.has(entry.timestamp)}
+                >
+                  👍 Good
+                </Button>
+                <Button
+                  size="sm"
+                  variant={ratedEntries.has(entry.timestamp) ? 'secondary' : 'outline-secondary'}
+                  style={{ padding: '1px 8px', fontSize: '0.7rem' }}
+                  onClick={() => handleFeedback('neutral', entry)}
+                  disabled={ratedEntries.has(entry.timestamp)}
+                >
+                  😐 Neutral
+                </Button>
+                <Button
+                  size="sm"
+                  variant={ratedEntries.has(entry.timestamp) ? 'danger' : 'outline-danger'}
+                  style={{ padding: '1px 8px', fontSize: '0.7rem' }}
+                  onClick={() => handleFeedback('negative', entry)}
+                  disabled={ratedEntries.has(entry.timestamp)}
+                >
+                  👎 Bad
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

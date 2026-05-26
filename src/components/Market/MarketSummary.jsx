@@ -6,7 +6,7 @@ import { Sparklines, SparklinesLine } from 'react-sparklines';
 import AlertBanner from '../Reusable/AlertBanner';
 
 // dynamic import of galaxy images
-const galaxyImages = import.meta.glob('/src/images/galaxy*.webp', { eager: true, as: 'url' });
+const galaxyImages = import.meta.glob('../../images/galaxy*.webp', { eager: true, as: 'url' });
 
 // Helper function to get image URL
 const getImageUrl = (imageMap, filename) => {

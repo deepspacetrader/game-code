@@ -60,8 +60,8 @@ const InventoryList = () => {
             : improvedAILevel < 100
             ? 'ultra'
             : 'elite';
-    const itemImages = import.meta.glob('/src/images/item*.webp', { eager: true, as: 'url' });
-    const secretItemImages = import.meta.glob('/src/images/secret-item*.webp', { eager: true, as: 'url' });
+    const itemImages = import.meta.glob('../../images/item*.webp', { eager: true, as: 'url' });
+    const secretItemImages = import.meta.glob('../../images/secret-item*.webp', { eager: true, as: 'url' });
 
     // Helper function to get image URL
     const getImageUrl = (imageMap, filename) => {
