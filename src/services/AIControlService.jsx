@@ -25,6 +25,12 @@ class AIControlService {
     this.lastActionTime = 0;
     this.lastActionResult = null;
 
+    // Training mode: wait for human feedback after each action
+    this.trainingMode = false;
+    this.trainingPaused = false;
+    this.pendingActionForFeedback = null;
+    this.totalFeedbacksCompleted = 0;
+
     // Callbacks for game state and actions
     this.onGameStateUpdate = null;
     this.onActionExecute = null;
@@ -32,9 +38,39 @@ class AIControlService {
   }
 
   /**
-   * Start AI control with a strategy
+   * Set training mode. When enabled, the AI pauses after each action
+   * until the human provides feedback.
+   */
+  setTrainingMode(enabled) {
+    this.trainingMode = enabled;
+    if (!enabled) {
+      this.trainingPaused = false;
+      this.pendingActionForFeedback = null;
+    }
+  }
+
+  /**
+   * Resume from training pause (called after human gives feedback)
+   */
+  resumeFromTraining() {
+    if (this.trainingMode && this.trainingPaused) {
+      this.trainingPaused = false;
+      this.pendingActionForFeedback = null;
+    }
+  }
+
+  /**
+   * Start AI control with a strategy.
+   * Clears previous feedback history so each training run starts fresh.
    */
   start(strategy) {
+    // Clear previous run's feedback for clean training runs
+    this.feedbackHistory = [];
+    this.totalFeedbacksCompleted = 0;
+    this.trainingPaused = false;
+    this.pendingActionForFeedback = null;
+    this.lastActionResult = null;
+
     this.strategy = strategy;
     this.isActive = true;
     this.loopPromise = this.runLoop();
@@ -57,6 +93,12 @@ class AIControlService {
   async runLoop() {
     while (this.isActive) {
       try {
+        // Training mode: pause after each action until human gives feedback
+        if (this.trainingMode && this.trainingPaused) {
+          await this._sleep(200);
+          continue;
+        }
+
         const gameState = await this.onGameStateUpdate?.();
 
         if (gameState && this.strategy) {
@@ -113,6 +155,12 @@ class AIControlService {
         this.feedbackHistory.shift();
       }
 
+      // Training mode: pause and wait for human feedback
+      if (this.trainingMode) {
+        this.trainingPaused = true;
+        this.pendingActionForFeedback = this.feedbackHistory[this.feedbackHistory.length - 1];
+      }
+
       return result;
     } catch (error) {
       console.error('Error executing action:', error);
@@ -125,16 +173,39 @@ class AIControlService {
    */
   submitFeedback(feedback) {
     const lastAction = this.feedbackHistory[this.feedbackHistory.length - 1];
-
     if (lastAction) {
-      lastAction.feedback = feedback;
-
-      if (this.onFeedback) {
-        this.onFeedback(lastAction);
-      }
-
-      console.log(`Feedback submitted: ${feedback} for action:`, lastAction.action);
+      this._applyFeedback(lastAction, feedback);
     }
+  }
+
+  /**
+   * Rate a specific action entry (for stacked feedback view).
+   */
+  rateAction(entry, feedback) {
+    const found = this.feedbackHistory.find((e) => e.timestamp === entry.timestamp && e.action?.action === entry.action?.action);
+    if (found) {
+      this._applyFeedback(found, feedback);
+    }
+  }
+
+  /**
+   * Internal: apply feedback to an entry and handle side effects.
+   */
+  _applyFeedback(entry, feedback) {
+    entry.feedback = feedback;
+    this.totalFeedbacksCompleted++;
+
+    // Auto-resume from training pause after feedback given
+    if (this.trainingMode && this.trainingPaused) {
+      this.trainingPaused = false;
+      this.pendingActionForFeedback = null;
+    }
+
+    if (this.onFeedback) {
+      this.onFeedback(entry);
+    }
+
+    console.log(`Feedback submitted: ${feedback} for action:`, entry.action);
   }
 
   /**
@@ -166,6 +237,7 @@ Respond with a JSON action object only.`;
           const response = await lmStudioService.generateResponse(
             'What action should I take next?',
             {
+              model: lmStudioService.defaultModel,
               systemPrompt,
               maxTokens: 1024,
               temperature: options.temperature || 0.5,
@@ -222,6 +294,7 @@ ${analysis}
           const response = await lmStudioService.generateResponse(
             'go',
             {
+              model: lmStudioService.defaultModel,
               systemPrompt,
               maxTokens: options.maxTokens || 1024,
               temperature: options.temperature || 0.2,
@@ -316,9 +389,41 @@ ${analysis}
       // Special focus
       quantumFocus: lower.includes('quantum') || lower.includes('processor') || lower.includes('ai level'),
       fuelPriority: lower.includes('fuel') && (lower.includes('high') || lower.includes('full') || lower.includes('always')),
+
+      // Target-buy: "buy at least 10 of item: Basic QBiT Inverter then use them"
+      targetBuy: this._parseTargetBuy(prompt),
+      useTargetItems: lower.includes('then use') || lower.includes('use them') || lower.includes('use all') || lower.includes('increase ai'),
     };
 
     return rules;
+  }
+
+  /**
+   * Parse "buy at least N of item: X [then use them]" patterns.
+   */
+  _parseTargetBuy(text) {
+    if (!text) return null;
+    const lower = text.toLowerCase();
+
+    // Pattern: "buy at least N of item: X" or "buy N of item: X"
+    const patterns = [
+      /buy\s+at\s+least\s+(\d+)\s+of\s+item:?\s*(.+?)(?:\.|then|$|\n)/i,
+      /buy\s+(\d+)\s+of\s+item:?\s*(.+?)(?:\.|then|$|\n)/i,
+      /buy\s+at\s+least\s+(\d+)\s+(.+?)(?:\.|then|$|\n)/i,
+    ];
+
+    for (const pat of patterns) {
+      const match = text.match(pat);
+      if (match) {
+        const quantity = parseInt(match[1]);
+        let itemName = match[2].trim().replace(/\.$/, '').replace(/\s+then.*/i, '').trim();
+        // Check if "then use" follows
+        const useAfter = lower.includes('then use') || lower.includes('use them');
+        return { item: itemName, quantity, useAfter };
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -446,7 +551,65 @@ ${analysis}
       }
     }
 
-    // ---- 4. SELL ----
+    // ---- 4. TARGET BUY ITEMS ----
+    // If user specified "buy at least N of item: X then use them",
+    // handle that before regular buy/sell logic.
+    if (rules.targetBuy) {
+      const targetName = rules.targetBuy.item.toLowerCase();
+      const targetQty = rules.targetBuy.quantity;
+      const owned = inv.find((x) => (x.n || x.name || '').toLowerCase().includes(targetName));
+      const ownedQty = owned ? (owned.q || owned.quantity || 1) : 0;
+
+      // Find the item in the current market
+      const marketItem = m.find((x) => (x.n || x.name || '').toLowerCase().includes(targetName));
+
+      if (rules.targetBuy.useAfter && ownedQty >= targetQty) {
+        // Have enough — use them
+        return { action: 'useItem', params: { item: owned.n || owned.name }, reason: `Using ${owned.n || owned.name} (have ${ownedQty}/${targetQty})` };
+      }
+
+      if (ownedQty < targetQty && marketItem) {
+        const price = marketItem.p ?? marketItem.price ?? 0;
+        const stock = marketItem.s ?? marketItem.stock ?? 0;
+        if (stock > 0 && price > 0 && credits >= price) {
+          return { action: 'buy', params: { item: marketItem.n || marketItem.name }, reason: `Buying target item (${ownedQty}/${targetQty})` };
+        }
+      }
+
+      if (ownedQty < targetQty && !marketItem) {
+        // Target not available here — travel to find it
+        if (fuel > rules.minFuel + 10) {
+          return { action: 'nextTrader', params: {}, reason: 'Searching for target item' };
+        }
+      }
+    }
+
+    // ---- 5. USE ITEMS (boosters, meds, AI enhancers) ----
+    // Before selling, check if we should use items instead.
+    // Strategy may say "use them all" or we may have items meant for use.
+    for (const item of inv) {
+      const name = item.n || item.name;
+      const qty = item.q || item.quantity || 0;
+      if (!name || qty <= 0) continue;
+
+      // If the strategy says to use target items, only use the target item
+      if (rules.targetBuy && rules.targetBuy.useAfter) {
+        const targetName = rules.targetBuy.item.toLowerCase();
+        if (!name.toLowerCase().includes(targetName)) continue;
+      }
+
+      // Use items identified as usable (AI boosters, medkits, etc.)
+      const lower = name.toLowerCase();
+      const isUsable = lower.includes('multimed') || lower.includes('medkit')
+        || lower.includes('ai') || lower.includes('booster')
+        || lower.includes('processor') || lower.includes('quantum');
+
+      if (isUsable && rules.useTargetItems) {
+        return { action: 'useItem', params: { item: name }, reason: `Using ${name} per strategy` };
+      }
+    }
+
+    // ---- 6. SELL ----
     // Find items in inventory that are profitable to sell at current trader
     for (const item of inv) {
       const name = item.n || item.name;
@@ -472,7 +635,7 @@ ${analysis}
       }
     }
 
-    // ---- 5. BUY ----
+    // ---- 7. BUY (fallback if no target item) ----
     if (credits > rules.creditReserve) {
       const maxUnitPrice = Math.max(credits * (rules.maxSpendPercent / 100), credits * 0.1);
 
@@ -522,7 +685,7 @@ ${analysis}
       }
     }
 
-    // ---- 6. TRAVEL ----
+    // ---- 8. TRAVEL ----
     // Nothing profitable to do — move to next trader
     if (fuel > rules.minFuel + 10) {
       if (traderIdx < totalTraders - 1) {
@@ -534,8 +697,133 @@ ${analysis}
       return { action: 'nextTrader', params: {}, reason: 'Checking other traders' };
     }
 
-    // ---- 7. WAIT ----
+    // ---- 9. WAIT ----
     return { action: 'wait', params: {}, reason: 'No action available' };
+  }
+
+  /**
+   * Sleep/pause helper for the training mode loop.
+   */
+  _sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Get all actions that haven't been reviewed with feedback yet.
+   */
+  getUnreviewedActions() {
+    return this.feedbackHistory.filter((entry) => !entry.feedback);
+  }
+
+  /**
+   * Analyze feedback history and generate a recommended strategy prompt.
+   * Called after every 10 feedback ratings.
+   * Returns { recommendation: string, stats: object }
+   */
+  generateStrategyRecommendation() {
+    const reviewed = this.feedbackHistory.filter((e) => e.feedback);
+    const lastBatch = reviewed.slice(-10);
+
+    // Count good/neutral/bad per action type
+    const actionCounts = {};
+    for (const entry of lastBatch) {
+      const act = entry.action?.action || 'unknown';
+      if (!actionCounts[act]) actionCounts[act] = { positive: 0, neutral: 0, negative: 0 };
+      actionCounts[act][entry.feedback]++;
+    }
+
+    // Build recommendation text
+    const lines = [];
+    const overallPositive = lastBatch.filter((e) => e.feedback === 'positive').length;
+    const overallNegative = lastBatch.filter((e) => e.feedback === 'negative').length;
+
+    lines.push(`Based on the last ${lastBatch.length} actions:`);
+    lines.push(`Overall: ${overallPositive} good, ${overallNegative} bad, ${lastBatch.length - overallPositive - overallNegative} neutral`);
+
+    for (const [act, counts] of Object.entries(actionCounts)) {
+      const total = counts.positive + counts.neutral + counts.negative;
+      if (total === 0) continue;
+      const goodPct = Math.round((counts.positive / total) * 100);
+      const badPct = Math.round((counts.negative / total) * 100);
+      if (goodPct >= 60) {
+        lines.push(`- ${act}: Mostly GOOD (${goodPct}%) — keep doing this`);
+      } else if (badPct >= 60) {
+        lines.push(`- ${act}: Mostly BAD (${badPct}%) — avoid or adjust`);
+      } else {
+        lines.push(`- ${act}: Mixed (${goodPct}% good, ${badPct}% bad)`);
+      }
+    }
+
+    // Generate a suggested strategy prompt
+    const suggestedPrompt = this._generateSuggestedPrompt(actionCounts, overallPositive, overallNegative, lastBatch.length);
+
+    return {
+      recommendation: lines.join('\n'),
+      stats: { total: lastBatch.length, positive: overallPositive, negative: overallNegative },
+      suggestedPrompt,
+    };
+  }
+
+  /**
+   * Generate a human-readable strategy prompt based on feedback analysis.
+   */
+  _generateSuggestedPrompt(actionCounts, overallPositive, overallNegative, total) {
+    const parts = [];
+
+    // Buy suggestions
+    const buyStats = actionCounts['buy'];
+    if (buyStats) {
+      const buyGood = buyStats.positive / (buyStats.positive + buyStats.neutral + buyStats.negative);
+      if (buyGood >= 0.6) {
+        parts.push('Continue buying items when price is below base price.');
+      } else if (buyStats.negative > buyStats.positive) {
+        parts.push('Be more selective when buying — only buy items at a significant discount to base price.');
+      } else {
+        parts.push('Buy items when price is below base price.');
+      }
+    } else {
+      parts.push('Buy items when price is below base price.');
+    }
+
+    // Sell suggestions
+    const sellStats = actionCounts['sell'];
+    if (sellStats) {
+      const sellGood = sellStats.positive / (sellStats.positive + sellStats.neutral + sellStats.negative);
+      if (sellGood >= 0.6) {
+        parts.push('Sell items when price is above base price for profit.');
+      } else if (sellStats.negative > sellStats.positive) {
+        parts.push('Reduce selling — hold items longer for better prices.');
+      } else {
+        parts.push('Sell items when price is above base price.');
+      }
+    } else {
+      parts.push('Sell items when price is above base price for profit.');
+    }
+
+    // Fuel suggestions
+    const fuelStats = actionCounts['buyFuel'];
+    if (fuelStats && fuelStats.negative >= fuelStats.positive) {
+      parts.push('Keep fuel above 70 to avoid getting stranded.');
+    } else {
+      parts.push('Keep fuel above 50.');
+    }
+
+    // Travel suggestions
+    const travelStats = actionCounts['nextTrader'];
+    if (travelStats && travelStats.negative > travelStats.positive) {
+      parts.push('Reduce unnecessary travel between traders.');
+    }
+
+    // Use item suggestions
+    const useStats = actionCounts['useItem'];
+    if (useStats && useStats.positive >= useStats.neutral) {
+      parts.push('Use items from inventory when beneficial.');
+    }
+
+    // If target-buy was used, add note about it
+    const targetBuys = actionCounts['buy'] && overallPositive >= overallNegative;
+
+    return parts.join(' ');
   }
 
   getFeedbackStats() {

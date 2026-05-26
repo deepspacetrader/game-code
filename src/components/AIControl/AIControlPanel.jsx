@@ -17,20 +17,22 @@ import './AIControlPanel.scss';
 const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlotsUsed }) => {
   const [isActive, setIsActive] = useState(false);
   const [strategyPrompt, setStrategyPrompt] = useState(
-    'Buy items when price is below base price. Sell when price is above base price. Keep fuel above 50. Focus on steady profit.'
+    ''
   );
   const [status, setStatus] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [lastDecision, setLastDecision] = useState(null);
   const [aiStatusLog, setAiStatusLog] = useState([]);
 
-  // Mode: 'local' (fast, no deps) or 'lmstudio' (uses external LLM)
-  const [aiMode, setAiMode] = useState('local');
+  // Training mode: pause after each action for human feedback
+  const [trainingMode, setTrainingMode] = useState(false);
 
-  // LM Studio state (only shown when mode is 'lmstudio')
+  // LM Studio state
   const [selectedModel, setSelectedModel] = useState('');
   const [availableModels, setAvailableModels] = useState([]);
   const [lmStudioAvailable, setLmStudioAvailable] = useState(false);
+  const [currentlyLoadedModel, setCurrentlyLoadedModel] = useState(null);
+  const [isLoadingModel, setIsLoadingModel] = useState(false);
 
   // Encounter state
   const encounterState = useMemo(() => {
@@ -54,6 +56,11 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
       gameActionExecutor.registerGameFunctions(gameFunctions);
     }
   }, [gameFunctions]);
+
+  // Auto-check LM Studio availability on mount (runs once)
+  useEffect(() => {
+    checkLMStudio();
+  }, []); // Empty dependency array = runs once on mount
 
   // Register callbacks with AI control service
   useEffect(() => {
@@ -82,56 +89,81 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
 
   const handleStart = useCallback(async () => {
     try {
-      let strategy;
-
-      if (aiMode === 'local') {
-        // Fast local strategy — no external dependencies
-        strategy = aiControlService.createLocalStrategy(strategyPrompt, {
-          name: 'Local Strategy',
-        });
-      } else {
-        // LM Studio — external LLM
-        if (selectedModel) {
-          lmStudioService.setModel(selectedModel);
-        }
-        strategy = aiControlService.createFastPromptStrategy(strategyPrompt, {
-          name: 'LM Studio Strategy',
-          temperature: 0.2,
-          maxTokens: 80,
-        });
+      // Check if LM Studio is available
+      const isAvailable = await lmStudioService.isAvailable();
+      if (!isAvailable) {
+        setStatus('Error: LM Studio not available. Please start LM Studio and click Refresh.');
+        return;
       }
 
+      // Check if a model is selected
+      if (!selectedModel) {
+        setStatus('Error: No model selected. Please click Refresh to load models and select one.');
+        return;
+      }
+
+      // LM Studio — external LLM
+      lmStudioService.setModel(selectedModel);
+      const strategy = aiControlService.createFastPromptStrategy(strategyPrompt, {
+        name: 'LM Studio Strategy',
+        temperature: 0.2,
+        maxTokens: 80,
+      });
+
+      aiControlService.setTrainingMode(trainingMode);
       aiControlService.start(strategy);
       setIsActive(true);
-      setStatus(`AI started (${aiMode} mode)`);
+      setStatus(`AI started (LM Studio) — Model: ${selectedModel}${trainingMode ? ' — training' : ''}`);
       setShowFeedback(true);
       setAiStatusLog((log) => [
         ...log,
-        `[${new Date().toLocaleTimeString()}] Started (${aiMode}) — ${strategyPrompt.slice(0, 50)}...`,
+        `[${new Date().toLocaleTimeString()}] Started (LM Studio) — Model: ${selectedModel}`,
       ]);
     } catch (error) {
       setStatus(`Error: ${error.message}`);
+      console.error('AI start error:', error);
     }
-  }, [strategyPrompt, aiMode, selectedModel]);
+  }, [strategyPrompt, selectedModel, trainingMode]);
 
   const logEntry = useCallback((msg) => {
     setAiStatusLog((log) => [...log.slice(-19), `[${new Date().toLocaleTimeString()}] ${msg}`]);
   }, []);
 
-  const checkLMStudio = useCallback(async () => {
-    const available = await lmStudioService.isAvailable();
+  const checkLMStudio = useCallback(async (forceRefresh = false) => {
+    setStatus('Checking LM Studio...');
+    const available = await lmStudioService.isAvailable(forceRefresh);
     setLmStudioAvailable(available);
     if (available) {
-      const models = await lmStudioService.getAvailableModels();
+      const models = await lmStudioService.getAvailableModels(forceRefresh);
       setAvailableModels(models);
       if (models.length > 0 && !selectedModel) {
         setSelectedModel(models[0]);
+        logEntry(`Auto-selected model: ${models[0]}`);
       }
-      logEntry(`Found ${models.length} LM Studio model(s)`);
+
+      // Check currently loaded model
+      const currentModel = await lmStudioService.getCurrentModel();
+      setCurrentlyLoadedModel(currentModel);
+
+      setStatus(`Found ${models.length} LM Studio model(s)${currentModel ? ` — Loaded: ${currentModel}` : ''}`);
+      logEntry(`Found ${models.length} LM Studio model(s)${currentModel ? ` — Loaded: ${currentModel}` : ''}`);
     } else {
-      setStatus('LM Studio not available');
+      setStatus('LM Studio not available. Please start LM Studio and click Refresh.');
+      logEntry('LM Studio not available');
     }
   }, [selectedModel, logEntry]);
+
+  const handleTrainingModeChange = useCallback((enabled) => {
+    setTrainingMode(enabled);
+    aiControlService.setTrainingMode(enabled);
+    setAiStatusLog((log) => [...log, `[${new Date().toLocaleTimeString()}] Training mode: ${enabled ? 'ON' : 'OFF'}`]);
+  }, []);
+
+  const handleApplyStrategy = useCallback((newPrompt) => {
+    setStrategyPrompt(newPrompt);
+    setStatus('AI strategy updated from feedback recommendation');
+    setAiStatusLog((log) => [...log, `[${new Date().toLocaleTimeString()}] Strategy updated from feedback`]);
+  }, []);
 
   const handleStop = useCallback(() => {
     aiControlService.stop();
@@ -153,6 +185,51 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
     setStatus('Feedback history exported');
   };
 
+  const handleLoadModel = useCallback(async () => {
+    if (!selectedModel) {
+      setStatus('Error: No model selected');
+      return;
+    }
+
+    setIsLoadingModel(true);
+    setStatus(`Loading model: ${selectedModel}...`);
+
+    try {
+      // If there's a currently loaded model, unload it first
+      if (currentlyLoadedModel && currentlyLoadedModel !== selectedModel) {
+        await lmStudioService.unloadModel();
+        logEntry(`Unloaded previous model: ${currentlyLoadedModel}`);
+      }
+
+      await lmStudioService.loadModel(selectedModel);
+      setCurrentlyLoadedModel(selectedModel);
+      setStatus(`Model loaded: ${selectedModel}`);
+      logEntry(`Model loaded: ${selectedModel}`);
+    } catch (error) {
+      setStatus(`Error loading model: ${error.message}`);
+      logEntry(`Error loading model: ${error.message}`);
+    } finally {
+      setIsLoadingModel(false);
+    }
+  }, [selectedModel, currentlyLoadedModel, logEntry]);
+
+  const handleUnloadModel = useCallback(async () => {
+    setIsLoadingModel(true);
+    setStatus('Unloading model...');
+
+    try {
+      await lmStudioService.unloadModel();
+      setCurrentlyLoadedModel(null);
+      setStatus('Model unloaded');
+      logEntry('Model unloaded');
+    } catch (error) {
+      setStatus(`Error unloading model: ${error.message}`);
+      logEntry(`Error unloading model: ${error.message}`);
+    } finally {
+      setIsLoadingModel(false);
+    }
+  }, [logEntry]);
+
   return (
     <div className="ai-control-panel">
       <div className="ai-control-header">
@@ -160,8 +237,8 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
         <Badge bg={isActive ? 'success' : 'secondary'}>
           {isActive ? 'Active' : 'Inactive'}
         </Badge>
-        <Badge bg={aiMode === 'local' ? 'info' : 'warning'} className="ms-2">
-          {aiMode === 'local' ? 'Local Mode' : 'LM Studio'}
+        <Badge bg="warning" className="ms-2">
+          LM Studio
         </Badge>
       </div>
 
@@ -169,7 +246,7 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
         {/* Strategy Prompt — the core of the AI's behavior */}
         <Form.Group className="mb-2">
           <Form.Label className="fw-bold">Strategy Prompt</Form.Label>
-          <div className="text-muted small mb-1">
+          <div className="small mb-1">
             Tell the AI HOW to trade. It parses your instructions into rules and plays fast.
           </div>
           <Form.Control
@@ -182,33 +259,31 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
           />
         </Form.Group>
 
-        {/* Mode toggle: Local vs LM Studio */}
+        {/* Training Mode */}
         <div className="mb-2">
           <Form.Check
             type="switch"
-            id="ai-mode-switch"
+            id="training-mode-switch"
             label={
               <span>
-                Use <strong>LM Studio</strong> (external LLM, slower) —{' '}
-                <span className="text-muted">off = local mode (fast, no deps)</span>
+                <strong>Training Mode</strong> — pause after each action for feedback
               </span>
             }
-            checked={aiMode === 'lmstudio'}
-            onChange={(e) => setAiMode(e.target.checked ? 'lmstudio' : 'local')}
+            checked={trainingMode}
+            onChange={(e) => setTrainingMode(e.target.checked)}
             disabled={isActive}
           />
         </div>
 
-        {/* LM Studio settings (collapsible, only when mode=lmstudio) */}
-        {aiMode === 'lmstudio' && (
-          <div className="lm-studio-section mb-3 p-2 border rounded">
+        {/* LM Studio settings */}
+        <div className="lm-studio-section mb-3 p-2 border rounded">
             <Form.Group className="mb-2">
               <Form.Label>Model</Form.Label>
               <div className="d-flex gap-2">
                 <Form.Select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
-                  disabled={isActive}
+                  disabled={isActive || isLoadingModel}
                   className="flex-grow-1"
                   size="sm"
                 >
@@ -217,16 +292,40 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
                     <option key={model} value={model}>{model}</option>
                   ))}
                 </Form.Select>
-                <Button variant="outline-primary" size="sm" onClick={checkLMStudio} disabled={isActive}>
+                <Button variant="outline-primary" size="sm" onClick={() => checkLMStudio(true)} disabled={isActive || isLoadingModel}>
                   Refresh
                 </Button>
               </div>
-              <Form.Text className={lmStudioAvailable ? 'text-success' : 'text-muted'}>
+              <Form.Text className={lmStudioAvailable ? 'text-success' : 'text-failed'}>
                 {lmStudioAvailable ? `${availableModels.length} model(s) available` : 'Not connected'}
               </Form.Text>
+              {currentlyLoadedModel && (
+                <Form.Text className="text-info small d-block mt-1">
+                  Currently loaded: <strong>{currentlyLoadedModel}</strong>
+                </Form.Text>
+              )}
             </Form.Group>
+
+            <div className="d-flex gap-2">
+              <Button
+                variant="outline-success"
+                size="sm"
+                onClick={handleLoadModel}
+                disabled={isActive || isLoadingModel || !selectedModel || currentlyLoadedModel === selectedModel}
+                className="flex-grow-1"
+              >
+                {isLoadingModel ? 'Loading...' : currentlyLoadedModel === selectedModel ? 'Loaded' : 'Load Model'}
+              </Button>
+              <Button
+                variant="outline-danger"
+                size="sm"
+                onClick={handleUnloadModel}
+                disabled={isActive || isLoadingModel || !currentlyLoadedModel}
+              >
+                Unload
+              </Button>
+            </div>
           </div>
-        )}
 
         {/* Start/Stop buttons */}
         <div className="ai-control-buttons d-flex gap-2">
@@ -282,7 +381,12 @@ const AIControlPanel = ({ gameFunctions, currentEnemy, quantumPower, quantumSlot
         </Accordion.Item>
       </Accordion>
 
-      <AIFeedbackPanel isVisible={showFeedback} />
+      <AIFeedbackPanel
+        isVisible={showFeedback}
+        trainingMode={trainingMode}
+        onTrainingModeChange={handleTrainingModeChange}
+        onApplyStrategy={handleApplyStrategy}
+      />
     </div>
   );
 };

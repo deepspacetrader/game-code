@@ -1,5 +1,13 @@
 {
     "versions": [
+            {
+            "number": "1.0.8",
+            "date": "2026-05-25",
+            "title": "AI Controller",
+            "changes": [
+                "Added AI Controller for local LM Studio integration for an enhanced Strategy Prompt gameplay experience"
+            ]
+        },
         {
             "number": "1.0.7",
             "date": "2025-09-19",
